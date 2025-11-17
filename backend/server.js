@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import os from 'os';
 import authRoutes from './routes/authRoutes.js';
 import questionRoutes from './routes/questionRoutes.js';
 import resourceRoutes from './routes/resourceRoutes.js';
@@ -20,6 +21,15 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.error('❌ MongoDB error:', err));
 
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Backend API is running',
+    status: 'ok',
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/questions', questionRoutes);
 app.use('/api/resources', resourceRoutes);
@@ -28,4 +38,22 @@ app.use('/api/stats', statsRoutes);
 app.use('/api/exams', examRoutes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Backend running on port ${PORT}`));
+const HOST = '0.0.0.0';
+
+const getLocalIp = () => {
+  const nets = os.networkInterfaces();
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name] || []) {
+      if (net.family === 'IPv4' && !net.internal) {
+        return net.address;
+      }
+    }
+  }
+  return 'localhost';
+};
+
+app.listen(PORT, HOST, () => {
+  const ip = getLocalIp();
+  console.log(`🚀 Backend running on http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
+  console.log(`🌐 Accessible on your network at: http://${ip}:${PORT}`);
+});

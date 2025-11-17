@@ -14,19 +14,31 @@ function QuizModal({ type, onClose }) {
     { id: 'NETWORK', label: 'Network', color: '#3b82f6' }
   ];
 
+  const isAllModeNoFilter = type === 'all' && selectedMode === 'all';
+  const isTagRequired = type !== 'basic' && !isAllModeNoFilter;
+  const needsTagAttention = isTagRequired && !selectedTag;
+
   const handleStart = () => {
     if (!selectedMode) return;
-    
-    // Pentru basic, tag-ul este mereu LINUX
-    // Pentru all și acadnet, tag-ul este obligatoriu
-    if ((type === 'all' || type === 'acadnet') && !selectedTag) return;
-    
-    const finalTag = type === 'basic' ? 'LINUX' : selectedTag;
-    const tagsParam = `?tags=${finalTag}&type=${type}`;
-    navigate(`/grile/${type}/${selectedMode}${tagsParam}`);
+    if (isTagRequired && !selectedTag) return;
+
+    let finalTag = '';
+    if (type === 'basic') {
+      finalTag = 'LINUX';
+    } else if (isTagRequired) {
+      finalTag = selectedTag;
+    }
+
+    const params = new URLSearchParams();
+    params.set('type', type);
+    if (finalTag) {
+      params.set('tags', finalTag);
+    }
+
+    navigate(`/grile/${type}/${selectedMode}?${params.toString()}`);
   };
 
-  const canStart = selectedMode && (type === 'basic' || selectedTag);
+  const canStart = selectedMode && (!isTagRequired || selectedTag);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -65,7 +77,9 @@ function QuizModal({ type, onClose }) {
 
         {type !== 'basic' && (
           <div className="modal-section">
-            <h3 className="section-title">Select Category *</h3>
+            <h3 className="section-title">
+              Select Category {isTagRequired ? '*' : <span className="optional-label">(optional)</span>}
+            </h3>
             <div className="tags-grid">
               {availableTags.map(tag => (
                 <button
@@ -80,6 +94,15 @@ function QuizModal({ type, onClose }) {
                 </button>
               ))}
             </div>
+            {isTagRequired ? (
+              <p className={`tag-helper ${needsTagAttention ? 'error' : ''}`}>
+                Choose Linux or Network to continue.
+              </p>
+            ) : (
+              <p className="tag-helper">
+                Optional: narrow down to Linux or Network questions.
+              </p>
+            )}
           </div>
         )}
 
@@ -134,13 +157,13 @@ export default function Grile() {
   const loadData = async () => {
     try {
       // Fetch all questions first
-      const basicRes = await fetch('http://localhost:5000/api/questions?type=basic');
+      const basicRes = await fetch('/api/questions?type=basic');
       const basic = await basicRes.json();
 
-      const allRes = await fetch('http://localhost:5000/api/questions?type=all');
+      const allRes = await fetch('/api/questions?type=all');
       const all = await allRes.json();
 
-      const acadnetRes = await fetch('http://localhost:5000/api/questions?type=acadnet');
+      const acadnetRes = await fetch('/api/questions?type=acadnet');
       const acadnet = await acadnetRes.json();
 
       // Filter by tags on client side

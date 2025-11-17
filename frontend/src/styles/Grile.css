@@ -305,6 +305,24 @@
   color: var(--tag-color);
 }
 
+.optional-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-left: 6px;
+}
+
+.tag-helper {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.tag-helper.error {
+  color: var(--error);
+  font-weight: 600;
+}
+
 .selected-tags-info {
   margin-top: 12px;
   font-size: 13px;

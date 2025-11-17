@@ -8,25 +8,5 @@
     "tag": "ACADNET_2025_LOCAL",
     "year": 2025,
     "phase": "local"
-  },
-  {
-    "id": "acadnet2025national",
-    "title": "Acadnet 2025 - National Phase",
-    "description": "Official national phase examination for Acadnet 2025",
-    "duration": 90,
-    "totalPoints": 100,
-    "tag": "ACADNET_2025_NATIONAL",
-    "year": 2025,
-    "phase": "national"
-  },
-  {
-    "id": "acadnet2024local",
-    "title": "Acadnet 2024 - Local Phase",
-    "description": "Official local phase examination for Acadnet 2024",
-    "duration": 60,
-    "totalPoints": 100,
-    "tag": "ACADNET_2024_LOCAL",
-    "year": 2024,
-    "phase": "local"
   }
 ]

@@ -13,7 +13,7 @@ export default function ExamSelection() {
 
   const loadExams = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/exams');
+      const response = await fetch('/api/exams');
       const data = await response.json();
       setExams(data);
     } catch (error) {
