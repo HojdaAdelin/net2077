@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Grile from './pages/Grile';
 import Quiz from './pages/Quiz';
+import ExamSelection from './pages/ExamSelection';
 import Resurse from './pages/Resurse';
 import Progress from './pages/Progress';
 import Login from './pages/Login';
@@ -20,6 +21,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/grile" element={<Grile />} />
           <Route path="/grile/:type/:mode" element={<Quiz />} />
+          <Route path="/exam-selection" element={<ExamSelection />} />
+          <Route path="/exam/:examId" element={<Quiz isExam={true} />} />
           <Route path="/resurse" element={<Resurse />} />
           <Route path="/progress" element={<Progress />} />
           <Route path="/login" element={<Login />} />

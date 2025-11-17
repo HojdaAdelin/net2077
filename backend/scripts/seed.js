@@ -5,6 +5,7 @@ import { dirname, join } from 'path';
 import { readFileSync } from 'fs';
 import Question from '../models/Question.js';
 import Resource from '../models/Resource.js';
+import Exam from '../models/Exam.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -23,12 +24,18 @@ const seedDatabase = async () => {
     const resourcesData = JSON.parse(
       readFileSync(join(__dirname, '../data/resources.json'), 'utf-8')
     );
+    const examsData = JSON.parse(
+      readFileSync(join(__dirname, '../data/exams.json'), 'utf-8')
+    );
 
     console.log('\n📊 Syncing Questions...');
     await syncQuestions(questionsData);
 
     console.log('\n📚 Syncing Resources...');
     await syncResources(resourcesData);
+
+    console.log('\n📝 Syncing Exams...');
+    await syncExams(examsData);
 
     console.log('\n🎉 Database synced successfully!');
     process.exit(0);
@@ -126,6 +133,45 @@ const syncResources = async (resourcesData) => {
 
   console.log(`   ✅ Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
   console.log(`   📚 Total resources in DB: ${jsonResources.size}`);
+};
+
+const syncExams = async (examsData) => {
+  const jsonExams = new Map();
+  examsData.forEach(e => {
+    jsonExams.set(e.id, e);
+  });
+
+  const existingExams = await Exam.find({});
+  const existingMap = new Map();
+  existingExams.forEach(e => {
+    existingMap.set(e.id, e);
+  });
+
+  let added = 0;
+  let updated = 0;
+  let deleted = 0;
+
+  for (const [id, examData] of jsonExams) {
+    if (existingMap.has(id)) {
+      const existing = existingMap.get(id);
+      await Exam.findByIdAndUpdate(existing._id, examData);
+      updated++;
+    } else {
+      await Exam.create(examData);
+      added++;
+    }
+  }
+
+  for (const [id, existingExam] of existingMap) {
+    if (!jsonExams.has(id)) {
+      await Exam.findByIdAndDelete(existingExam._id);
+      deleted++;
+      console.log(`   🗑️  Deleted: "${existingExam.title}"`);
+    }
+  }
+
+  console.log(`   ✅ Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
+  console.log(`   📝 Total exams in DB: ${jsonExams.size}`);
 };
 
 seedDatabase();

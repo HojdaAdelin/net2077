@@ -1,6 +1,6 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
-import { getQuestions, getUserProgress } from '../services/api';
+import { getUserProgress } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import '../styles/Grile.css';
 
@@ -125,6 +125,7 @@ export default function Grile() {
   const [showModal, setShowModal] = useState(false);
   const [selectedType, setSelectedType] = useState('');
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadData();
@@ -165,15 +166,37 @@ export default function Grile() {
 
       if (user) {
         const progress = await getUserProgress();
+        
+        // Count solved questions per type and tag
+        const basicSolved = basic.filter(q => 
+          progress.solvedQuestions?.some(id => id === q._id)
+        ).length;
+
+        const allLinuxSolved = allLinux.filter(q => 
+          progress.solvedQuestions?.some(id => id === q._id)
+        ).length;
+
+        const allNetworkSolved = allNetwork.filter(q => 
+          progress.solvedQuestions?.some(id => id === q._id)
+        ).length;
+
+        const acadnetLinuxSolved = acadnetLinux.filter(q => 
+          progress.solvedQuestions?.some(id => id === q._id)
+        ).length;
+
+        const acadnetNetworkSolved = acadnetNetwork.filter(q => 
+          progress.solvedQuestions?.some(id => id === q._id)
+        ).length;
+
         setSolved({
-          basic: progress.solvedByTag?.LINUX || 0,
+          basic: basicSolved,
           all: { 
-            linux: progress.solvedByTag?.LINUX || 0, 
-            network: progress.solvedByTag?.NETWORK || 0 
+            linux: allLinuxSolved, 
+            network: allNetworkSolved 
           },
           acadnet: { 
-            linux: progress.solvedByTag?.LINUX || 0, 
-            network: progress.solvedByTag?.NETWORK || 0 
+            linux: acadnetLinuxSolved, 
+            network: acadnetNetworkSolved 
           }
         });
       }
@@ -183,8 +206,12 @@ export default function Grile() {
   };
 
   const handleContinue = (type) => {
-    setSelectedType(type);
-    setShowModal(true);
+    if (type === 'exam') {
+      navigate('/exam-selection');
+    } else {
+      setSelectedType(type);
+      setShowModal(true);
+    }
   };
 
   const cards = [
@@ -206,13 +233,10 @@ export default function Grile() {
       ]
     },
     { 
-      title: 'Acadnet Questions', 
-      desc: 'Specialized questions for academic certification',
-      type: 'acadnet',
-      categories: [
-        { name: 'Linux', total: stats.acadnet.linux, solved: solved.acadnet.linux },
-        { name: 'Network', total: stats.acadnet.network, solved: solved.acadnet.network }
-      ]
+      title: 'Examination Subjects', 
+      desc: 'Official examination practice with timer and scoring',
+      type: 'exam',
+      isExam: true
     }
   ];
 

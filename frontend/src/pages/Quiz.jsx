@@ -9,6 +9,7 @@ export default function Quiz() {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({}); // Pentru multiple: {questionId: [0, 2, 3]}
+  const [submittedAnswers, setSubmittedAnswers] = useState({}); // {questionId: true/false}
   const [showResults, setShowResults] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -23,24 +24,57 @@ export default function Quiz() {
       const tags = urlParams.get('tags');
       const queryType = urlParams.get('type') || type;
       
-      let url = '';
-      const params = new URLSearchParams();
-      if (queryType) params.append('type', queryType);
-      if (tags) params.append('tags', tags);
-      
       let data;
+      const token = localStorage.getItem('token');
+      
       if (mode === 'random') {
-        url = `/api/questions/random50?${params.toString()}`;
-        const response = await fetch(`http://localhost:5000${url}`);
+        const response = await fetch(`http://localhost:5000/api/questions/random50`);
         data = await response.json();
       } else if (mode === 'unsolved') {
-        data = await getUnsolvedQuestions();
+        if (token) {
+          const response = await fetch(`http://localhost:5000/api/questions/unsolved`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          data = await response.json();
+        } else {
+          const response = await fetch(`http://localhost:5000/api/questions`);
+          data = await response.json();
+        }
       } else {
-        url = `/api/questions?${params.toString()}`;
-        const response = await fetch(`http://localhost:5000${url}`);
+        const response = await fetch(`http://localhost:5000/api/questions`);
         data = await response.json();
       }
-      setQuestions(data);
+
+      // Filter on client side
+      let filtered = data;
+
+      // Filter by type
+      if (queryType === 'basic') {
+        // Basic Commands: only type "basic"
+        filtered = filtered.filter(q => q.type === 'basic');
+      } else if (queryType === 'all') {
+        // All Questions: only type "all" (exclude basic and acadnet)
+        filtered = filtered.filter(q => q.type === 'all');
+      } else if (queryType === 'acadnet') {
+        // Acadnet: only type "acadnet"
+        filtered = filtered.filter(q => q.type === 'acadnet');
+      }
+
+      // Filter by tags
+      if (tags) {
+        filtered = filtered.filter(q => q.tags && q.tags.includes(tags));
+      }
+
+      console.log('Filtered questions:', {
+        total: data.length,
+        filtered: filtered.length,
+        type: queryType,
+        tags: tags
+      });
+
+      setQuestions(filtered);
     } catch (error) {
       console.error('Error loading questions:', error);
     }
@@ -80,7 +114,41 @@ export default function Quiz() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmitQuestion = async () => {
+    const currentQuestion = questions[currentIndex];
+    const userAnswers = selectedAnswers[currentQuestion._id] || [];
+    const correctAnswers = currentQuestion.correctAnswers || [currentQuestion.correctIndex];
+
+    // Check if answer is correct
+    const isCorrect = 
+      userAnswers.length === correctAnswers.length &&
+      userAnswers.every(ans => correctAnswers.includes(ans));
+
+    setSubmittedAnswers({
+      ...submittedAnswers,
+      [currentQuestion._id]: isCorrect
+    });
+
+    // Save progress to backend if user is logged in
+    const token = localStorage.getItem('token');
+    if (token && isCorrect) {
+      try {
+        await fetch('http://localhost:5000/api/questions/markSolved', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ questionId: currentQuestion._id })
+        });
+        console.log('Progress saved for question:', currentQuestion._id);
+      } catch (error) {
+        console.error('Error saving progress:', error);
+      }
+    }
+  };
+
+  const handleSubmitAll = () => {
     setShowResults(true);
   };
 
@@ -176,15 +244,27 @@ export default function Quiz() {
           </div>
 
           <div className="question-list">
-            {questions.map((q, idx) => (
-              <button
-                key={q._id}
-                className={`question-nav-btn ${idx === currentIndex ? 'active' : ''} ${selectedAnswers[q._id] !== undefined ? 'answered' : ''}`}
-                onClick={() => setCurrentIndex(idx)}
-              >
-                {idx + 1}
-              </button>
-            ))}
+            {questions.map((q, idx) => {
+              const isAnswered = selectedAnswers[q._id] !== undefined;
+              const isSubmitted = submittedAnswers[q._id] !== undefined;
+              const isCorrect = submittedAnswers[q._id] === true;
+              
+              let btnClass = 'question-nav-btn';
+              if (idx === currentIndex) btnClass += ' active';
+              if (isSubmitted && isCorrect) btnClass += ' correct';
+              if (isSubmitted && !isCorrect) btnClass += ' incorrect';
+              if (isAnswered && !isSubmitted) btnClass += ' answered';
+              
+              return (
+                <button
+                  key={q._id}
+                  className={btnClass}
+                  onClick={() => setCurrentIndex(idx)}
+                >
+                  {idx + 1}
+                </button>
+              );
+            })}
           </div>
 
           <div className="quiz-actions">
@@ -195,16 +275,18 @@ export default function Quiz() {
             >
               Previous
             </button>
-            {currentIndex === questions.length - 1 ? (
-              <button onClick={handleSubmit} className="btn btn-primary">
-                Submit
-              </button>
-            ) : (
-              <button onClick={handleNext} className="btn btn-primary">
-                Next
-              </button>
-            )}
+            <button onClick={handleNext} className="btn btn-secondary" disabled={currentIndex === questions.length - 1}>
+              Next
+            </button>
           </div>
+
+          <button 
+            onClick={handleSubmitAll} 
+            className="btn btn-primary"
+            style={{ marginTop: '16px', width: '100%' }}
+          >
+            Finish Quiz
+          </button>
         </div>
 
         <div className="quiz-content">
@@ -237,12 +319,24 @@ export default function Quiz() {
               {currentQuestion.answers.map((answer, idx) => {
                 const userAnswers = selectedAnswers[currentQuestion._id] || [];
                 const isSelected = userAnswers.includes(idx);
+                const isSubmitted = submittedAnswers[currentQuestion._id] !== undefined;
+                const correctAnswers = currentQuestion.correctAnswers || [currentQuestion.correctIndex];
+                const isCorrectAnswer = correctAnswers.includes(idx);
+                
+                let answerClass = 'answer-option';
+                if (isSelected) answerClass += ' selected';
+                if (currentQuestion.multipleCorrect) answerClass += ' multiple';
+                if (isSubmitted) {
+                  if (isCorrectAnswer) answerClass += ' correct';
+                  if (isSelected && !isCorrectAnswer) answerClass += ' incorrect';
+                }
                 
                 return (
                   <button
                     key={idx}
-                    className={`answer-option ${isSelected ? 'selected' : ''} ${currentQuestion.multipleCorrect ? 'multiple' : ''}`}
-                    onClick={() => handleAnswerSelect(currentQuestion._id, idx, currentQuestion.multipleCorrect)}
+                    className={answerClass}
+                    onClick={() => !isSubmitted && handleAnswerSelect(currentQuestion._id, idx, currentQuestion.multipleCorrect)}
+                    disabled={isSubmitted}
                   >
                     <span className="answer-letter">{String.fromCharCode(65 + idx)}</span>
                     <span className="answer-text">{answer}</span>
@@ -251,10 +345,43 @@ export default function Quiz() {
                         {isSelected && '✓'}
                       </span>
                     )}
+                    {isSubmitted && isCorrectAnswer && (
+                      <span className="answer-indicator">✓</span>
+                    )}
+                    {isSubmitted && isSelected && !isCorrectAnswer && (
+                      <span className="answer-indicator">✗</span>
+                    )}
                   </button>
                 );
               })}
             </div>
+
+            {!submittedAnswers[currentQuestion._id] && (
+              <button 
+                onClick={handleSubmitQuestion}
+                className="btn btn-primary"
+                disabled={!selectedAnswers[currentQuestion._id] || selectedAnswers[currentQuestion._id].length === 0}
+                style={{ marginTop: '24px', width: '100%' }}
+              >
+                Submit Answer
+              </button>
+            )}
+
+            {submittedAnswers[currentQuestion._id] !== undefined && (
+              <div className={`answer-feedback ${submittedAnswers[currentQuestion._id] ? 'correct' : 'incorrect'}`}>
+                {submittedAnswers[currentQuestion._id] ? (
+                  <>
+                    <span className="feedback-icon">✓</span>
+                    <span className="feedback-text">Correct! +{currentQuestion.points || 1} points</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="feedback-icon">✗</span>
+                    <span className="feedback-text">Incorrect. Try the next question!</span>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
