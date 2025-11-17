@@ -1,0 +1,50 @@
+[
+  {
+    "title": "Algorithm",
+    "content": "A step-by-step procedure for solving a problem or accomplishing a task.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "API",
+    "content": "Application Programming Interface - a set of protocols and tools for building software applications.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "Binary",
+    "content": "A number system that uses only two digits: 0 and 1.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "Cache",
+    "content": "A hardware or software component that stores data for faster future access.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "Database",
+    "content": "An organized collection of structured information or data stored electronically.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "Introduction to Computer Science",
+    "content": "Comprehensive guide covering fundamentals of programming, algorithms, and data structures.",
+    "category": "resource",
+    "type": "pdf"
+  },
+  {
+    "title": "Data Structures Tutorial",
+    "content": "Learn about arrays, linked lists, stacks, queues, trees, and graphs with practical examples.",
+    "category": "resource",
+    "type": "video"
+  },
+  {
+    "title": "Networking Basics",
+    "content": "Understanding TCP/IP, HTTP, DNS, and network protocols essential for modern computing.",
+    "category": "resource",
+    "type": "text"
+  }
+]

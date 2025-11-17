@@ -1,0 +1,347 @@
+.progress-page {
+  padding: 80px 0;
+  min-height: calc(100vh - 200px);
+}
+
+.progress-header {
+  margin-bottom: 60px;
+}
+
+.progress-header h1 {
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.progress-header p {
+  font-size: 17px;
+  color: var(--text-secondary);
+}
+
+.progress-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 80px;
+}
+
+.level-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 40px;
+  position: relative;
+}
+
+.level-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.level-details h2 {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.level-number {
+  font-size: 56px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.xp-badge {
+  padding: 8px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.progress-bar-container {
+  margin-top: 24px;
+}
+
+.progress-bar-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.progress-bar-label span:first-child {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.progress-bar-label span:last-child {
+  color: var(--text-muted);
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent-primary);
+  border-radius: 4px;
+  transition: width 0.8s ease;
+}
+
+.stat-card-progress {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 32px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.stat-card-progress:hover {
+  border-color: var(--border-light);
+  background: var(--bg-tertiary);
+}
+
+.stat-label-small {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.stat-value {
+  font-size: 48px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: -1.5px;
+}
+
+.category-progress-section {
+  margin-bottom: 80px;
+}
+
+.category-progress-section h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 32px;
+  letter-spacing: -0.3px;
+}
+
+.category-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.category-progress-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 32px;
+  transition: all 0.2s;
+}
+
+.category-progress-card:hover {
+  border-color: var(--border-light);
+  background: var(--bg-tertiary);
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.category-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.category-badge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.category-badge.linux {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.category-badge.network {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.category-stat-large {
+  text-align: center;
+}
+
+.category-stat-large .stat-number {
+  font-size: 56px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: 12px;
+  letter-spacing: -2px;
+}
+
+.category-stat-large .stat-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.simulations-section h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 32px;
+  letter-spacing: -0.3px;
+}
+
+@media (max-width: 768px) {
+  .category-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .category-progress-card {
+    padding: 24px;
+  }
+
+  .category-stat-large .stat-number {
+    font-size: 48px;
+  }
+}
+
+.simulations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.simulation-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  transition: all 0.2s;
+}
+
+.simulation-card:hover {
+  border-color: var(--border-light);
+  background: var(--bg-tertiary);
+}
+
+.simulation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.simulation-badge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.simulation-badge.passed {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--success);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.simulation-badge.failed {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.simulation-date {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.simulation-score {
+  text-align: center;
+  margin: 24px 0;
+}
+
+.score-display {
+  font-size: 42px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: -1px;
+}
+
+.simulation-details {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+@media (max-width: 1024px) {
+  .progress-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .level-card {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .progress-page {
+    padding: 60px 0;
+  }
+
+  .progress-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .level-card,
+  .stat-card-progress {
+    padding: 28px;
+  }
+
+  .level-number {
+    font-size: 48px;
+  }
+
+  .simulations-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,228 @@
+[
+  {
+    "title": "What is the primary function of an operating system?",
+    "type": "basic",
+    "answers": [
+      "To manage hardware and software resources",
+      "To create documents",
+      "To browse the internet",
+      "To play games"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which commands are used to list files in Unix-based systems?",
+    "type": "basic",
+    "answers": ["ls", "dir", "list", "ll", "la"],
+    "correctAnswers": [0, 3, 4],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which Linux command is used to change file permissions?",
+    "type": "basic",
+    "answers": ["chmod", "chown", "chgrp", "chperm"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the purpose of the grep command in Linux?",
+    "type": "basic",
+    "answers": [
+      "Search for patterns in files",
+      "Copy files",
+      "Delete files",
+      "List directories"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which command shows running processes in Linux?",
+    "type": "basic",
+    "answers": ["ps", "ls", "cd", "pwd"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the 'sudo' command do in Linux?",
+    "type": "basic",
+    "answers": [
+      "Execute commands with superuser privileges",
+      "Show disk usage",
+      "Switch user directory",
+      "Shutdown the system"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which of the following are valid data structures?",
+    "type": "all",
+    "answers": ["Stack", "Queue", "Tree", "Loop", "Graph"],
+    "correctAnswers": [0, 1, 2, 4],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the time complexity of binary search?",
+    "type": "all",
+    "answers": ["O(log n)", "O(n)", "O(n²)", "O(1)"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which data structure uses LIFO principle?",
+    "type": "all",
+    "answers": ["Stack", "Queue", "Array", "Tree"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Select all valid HTTP methods:",
+    "type": "all",
+    "answers": ["GET", "POST", "FETCH", "PUT", "DELETE", "SEND"],
+    "correctAnswers": [0, 1, 3, 4],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK"]
+  },
+  {
+    "title": "What is the default port for HTTP?",
+    "type": "all",
+    "answers": ["80", "443", "8080", "3000"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK"]
+  },
+  {
+    "title": "Which protocols are used for secure communication?",
+    "type": "all",
+    "answers": ["HTTPS", "HTTP", "SSH", "FTP", "SSL/TLS"],
+    "correctAnswers": [0, 2, 4],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK"]
+  },
+  {
+    "title": "What does TCP stand for?",
+    "type": "all",
+    "answers": [
+      "Transmission Control Protocol",
+      "Transfer Control Protocol",
+      "Transport Connection Protocol",
+      "Transmission Connection Protocol"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK"]
+  },
+  {
+    "title": "Which command is used to test network connectivity?",
+    "type": "acadnet",
+    "answers": ["ping", "ls", "cd", "grep"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK"]
+  },
+  {
+    "title": "Select all valid IP address classes:",
+    "type": "acadnet",
+    "answers": ["Class A", "Class B", "Class C", "Class D", "Class E", "Class F"],
+    "correctAnswers": [0, 1, 2, 3, 4],
+    "multipleCorrect": true,
+    "difficulty": "hard",
+    "points": 3,
+    "tags": ["NETWORK"]
+  },
+  {
+    "title": "Which OSI layers are responsible for routing?",
+    "type": "acadnet",
+    "answers": [
+      "Physical Layer",
+      "Data Link Layer",
+      "Network Layer",
+      "Transport Layer",
+      "Application Layer"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 1,
+    "tags": ["NETWORK"]
+  },
+  {
+    "title": "What is the subnet mask for a /24 network?",
+    "type": "acadnet",
+    "answers": ["255.255.255.0", "255.255.0.0", "255.0.0.0", "255.255.255.255"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 1,
+    "tags": ["NETWORK"]
+  },
+  {
+    "title": "Which Linux directory contains system configuration files?",
+    "type": "acadnet",
+    "answers": ["/etc", "/var", "/home", "/usr"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What command displays the current working directory in Linux?",
+    "type": "acadnet",
+    "answers": ["pwd", "cd", "ls", "dir"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which file contains user account information in Linux?",
+    "type": "acadnet",
+    "answers": ["/etc/passwd", "/etc/shadow", "/etc/group", "/etc/hosts"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 1,
+    "tags": ["LINUX"]
+  }
+]
