@@ -166,27 +166,18 @@ export default function Grile() {
 
       if (user) {
         const progress = await getUserProgress();
+        const solvedSet = new Set(
+          (progress.solvedQuestions || []).map(entry => 
+            typeof entry === 'string' ? entry : entry.id
+          )
+        );
         
         // Count solved questions per type and tag
-        const basicSolved = basic.filter(q => 
-          progress.solvedQuestions?.some(id => id === q._id)
-        ).length;
-
-        const allLinuxSolved = allLinux.filter(q => 
-          progress.solvedQuestions?.some(id => id === q._id)
-        ).length;
-
-        const allNetworkSolved = allNetwork.filter(q => 
-          progress.solvedQuestions?.some(id => id === q._id)
-        ).length;
-
-        const acadnetLinuxSolved = acadnetLinux.filter(q => 
-          progress.solvedQuestions?.some(id => id === q._id)
-        ).length;
-
-        const acadnetNetworkSolved = acadnetNetwork.filter(q => 
-          progress.solvedQuestions?.some(id => id === q._id)
-        ).length;
+        const basicSolved = basic.filter(q => solvedSet.has(q._id)).length;
+        const allLinuxSolved = allLinux.filter(q => solvedSet.has(q._id)).length;
+        const allNetworkSolved = allNetwork.filter(q => solvedSet.has(q._id)).length;
+        const acadnetLinuxSolved = acadnetLinux.filter(q => solvedSet.has(q._id)).length;
+        const acadnetNetworkSolved = acadnetNetwork.filter(q => solvedSet.has(q._id)).length;
 
         setSolved({
           basic: basicSolved,

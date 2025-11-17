@@ -2,9 +2,22 @@ import User from '../models/User.js';
 
 export const getUserProgress = async (req, res) => {
   try {
-    const user = await User.findById(req.userId).populate('solvedQuestions');
+    const user = await User.findById(req.userId).populate('solvedQuestions', '_id tags type');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const solvedQuestions = user.solvedQuestions.map(question => ({
+      id: question._id.toString(),
+      tags: question.tags || [],
+      type: question.type
+    }));
+
     res.json({
-      solvedCount: user.solvedQuestions.length,
+      solvedCount: solvedQuestions.length,
+      solvedQuestions,
+      solvedByTag: user.solvedByTag,
       simulations: user.simulations,
       xp: user.xp,
       level: user.level
