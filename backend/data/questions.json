@@ -19,28 +19,6 @@
     ]
   },
   {
-    "title": "Which commands are used to list files in Unix-based systems?",
-    "type": "basic",
-    "answers": [
-      "ls",
-      "dir",
-      "list",
-      "ll",
-      "la"
-    ],
-    "correctAnswers": [
-      0,
-      3,
-      4
-    ],
-    "multipleCorrect": true,
-    "difficulty": "medium",
-    "points": 2,
-    "tags": [
-      "LINUX"
-    ]
-  },
-  {
     "title": "Which Linux command is used to change file permissions?",
     "type": "basic",
     "answers": [
@@ -115,6 +93,306 @@
     "tags": [
       "LINUX"
     ]
+  },
+  {
+    "title": "What does the 'ls' command do in Linux?",
+    "type": "basic",
+    "answers": [
+      "Show current directory path",
+      "List files and directories",
+      "Remove files",
+      "Copy files"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the purpose of the 'cd' command?",
+    "type": "basic",
+    "answers": [
+      "Create a new directory",
+      "Change the current directory",
+      "Display file contents",
+      "Check disk usage"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the 'pwd' command do?",
+    "type": "basic",
+    "answers": [
+      "Delete a directory",
+      "Change file permissions",
+      "Prints the current working directory",
+      "Lists running processes"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'mkdir' command do?",
+    "type": "basic",
+    "answers": [
+      "Move a file",
+      "Display disk usage",
+      "Create a new directory",
+      "Rename a file"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'rm -r' do?",
+    "type": "basic",
+    "answers": [
+      "Rename a file",
+      "List directory contents",
+      "Recursively remove directories",
+      "Change file permissions"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the 'chmod' command do?",
+    "type": "basic",
+    "answers": [
+      "Show running processes",
+      "Display free memory",
+      "Change file ownership",
+      "Change file permissions"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the purpose of the 'grep' command?",
+    "type": "basic",
+    "answers": [
+      "Search for text patterns in files",
+      "Display disk usage",
+      "Show active users",
+      "Remove files"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'top' command do?",
+    "type": "basic",
+    "answers": [
+      "Change file permissions",
+      "Display running processes and system usage",
+      "Show directory contents",
+      "Edit a file"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'df -h' command display?",
+    "type": "basic",
+    "answers": [
+      "Disk space usage in human-readable format",
+      "Current directory path",
+      "Memory usage",
+      "File permissions"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'ps aux' command do?",
+    "type": "basic",
+    "answers": [
+      "Show network connections",
+      "List all running processes",
+      "Delete temporary files",
+      "Change user password"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the 'find / -name filename' command do?",
+    "type": "basic",
+    "answers": [
+      "Search for a file named 'filename' starting from root",
+      "Delete a file named 'filename'",
+      "Move a file named 'filename' to root",
+      "Show disk usage of 'filename'"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the purpose of 'tar -czvf archive.tar.gz /folder'?",
+    "type": "basic",
+    "answers": [
+      "Compress /folder into a gzip tar archive",
+      "Extract /folder from a tar archive",
+      "Show contents of /folder",
+      "Move /folder to /archive"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'df -i' display?",
+    "type": "basic",
+    "answers": [
+      "Number of used and free inodes on filesystems",
+      "Disk space usage in human-readable format",
+      "Memory usage",
+      "List active processes"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the purpose of 'rsync -av source/ dest/'?",
+    "type": "basic",
+    "answers": [
+      "Synchronize files from source to dest preserving permissions",
+      "Move files from source to dest and delete source",
+      "Create a zip archive of source",
+      "Check disk usage of source and dest"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'chmod 755 file.sh' do?",
+    "type": "basic",
+    "answers": [
+      "Owner can read/write/execute, group and others can read/execute",
+      "Owner can read/write, others no access",
+      "Change owner of file.sh to user 755",
+      "Delete file.sh"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the purpose of 'chown user:group file.txt'?",
+    "type": "basic",
+    "answers": [
+      "Change owner and group of file.txt",
+      "Change permissions of file.txt",
+      "Copy file.txt to another directory",
+      "Show owner of file.txt"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'sed -i 's/old/new/g' file.txt' do?",
+    "type": "basic",
+    "answers": [
+      "Replace all occurrences of 'old' with 'new' in file.txt in-place",
+      "Delete file.txt",
+      "Search for 'old' in file.txt",
+      "Copy file.txt to new file"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the purpose of 'awk '{print $2}' file.txt'?",
+    "type": "basic",
+    "answers": [
+      "Print the second column of each line in file.txt",
+      "Print the second line of file.txt",
+      "Delete the second column in file.txt",
+      "Sort file.txt by second column"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'netstat -tuln' display?",
+    "type": "basic",
+    "answers": [
+      "List all listening TCP/UDP ports",
+      "Show active processes",
+      "Check disk usage",
+      "Show memory usage"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'kill -9 1234' do?",
+    "type": "basic",
+    "answers": [
+      "Forcefully terminate the process with PID 1234",
+      "Pause process 1234",
+      "Restart process 1234",
+      "Show process 1234 details"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
   },
   {
     "title": "Which of the following are valid data structures?",
