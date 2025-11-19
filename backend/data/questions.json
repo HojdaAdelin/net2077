@@ -395,6 +395,381 @@
     "tags": ["LINUX"]
   },
   {
+    "title": "What does the 'whoami' command do?",
+    "type": "basic",
+    "answers": [
+      "Switches to root user",
+      "Displays system uptime",
+      "Prints the current logged-in user",
+      "Shows current directory"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the 'touch file.txt' command do?",
+    "type": "basic",
+    "answers": [
+      "Displays contents of file.txt",
+      "Creates an empty file named file.txt",
+      "Changes permissions of file.txt",
+      "Deletes file.txt"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'cp file1.txt file2.txt' do?",
+    "type": "basic",
+    "answers": [
+      "Renames file1.txt to file2.txt",
+      "Moves file1.txt to another directory",
+      "Copies file1.txt to file2.txt",
+      "Deletes file2.txt"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the purpose of 'mv file1.txt file2.txt'?",
+    "type": "basic",
+    "answers": [
+      "Rename or move file1.txt to file2.txt",
+      "Copy file1.txt to file2.txt",
+      "Show contents of file1.txt",
+      "Delete file2.txt"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the 'cat file.txt' command do?",
+    "type": "basic",
+    "answers": [
+      "Move file.txt to another directory",
+      "Create file.txt",
+      "Display the contents of file.txt",
+      "Delete file.txt"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'head -n 5 file.txt' do?",
+    "type": "basic",
+    "answers": [
+      "Displays the first 5 lines of file.txt",
+      "Copies first 5 lines to another file",
+      "Displays last 5 lines of file.txt",
+      "Deletes first 5 lines of file.txt"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'tail -n 5 file.txt' do?",
+    "type": "basic",
+    "answers": [
+      "Displays the first 5 lines of file.txt",
+      "Deletes the last 5 lines of file.txt",
+      "Displays the last 5 lines of file.txt",
+      "Copies last 5 lines to another file"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the purpose of 'echo Hello World'?",
+    "type": "basic",
+    "answers": [
+      "Prints 'Hello World' to the terminal",
+      "Deletes a file named 'Hello World'",
+      "Changes permissions of 'Hello World'",
+      "Creates a file named 'Hello World'"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'man ls' do?",
+    "type": "basic",
+    "answers": [
+      "Runs ls command with default options",
+      "Displays the manual page for the ls command",
+      "Deletes the ls command",
+      "Shows the disk usage of ls"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'history' command do?",
+    "type": "basic",
+    "answers": [
+      "Runs all previous commands",
+      "Displays the command history",
+      "Deletes previous commands",
+      "Shows system uptime"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'clear' command do?",
+    "type": "basic",
+    "answers": [
+      "Shows system processes",
+      "Displays disk usage",
+      "Deletes all files in current directory",
+      "Clears the terminal screen"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'uname -a' display?",
+    "type": "basic",
+    "answers": [
+      "Prints logged-in user",
+      "Lists files in home folder",
+      "Displays current directory",
+      "Shows all system information"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the purpose of 'uptime' command?",
+    "type": "basic",
+    "answers": [
+      "Shows memory usage",
+      "Displays CPU usage",
+      "Shows how long the system has been running",
+      "Lists active users"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'df -h' command do?",
+    "type": "basic",
+    "answers": [
+      "Shows current running processes",
+      "Displays memory usage",
+      "Shows disk space usage in human-readable format",
+      "Lists files in current directory"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'du -sh folder/' do?",
+    "type": "basic",
+    "answers": [
+      "Displays the total size of folder in human-readable format",
+      "Shows all files inside folder",
+      "Changes permissions of folder",
+      "Deletes folder"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the command 'strace -p 1234' do?",
+    "type": "basic",
+    "answers": [
+      "Shows memory usage of process 1234",
+      "Starts debugging process 1234 with gdb",
+      "Attaches to process 1234 and traces system calls",
+      "Kills process 1234 immediately"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the purpose of 'lsof -i :80'?",
+    "type": "basic",
+    "answers": [
+      "Block port 80",
+      "Scan open ports on the system",
+      "Kill all processes using port 80",
+      "List processes using port 80"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'ip route show' display?",
+    "type": "basic",
+    "answers": [
+      "DNS resolution history",
+      "The system's routing table",
+      "Network interface hardware info",
+      "All open TCP connections"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'mount -o remount,rw /' do?",
+    "type": "basic",
+    "answers": [
+      "Unmounts all mounted filesystems",
+      "Creates a backup of the root partition",
+      "Formats the root filesystem",
+      "Remounts the root filesystem as read/write"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the function of 'journalctl -u nginx --since \"1 hour ago\"'?",
+    "type": "basic",
+    "answers": [
+      "Shows logs for the nginx service from the last hour",
+      "Deletes nginx logs older than one hour",
+      "Displays real-time CPU usage of nginx",
+      "Restarts the nginx service"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the 'tcpdump -i eth0 port 22' command do?",
+    "type": "basic",
+    "answers": [
+      "Captures packets on interface eth0 filtered for port 22",
+      "Shows all active SSH connections",
+      "Blocks port 22 on interface eth0",
+      "Restarts the eth0 interface"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the purpose of 'chroot /mnt/sysroot'?",
+    "type": "basic",
+    "answers": [
+      "Changes the root directory for the current shell to /mnt/sysroot",
+      "Creates a backup of /mnt/sysroot",
+      "Deletes all files inside /mnt/sysroot",
+      "Mounts /mnt/sysroot as the new system root automatically"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does 'systemctl isolate multi-user.target' do?",
+    "type": "basic",
+    "answers": [
+      "Switches the system to multi-user runlevel (no GUI)",
+      "Enables all system targets",
+      "Switches to GUI graphical mode",
+      "Reboots the system"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the effect of running 'ulimit -n 65535'?",
+    "type": "basic",
+    "answers": [
+      "Limits number of processes per user",
+      "Sets the maximum RAM usage",
+      "Sets the maximum number of open file descriptors",
+      "Sets CPU usage limit for processes"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the command 'rsync -aHAX --delete source/ dest/' achieve?",
+    "type": "basic",
+    "answers": [
+      "Creates a restore point before syncing",
+      "Performs a full mirror sync preserving ACLs, hardlinks, and extended attributes",
+      "Deletes all files in source after syncing",
+      "Compresses source before syncing"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
     "title": "Which of the following are valid data structures?",
     "type": "all",
     "answers": [
