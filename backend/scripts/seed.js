@@ -17,7 +17,6 @@ const seedDatabase = async () => {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('✅ Connected to MongoDB');
 
-    // Load data from JSON files
     const questionsData = JSON.parse(
       readFileSync(join(__dirname, '../data/questions.json'), 'utf-8')
     );
@@ -46,13 +45,12 @@ const seedDatabase = async () => {
 };
 
 const syncQuestions = async (questionsData) => {
-  // Create a unique identifier for each question (based on title)
+
   const jsonQuestions = new Map();
   questionsData.forEach(q => {
     jsonQuestions.set(q.title, q);
   });
 
-  // Get existing questions from DB
   const existingQuestions = await Question.find({});
   const existingMap = new Map();
   existingQuestions.forEach(q => {
@@ -63,21 +61,18 @@ const syncQuestions = async (questionsData) => {
   let updated = 0;
   let deleted = 0;
 
-  // Add or update questions from JSON
   for (const [title, questionData] of jsonQuestions) {
     if (existingMap.has(title)) {
-      // Update existing question
       const existing = existingMap.get(title);
       await Question.findByIdAndUpdate(existing._id, questionData);
       updated++;
     } else {
-      // Add new question
+
       await Question.create(questionData);
       added++;
     }
   }
 
-  // Delete questions that are in DB but not in JSON
   for (const [title, existingQuestion] of existingMap) {
     if (!jsonQuestions.has(title)) {
       await Question.findByIdAndDelete(existingQuestion._id);
@@ -91,13 +86,12 @@ const syncQuestions = async (questionsData) => {
 };
 
 const syncResources = async (resourcesData) => {
-  // Create a unique identifier for each resource (based on title)
+
   const jsonResources = new Map();
   resourcesData.forEach(r => {
     jsonResources.set(r.title, r);
   });
 
-  // Get existing resources from DB
   const existingResources = await Resource.find({});
   const existingMap = new Map();
   existingResources.forEach(r => {
@@ -108,7 +102,6 @@ const syncResources = async (resourcesData) => {
   let updated = 0;
   let deleted = 0;
 
-  // Add or update resources from JSON
   for (const [title, resourceData] of jsonResources) {
     if (existingMap.has(title)) {
       // Update existing resource
