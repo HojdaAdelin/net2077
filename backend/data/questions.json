@@ -915,247 +915,6 @@
     ]
   },
   {
-    "title": "Which command is used to test network connectivity?",
-    "type": "acadnet",
-    "answers": [
-      "ping",
-      "ls",
-      "cd",
-      "grep"
-    ],
-    "correctAnswers": [
-      0
-    ],
-    "multipleCorrect": false,
-    "difficulty": "easy",
-    "points": 1,
-    "tags": [
-      "NETWORK"
-    ]
-  },
-  {
-    "title": "Select all valid IP address classes:",
-    "type": "acadnet",
-    "answers": [
-      "Class A",
-      "Class B",
-      "Class C",
-      "Class D",
-      "Class E",
-      "Class F"
-    ],
-    "correctAnswers": [
-      0,
-      1,
-      2,
-      3,
-      4
-    ],
-    "multipleCorrect": true,
-    "difficulty": "hard",
-    "points": 3,
-    "tags": [
-      "NETWORK"
-    ]
-  },
-  {
-    "title": "Which OSI layers are responsible for routing?",
-    "type": "acadnet",
-    "answers": [
-      "Physical Layer",
-      "Data Link Layer",
-      "Network Layer",
-      "Transport Layer",
-      "Application Layer"
-    ],
-    "correctAnswers": [
-      2
-    ],
-    "multipleCorrect": false,
-    "difficulty": "medium",
-    "points": 1,
-    "tags": [
-      "NETWORK"
-    ]
-  },
-  {
-    "title": "What is the subnet mask for a /24 network?",
-    "type": "acadnet",
-    "answers": [
-      "255.255.255.0",
-      "255.255.0.0",
-      "255.0.0.0",
-      "255.255.255.255"
-    ],
-    "correctAnswers": [
-      0
-    ],
-    "multipleCorrect": false,
-    "difficulty": "medium",
-    "points": 1,
-    "tags": [
-      "NETWORK"
-    ]
-  },
-  {
-    "title": "Which Linux directory contains system configuration files?",
-    "type": "acadnet",
-    "answers": [
-      "/etc",
-      "/var",
-      "/home",
-      "/usr"
-    ],
-    "correctAnswers": [
-      0
-    ],
-    "multipleCorrect": false,
-    "difficulty": "medium",
-    "points": 2,
-    "tags": [
-      "ACADNET_2025_LOCAL"
-    ]
-  },
-  {
-    "title": "What command displays the current working directory in Linux?",
-    "type": "acadnet",
-    "answers": [
-      "pwd",
-      "cd",
-      "ls",
-      "dir"
-    ],
-    "correctAnswers": [
-      0
-    ],
-    "multipleCorrect": false,
-    "difficulty": "easy",
-    "points": 2,
-    "tags": [
-      "ACADNET_2025_LOCAL"
-    ]
-  },
-  {
-    "title": "Which file contains user account information in Linux?",
-    "type": "acadnet",
-    "answers": [
-      "/etc/passwd",
-      "/etc/shadow",
-      "/etc/group",
-      "/etc/hosts"
-    ],
-    "correctAnswers": [
-      0
-    ],
-    "multipleCorrect": false,
-    "difficulty": "medium",
-    "points": 2,
-    "tags": [
-      "ACADNET_2025_LOCAL"
-    ]
-  },
-  {
-    "title": "What is the purpose of the /proc directory in Linux?",
-    "type": "acadnet",
-    "answers": [
-      "Virtual filesystem for process information",
-      "Program files storage",
-      "Temporary files",
-      "User home directories"
-    ],
-    "correctAnswers": [
-      0
-    ],
-    "multipleCorrect": false,
-    "difficulty": "hard",
-    "points": 2,
-    "tags": [
-      "ACADNET_2025_LOCAL"
-    ]
-  },
-  {
-    "title": "Select all valid network troubleshooting commands:",
-    "type": "acadnet",
-    "answers": [
-      "ping",
-      "traceroute",
-      "netstat",
-      "chmod",
-      "ifconfig"
-    ],
-    "correctAnswers": [
-      0,
-      1,
-      2,
-      4
-    ],
-    "multipleCorrect": true,
-    "difficulty": "medium",
-    "points": 2,
-    "tags": [
-      "ACADNET_2025_LOCAL"
-    ]
-  },
-  {
-    "title": "What is the maximum number of hosts in a /24 subnet?",
-    "type": "acadnet",
-    "answers": [
-      "254",
-      "256",
-      "255",
-      "253"
-    ],
-    "correctAnswers": [
-      0
-    ],
-    "multipleCorrect": false,
-    "difficulty": "medium",
-    "points": 2,
-    "tags": [
-      "ACADNET_2025_NATIONAL"
-    ]
-  },
-  {
-    "title": "Which protocols operate at the Transport Layer?",
-    "type": "acadnet",
-    "answers": [
-      "TCP",
-      "UDP",
-      "IP",
-      "ICMP",
-      "HTTP"
-    ],
-    "correctAnswers": [
-      0,
-      1
-    ],
-    "multipleCorrect": true,
-    "difficulty": "hard",
-    "points": 2,
-    "tags": [
-      "ACADNET_2025_NATIONAL"
-    ]
-  },
-  {
-    "title": "What is the default gateway used for?",
-    "type": "acadnet",
-    "answers": [
-      "Routing traffic to other networks",
-      "DNS resolution",
-      "DHCP assignment",
-      "Local network communication"
-    ],
-    "correctAnswers": [
-      0
-    ],
-    "multipleCorrect": false,
-    "difficulty": "easy",
-    "points": 2,
-    "tags": [
-      "ACADNET_2024_LOCAL"
-    ]
-  },
-  {
     "title": "Which command shows network interface configuration in Linux?",
     "type": "acadnet",
     "answers": [
@@ -1173,5 +932,799 @@
     "tags": [
       "ACADNET_2024_LOCAL"
     ]
+  },
+  {
+    "title": "Care dintre următoarele redirectează doar erorile în fișierul \"errors.txt\"?",
+    "type": "acadnet",
+    "answers": [
+      "cat \"nu-exista.txt\" > errors.txt",
+      "cat \"nu-exista.txt\" >> errors.txt",
+      "cat \"nu-exista.txt\" | errors.txt",
+      "cat \"nu-exista.txt\" &> errors.txt",
+      "cat \"nu-exista.txt\" 2> errors.txt"
+    ],
+    "correctAnswers": [4],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce fișier este reprezentat prin file descriptor-ul \"2\" într-un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "standard input",
+      "standard output",
+      "standard error",
+      "orice fișier deschis prin funcția fopen()"
+    ],
+    "correctAnswers": [2, 3],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Cum putem suspenda execuția unui proces într-un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "kill -STOP <PID>",
+      "Ctrl + C",
+      "kill <PID>",
+      "stop <PID>"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce este un pachet software?",
+    "type": "acadnet",
+    "answers": [
+      "Un fișier de configurare",
+      "Un program în execuție",
+      "O arhivă de date și metadate",
+      "O colecție de fișiere executabile"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce este un descriptor de fișier într-un context de proces?",
+    "type": "acadnet",
+    "answers": [
+      "Un program care monitorizează resursele de sistem",
+      "Un identificator unic care permite unui proces să acceseze un fișier sau o resursă de I/O",
+      "Un tip de sistem de fișiere utilizat pentru stocare",
+      "O structură de date care conține informații despre un fișier"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care este funcția dispozitivului /dev/null într-un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "generează un număr infinit de zero-uri",
+      "emulează condițiile unui disc plin",
+      "transformă orice primește ca input în zero-uri",
+      "șterge orice primește ca input"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce realizează comanda tty într-un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "Afișează toate terminalele disponibile în sistem",
+      "Închide sesiunea curentă de terminal",
+      "Nu există",
+      "Afișează terminalul curent pentru un shell",
+      "Afișează procesele deschise din terminalul curent"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce este un depozit de pachete (package repository)?",
+    "type": "acadnet",
+    "answers": [
+      "Un loc unde sunt stocate pachetele software",
+      "Un loc unde sunt stocate arhivele simple",
+      "Un program de instalare a pachetelor",
+      "Un fișier de configurare"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care sunt rolurile unui sistem de fișiere? (alegeți 4)",
+    "type": "acadnet",
+    "answers": [
+      "Administrarea conținutului bazelor de date",
+      "Compresia fișierelor",
+      "Transferul datelor pe rețea",
+      "Sortarea automată a fișierelor după conținut",
+      "Autorizarea accesului la fișiere",
+      "Asigură integritatea datelor",
+      "Gestionarea erorilor",
+      "Facilitarea lucrului cu un număr mare de fișiere"
+    ],
+    "correctAnswers": [1, 5, 6, 7],
+    "multipleCorrect": true,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce este un atac de tip \"man-in-the-middle\"?",
+    "type": "acadnet",
+    "answers": [
+      "Un atac în care atacatorul instalează malware pe un sistem",
+      "Un atac în care atacatorul ghicește parola unui utilizator",
+      "Un atac în care atacatorul interceptează și modifică datele în tranzit între două entități",
+      "Un atac în care atacatorul exploatează o vulnerabilitate a unui software"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care sunt caracteristicile principale ale unui sistem încorporat/embedded?",
+    "type": "acadnet",
+    "answers": [
+      "Sunt făcute pentru a îndeplini o anumită sarcină eficient",
+      "Consumă cantități mari de energie pentru performanță maximă",
+      "Este proiectat pentru a fi utilizat într-un scop bine definit",
+      "Este proiectat pentru a fi utilizat în multiple scopuri generale"
+    ],
+    "correctAnswers": [0, 2],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce este un prompt în contextul unui shell CLI?",
+    "type": "acadnet",
+    "answers": [
+      "O interfață grafică care afișează rezultatele comenzilor",
+      "Un șir de caractere care indică utilizatorului unde să tasteze comanda",
+      "Un dispozitiv de ieșire pentru comenzi",
+      "O fereastră grafică în care utilizatorul poate introduce comenzi"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce comandă poți utiliza pentru a genera o parolă sigură?",
+    "type": "acadnet",
+    "answers": [
+      "echo",
+      "openssl rand",
+      "pwgen",
+      "cat"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce este un pachet de tip .deb?",
+    "type": "acadnet",
+    "answers": [
+      "Un fișier executabil",
+      "O arhivă ce conține date și metadate",
+      "Un fișier de configurare",
+      "O arhivă comprimată ce conține doar date"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Alegeți comanda corectă care va afișa fișierele cu o mărime de peste 500KB din ierarhia folderului /usr",
+    "type": "acadnet",
+    "answers": [
+      "find ./usr -size >500",
+      "find usr -size 500+",
+      "find /usr -size +500",
+      "find usr -size +500",
+      "find . -size >500",
+      "find /usr -size 500+",
+      "find usr -size +500",
+      "find -size +500"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce este un proces daemon?",
+    "type": "acadnet",
+    "answers": [
+      "un proces care rulează exclusiv într-un mediu virtualizat",
+      "un proces care nu mai poate fi oprit",
+      "un proces care rulează neinteractiv și oferă un anumit serviciu în sistem",
+      "un proces care execută cod malițios (malware)"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care dintre următoarele limbaje de programare este un limbaj compilat?",
+    "type": "acadnet",
+    "answers": [
+      "Java",
+      "Perl",
+      "Python",
+      "C++"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care este beneficiul principal al organizării ierarhice a fișierelor într-un sistem de fișiere?",
+    "type": "acadnet",
+    "answers": [
+      "Reducerea spațiului de stocare pentru fișiere",
+      "Securizarea fișierelor",
+      "Reducerea timpului necesar căutării unui fișier",
+      "Elimină nevoia arhivării/compresiei fișierelor",
+      "Organizarea automată a fișierelor",
+      "Previne coruperea fișierelor"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care este relația dintre shell și terminal într-un sistem CLI?",
+    "type": "acadnet",
+    "answers": [
+      "Shell-ul controlează toate funcțiile terminalului",
+      "Terminalul execută comenzi direct, fără a folosi un shell",
+      "Shell-ul este un dispozitiv hardware conectat la terminal",
+      "Terminalul este o interfață care permite shell-ului să comunice cu utilizatorul"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Scurtătura de tastatură „Ctrl + w” are efectul:",
+    "type": "acadnet",
+    "answers": [
+      "Accesarea barei de adrese",
+      "Deschide un nou tab",
+      "Deschide o aplicație identică cu cea în care ne aflăm",
+      "Închide tabul curent sau ultimul accesat"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce este o \"amprentă digitală\" în contextul securității informatice?",
+    "type": "acadnet",
+    "answers": [
+      "Un rezumat unic generat de un algoritm de hashing pentru un fișier sau un mesaj",
+      "O semnătură digitală",
+      "O imagine scanată a amprentei unui utilizator",
+      "O metodă de identificare biometrică"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce realizează operatorul de înlănțuire \"|\" în Linux?",
+    "type": "acadnet",
+    "answers": [
+      "Execută o comandă după alta, indiferent dacă prima s-a încheiat cu succes sau nu",
+      "Execută o comandă după alta, doar dacă prima s-a încheiat cu succes",
+      "Execută o comandă după alta, doar dacă prima s-a încheiat cu insucces",
+      "Leagă ieșirea primei comenzi la intrarea celei de-a doua comenzi"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Cum se numește procesul prin care un sistem de fișiere este făcut disponibil utilizatorului?",
+    "type": "acadnet",
+    "answers": [
+      "formatare",
+      "montare",
+      "arhivare",
+      "partiționare"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce afișează comanda lsmod într-un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "Toate driverele încărcate în sistem",
+      "Informații despre rețeaua în care este conectat sistemul",
+      "Toate procesele care rulează la momentul curent pe sistem",
+      "Toate fișierele dintr-un director specificat"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care este rolul unui driver?",
+    "type": "acadnet",
+    "answers": [
+      "Realizează comunicarea între sistemul de operare și o componentă hardware",
+      "Gestionează alocarea și utilizarea resurselor de memorie de către aplicații",
+      "Coordonează funcționarea între mai multe aplicații software",
+      "Asigură securitatea și criptarea datelor în sistemul de operare"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care dintre următoarele afirmații nu este adevărată despre procesul init într-un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "adoptă procesele orfane",
+      "este un proces daemon",
+      "este primul proces pornit în cadrul sistemului de operare",
+      "poate fi oprit fără a afecta funcționalitatea sistemului"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce comandă oferă o interfață interactivă de monitorizare a proceselor într-un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "ls /proc",
+      "pstree",
+      "htop",
+      "ps",
+      "iotop"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care sunt formatele de pachete cele mai răspândite în Linux?",
+    "type": "acadnet",
+    "answers": [
+      ".dmg și .pkg",
+      ".deb și .rpm",
+      ".zip și .tar.gz",
+      ".exe și .msi"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care este valoarea implicită a unui proces la pornire în ceea ce privește prioritatea (nice value)?",
+    "type": "acadnet",
+    "answers": [
+      "1",
+      "0",
+      "-1",
+      "10"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care dintre următoarele tipuri de servicii cloud oferă control direct asupra sistemului de operare care rulează pe mașina virtuală ținută de provider?",
+    "type": "acadnet",
+    "answers": [
+      "NaaS",
+      "IaaS",
+      "WaaS",
+      "SDN",
+      "MaaS",
+      "VaaS",
+      "PaaS",
+      "SaaS"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care dintre următoarele afirmații nu reprezintă un rol al kernelului?",
+    "type": "acadnet",
+    "answers": [
+      "Izolarea proceselor",
+      "Realizarea de backup pentru datele utilizatorului",
+      "Abstractizarea componentelor fizice",
+      "Oferă acces echitabil aplicațiilor la resursele hardware"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce riscuri poate avea o interfață grafică greu de folosit pentru utilizator?",
+    "type": "acadnet",
+    "answers": [
+      "Interfața grafică va fi respinsă de către utilizatori",
+      "Utilizatorii neexperimentați se vor îndrepta spre CLI",
+      "Resursele hardware nu vor fi folosite la capacitatea maximă"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care a fost motivul principal al implementării extensiilor pentru virtualizare în hardware (în CPU)?",
+    "type": "acadnet",
+    "answers": [
+      "Îmbunătățirea graficii 3D",
+      "Creșterea capacității de stocare",
+      "Reducerea dimensiunii procesoarelor",
+      "Performanța îmbunătățită",
+      "Îmbunătățirea calității sunetului",
+      "Crearea de rețele mai eficiente",
+      "Reducerea consumului de energie",
+      "Facilitarea jocurilor video pe servere"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care dintre următoarele fișiere va fi afișat de comanda ls /bin/[xz]?grep?",
+    "type": "acadnet",
+    "answers": [
+      "/bin/xzegrep",
+      "/bin/xzgrep",
+      "/bin/zfgrep",
+      "/bin/zipgrep",
+      "/bin/xzfgrep"
+    ],
+    "correctAnswers": [1, 2],
+    "multipleCorrect": true,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce sunt procesele batch?",
+    "type": "acadnet",
+    "answers": [
+      "Procese care necesită multe resurse pentru a putea fi executate",
+      "Procese care se închid automat la închiderea terminalului",
+      "Procese care se execută în mod interactiv în terminal",
+      "Procese care se execută în fundal și nu necesită interacțiune umană"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce comandă vom folosi pentru a afișa toate procesele care rulează pe un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "ps -l",
+      "ps -e",
+      "ps -a",
+      "ps -u"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Alegeți sarcinile care pot fi automatizate (alegeți 8 variante):",
+    "type": "acadnet",
+    "answers": [
+      "reînnoirea certificatelor",
+      "monitorizarea resurselor de sistem",
+      "depanarea unor probleme complexe",
+      "sarcini cu date de input de la utilizator",
+      "sincronizarea de fișiere",
+      "analizarea logurilor",
+      "crearea de conținut creativ",
+      "efectuarea de sarcini interactive",
+      "efectuarea de backupuri",
+      "analizarea incidentelor de securitate",
+      "instalarea de hardware nou",
+      "actualizarea pachetelor",
+      "rotația logurilor",
+      "scanarea de vulnerabilități"
+    ],
+    "correctAnswers": [0, 1, 4, 5, 8, 11, 12, 13],
+    "multipleCorrect": true,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce este \"principiul celui mai mic privilegiu\"?",
+    "type": "acadnet",
+    "answers": [
+      "Sistemele trebuie actualizate periodic",
+      "Utilizatorii trebuie să aibă acces doar la resursele necesare",
+      "Parolele trebuie să fie complexe",
+      "Datele trebuie criptate"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Arhitectura folosită cu precădere în dispozitivele mobile este:",
+    "type": "acadnet",
+    "answers": [
+      "CISC",
+      "x86",
+      "ARM",
+      "Android"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Cum putem afla codul de ieșire al ultimei comenzi rulate în shell?",
+    "type": "acadnet",
+    "answers": [
+      "status <PID>",
+      "ps | tail -n 1 | grep \"exit\"",
+      "echo $$",
+      "echo $?",
+      "echo $status"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care sunt avantajele utilizării pachetelor software față de arhivele simple?",
+    "type": "acadnet",
+    "answers": [
+      "Permit dezinstalarea facilă",
+      "Sunt mai ușor de creat",
+      "Ocupă mai puțin spațiu pe disc",
+      "Rezolvă dependențele"
+    ],
+    "correctAnswers": [0, 3],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce este un proces zombie?",
+    "type": "acadnet",
+    "answers": [
+      "Un proces terminat, dar care încă ocupă spațiu în tabelul de procese",
+      "Un proces orfan",
+      "Un proces care nu are un proces părinte",
+      "Un proces care consumă prea multe resurse",
+      "Un proces care nu poate fi terminat"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care sunt stări posibile ale unui proces?",
+    "type": "acadnet",
+    "answers": [
+      "Ready",
+      "Inactive",
+      "Blocked",
+      "Compiled",
+      "Terminated",
+      "Zombie",
+      "Waiting for Input",
+      "Suspended"
+    ],
+    "correctAnswers": [0, 2, 4, 5],
+    "multipleCorrect": true,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Ce variabilă trebuie modificată pentru a modifica promptul shell-ului bash?",
+    "type": "acadnet",
+    "answers": [
+      "$PROMPT",
+      "$BASH_PROMPT",
+      "$PS1",
+      "$CMD",
+      "$PROMPT_COMMAND",
+      "$COMMAND"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "La ce sunt folosite comenzile nohup și disown într-un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "Pentru a păstra active procesele din background după închiderea terminalului",
+      "Pentru a monitoriza starea proceselor din background",
+      "Pentru a crea și gestiona multiple sesiuni de terminal",
+      "Pentru a opri procesele care rulează în background"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Care este implementarea cea mai des folosită a procesului init?",
+    "type": "acadnet",
+    "answers": [
+      "systemd",
+      "s6",
+      "sysvinit",
+      "epoch",
+      "openrc",
+      "runit",
+      "upstart"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Cum putem omorî un proces într-un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "kill -STOP <PID>",
+      "stop <PID>",
+      "exit -p <PID>",
+      "kill -9 <PID>",
+      "Ctrl + Z"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Scurtătura de tastatură „Alt + F2” are efectul:",
+    "type": "acadnet",
+    "answers": [
+      "Trecerea în modul sleep",
+      "Restart la desktop",
+      "Închiderea aplicației curente",
+      "Deschidere unei aplicații selectate de user"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "Cum se numește procesul de transformare a codului sursă în cod mașină?",
+    "type": "acadnet",
+    "answers": [
+      "Execuție",
+      "Linking",
+      "Pre-procesare",
+      "Compilare"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
+  },
+  {
+    "title": "La ce este folosit utilitarul dmesg într-un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "Afișează mesajele generate de kernel",
+      "Afișează informații detaliate despre spațiul de stocare",
+      "Configurează setările de securitate",
+      "Configurează parametrii de rețea ai sistemului",
+      "Analizează și repară fișierele corupte"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": ["ACADNET_2025_LOCAL_XI"]
   }
 ]
