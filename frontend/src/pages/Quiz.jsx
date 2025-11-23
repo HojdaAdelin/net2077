@@ -410,10 +410,11 @@ export default function Quiz({ isExam = false }) {
         ...prev,
         [currentQuestion._id]: isCorrect
       };
-
+      /*
       if (isExam && Object.keys(updated).length === questions.length) {
         handleFinishExam('completed');
       }
+        */
 
       return updated;
     });
