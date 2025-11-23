@@ -52,6 +52,37 @@ export default function Quiz({ isExam = false }) {
     if (showResults) return;
 
     if (isExam) {
+      /* Simulation logic */
+
+        let score = 0;
+        let total = 0;
+        
+        questions.forEach((q) => {
+          total += q.points || 1;
+          const qUserAnswers = selectedAnswers[q._id] || [];
+          const qCorrectAnswers = q.correctAnswers || [q.correctIndex];
+          
+          if (
+            qUserAnswers.length === qCorrectAnswers.length &&
+            qUserAnswers.every(ans => qCorrectAnswers.includes(ans))
+          ) {
+            score += q.points || 1;
+          }
+        });
+
+        const token = localStorage.getItem('token');
+        if (token) {
+          fetch(`${API_BASE}/progress/addSimulation`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ score, total })
+          }).catch(error => console.error('Error saving simulation:', error));
+        }
+
+      /* Simulation logic */
       setFinishReason(reason);
       setExamStarted(false);
       const duration = examDurationSeconds ?? 0;
@@ -411,38 +442,6 @@ export default function Quiz({ isExam = false }) {
         [currentQuestion._id]: isCorrect
       };
       
-      if (isExam && Object.keys(updated).length === questions.length) {
-
-        let score = 0;
-        let total = 0;
-        
-        questions.forEach((q) => {
-          total += q.points || 1;
-          const qUserAnswers = selectedAnswers[q._id] || [];
-          const qCorrectAnswers = q.correctAnswers || [q.correctIndex];
-          
-          if (
-            qUserAnswers.length === qCorrectAnswers.length &&
-            qUserAnswers.every(ans => qCorrectAnswers.includes(ans))
-          ) {
-            score += q.points || 1;
-          }
-        });
-
-        const token = localStorage.getItem('token');
-        if (token) {
-          fetch(`${API_BASE}/progress/addSimulation`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ score, total })
-          }).catch(error => console.error('Error saving simulation:', error));
-        }
-      }
-    
-
       return updated;
     });
 
@@ -452,26 +451,7 @@ export default function Quiz({ isExam = false }) {
         [currentQuestion._id]: true
       }));
     }
-
-
     const token = localStorage.getItem('token');
-    /*
-    if (isExam && token && isCorrect) {
-        try {
-          await fetch(`${API_BASE}/questions/examPoints`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ questionId: currentQuestion._id })
-          });
-          console.log('Progress saved for question:', currentQuestion._id);
-        } catch (error) {
-          console.error('Error saving progress:', error);
-        }
-    }
-        */
     if (!isExam && token && isCorrect) {
       try {
         await fetch(`${API_BASE}/questions/markSolved`, {

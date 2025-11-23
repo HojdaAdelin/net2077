@@ -110,7 +110,8 @@ export default function Progress() {
                   </div>
                   
                   <div className="simulation-details">
-                    {sim.score} / {sim.total} correct answers
+                    <div>{sim.score} points</div>
+                    <div>{sim.score/2} / {sim.total/2} correct answers</div>
                   </div>
                 </div>
               );
