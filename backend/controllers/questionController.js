@@ -109,3 +109,37 @@ export const markSolved = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+
+export const examPoints = async (req, res) => {
+  try {
+    const { questionId } = req.body;
+    const user = await User.findById(req.userId);
+    const question = await Question.findById(questionId);
+    
+    if (!question) {
+      return res.status(404).json({ message: 'Question not found' });
+    }
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const points = question.points || 1;
+    user.xp += points;
+    user.level = Math.floor(user.xp / 100) + 1;
+    
+    await user.save();
+    
+    console.log(`✅ Added ${points} exam points for question ${questionId} to user ${user.username}`);
+    
+    res.json({ 
+      xp: user.xp, 
+      level: user.level,
+      pointsAdded: points
+    });
+  } catch (error) {
+    console.error('Error adding exam question points:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

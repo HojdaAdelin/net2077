@@ -8,5 +8,6 @@ router.get('/', getQuestions);
 router.get('/unsolved', authMiddleware, getUnsolvedQuestions);
 router.get('/random50', getRandom50);
 router.post('/markSolved', authMiddleware, markSolved);
+router.post('/examPoints', authMiddleware, markSolved);
 
 export default router;

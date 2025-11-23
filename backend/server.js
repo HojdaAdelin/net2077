@@ -21,7 +21,6 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.error('❌ MongoDB error:', err));
 
-// Health check endpoint
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Backend API is running',

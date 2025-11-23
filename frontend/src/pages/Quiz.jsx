@@ -12,8 +12,8 @@ export default function Quiz({ isExam = false }) {
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState({}); // Pentru multiple: {questionId: [0, 2, 3]}
-  const [submittedAnswers, setSubmittedAnswers] = useState({}); // {questionId: true/false}
+  const [selectedAnswers, setSelectedAnswers] = useState({}); 
+  const [submittedAnswers, setSubmittedAnswers] = useState({}); 
   const [showResults, setShowResults] = useState(false);
   const [loading, setLoading] = useState(true);
   const [examMeta, setExamMeta] = useState(null);
@@ -362,7 +362,7 @@ export default function Quiz({ isExam = false }) {
     if (isExam && !examStarted) return;
 
     if (isMultiple) {
-      // Pentru răspunsuri multiple
+
       const current = selectedAnswers[questionId] || [];
       const newAnswers = current.includes(answerIndex)
         ? current.filter(idx => idx !== answerIndex)
@@ -373,7 +373,7 @@ export default function Quiz({ isExam = false }) {
         [questionId]: newAnswers
       });
     } else {
-      // Pentru răspuns unic
+  
       setSelectedAnswers({
         ...selectedAnswers,
         [questionId]: [answerIndex]
@@ -400,7 +400,7 @@ export default function Quiz({ isExam = false }) {
     const userAnswers = selectedAnswers[currentQuestion._id] || [];
     const correctAnswers = currentQuestion.correctAnswers || [currentQuestion.correctIndex];
 
-    // Check if answer is correct
+
     const isCorrect = 
       userAnswers.length === correctAnswers.length &&
       userAnswers.every(ans => correctAnswers.includes(ans));
@@ -425,9 +425,24 @@ export default function Quiz({ isExam = false }) {
       }));
     }
 
-    // Save progress to backend if user is logged in (non-exam quizzes)
+
     const token = localStorage.getItem('token');
-    if (!isExam && token && isCorrect) {
+    if (isExam && token && isCorrect) {
+        try {
+          await fetch(`${API_BASE}/questions/examPoints`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ questionId: currentQuestion._id })
+          });
+          console.log('Progress saved for question:', currentQuestion._id);
+        } catch (error) {
+          console.error('Error saving progress:', error);
+        }
+    }
+    else if (!isExam && token && isCorrect) {
       try {
         await fetch(`${API_BASE}/questions/markSolved`, {
           method: 'POST',
@@ -457,7 +472,7 @@ export default function Quiz({ isExam = false }) {
       const userAnswers = selectedAnswers[q._id] || [];
       const correctAnswers = q.correctAnswers || [q.correctIndex];
 
-      // Verifică dacă răspunsurile sunt identice
+
       if (
         userAnswers.length === correctAnswers.length &&
         userAnswers.every(ans => correctAnswers.includes(ans))
@@ -527,7 +542,6 @@ export default function Quiz({ isExam = false }) {
             </div>
             <div className="score-details">
               <p>{totalPoints} / {maxPoints} points</p>
-              <p className="score-subtext">{questions.length} questions answered</p>
             </div>
           </div>
           {isExam && (
