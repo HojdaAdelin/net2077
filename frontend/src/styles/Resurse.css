@@ -91,7 +91,7 @@
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 24px;
+  padding: 16px;
   transition: all 0.2s;
 }
 

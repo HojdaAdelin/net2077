@@ -1,31 +1,361 @@
 [
   {
-    "title": "Algorithm",
-    "content": "A step-by-step procedure for solving a problem or accomplishing a task.",
+    "title": "ls",
+    "content": "List directory contents, showing files and folders.",
     "category": "dictionary",
     "type": "text"
   },
   {
-    "title": "API",
-    "content": "Application Programming Interface - a set of protocols and tools for building software applications.",
+    "title": "cd",
+    "content": "Change the current working directory.",
     "category": "dictionary",
     "type": "text"
   },
   {
-    "title": "Binary",
-    "content": "A number system that uses only two digits: 0 and 1.",
+    "title": "pwd",
+    "content": "Print the current working directory path.",
     "category": "dictionary",
     "type": "text"
   },
   {
-    "title": "Cache",
-    "content": "A hardware or software component that stores data for faster future access.",
+    "title": "mkdir",
+    "content": "Create a new directory.",
     "category": "dictionary",
     "type": "text"
   },
   {
-    "title": "Database",
-    "content": "An organized collection of structured information or data stored electronically.",
+    "title": "rmdir",
+    "content": "Remove an empty directory.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "cp",
+    "content": "Copy files or directories.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "mv",
+    "content": "Move or rename files or directories.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "rm",
+    "content": "Delete files or directories.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "touch",
+    "content": "Create an empty file or update file timestamps.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "cat",
+    "content": "Display the content of files to standard output.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "echo",
+    "content": "Print text or variables to standard output.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "chmod",
+    "content": "Change file permissions.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "chown",
+    "content": "Change the owner or group of a file.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "grep",
+    "content": "Search for text patterns in files.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "find",
+    "content": "Search for files and directories in a directory hierarchy.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "locate",
+    "content": "Quickly find files by name using a database.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "man",
+    "content": "Display the manual pages for commands.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "head",
+    "content": "Show the first lines of a file.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "tail",
+    "content": "Show the last lines of a file, often used with log files.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "tar",
+    "content": "Archive multiple files into a single file or extract archives.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "zip",
+    "content": "Compress files into a ZIP archive.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "unzip",
+    "content": "Extract files from a ZIP archive.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "wget",
+    "content": "Download files from the web via HTTP, HTTPS, or FTP.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "curl",
+    "content": "Transfer data from or to a server using various protocols.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "ps",
+    "content": "Display information about running processes.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "kill",
+    "content": "Send a signal to a process, often to stop it.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "top",
+    "content": "Monitor system processes in real time.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "htop",
+    "content": "An interactive process viewer with enhanced features.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "df",
+    "content": "Display disk space usage for file systems.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "du",
+    "content": "Show disk usage for files and directories.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "sudo",
+    "content": "Execute commands with superuser privileges.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "ps aux",
+    "content": "Display detailed information about all running processes.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "df -h",
+    "content": "Show disk space usage in human-readable format.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "df -i",
+    "content": "Show inode usage for mounted filesystems.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "du -sh",
+    "content": "Display total size of a file or directory in human-readable format.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "rsync -av",
+    "content": "Synchronize directories while preserving attributes.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "rsync -aHAX --delete",
+    "content": "Create a full mirror sync preserving ACLs, hardlinks and attributes.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "tar -czvf",
+    "content": "Create a compressed gzip tar archive.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "find / -name",
+    "content": "Search for files by name starting at root.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "sed -i",
+    "content": "Edit files in-place using stream substitutions.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "awk",
+    "content": "A powerful text processing and pattern scanning tool.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "netstat -tuln",
+    "content": "List all listening TCP and UDP ports.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "kill -9",
+    "content": "Forcefully terminate a process.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "whoami",
+    "content": "Print the current logged-in user.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "man",
+    "content": "Display the manual page for commands.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "history",
+    "content": "Show the shell command history.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "clear",
+    "content": "Clear the terminal screen.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "uname -a",
+    "content": "Print detailed system information.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "uptime",
+    "content": "Show how long the system has been running.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "strace",
+    "content": "Trace system calls and signals of a process.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "lsof -i",
+    "content": "List processes using specific network ports.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "ip route show",
+    "content": "Display the system's routing table.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "mount -o remount,rw",
+    "content": "Remount a filesystem with read/write permissions.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "journalctl",
+    "content": "Query and view systemd logs.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "tcpdump",
+    "content": "Capture and analyze network packets.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "chroot",
+    "content": "Run a command with a different filesystem as root.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "systemctl isolate",
+    "content": "Switch to another systemd target (runlevel).",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "ulimit",
+    "content": "Control user resource limits, such as open files.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "ifconfig",
+    "content": "Display or configure network interfaces.",
+    "category": "dictionary",
+    "type": "text"
+  },
+  {
+    "title": "tty",
+    "content": "Print the file name of the terminal connected to stdin.",
     "category": "dictionary",
     "type": "text"
   },

@@ -23,10 +23,9 @@ export default function Footer() {
           </div>
 
           <div className="footer-section">
-            <h3>Account</h3>
+            <h3>LINKS</h3>
             <div className="footer-links">
-              <Link to="/login">Sign In</Link>
-              <Link to="/register">Sign Up</Link>
+              <a href="https://github.com/HojdaAdelin/net2077" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
           </div>
         </div>
