@@ -24,7 +24,6 @@ export default function Progress() {
     <div className="container progress-page">
       <div className="progress-header">
         <h1>Your Progress</h1>
-        <p>Track your learning journey and achievements</p>
       </div>
 
       <div className="progress-grid">

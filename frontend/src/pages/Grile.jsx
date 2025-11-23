@@ -259,7 +259,6 @@ export default function Grile() {
       <div className="container grile-page">
         <div className="grile-header">
           <h1>Practice Questions</h1>
-          <p>Choose your learning path and start mastering computer science fundamentals</p>
         </div>
         
         <div className="cards-grid">

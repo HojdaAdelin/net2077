@@ -22,7 +22,6 @@ export default function Resurse() {
     <div className="container resurse-page">
       <div className="resurse-header">
         <h1>Learning Resources</h1>
-        <p>Explore our comprehensive dictionary and curated learning materials</p>
       </div>
 
       <div className="tabs">
