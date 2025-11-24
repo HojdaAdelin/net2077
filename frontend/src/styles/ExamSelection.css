@@ -4,8 +4,9 @@
 }
 
 .exam-header {
+  margin-top: 20px;
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: 48px;
 }
 
 .exam-header h1 {

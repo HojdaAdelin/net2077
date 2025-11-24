@@ -38,7 +38,6 @@ export default function ExamSelection() {
     <div className="container exam-selection-page">
       <div className="exam-header">
         <h1>Examination Subjects</h1>
-        <p>Select an official examination to practice under real exam conditions</p>
       </div>
 
       <div className="exams-grid">
