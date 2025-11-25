@@ -1,12 +1,5 @@
 const API_URL = '/api';
 
-const getToken = () => localStorage.getItem('token');
-
-const authHeaders = () => ({
-  'Content-Type': 'application/json',
-  'Authorization': `Bearer ${getToken()}`
-});
-
 export const getStats = async () => {
   const res = await fetch(`${API_URL}/stats`);
   return res.json();
@@ -19,7 +12,9 @@ export const getQuestions = async (type) => {
 };
 
 export const getUnsolvedQuestions = async () => {
-  const res = await fetch(`${API_URL}/questions/unsolved`, { headers: authHeaders() });
+  const res = await fetch(`${API_URL}/questions/unsolved`, { 
+    credentials: 'include'
+  });
   return res.json();
 };
 
@@ -39,7 +34,9 @@ export const getResources = async () => {
 };
 
 export const getUserProgress = async () => {
-  const res = await fetch(`${API_URL}/progress/user`, { headers: authHeaders() });
+  const res = await fetch(`${API_URL}/progress/user`, { 
+    credentials: 'include'
+  });
   return res.json();
 };
 
@@ -47,6 +44,7 @@ export const login = async (email, password) => {
   const res = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
     body: JSON.stringify({ email, password })
   });
   return res.json();
@@ -56,6 +54,7 @@ export const register = async (username, email, password) => {
   const res = await fetch(`${API_URL}/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
     body: JSON.stringify({ username, email, password })
   });
   return res.json();

@@ -70,17 +70,14 @@ export default function Quiz({ isExam = false }) {
           }
         });
 
-        const token = localStorage.getItem('token');
-        if (token) {
-          fetch(`${API_BASE}/progress/addSimulation`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ score, total })
-          }).catch(error => console.error('Error saving simulation:', error));
-        }
+        fetch(`${API_BASE}/progress/addSimulation`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({ score, total })
+        }).catch(error => console.error('Error saving simulation:', error));
 
       /* Simulation logic */
       setFinishReason(reason);
@@ -156,7 +153,6 @@ export default function Quiz({ isExam = false }) {
       const urlParams = new URLSearchParams(location.search);
       const tagsParam = urlParams.get('tags');
       const queryType = urlParams.get('type') || type;
-      const token = localStorage.getItem('token');
 
       let data = [];
       let tagsFilter = tagsParam;
@@ -195,17 +191,10 @@ export default function Quiz({ isExam = false }) {
           const response = await fetch(`${API_BASE}/questions/random50`);
           data = await response.json();
         } else if (mode === 'unsolved') {
-          if (token) {
-            const response = await fetch(`${API_BASE}/questions/unsolved`, {
-              headers: {
-                'Authorization': `Bearer ${token}`
-              }
-            });
-            data = await response.json();
-          } else {
-            const response = await fetch(`${API_BASE}/questions`);
-            data = await response.json();
-          }
+          const response = await fetch(`${API_BASE}/questions/unsolved`, {
+            credentials: 'include'
+          });
+          data = await response.json();
         } else {
           const response = await fetch(`${API_BASE}/questions`);
           data = await response.json();
@@ -289,14 +278,12 @@ export default function Quiz({ isExam = false }) {
           const base = prev || currentMeta || {};
           return { ...base, questionCount: filtered.length };
         });
-      } else if (token) {
+      } else {
         let prefilledSelected = {};
         let prefilledSubmitted = {};
         try {
           const progressRes = await fetch(`${API_BASE}/progress/user`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
+            credentials: 'include'
           });
 
           if (progressRes.ok) {
@@ -451,15 +438,14 @@ export default function Quiz({ isExam = false }) {
         [currentQuestion._id]: true
       }));
     }
-    const token = localStorage.getItem('token');
-    if (!isExam && token && isCorrect) {
+    if (!isExam && isCorrect) {
       try {
         await fetch(`${API_BASE}/questions/markSolved`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Content-Type': 'application/json'
           },
+          credentials: 'include',
           body: JSON.stringify({ questionId: currentQuestion._id })
         });
         console.log('Progress saved for question:', currentQuestion._id);

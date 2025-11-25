@@ -16,7 +16,22 @@ export const register = async (req, res) => {
     await user.save();
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.status(201).json({ token, user: { id: user._id, username, email } });
+    
+    // Set HTTP-only cookie (secure against XSS)
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: false, // Set to false for localhost
+      sameSite: 'lax', // Changed from 'strict' to 'lax' for localhost
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+
+
+
+    // Don't send sensitive data to client
+    res.status(201).json({ 
+      success: true,
+      user: { id: user._id, username }
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -37,7 +52,38 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token, user: { id: user._id, username: user.username, email: user.email } });
+    
+    // Set HTTP-only cookie
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: false, // Set to false for localhost
+      sameSite: 'lax', // Changed from 'strict' to 'lax' for localhost
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+
+
+
+    res.json({ 
+      success: true,
+      user: { id: user._id, username: user.username }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const logout = async (req, res) => {
+  res.clearCookie('token');
+  res.json({ success: true, message: 'Logged out successfully' });
+};
+
+export const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({ user: { id: user._id, username: user.username } });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

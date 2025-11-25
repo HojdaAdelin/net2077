@@ -18,8 +18,8 @@ export default function Login() {
     
     try {
       const data = await apiLogin(email, password);
-      if (data.token) {
-        login(data.token, data.user);
+      if (data.success) {
+        login(data.user);
         navigate('/');
       } else {
         setError(data.message || 'Login failed');

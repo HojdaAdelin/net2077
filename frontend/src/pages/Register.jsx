@@ -40,8 +40,8 @@ export default function Register() {
 
     try {
       const data = await apiRegister(username, email, password);
-      if (data.token) {
-        login(data.token, data.user);
+      if (data.success) {
+        login(data.user);
         navigate('/');
       } else {
         setError(data.message || 'Registration failed');
