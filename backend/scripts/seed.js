@@ -45,39 +45,40 @@ const seedDatabase = async () => {
 };
 
 const syncQuestions = async (questionsData) => {
-
+  // Create unique identifier: title + tags (so same title with different tags = different question)
   const jsonQuestions = new Map();
   questionsData.forEach(q => {
-    jsonQuestions.set(q.title, q);
+    const uniqueKey = `${q.title}|||${(q.tags || []).sort().join(',')}`;
+    jsonQuestions.set(uniqueKey, q);
   });
 
   const existingQuestions = await Question.find({});
   const existingMap = new Map();
   existingQuestions.forEach(q => {
-    existingMap.set(q.title, q);
+    const uniqueKey = `${q.title}|||${(q.tags || []).sort().join(',')}`;
+    existingMap.set(uniqueKey, q);
   });
 
   let added = 0;
   let updated = 0;
   let deleted = 0;
 
-  for (const [title, questionData] of jsonQuestions) {
-    if (existingMap.has(title)) {
-      const existing = existingMap.get(title);
+  for (const [uniqueKey, questionData] of jsonQuestions) {
+    if (existingMap.has(uniqueKey)) {
+      const existing = existingMap.get(uniqueKey);
       await Question.findByIdAndUpdate(existing._id, questionData);
       updated++;
     } else {
-
       await Question.create(questionData);
       added++;
     }
   }
 
-  for (const [title, existingQuestion] of existingMap) {
-    if (!jsonQuestions.has(title)) {
+  for (const [uniqueKey, existingQuestion] of existingMap) {
+    if (!jsonQuestions.has(uniqueKey)) {
       await Question.findByIdAndDelete(existingQuestion._id);
       deleted++;
-      console.log(`   🗑️  Deleted: "${title}"`);
+      console.log(`   🗑️  Deleted: "${existingQuestion.title}" [${existingQuestion.tags?.join(', ')}]`);
     }
   }
 

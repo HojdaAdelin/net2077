@@ -947,7 +947,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce fișier este reprezentat prin file descriptor-ul \"2\" într-un sistem Linux?",
@@ -962,7 +962,7 @@
     "multipleCorrect": true,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Cum putem suspenda execuția unui proces într-un sistem Linux?",
@@ -977,7 +977,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce este un pachet software?",
@@ -992,7 +992,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce este un descriptor de fișier într-un context de proces?",
@@ -1007,7 +1007,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care este funcția dispozitivului /dev/null într-un sistem Linux?",
@@ -1022,7 +1022,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce realizează comanda tty într-un sistem Linux?",
@@ -1038,7 +1038,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce este un depozit de pachete (package repository)?",
@@ -1053,7 +1053,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care sunt rolurile unui sistem de fișiere? (alegeți 4)",
@@ -1072,7 +1072,7 @@
     "multipleCorrect": true,
     "difficulty": "hard",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce este un atac de tip \"man-in-the-middle\"?",
@@ -1087,7 +1087,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care sunt caracteristicile principale ale unui sistem încorporat/embedded?",
@@ -1102,7 +1102,7 @@
     "multipleCorrect": true,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce este un prompt în contextul unui shell CLI?",
@@ -1117,7 +1117,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce comandă poți utiliza pentru a genera o parolă sigură?",
@@ -1132,7 +1132,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce este un pachet de tip .deb?",
@@ -1147,7 +1147,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Alegeți comanda corectă care va afișa fișierele cu o mărime de peste 500KB din ierarhia folderului /usr",
@@ -1166,7 +1166,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce este un proces daemon?",
@@ -1181,7 +1181,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care dintre următoarele limbaje de programare este un limbaj compilat?",
@@ -1196,7 +1196,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care este beneficiul principal al organizării ierarhice a fișierelor într-un sistem de fișiere?",
@@ -1213,7 +1213,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care este relația dintre shell și terminal într-un sistem CLI?",
@@ -1228,7 +1228,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Scurtătura de tastatură „Ctrl + w” are efectul:",
@@ -1243,7 +1243,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce este o \"amprentă digitală\" în contextul securității informatice?",
@@ -1258,7 +1258,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce realizează operatorul de înlănțuire \"|\" în Linux?",
@@ -1273,7 +1273,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Cum se numește procesul prin care un sistem de fișiere este făcut disponibil utilizatorului?",
@@ -1288,7 +1288,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce afișează comanda lsmod într-un sistem Linux?",
@@ -1303,7 +1303,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care este rolul unui driver?",
@@ -1318,7 +1318,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care dintre următoarele afirmații nu este adevărată despre procesul init într-un sistem Linux?",
@@ -1333,7 +1333,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce comandă oferă o interfață interactivă de monitorizare a proceselor într-un sistem Linux?",
@@ -1349,7 +1349,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care sunt formatele de pachete cele mai răspândite în Linux?",
@@ -1364,7 +1364,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care este valoarea implicită a unui proces la pornire în ceea ce privește prioritatea (nice value)?",
@@ -1379,7 +1379,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care dintre următoarele tipuri de servicii cloud oferă control direct asupra sistemului de operare care rulează pe mașina virtuală ținută de provider?",
@@ -1398,7 +1398,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care dintre următoarele afirmații nu reprezintă un rol al kernelului?",
@@ -1413,7 +1413,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce riscuri poate avea o interfață grafică greu de folosit pentru utilizator?",
@@ -1427,7 +1427,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care a fost motivul principal al implementării extensiilor pentru virtualizare în hardware (în CPU)?",
@@ -1446,7 +1446,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care dintre următoarele fișiere va fi afișat de comanda ls /bin/[xz]?grep?",
@@ -1462,7 +1462,7 @@
     "multipleCorrect": true,
     "difficulty": "hard",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce sunt procesele batch?",
@@ -1477,7 +1477,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce comandă vom folosi pentru a afișa toate procesele care rulează pe un sistem Linux?",
@@ -1492,7 +1492,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Alegeți sarcinile care pot fi automatizate (alegeți 8 variante):",
@@ -1517,7 +1517,7 @@
     "multipleCorrect": true,
     "difficulty": "hard",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce este \"principiul celui mai mic privilegiu\"?",
@@ -1532,7 +1532,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Arhitectura folosită cu precădere în dispozitivele mobile este:",
@@ -1547,7 +1547,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Cum putem afla codul de ieșire al ultimei comenzi rulate în shell?",
@@ -1563,7 +1563,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care sunt avantajele utilizării pachetelor software față de arhivele simple?",
@@ -1578,7 +1578,7 @@
     "multipleCorrect": true,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce este un proces zombie?",
@@ -1594,7 +1594,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care sunt stări posibile ale unui proces?",
@@ -1613,7 +1613,7 @@
     "multipleCorrect": true,
     "difficulty": "hard",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce variabilă trebuie modificată pentru a modifica promptul shell-ului bash?",
@@ -1630,7 +1630,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "La ce sunt folosite comenzile nohup și disown într-un sistem Linux?",
@@ -1645,7 +1645,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Care este implementarea cea mai des folosită a procesului init?",
@@ -1663,7 +1663,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Cum putem omorî un proces într-un sistem Linux?",
@@ -1679,7 +1679,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Scurtătura de tastatură „Alt + F2” are efectul:",
@@ -1694,7 +1694,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Cum se numește procesul de transformare a codului sursă în cod mașină?",
@@ -1709,7 +1709,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "La ce este folosit utilitarul dmesg într-un sistem Linux?",
@@ -1725,7 +1725,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["ACADNET_2025_LOCAL_XI"]
+    "tags": ["ACADNET_2025_LOCAL_XI_XII"]
   },
   {
     "title": "Ce este un proces?",
