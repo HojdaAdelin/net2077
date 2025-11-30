@@ -33,6 +33,11 @@ export const getResources = async () => {
   return res.json();
 };
 
+export const getRoadmap = async (title) => {
+  const res = await fetch(`${API_URL}/resources/roadmap/${title}`);
+  return res.json();
+};
+
 export const getUserProgress = async () => {
   const res = await fetch(`${API_URL}/progress/user`, { 
     credentials: 'include'

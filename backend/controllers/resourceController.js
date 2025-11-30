@@ -26,3 +26,21 @@ export const getPredefined = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+export const getRoadmapByTitle = async (req, res) => {
+  try {
+    const { title } = req.params;
+    const resource = await Resource.findOne({ 
+      title: { $regex: new RegExp(`^${title}$`, 'i') },
+      type: 'roadmap' 
+    });
+    
+    if (!resource) {
+      return res.status(404).json({ message: 'Roadmap not found' });
+    }
+    
+    res.json(resource);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
