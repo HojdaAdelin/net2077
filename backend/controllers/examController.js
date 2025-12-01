@@ -17,7 +17,6 @@ export const getExamById = async (req, res) => {
       return res.status(404).json({ message: 'Exam not found' });
     }
 
-    // Get questions for this exam
     const questions = await Question.find({ tags: exam.tag });
     
     res.json({

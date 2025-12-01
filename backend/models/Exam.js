@@ -4,7 +4,7 @@ const examSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   title: { type: String, required: true },
   description: { type: String, required: true },
-  duration: { type: Number, required: true }, // minutes
+  duration: { type: Number, required: true },
   totalPoints: { type: Number, required: true },
   tag: { type: String, required: true },
   year: { type: Number, required: true },

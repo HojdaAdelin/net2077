@@ -8,7 +8,7 @@ const questionSchema = new mongoose.Schema({
   multipleCorrect: { type: Boolean, default: false },
   difficulty: { type: String, enum: ['easy', 'medium', 'hard'], default: 'medium' },
   points: { type: Number, default: 1 },
-  tags: [{ type: String }] // Tag-uri: LINUX, NETWORK, DATABASE, etc.
+  tags: [{ type: String }] 
 }, { timestamps: true });
 
 export default mongoose.model('Question', questionSchema);

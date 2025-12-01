@@ -17,17 +17,15 @@ export const register = async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     
-    // Set HTTP-only cookie (secure against XSS)
     res.cookie('token', token, {
       httpOnly: true,
-      secure: false, // Set to false for localhost
-      sameSite: 'lax', // Changed from 'strict' to 'lax' for localhost
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      secure: false,
+      sameSite: 'lax', 
+      maxAge: 7 * 24 * 60 * 60 * 1000 
     });
 
 
 
-    // Don't send sensitive data to client
     res.status(201).json({ 
       success: true,
       user: { id: user._id, username }
@@ -53,11 +51,10 @@ export const login = async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     
-    // Set HTTP-only cookie
     res.cookie('token', token, {
       httpOnly: true,
-      secure: false, // Set to false for localhost
-      sameSite: 'lax', // Changed from 'strict' to 'lax' for localhost
+      secure: false,
+      sameSite: 'lax', 
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 

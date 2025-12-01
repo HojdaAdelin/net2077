@@ -14,7 +14,7 @@ dotenv.config({ path: join(__dirname, '../../.env') });
 const clearDatabase = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('✅ Connected to MongoDB');
+    console.log('[✔] Connected to MongoDB');
 
     const questionsCount = await Question.countDocuments();
     const resourcesCount = await Resource.countDocuments();
@@ -34,12 +34,12 @@ const clearDatabase = async () => {
     await Resource.deleteMany({});
     await User.deleteMany({});
 
-    console.log('✅ Database cleared successfully!');
+    console.log('[✔] Database cleared successfully!');
     console.log('\n💡 Run "npm run seed" to populate with fresh data.');
     
     process.exit(0);
   } catch (error) {
-    console.error('❌ Error clearing database:', error);
+    console.error('[✘] Error clearing database:', error);
     process.exit(1);
   }
 };

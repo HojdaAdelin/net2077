@@ -15,7 +15,7 @@ dotenv.config({ path: join(__dirname, '../../.env') });
 const seedDatabase = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('✅ Connected to MongoDB');
+    console.log('[✔] Connected to MongoDB');
 
     const questionsData = JSON.parse(
       readFileSync(join(__dirname, '../data/questions.json'), 'utf-8')
@@ -39,13 +39,13 @@ const seedDatabase = async () => {
     console.log('\n🎉 Database synced successfully!');
     process.exit(0);
   } catch (error) {
-    console.error('❌ Error seeding database:', error);
+    console.error('[✘] Error seeding database:', error);
     process.exit(1);
   }
 };
 
 const syncQuestions = async (questionsData) => {
-  // Create unique identifier: title + tags (so same title with different tags = different question)
+
   const jsonQuestions = new Map();
   questionsData.forEach(q => {
     const uniqueKey = `${q.title}|||${(q.tags || []).sort().join(',')}`;
@@ -82,7 +82,7 @@ const syncQuestions = async (questionsData) => {
     }
   }
 
-  console.log(`   ✅ Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
+  console.log(`   [✔] Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
   console.log(`   📝 Total questions in DB: ${jsonQuestions.size}`);
 };
 
@@ -105,27 +105,24 @@ const syncResources = async (resourcesData) => {
 
   for (const [title, resourceData] of jsonResources) {
     if (existingMap.has(title)) {
-      // Update existing resource
       const existing = existingMap.get(title);
       await Resource.findByIdAndUpdate(existing._id, resourceData);
       updated++;
     } else {
-      // Add new resource
       await Resource.create(resourceData);
       added++;
     }
   }
 
-  // Delete resources that are in DB but not in JSON
   for (const [title, existingResource] of existingMap) {
     if (!jsonResources.has(title)) {
       await Resource.findByIdAndDelete(existingResource._id);
       deleted++;
-      console.log(`   🗑️  Deleted: "${title}"`);
+      console.log(`   [-]  Deleted: "${title}"`);
     }
   }
 
-  console.log(`   ✅ Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
+  console.log(`   [✔] Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
   console.log(`   📚 Total resources in DB: ${jsonResources.size}`);
 };
 
@@ -160,11 +157,11 @@ const syncExams = async (examsData) => {
     if (!jsonExams.has(id)) {
       await Exam.findByIdAndDelete(existingExam._id);
       deleted++;
-      console.log(`   🗑️  Deleted: "${existingExam.title}"`);
+      console.log(`   [-]  Deleted: "${existingExam.title}"`);
     }
   }
 
-  console.log(`   ✅ Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
+  console.log(`   [✔] Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
   console.log(`   📝 Total exams in DB: ${jsonExams.size}`);
 };
 

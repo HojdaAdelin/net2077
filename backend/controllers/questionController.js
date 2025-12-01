@@ -70,7 +70,6 @@ export const markSolved = async (req, res) => {
       return res.status(404).json({ message: 'Question not found' });
     }
 
-    // Check if already solved
     const alreadySolved = user.solvedQuestions.some(
       id => id.toString() === questionId.toString()
     );
@@ -80,7 +79,6 @@ export const markSolved = async (req, res) => {
       user.xp += question.points || 1;
       user.level = Math.floor(user.xp / 100) + 1;
       
-      // Update solvedByTag
       if (question.tags && question.tags.length > 0) {
         question.tags.forEach(tag => {
           if (tag === 'LINUX' || tag === 'NETWORK') {
@@ -93,9 +91,9 @@ export const markSolved = async (req, res) => {
       }
       
       await user.save();
-      console.log(`✅ Question ${questionId} marked as solved for user ${user.username}`);
+      console.log(`[✔] Question ${questionId} marked as solved for user ${user.username}`);
     } else {
-      console.log(`ℹ️  Question ${questionId} already solved by user ${user.username}`);
+      console.log(`[✘]  Question ${questionId} already solved by user ${user.username}`);
     }
     
     res.json({ 
@@ -131,7 +129,7 @@ export const examPoints = async (req, res) => {
     
     await user.save();
     
-    console.log(`✅ Added ${points} exam points for question ${questionId} to user ${user.username}`);
+    console.log(`[✔] Added ${points} exam points for question ${questionId} to user ${user.username}`);
     
     res.json({ 
       xp: user.xp, 

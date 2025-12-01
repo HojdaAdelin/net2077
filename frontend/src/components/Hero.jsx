@@ -20,7 +20,7 @@ export default function Hero() {
           </p>
           
           <div className="hero-cta">
-            <Link to="/grile" className="btn btn-primary">Get Started</Link>
+            <Link to="/grile" className="btn btn-primary">Browse Questions</Link>
             <Link to="/resurse" className="btn btn-secondary">Browse Resources</Link>
           </div>
         </div>

@@ -25,8 +25,8 @@ app.use(express.json());
 
 
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('❌ MongoDB error:', err));
+  .then(() => console.log('[✔] MongoDB connected'))
+  .catch(err => console.error('[✘] MongoDB error:', err));
 
 app.get('/', (req, res) => {
   res.json({ 
@@ -60,6 +60,6 @@ const getLocalIp = () => {
 
 app.listen(PORT, HOST, () => {
   const ip = getLocalIp();
-  console.log(`🚀 Backend running on http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
-  console.log(`🌐 Accessible on your network at: http://${ip}:${PORT}`);
+  console.log(`[-] Backend running on http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
+  console.log(`[-] Accessible on your network at: http://${ip}:${PORT}`);
 });
