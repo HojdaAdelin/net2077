@@ -38,5 +38,45 @@
     "tag": "ACADNET_2025_COUNTY_XI_XII",
     "year": 2025,
     "phase": "county"
+  },
+  {
+    "id": "easy_linux",
+    "title": "Linux Exam 1 - Easy",
+    "description": "NET2077 exam",
+    "duration": 60,
+    "totalPoints": 100,
+    "tag": "LINUX_1",
+    "year": 2025,
+    "phase": "county"
+  },
+  {
+    "id": "medium_linux",
+    "title": "Linux Exam 1 - Medium",
+    "description": "NET2077 exam",
+    "duration": 60,
+    "totalPoints": 100,
+    "tag": "LINUX_2",
+    "year": 2025,
+    "phase": "county"
+  },
+  {
+    "id": "easy_network",
+    "title": "Network Exam 1 - Easy",
+    "description": "NET2077 exam",
+    "duration": 60,
+    "totalPoints": 100,
+    "tag": "NETWORK_1",
+    "year": 2025,
+    "phase": "county"
+  },
+  {
+    "id": "medium_network",
+    "title": "Network Exam 1 - Medium",
+    "description": "NET2077 exam",
+    "duration": 60,
+    "totalPoints": 100,
+    "tag": "NETWORK_2",
+    "year": 2025,
+    "phase": "county"
   }
 ]

@@ -2458,5 +2458,635 @@
     "difficulty": "medium",
     "points": 2,
     "tags": ["ACADNET_2025_LOCAL_IX_X"]
-  }
+  },
+  {
+    "title": "Which command is used to display the current working directory?",
+    "type": "all",
+    "answers": ["pwd", "ls", "cd", "path"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "What does the 'ls' command do in Linux?",
+    "type": "all",
+    "answers": ["Lists files", "Deletes files", "Creates a directory", "Copies files"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "Which command is used to change the current directory?",
+    "type": "all",
+    "answers": ["mv", "cd", "ls", "dir"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "Which command displays the contents of a text file?",
+    "type": "all",
+    "answers": ["touch", "cat", "rm", "mv"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "What does the 'mkdir' command do?",
+    "type": "all",
+    "answers": ["Deletes a directory", "Creates a directory", "Moves a directory", "Displays permissions"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "Which symbol represents the user's home directory?",
+    "type": "all",
+    "answers": ["/", "~", ".", ".."],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "Which command is used to delete a file?",
+    "type": "all",
+    "answers": ["rm", "rf", "erase", "del"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "What does the 'cp' command do?",
+    "type": "all",
+    "answers": ["Creates a file", "Copies files or directories", "Shows processes", "Changes permissions"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "Which command shows the first lines of a file?",
+    "type": "all",
+    "answers": ["tail", "head", "first", "top"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "Which command shows all running processes?",
+    "type": "all",
+    "answers": ["proc", "ps", "list", "jobs"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "What does the 'chmod' command do?",
+    "type": "all",
+    "answers": ["Changes owner", "Changes permissions", "Deletes files", "Lists directories"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "Which command stops a process using its PID?",
+    "type": "all",
+    "answers": ["stop", "end", "kill", "terminate"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "Which file contains user information in Linux?",
+    "type": "all",
+    "answers": ["/etc/passwd", "/home/passwd", "/bin/users", "/usr/passwd"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "Which command displays free disk space?",
+    "type": "all",
+    "answers": ["df", "disk", "space", "du"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "Which command changes the user's password?",
+    "type": "all",
+    "answers": ["pass", "password", "passwd", "chpass"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "What is the name of the root directory in Linux?",
+    "type": "all",
+    "answers": ["home", "root", "/", "/root"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "Which command displays the command history?",
+    "type": "all",
+    "answers": ["history", "commands", "log", "his"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "How do you redirect the output of a command to a file?",
+    "type": "all",
+    "answers": ["cmd < file", "cmd > file", "cmd << file", "cmd >> file"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "Which command shows system information?",
+    "type": "all",
+    "answers": ["uname", "whoami", "sysinfo", "info"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "Which command is used to move or rename files?",
+    "type": "all",
+    "answers": ["mv", "move", "rename", "cp"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX_1"]
+  },
+  {
+    "title": "Which command is used to display the last 50 lines of a log file?",
+    "type": "all",
+    "answers": ["head -n 50", "tail -n 50", "cat -n 50", "less 50"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "What does the command 'grep -i' do?",
+    "type": "all",
+    "answers": ["Searches case-sensitive", "Searches case-insensitive", "Searches only numbers", "Searches directories only"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "Which file contains system-wide environment variable definitions?",
+    "type": "all",
+    "answers": ["/etc/env", "/etc/environment", "/etc/config", "/etc/vars"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "Which command is used to change the owner of a file?",
+    "type": "all",
+    "answers": ["chmod", "chgrp", "chown", "usermod"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "Which command shows the current running services on a systemd-based system?",
+    "type": "all",
+    "answers": ["systemctl list", "systemctl status", "systemctl list-units --type=service", "service --all"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "What does the 'tar -xzvf' command do?",
+    "type": "all",
+    "answers": [
+      "Extracts a compressed .tar.gz file",
+      "Creates a compressed .tar.gz archive",
+      "Lists content of a tar file",
+      "Compresses using zip"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "Which command is used to view active network connections?",
+    "type": "all",
+    "answers": ["netstat -tulnp", "ifconfig -a", "ip link show", "nslookup"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "Which file contains the list of mounted file systems?",
+    "type": "all",
+    "answers": ["/etc/fstab", "/etc/mounts", "/etc/diskmap", "/etc/fsconfig"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "Which command is used to compare two files line by line?",
+    "type": "all",
+    "answers": ["cmp", "diff", "compare", "check"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "What does the 'du -h' command show?",
+    "type": "all",
+    "answers": [
+      "Disk usage in human-readable format",
+      "Free disk space",
+      "Mounted partitions",
+      "Memory usage"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "Which directory contains system logs?",
+    "type": "all",
+    "answers": ["/var/sys", "/var/log", "/etc/logs", "/usr/log"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "Which command shows the routing table?",
+    "type": "all",
+    "answers": ["ip route", "ip table", "route list", "netconfig"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "Which command is used to monitor real-time system performance?",
+    "type": "all",
+    "answers": ["watch", "monitor", "top", "sysmon"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "Where are user cron jobs stored?",
+    "type": "all",
+    "answers": ["/etc/cron.user", "/var/cron", "/var/spool/cron", "/usr/cron"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "What does the command 'export PATH=/usr/local/bin:$PATH' do?",
+    "type": "all",
+    "answers": [
+      "Replaces the PATH variable",
+      "Adds a new directory to PATH",
+      "Deletes PATH",
+      "Shows PATH"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "Which command is used to search for a file by name?",
+    "type": "all",
+    "answers": ["locate", "search", "find", "whereis"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "What does 'chmod 755 file' do?",
+    "type": "all",
+    "answers": [
+      "Gives full permissions to everyone",
+      "Owner: read/write, Group: read-only, Others: no access",
+      "Owner: full, Group: read/execute, Others: read/execute",
+      "Removes write permission from owner"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "Which command is used to create a symbolic link?",
+    "type": "all",
+    "answers": ["link", "symlink", "ln -s", "mklink"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "Which directory stores device files in Linux?",
+    "type": "all",
+    "answers": ["/dev", "/device", "/mnt/dev", "/proc/dev"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "Which command displays memory usage?",
+    "type": "all",
+    "answers": ["free -h", "meminfo", "usage -m", "topmem"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX_2"]
+  },
+  {
+    "title": "What does the acronym LAN stand for?",
+    "type": "all",
+    "answers": ["Local Area Network", "Large Access Network", "Logical Address Node", "Layered Area Network"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  { 
+    "title": "Which device connects multiple network segments and operates at Layer 2 of the OSI model?",
+    "type": "all",
+    "answers": ["Router", "Switch", "Hub", "Firewall"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "What is the purpose of a router?",
+    "type": "all",
+    "answers": ["To connect hosts", "To forward packets between networks", "To amplify signals", "To convert analog to digital"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "Which protocol is used to assign IP addresses automatically?",
+    "type": "all",
+    "answers": ["DNS", "FTP", "DHCP", "HTTP"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "Which IP class typically supports the fewest hosts?",
+    "type": "all",
+    "answers": ["Class A", "Class B", "Class C", "Class D"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "What does DNS stand for?",
+    "type": "all",
+    "answers": ["Domain Name System", "Dynamic Network Service", "Digital Node Server", "Domain Network Signal"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "Which protocol uses port 80 by default?",
+    "type": "all",
+    "answers": ["HTTPS", "FTP", "HTTP", "DNS"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "What device broadcasts all incoming data to every port?",
+    "type": "all",
+    "answers": ["Switch", "Router", "Hub", "Bridge"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "Which layer of the OSI model is responsible for IP addressing?",
+    "type": "all",
+    "answers": ["Transport", "Network", "Session", "Physical"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "Which protocol is used to transfer files between devices?",
+    "type": "all",
+    "answers": ["HTTP", "FTP", "SMTP", "SSH"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "What is the default gateway?",
+    "type": "all",
+    "answers": [
+      "The DNS server",
+      "The router that forwards traffic outside the local network",
+      "The first usable IP in a subnet",
+      "The broadcast address"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "Which cable type is commonly used for Ethernet networks?",
+    "type": "all",
+    "answers": ["Coaxial", "Fiber", "Twisted Pair", "HDMI"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "Which protocol sends echo requests and replies?",
+    "type": "all",
+    "answers": ["TCP", "ICMP", "UDP", "ARP"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "What command is used to test network connectivity?",
+    "type": "all",
+    "answers": ["ping", "testnet", "check", "ipconfig"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "Which protocol translates domain names to IP addresses?",
+    "type": "all",
+    "answers": ["FTP", "DHCP", "DNS", "Telnet"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "What is the loopback IP address?",
+    "type": "all",
+    "answers": ["255.255.255.255", "0.0.0.0", "192.168.0.1", "127.0.0.1"],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "Which layer of the OSI model is responsible for data encryption?",
+    "type": "all",
+    "answers": ["Presentation", "Session", "Transport", "Network"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "Which network type spans the largest geographical area?",
+    "type": "all",
+    "answers": ["LAN", "WAN", "PAN", "MAN"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "What does the subnet mask 255.255.255.0 indicate?",
+    "type": "all",
+    "answers": [
+      "A Class A network",
+      "A /24 network",
+      "A /8 network",
+      "A network with only 10 hosts"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  },
+  {
+    "title": "What protocol is used for secure remote login?",
+    "type": "all",
+    "answers": ["SSH", "Telnet", "HTTP", "FTP"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["NETWORK_1"]
+  }  
 ]
