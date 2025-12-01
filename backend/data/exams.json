@@ -51,7 +51,7 @@
   },
   {
     "id": "medium_linux",
-    "title": "Linux Exam 1 - Medium",
+    "title": "Linux Exam 2 - Medium",
     "description": "NET2077 exam",
     "duration": 60,
     "totalPoints": 100,
@@ -71,7 +71,7 @@
   },
   {
     "id": "medium_network",
-    "title": "Network Exam 1 - Medium",
+    "title": "Network Exam 2 - Medium",
     "description": "NET2077 exam",
     "duration": 60,
     "totalPoints": 100,

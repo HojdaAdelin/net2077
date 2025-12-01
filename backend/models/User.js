@@ -10,8 +10,13 @@ const userSchema = new mongoose.Schema({
     NETWORK: { type: Number, default: 0 }
   },
   simulations: [{
+    examId: String,
+    examTitle: String,
+    examTag: String,
     score: Number,
-    total: Number,
+    totalPoints: Number,
+    correctAnswers: Number,
+    totalQuestions: Number,
     date: { type: Date, default: Date.now }
   }],
   xp: { type: Number, default: 0 },

@@ -55,10 +55,11 @@ export default function Quiz({ isExam = false }) {
       /* Simulation logic */
 
         let score = 0;
-        let total = 0;
+        let totalPoints = 0;
+        let correctAnswers = 0;
         
         questions.forEach((q) => {
-          total += q.points || 1;
+          totalPoints += q.points || 1;
           const qUserAnswers = selectedAnswers[q._id] || [];
           const qCorrectAnswers = q.correctAnswers || [q.correctIndex];
           
@@ -67,6 +68,7 @@ export default function Quiz({ isExam = false }) {
             qUserAnswers.every(ans => qCorrectAnswers.includes(ans))
           ) {
             score += q.points || 1;
+            correctAnswers += 1;
           }
         });
 
@@ -76,7 +78,15 @@ export default function Quiz({ isExam = false }) {
             'Content-Type': 'application/json'
           },
           credentials: 'include',
-          body: JSON.stringify({ score, total })
+          body: JSON.stringify({ 
+            examId: examId,
+            examTitle: examMeta?.title || 'Unknown Exam',
+            examTag: examMeta?.tag || '',
+            score, 
+            totalPoints,
+            correctAnswers,
+            totalQuestions: questions.length
+          })
         }).catch(error => console.error('Error saving simulation:', error));
 
       /* Simulation logic */

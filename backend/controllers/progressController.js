@@ -38,11 +38,23 @@ export const getLevel = async (req, res) => {
 
 export const addSimulation = async (req, res) => {
   try {
-    const { score, total } = req.body;
+    const { examId, examTitle, examTag, score, totalPoints, correctAnswers, totalQuestions } = req.body;
     const user = await User.findById(req.userId);
     
-    user.simulations.push({ score, total, date: new Date() });
-    user.xp += Math.floor(score / total * 100) * 2;
+    user.simulations.push({ 
+      examId,
+      examTitle,
+      examTag,
+      score, 
+      totalPoints,
+      correctAnswers,
+      totalQuestions,
+      date: new Date() 
+    });
+    
+    // Calculate XP based on score percentage
+    const percentage = totalPoints > 0 ? (score / totalPoints) * 100 : 0;
+    user.xp += Math.floor(percentage) * 2;
     user.level = Math.floor(user.xp / 100) + 1;
     await user.save();
     

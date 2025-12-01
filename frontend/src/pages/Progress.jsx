@@ -90,7 +90,7 @@ export default function Progress() {
           <h2>Recent Simulations</h2>
           <div className="simulations-grid">
             {progress.simulations.slice(-6).reverse().map((sim, i) => {
-              const percentage = Math.round((sim.score / sim.total) * 100);
+              const percentage = sim.totalPoints > 0 ? Math.round((sim.score / sim.totalPoints) * 100) : 0;
               const isPassed = percentage >= 70;
               
               return (
@@ -104,13 +104,19 @@ export default function Progress() {
                     </span>
                   </div>
                   
+                  {sim.examTitle && (
+                    <div className="simulation-title">
+                      {sim.examTitle}
+                    </div>
+                  )}
+                  
                   <div className="simulation-score">
                     <div className="score-display">{percentage}%</div>
                   </div>
                   
                   <div className="simulation-details">
-                    <div>{sim.score} points</div>
-                    <div>{sim.score/2} / {sim.total/2} correct answers</div>
+                    <div>{sim.score} / {sim.totalPoints} points</div>
+                    <div>{sim.correctAnswers} / {sim.totalQuestions} correct answers</div>
                   </div>
                 </div>
               );

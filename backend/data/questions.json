@@ -2467,7 +2467,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "What does the 'ls' command do in Linux?",
@@ -2477,7 +2477,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "Which command is used to change the current directory?",
@@ -2487,7 +2487,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "Which command displays the contents of a text file?",
@@ -2497,7 +2497,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "What does the 'mkdir' command do?",
@@ -2507,7 +2507,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "Which symbol represents the user's home directory?",
@@ -2517,7 +2517,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "Which command is used to delete a file?",
@@ -2527,7 +2527,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "What does the 'cp' command do?",
@@ -2537,7 +2537,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "Which command shows the first lines of a file?",
@@ -2547,7 +2547,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "Which command shows all running processes?",
@@ -2557,7 +2557,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "What does the 'chmod' command do?",
@@ -2567,7 +2567,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "Which command stops a process using its PID?",
@@ -2577,7 +2577,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "Which file contains user information in Linux?",
@@ -2587,7 +2587,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "Which command displays free disk space?",
@@ -2597,7 +2597,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "Which command changes the user's password?",
@@ -2607,7 +2607,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "What is the name of the root directory in Linux?",
@@ -2617,7 +2617,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "Which command displays the command history?",
@@ -2627,7 +2627,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "How do you redirect the output of a command to a file?",
@@ -2637,7 +2637,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "Which command shows system information?",
@@ -2647,7 +2647,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "Which command is used to move or rename files?",
@@ -2657,7 +2657,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["LINUX_1"]
+    "tags": ["LINUX_1", "LINUX"]
   },
   {
     "title": "Which command is used to display the last 50 lines of a log file?",
@@ -2667,7 +2667,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "What does the command 'grep -i' do?",
@@ -2677,7 +2677,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "Which file contains system-wide environment variable definitions?",
@@ -2687,7 +2687,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "Which command is used to change the owner of a file?",
@@ -2697,7 +2697,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "Which command shows the current running services on a systemd-based system?",
@@ -2707,7 +2707,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "What does the 'tar -xzvf' command do?",
@@ -2722,7 +2722,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "Which command is used to view active network connections?",
@@ -2732,7 +2732,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "Which file contains the list of mounted file systems?",
@@ -2742,7 +2742,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "Which command is used to compare two files line by line?",
@@ -2752,7 +2752,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "What does the 'du -h' command show?",
@@ -2767,7 +2767,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "Which directory contains system logs?",
@@ -2777,7 +2777,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "Which command shows the routing table?",
@@ -2787,7 +2787,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "Which command is used to monitor real-time system performance?",
@@ -2797,7 +2797,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "Where are user cron jobs stored?",
@@ -2807,7 +2807,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "What does the command 'export PATH=/usr/local/bin:$PATH' do?",
@@ -2822,7 +2822,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "Which command is used to search for a file by name?",
@@ -2832,7 +2832,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "What does 'chmod 755 file' do?",
@@ -2847,7 +2847,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "Which command is used to create a symbolic link?",
@@ -2857,7 +2857,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "Which directory stores device files in Linux?",
@@ -2867,7 +2867,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "Which command displays memory usage?",
@@ -2877,7 +2877,7 @@
     "multipleCorrect": false,
     "difficulty": "medium",
     "points": 2,
-    "tags": ["LINUX_2"]
+    "tags": ["LINUX_2", "LINUX"]
   },
   {
     "title": "What does the acronym LAN stand for?",
@@ -2887,7 +2887,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   { 
     "title": "Which device connects multiple network segments and operates at Layer 2 of the OSI model?",
@@ -2897,7 +2897,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "What is the purpose of a router?",
@@ -2907,7 +2907,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "Which protocol is used to assign IP addresses automatically?",
@@ -2917,7 +2917,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "Which IP class typically supports the fewest hosts?",
@@ -2927,7 +2927,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "What does DNS stand for?",
@@ -2937,7 +2937,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "Which protocol uses port 80 by default?",
@@ -2947,7 +2947,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "What device broadcasts all incoming data to every port?",
@@ -2957,7 +2957,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "Which layer of the OSI model is responsible for IP addressing?",
@@ -2967,7 +2967,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "Which protocol is used to transfer files between devices?",
@@ -2977,7 +2977,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "What is the default gateway?",
@@ -2992,7 +2992,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "Which cable type is commonly used for Ethernet networks?",
@@ -3002,7 +3002,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "Which protocol sends echo requests and replies?",
@@ -3012,7 +3012,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "What command is used to test network connectivity?",
@@ -3022,7 +3022,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "Which protocol translates domain names to IP addresses?",
@@ -3032,7 +3032,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "What is the loopback IP address?",
@@ -3042,7 +3042,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "Which layer of the OSI model is responsible for data encryption?",
@@ -3052,7 +3052,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "Which network type spans the largest geographical area?",
@@ -3062,7 +3062,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "What does the subnet mask 255.255.255.0 indicate?",
@@ -3077,7 +3077,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
+    "tags": ["NETWORK_1", "NETWORK"]
   },
   {
     "title": "What protocol is used for secure remote login?",
@@ -3087,6 +3087,206 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 1,
-    "tags": ["NETWORK_1"]
-  }  
+    "tags": ["NETWORK_1", "NETWORK"]
+  },
+  {
+    "title": "Which command displays detailed network interface information on Linux?",
+    "type": "all",
+    "answers": ["ip a", "netinfo", "ifstatus", "route -i"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "Which protocol is responsible for resolving MAC addresses from IP addresses?",
+    "type": "all",
+    "answers": ["ICMP", "ARP", "DNS", "RARP"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "Which routing protocol uses administrative distance 120 by default?",
+    "type": "all",
+    "answers": ["OSPF", "EIGRP", "RIP", "BGP"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "What is the main advantage of switching over hubs?",
+    "type": "all",
+    "answers": ["Faster routing", "Collision domain reduction", "Working at Layer 3", "Broadcast suppression"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "Which protocol uses port 443?",
+    "type": "all",
+    "answers": ["HTTPS", "SSH", "SMTP", "IMAP"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "Which command traces the route taken by packets to a destination?",
+    "type": "all",
+    "answers": ["ping", "tracert/traceroute", "route show", "netstat"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "In a subnet mask, what does a /26 prefix represent?",
+    "type": "all",
+    "answers": ["64 IP addresses", "128 IP addresses", "16 IP addresses", "32 IP addresses"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "Which type of IPv6 address is equivalent to a private IPv4 address?",
+    "type": "all",
+    "answers": ["Global Unicast", "Multicast", "Link-local", "Unique Local"],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "Which device separates broadcast domains?",
+    "type": "all",
+    "answers": ["Switch", "Hub", "Router", "Repeater"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "Which protocol is used for sending emails?",
+    "type": "all",
+    "answers": ["POP3", "SMTP", "IMAP", "FTP"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "What is the function of NAT?",
+    "type": "all",
+    "answers": ["Encrypts traffic", "Translates private IPs to public IPs", "Assigns DNS addresses", "Provides subnet masks"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "At which OSI layer does a firewall normally operate?",
+    "type": "all",
+    "answers": ["Layer 1", "Layer 2", "Layer 3/4", "Layer 7 only"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "Which command displays the ARP table?",
+    "type": "all",
+    "answers": ["arp -a", "ip show arp", "maclist", "ping -arp"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "Which wireless security protocol is considered strongest?",
+    "type": "all",
+    "answers": ["WEP", "WPA", "WPA2", "WPA3"],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of VLANs?",
+    "type": "all",
+    "answers": ["Increase WiFi coverage", "Segment networks logically", "Block external attacks", "Convert IP versions"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "Which part of an IP packet contains routing information?",
+    "type": "all",
+    "answers": ["Payload", "Header", "Checksum", "Footer"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "Which protocol secures remote access using encryption?",
+    "type": "all",
+    "answers": ["Telnet", "SSH", "FTP", "ARP"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "Which tool captures and analyzes network packets?",
+    "type": "all",
+    "answers": ["Wireshark", "Nmap", "Traceroute", "PingView"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "Which protocol is used for secure file transfer?",
+    "type": "all",
+    "answers": ["FTP", "TFTP", "SFTP", "POP3"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "Which command shows open ports and listening services?",
+    "type": "all",
+    "answers": ["netstat -tulnp", "ip show ports", "route -l", "portscan -list"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["NETWORK_2", "NETWORK"]
+  }
 ]
