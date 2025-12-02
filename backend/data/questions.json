@@ -3288,5 +3288,405 @@
     "difficulty": "medium",
     "points": 2,
     "tags": ["NETWORK_2", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of VLAN tagging in network switches?",
+    "type": "all",
+    "answers": ["Segment network traffic logically", "Increase bandwidth", "Encrypt data", "Compress packets"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "Which routing protocol uses the Bellman-Ford algorithm?",
+    "type": "all",
+    "answers": ["RIP", "OSPF", "BGP", "EIGRP"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "What is the maximum number of hops allowed in RIPv2?",
+    "type": "all",
+    "answers": ["15", "16", "255", "Unlimited"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "Which protocol operates at Layer 2 and prevents switching loops?",
+    "type": "all",
+    "answers": ["STP (Spanning Tree Protocol)", "RIP", "ICMP", "ARP"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of the BGP protocol?",
+    "type": "all",
+    "answers": ["Inter-domain routing between autonomous systems", "Intra-domain routing", "MAC address resolution", "DNS resolution"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "Which QoS mechanism prioritizes network traffic based on packet marking?",
+    "type": "all",
+    "answers": ["DiffServ (Differentiated Services)", "Best Effort", "FIFO", "Round Robin"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "What is the default administrative distance of OSPF?",
+    "type": "all",
+    "answers": ["110", "90", "120", "100"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "Which OSPF area type does not allow external routes?",
+    "type": "all",
+    "answers": ["Stub Area", "Backbone Area", "NSSA", "Transit Area"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of HSRP (Hot Standby Router Protocol)?",
+    "type": "all",
+    "answers": ["Provide gateway redundancy", "Load balancing", "Route optimization", "Packet filtering"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "Which protocol is used for automatic IP address assignment in IPv6?",
+    "type": "all",
+    "answers": ["DHCPv6 and SLAAC", "DHCP", "BOOTP", "RARP"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of MPLS (Multiprotocol Label Switching)?",
+    "type": "all",
+    "answers": ["Fast packet forwarding using labels", "Encrypt traffic", "Compress data", "Filter packets"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "Which mechanism prevents IP address conflicts in DHCP?",
+    "type": "all",
+    "answers": ["DHCP Snooping", "ARP Inspection", "Port Security", "BPDU Guard"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "What is the maximum transmission unit (MTU) for standard Ethernet frames?",
+    "type": "all",
+    "answers": ["1500 bytes", "1518 bytes", "9000 bytes", "64 bytes"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "Which protocol provides secure remote access with encryption?",
+    "type": "all",
+    "answers": ["SSH", "Telnet", "FTP", "HTTP"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of NAT overload (PAT)?",
+    "type": "all",
+    "answers": ["Map multiple private IPs to one public IP using ports", "Encrypt traffic", "Load balance", "Filter packets"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "Which EIGRP metric components are used by default?",
+    "type": "all",
+    "answers": ["Bandwidth and Delay", "Bandwidth and Load", "Delay and Reliability", "All metrics"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of GRE (Generic Routing Encapsulation)?",
+    "type": "all",
+    "answers": ["Tunnel multiple protocols over IP", "Encrypt data", "Compress packets", "Filter traffic"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "Which protocol detects and prevents ARP spoofing attacks?",
+    "type": "all",
+    "answers": ["Dynamic ARP Inspection (DAI)", "DHCP Snooping", "Port Security", "BPDU Guard"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "What is the default hello interval for OSPF on broadcast networks?",
+    "type": "all",
+    "answers": ["10 seconds", "30 seconds", "40 seconds", "5 seconds"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "Which VPN protocol provides the highest level of security?",
+    "type": "all",
+    "answers": ["IPsec", "PPTP", "L2TP", "GRE"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["NETWORK_3", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of SELinux in Linux systems?",
+    "type": "all",
+    "answers": ["Mandatory Access Control (MAC) security", "File encryption", "Network filtering", "Process scheduling"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "Which Linux command displays real-time system resource usage?",
+    "type": "all",
+    "answers": ["top", "ps", "ls", "df"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of the iptables command in Linux?",
+    "type": "all",
+    "answers": ["Configure firewall rules", "Manage users", "Schedule tasks", "Monitor logs"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "Which file contains user account information in Linux?",
+    "type": "all",
+    "answers": ["/etc/passwd", "/etc/shadow", "/etc/group", "/etc/hosts"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of systemd in modern Linux distributions?",
+    "type": "all",
+    "answers": ["System and service manager", "Package manager", "File system", "Shell interpreter"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "Which command creates a compressed tar archive?",
+    "type": "all",
+    "answers": ["tar -czf archive.tar.gz files/", "tar -xzf archive.tar.gz", "gzip files/", "zip archive.zip files/"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of the cron daemon in Linux?",
+    "type": "all",
+    "answers": ["Schedule automated tasks", "Manage processes", "Monitor logs", "Configure network"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "Which Linux file system supports journaling?",
+    "type": "all",
+    "answers": ["ext4", "FAT32", "NTFS", "exFAT"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of the sudo command?",
+    "type": "all",
+    "answers": ["Execute commands with elevated privileges", "Switch users", "Show disk usage", "Search files"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "Which command displays kernel messages in Linux?",
+    "type": "all",
+    "answers": ["dmesg", "syslog", "journalctl", "logcat"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of LVM (Logical Volume Manager)?",
+    "type": "all",
+    "answers": ["Flexible disk partition management", "File encryption", "Network configuration", "Process monitoring"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "Which command changes file ownership in Linux?",
+    "type": "all",
+    "answers": ["chown", "chmod", "chgrp", "chattr"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of the rsync command?",
+    "type": "all",
+    "answers": ["Efficient file synchronization and transfer", "File compression", "File encryption", "File deletion"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "Which Linux command monitors network traffic in real-time?",
+    "type": "all",
+    "answers": ["tcpdump", "ping", "traceroute", "nslookup"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of AppArmor in Linux?",
+    "type": "all",
+    "answers": ["Application security framework", "Package manager", "File system", "Network manager"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "Which command displays active network connections in Linux?",
+    "type": "all",
+    "answers": ["ss or netstat", "ifconfig", "route", "arp"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of the find command in Linux?",
+    "type": "all",
+    "answers": ["Search for files and directories", "Find text in files", "Find processes", "Find network devices"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "Which Linux command manages software packages in Debian-based systems?",
+    "type": "all",
+    "answers": ["apt or apt-get", "yum", "dnf", "pacman"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "What is the purpose of the systemctl command?",
+    "type": "all",
+    "answers": ["Control systemd services and units", "System monitoring", "File management", "Network configuration"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
+  },
+  {
+    "title": "Which file contains DNS resolver configuration in Linux?",
+    "type": "all",
+    "answers": ["/etc/resolv.conf", "/etc/hosts", "/etc/network/interfaces", "/etc/hostname"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX_3", "NETWORK"]
   }
 ]

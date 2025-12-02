@@ -43,19 +43,29 @@
     "id": "easy_linux",
     "title": "Linux Exam 1 - Easy",
     "description": "NET2077 exam",
-    "duration": 60,
-    "totalPoints": 100,
+    "duration": 10,
+    "totalPoints": 20,
     "tag": "LINUX_1",
     "year": 2025,
     "phase": "county"
   },
   {
-    "id": "medium_linux",
+    "id": "medium_linux", 
     "title": "Linux Exam 2 - Medium",
     "description": "NET2077 exam",
-    "duration": 60,
-    "totalPoints": 100,
+    "duration": 20,
+    "totalPoints": 40,
     "tag": "LINUX_2",
+    "year": 2025,
+    "phase": "county"
+  },
+  {
+    "id": "hard_linux", 
+    "title": "Linux Exam 3 - Hard",
+    "description": "NET2077 exam",
+    "duration": 30,
+    "totalPoints": 100,
+    "tag": "LINUX_3",
     "year": 2025,
     "phase": "county"
   },
@@ -63,8 +73,8 @@
     "id": "easy_network",
     "title": "Network Exam 1 - Easy",
     "description": "NET2077 exam",
-    "duration": 60,
-    "totalPoints": 100,
+    "duration": 10,
+    "totalPoints": 20,
     "tag": "NETWORK_1",
     "year": 2025,
     "phase": "county"
@@ -73,9 +83,19 @@
     "id": "medium_network",
     "title": "Network Exam 2 - Medium",
     "description": "NET2077 exam",
-    "duration": 60,
-    "totalPoints": 100,
+    "duration": 20,
+    "totalPoints": 40,
     "tag": "NETWORK_2",
+    "year": 2025,
+    "phase": "county"
+  },
+  {
+    "id": "hard_network",
+    "title": "Network Exam 3 - Hard",
+    "description": "NET2077 exam",
+    "duration": 30,
+    "totalPoints": 100,
+    "tag": "NETWORK_3",
     "year": 2025,
     "phase": "county"
   }
