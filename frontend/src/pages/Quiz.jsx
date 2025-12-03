@@ -43,16 +43,16 @@ export default function Quiz({ isExam = false }) {
   const examDurationSeconds = examDurationMinutes ? examDurationMinutes * 60 : null;
 
   useEffect(() => {
-    if (!isExam || !examMeta || !examDurationSeconds) return;
+    if (!isExam || !examMeta || !examDurationSeconds || !examStarted) return;
     if (timeLeft !== null) return;
     setTimeLeft(examDurationSeconds);
-  }, [isExam, examMeta, examDurationSeconds, timeLeft]);
+  }, [isExam, examMeta, examDurationSeconds, timeLeft, examStarted]);
 
   const handleFinishExam = useCallback((reason = 'manual') => {
     if (showResults) return;
 
     if (isExam) {
-      /* Simulation logic */
+      
 
         let score = 0;
         let totalPoints = 0;
@@ -273,13 +273,17 @@ export default function Quiz({ isExam = false }) {
         }
 
         const autoFinished = restoredState?.examStarted && !restoredState?.showResults && adjustedTimeLeft === 0;
+        const wasExamStarted = restoredState?.examStarted || false;
 
-        setExamStarted(autoFinished ? false : (restoredState?.examStarted || false));
+        setExamStarted(autoFinished ? false : wasExamStarted);
         setSelectedAnswers(initialSelected);
         setSubmittedAnswers(initialSubmitted);
         setLockedQuestions(initialLocked);
         setCurrentIndex(initialCurrentIndex);
-        setTimeLeft(adjustedTimeLeft);
+        
+        if (wasExamStarted || autoFinished) {
+          setTimeLeft(adjustedTimeLeft);
+        }
         setShowResults(autoFinished ? true : (restoredState?.showResults || false));
         setFinishReason(autoFinished ? 'time' : (restoredState?.finishReason || null));
         setTimeSpent(autoFinished ? durationSeconds : (restoredState?.timeSpent || 0));
