@@ -3497,7 +3497,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "Which Linux command displays real-time system resource usage?",
@@ -3507,7 +3507,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "What is the purpose of the iptables command in Linux?",
@@ -3517,7 +3517,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "Which file contains user account information in Linux?",
@@ -3527,7 +3527,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "What is the purpose of systemd in modern Linux distributions?",
@@ -3537,7 +3537,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "Which command creates a compressed tar archive?",
@@ -3547,7 +3547,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "What is the purpose of the cron daemon in Linux?",
@@ -3557,7 +3557,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "Which Linux file system supports journaling?",
@@ -3567,7 +3567,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "What is the purpose of the sudo command?",
@@ -3577,7 +3577,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "Which command displays kernel messages in Linux?",
@@ -3587,7 +3587,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "What is the purpose of LVM (Logical Volume Manager)?",
@@ -3597,7 +3597,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "Which command changes file ownership in Linux?",
@@ -3607,7 +3607,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "What is the purpose of the rsync command?",
@@ -3617,7 +3617,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "Which Linux command monitors network traffic in real-time?",
@@ -3627,7 +3627,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "What is the purpose of AppArmor in Linux?",
@@ -3637,7 +3637,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "Which command displays active network connections in Linux?",
@@ -3647,7 +3647,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "What is the purpose of the find command in Linux?",
@@ -3657,7 +3657,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "Which Linux command manages software packages in Debian-based systems?",
@@ -3667,7 +3667,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "What is the purpose of the systemctl command?",
@@ -3677,7 +3677,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
   },
   {
     "title": "Which file contains DNS resolver configuration in Linux?",
@@ -3687,6 +3687,775 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX_3", "NETWORK"]
+    "tags": ["LINUX_3", "LINUX"]
+  },
+  {
+    "title": "Care este diferența dintre un switch și un hub?",
+    "type": "acadnet",
+    "answers": [
+      "Un switch este un dispozitiv de rețea care filtrează traficul de rețea, în timp ce un hub nu are această funcționalitate.",
+      "Un switch este un dispozitiv de rețea care conectează mai multe dispozitive într-o rețea și direcționează pachetele de date doar către destinația corectă, în timp ce un hub transmite pachetele către toate dispozitivele conectate.",
+      "Nu există nicio diferență semnificativă între un switch și un hub.",
+      "Un switch este un dispozitiv de rețea care conectează două rețele diferite, în timp ce un hub conectează dispozitivele dintr-o singură rețea."
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele afirmații este adevărată în contextul diferenței dintre aplicațiile native și aplicațiile web?",
+    "type": "acadnet",
+    "answers": [
+      "Aplicațiile native sunt accesibile doar prin intermediul unui browser și nu pot fi instalate direct pe dispozitive.",
+      "Aplicațiile web sunt mai frecvent utilizate pe desktop, în timp ce pe dispozitivele mobile sunt mai des întâlnite aplicațiile native.",
+      "Aplicațiile native rulează într-un browser și pot fi utilizate pe orice sistem de operare.",
+      "Aplicațiile web oferă o interfață grafică (GUI) și rulează de obicei pe un sistem de calcul independent."
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ce înseamnă conceptul de virtualizare hardware?",
+    "type": "acadnet",
+    "answers": [
+      "Crearea de simulări software pentru testarea hardware-ului fizic",
+      "Transformarea unui dispozitiv fizic într-un dispozitiv virtual",
+      "Alocarea dinamică a resurselor hardware între diferite aplicații software",
+      "Posibilitatea de a rula mai multe sisteme de operare simultan folosind aceleași resurse hardware",
+      "Îmbunătățirea performanței hardware-ului prin actualizări de firmware"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ce este o rețea VPN și cum funcționează?",
+    "type": "acadnet",
+    "answers": [
+      "O rețea VPN este o rețea privată care utilizează infrastructura publică a internetului pentru a conecta utilizatorii sau locațiile la distanță.",
+      "O rețea VPN este o rețea wireless care utilizează un protocol de securitate special pentru a proteja datele transmise.",
+      "O rețea VPN este o rețea locală care utilizează un protocol de rutare special pentru a optimiza traficul de rețea.",
+      "O rețea VPN este o rețea virtuală care este creată în cadrul unui hipervizor."
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ce este un \"atac de tip dictionary attack\"?",
+    "type": "acadnet",
+    "answers": [
+      "Un atac în care atacatorul exploatează o vulnerabilitate a unui software.",
+      "Un atac în care atacatorul încearcă să ghicească o parolă prin încercarea unor cuvinte și fraze comune.",
+      "Un atac în care atacatorul folosește forța brută.",
+      "Un atac în care atacatorul instalează malware pe un sistem."
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Pe ce port se conectează placa video (GPU) într-un sistem de tip desktop?",
+    "type": "acadnet",
+    "answers": [
+      "PCIe",
+      "SATA",
+      "USB",
+      "HDMI"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Alegeți definiția corectă pentru Internet of Things.",
+    "type": "acadnet",
+    "answers": [
+      "un sistem de dispozitive interconectate care furnizează date despre mediul lor",
+      "capacitatea obiectelor de a repara configurațiile folosind inteligența artificială și conexiunea la internet",
+      "un protocol de comunicare wireless pentru dispozitive cu interacțiune umană",
+      "capacitatea obiectelor de a genera propriul conținut web și de a-l publica online",
+      "o tehnologie care permite obiectelor să acceseze și să navigheze pe internet în mod autonom",
+      "un sistem de control centralizat al tuturor dispozitivelor electronice dintr-o încăpere",
+      "o metodă de a transforma orice obiect fizic într-un computer prin conectarea la internet"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care este numărul maxim de partiții primare suportate de schema de partiționare MBR?",
+    "type": "acadnet",
+    "answers": [
+      "Nu este limitată la vreun număr de partiții",
+      "Una",
+      "Patru",
+      "Două"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ce comandă este utilizată în Linux pentru a afișa tabela de rutare? (2 variante corecte)",
+    "type": "acadnet",
+    "answers": [
+      "route",
+      "ifconfig",
+      "netstat",
+      "ip",
+      "cd"
+    ],
+    "correctAnswers": [0, 3],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ai nevoie să termini un proces care nu răspunde la comenzile normale. Ce semnal ar trebui să utilizezi cu comanda kill?",
+    "type": "acadnet",
+    "answers": [
+      "SIGKILL",
+      "SIGTERM",
+      "SIGSTOP",
+      "SIGINT"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care sunt comenzile specifice pentru gestionarea pachetelor în distribuțiile bazate pe Debian? (3 variante corecte)",
+    "type": "acadnet",
+    "answers": [
+      "dpkg",
+      "equery",
+      "dnf",
+      "rpm",
+      "apt",
+      "aptitude"
+    ],
+    "correctAnswers": [0, 4, 5],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "La ce este folosită comanda du, pe un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "Afișarea utilizării spațiului de disc pentru un fișier",
+      "Listarea fișierelor dintr-un director în ordine alfabetică",
+      "Verificarea integrității unui fișier",
+      "Ștergerea unui utilizator"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Pe un sistem Linux, în ce director sunt localizate imaginile de kernel?",
+    "type": "acadnet",
+    "answers": [
+      "/boot",
+      "/usr/local/bin/",
+      "/etc/kernel",
+      "/opt/kernel-images"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care este stiva de protocoale folosită în Internet?",
+    "type": "acadnet",
+    "answers": [
+      "NetBEUI",
+      "TCP/IP",
+      "OSI",
+      "IPX/SPX",
+      "SNA"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele utilitare folosește propriul său limbaj de programare și permite scrierea și executarea unui script complet?",
+    "type": "acadnet",
+    "answers": [
+      "grep",
+      "sed",
+      "find",
+      "tr",
+      "cut",
+      "awk"
+    ],
+    "correctAnswers": [5],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ai nevoie să transferi un fișier confidențial către un partener de afaceri. Ce metodă de securizare a transferului este cea mai potrivită?",
+    "type": "acadnet",
+    "answers": [
+      "Împărțirea fișierului în mai multe părți și trimiterea lor separat prin email.",
+      "Utilizarea unui serviciu de transfer de fișiere securizat, cum ar fi SFTP.",
+      "Publicarea fișierului pe un forum public."
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "#!/bin/bash\nfunction copil(){ sleep 10; echo \"Copil terminat\"; }\ncopil &\necho \"PID-ul copilului: $!\"\nCe va afișa acest script în terminal?",
+    "type": "acadnet",
+    "answers": [
+      "Doar \"PID-ul copilului: [PID]\"",
+      "\"PID-ul copilului: [PID]\" urmat de \"Copil terminat\" după 10 secunde",
+      "\"PID-ul copilului: [PID]\" și \"Copil terminat\" simultan",
+      "\"Copil terminat\" urmat de \"PID-ul copilului: [PID]\" după 10 secunde"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Pe un sistem Linux, care este cea mai răspândită implementare de init?",
+    "type": "acadnet",
+    "answers": [
+      "cron",
+      "upstart",
+      "systemd",
+      "sysvinit"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ai nevoie să generezi o parolă sigură și să o stochezi într-un mod securizat. Ce comandă poți utiliza pentru a genera o parolă sigură?",
+    "type": "acadnet",
+    "answers": [
+      "echo",
+      "cat",
+      "pwgen",
+      "openssl rand"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele reprezintă o diferență între utilitarele sed și tr?",
+    "type": "acadnet",
+    "answers": [
+      "sed poate salva modificările într-un fișier nou, pe când tr nu are această capacitate",
+      "sed suportă expresii regulate, pe când tr înlocuiește caracter cu caracter",
+      "sed poate lucra doar cu fișiere, pe când tr poate lucra doar cu standard input",
+      "tr suportă expresii regulate, pe când sed înlocuiește caracter cu caracter"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care este diferența principală între utilitarele ps și top?",
+    "type": "acadnet",
+    "answers": [
+      "ps este utilizat pentru a modifica prioritățile proceselor, în timp ce top este utilizat pentru a crea și șterge procese",
+      "ps este utilizat pentru a vizualiza doar procesele curente ale unui utilizator, în timp ce top afișează doar procesele sistemului",
+      "ps afișează o instantanee a stării proceselor la momentul comenzii, în timp ce top oferă o actualizare continuă și în timp real a stării proceselor și a utilizării resurselor sistemului",
+      "ps afișează informații detaliate despre procese într-un format tabelar static, iar top afișează procesele într-un format grafic care nu se actualizează automat"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Alegeți definiția potrivită pentru CLI:",
+    "type": "acadnet",
+    "answers": [
+      "O aplicație de tip interfață grafică care permite navigarea pe internet.",
+      "Un program care interpretează și execută comenzi introduse de utilizator printr-o interfață text.",
+      "O aplicație folosită pentru scrierea de cod.",
+      "Un software care gestionează interacțiunile utilizatorului cu baza de date prin intermediul unei interfețe grafice."
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ce tehnologie este utilizată pentru a crea și gestiona containere software?",
+    "type": "acadnet",
+    "answers": [
+      "DNF",
+      "APT",
+      "Docker",
+      "Flatpak"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "La ce se folosește memoria cache?",
+    "type": "acadnet",
+    "answers": [
+      "Crește viteza de acces la datele utilizate frecvent",
+      "Asigură un spațiu de stocare extensibil",
+      "Este folosită atunci când sistemul rămâne fără memorie",
+      "Securizează datele sensibile prin criptare"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Cum se poate păstra rezultatul unei adunări de numere într-o variabilă într-un shell de Unix/Linux?",
+    "type": "acadnet",
+    "answers": [
+      "result=$((5 + 3))",
+      "result=$(($5 + 3)",
+      "result=$(5 + 3)",
+      "result = $((5 + 3))"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ce tip de fișier este cel analizat mai jos?\nelev@acadnet:/bin$ file busybox\nbusybox: ELF 64-bit LSB executable...",
+    "type": "acadnet",
+    "answers": [
+      "executable and linkable format",
+      "obiect",
+      "executabil Mach-O",
+      "fișier video",
+      "fișier imagine"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "De la ce provine denumirea GPT în contextul spațiului de stocare?",
+    "type": "acadnet",
+    "answers": [
+      "Generative Pre-trained Transformer",
+      "Geometric Partition Table",
+      "Global Partition Table",
+      "GUID Partition Table"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ce este DMZ (Demilitarized Zone)?",
+    "type": "acadnet",
+    "answers": [
+      "Rețeaua internă a unei organizații",
+      "Un protocol de securitate",
+      "O subrețea care conține sistemele și resursele accesibile publicului",
+      "Un tip de firewall"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care este denumirea celor 2 sisteme de ferestre întâlnite pe sistemele de operare Linux?",
+    "type": "acadnet",
+    "answers": [
+      "X Windows System și Waytray",
+      "X Windows System și Wayland",
+      "X Window System și Waytray",
+      "X Window System și Wayland"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele fișiere de dispozitiv afișează eroarea \"No space left on device\" la scriere?",
+    "type": "acadnet",
+    "answers": [
+      "/dev/full",
+      "/dev/cdrom",
+      "/dev/nvme0",
+      "/dev/sda1",
+      "/dev/virtual1"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele variante referitoare la TCP și UDP este corectă?",
+    "type": "acadnet",
+    "answers": [
+      "UDP este orientat pe conexiune, asigură livrarea corectă a datelor, în timp ce TCP este fără conexiune, nu oferă garanția livrării pachetelor.",
+      "TCP este utilizat pentru a transmite fișiere mari, în timp ce UDP este utilizat pentru a transmite mesaje scurte.",
+      "UDP este mai rapid decât TCP.",
+      "UDP este mai sigur decât TCP."
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Cum se numește primul proces care rulează în cadrul sistemului de operare într-un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "shell",
+      "init",
+      "kernel",
+      "grub"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele variante sunt medii desktop în Linux (2 variante corecte):",
+    "type": "acadnet",
+    "answers": [
+      "KDE",
+      "KED",
+      "VLC",
+      "GNOME"
+    ],
+    "correctAnswers": [0, 3],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ce comandă este utilizată în Linux pentru a afișa informații despre serverele DNS configurate?",
+    "type": "acadnet",
+    "answers": [
+      "host",
+      "nslookup",
+      "cat /etc/resolv.conf",
+      "dig",
+      "less"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ce este o adresă IP dinamică și cum diferă de o adresă IP statică?",
+    "type": "acadnet",
+    "answers": [
+      "O adresă IP dinamică este o adresă IP care este atribuită automat unui dispozitiv, în timp ce o adresă IP statică este o adresă configurată manual.",
+      "Nu există nicio diferență semnificativă între o adresă IP dinamică și o adresă IP statică.",
+      "O adresă IP dinamică este o adresă IP care este utilizată pentru a accesa internetul, în timp ce o adresă IP statică este utilizată doar în rețeaua locală.",
+      "O adresă IP statică este o adresă IP care se schimbă periodic, în timp ce o adresă IP dinamică este permanentă."
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Cum poți pune un proces în background?",
+    "type": "acadnet",
+    "answers": [
+      "Utilizând comanda nohup",
+      "Apăsând Ctrl+Y",
+      "Utilizând comanda ps",
+      "Apăsând Ctrl+Z și apoi tastând bg"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ce rol are procesul părinte în legătură cu procesul copil?",
+    "type": "acadnet",
+    "answers": [
+      "Procesul părinte poate modifica PID-ul procesului copil",
+      "Procesul părinte nu are nicio legătură cu procesul copil",
+      "Procesul părinte poate furniza informații despre încheierea procesului copil",
+      "Procesul părinte este responsabil pentru alocarea memoriei procesului copil"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ce este un fișier .jar într-o aplicație scrisă în limbajul Java?",
+    "type": "acadnet",
+    "answers": [
+      "un fișier care conține o bază de date",
+      "un fișier de configurare",
+      "un fișier temporar, generat automat în timpul compilării",
+      "o bibliotecă",
+      "un fișier care conține o imagine"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ce este \"principiul separării privilegiilor\"?",
+    "type": "acadnet",
+    "answers": [
+      "Un principiu de securitate care prevede că sistemele ar trebui să fie actualizate periodic.",
+      "Un principiu de securitate care prevede că o acțiune critică ar trebui să necesite mai multe autorizații.",
+      "Un principiu de securitate care prevede că utilizatorii ar trebui să aibă acces doar la informațiile și resursele necesare pentru a-și îndeplini sarcinile.",
+      "Un principiu de securitate care prevede că datele ar trebui să fie criptate."
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele comenzi afișează informații despre un modul de kernel pe un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "cat /etc/kernel/<kernel_module>",
+      "modprobe -i <kernel_module>",
+      "modinfo <kernel_module>",
+      "lsmod <kernel_module>"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Comanda `cat` are următorul rol:",
+    "type": "acadnet",
+    "answers": [
+      "comprimă un fișier",
+      "concatenează mai multe fișiere",
+      "afișează conținutul unui fișier text",
+      "convertește un fișier din text în binar",
+      "afișează o imagine în linia de comandă",
+      "copiază conținutul unui fișier peste altul",
+      "cataloghează fișierele dintr-un anumit director"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ce comenzi ne vor afișa versiunea nucleului care rulează? (Alegeți 2 variante de răspuns)",
+    "type": "acadnet",
+    "answers": [
+      "cat /proc/version",
+      "uname -a",
+      "cat /etc/kernel/version",
+      "kernel-info"
+    ],
+    "correctAnswers": [0, 1],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ai scris un script bash care lansează mai multe procese în background. Cum poți aștepta ca toate aceste procese să se termine înainte de a continua execuția scriptului?",
+    "type": "acadnet",
+    "answers": [
+      "fg",
+      "wait",
+      "bg",
+      "trap",
+      "jobs"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Cum se poate asigura integritatea datelor pe un sistem de fișiere? (Alegeți două variante de răspuns.)",
+    "type": "acadnet",
+    "answers": [
+      "Prin calcularea unei sume de control",
+      "Prin salvarea datelor SMART ale discurilor",
+      "Prin evitarea redundanței",
+      "Prin folosirea permisiunilor pentru utilizatori",
+      "Prin scrierea datelor pe un singur disc",
+      "Prin jurnalizare"
+    ],
+    "correctAnswers": [0, 5],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care este principala diferență între un limbaj de programare compilat și unul interpretat?",
+    "type": "acadnet",
+    "answers": [
+      "Limbajele compilate rulează direct pe procesor, în timp ce limbajele interpretate generează codul mașină în timpul execuției.",
+      "Limbajele interpretate sunt mai rapide decât limbajele compilate.",
+      "Limbajele interpretate sunt mai sigure decât limbajele compilate.",
+      "Limbajele compilate nu necesită un interpretor pentru a rula codul sursă."
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele sunt elemente care fac parte din mediul grafic al unui desktop? (2 variante corecte)",
+    "type": "acadnet",
+    "answers": [
+      "Window manager",
+      "Storage manager",
+      "Process manager",
+      "File manager"
+    ],
+    "correctAnswers": [0, 3],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Pe un sistem de operare Unix, cum se numesc procesele pornite de sistem care nu interacţionează cu utilizatorul?",
+    "type": "acadnet",
+    "answers": [
+      "Driver",
+      "Daemon",
+      "Modul",
+      "Thread"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care este rolul unui NIC?",
+    "type": "acadnet",
+    "answers": [
+      "Permite conectarea unui sistem de calcul într-o rețea",
+      "Controlează alocarea memoriei RAM",
+      "Optimizează viteza de acces la datele de pe disc",
+      "Asigură stocarea permanentă a datelor"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ce este un \"rootkit\"?",
+    "type": "acadnet",
+    "answers": [
+      "Un firewall.",
+      "Un tip de malware care se ascunde în sistemul de operare și oferă acces la distanță unui atacator.",
+      "Un software antivirus.",
+      "Un sistem de detectare a intruziunilor."
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Care este cel mai folosit boot-loader pe sistemele Linux, x86?",
+    "type": "acadnet",
+    "answers": [
+      "CISC",
+      "BIOS/UEFI",
+      "GRUB",
+      "U-BOOT"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
   }
 ]
