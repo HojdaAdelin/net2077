@@ -198,7 +198,8 @@ export default function Quiz({ isExam = false }) {
         setExamMeta(null);
 
         if (mode === 'random') {
-          const response = await fetch(`${API_BASE}/questions/random50`);
+          const typeParam = queryType ? `?type=${queryType}` : '';
+          const response = await fetch(`${API_BASE}/questions/random50${typeParam}`);
           data = await response.json();
         } else if (mode === 'unsolved') {
           const response = await fetch(`${API_BASE}/questions/unsolved`, {

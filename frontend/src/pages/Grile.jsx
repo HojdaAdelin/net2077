@@ -156,7 +156,7 @@ export default function Grile() {
 
   const loadData = async () => {
     try {
-      // Fetch all questions first
+      
       const basicRes = await fetch('/api/questions?type=basic');
       const basic = await basicRes.json();
 
@@ -166,7 +166,6 @@ export default function Grile() {
       const acadnetRes = await fetch('/api/questions?type=acadnet');
       const acadnet = await acadnetRes.json();
 
-      // Filter by tags on client side
       const allLinux = all.filter(q => q.tags && q.tags.includes('LINUX'));
       const allNetwork = all.filter(q => q.tags && q.tags.includes('NETWORK'));
       
@@ -195,7 +194,6 @@ export default function Grile() {
           )
         );
         
-        // Count solved questions per type and tag
         const basicSolved = basic.filter(q => solvedSet.has(q._id)).length;
         const allLinuxSolved = allLinux.filter(q => solvedSet.has(q._id)).length;
         const allNetworkSolved = allNetwork.filter(q => solvedSet.has(q._id)).length;
@@ -273,7 +271,7 @@ export default function Grile() {
               <p>{card.desc}</p>
               
               {card.categories ? (
-                // Multiple categories (All Questions, Acadnet)
+                
                 <div className="categories-stats">
                   {card.categories.map((cat, idx) => (
                     <div key={idx} className="category-stat-card">
@@ -295,7 +293,7 @@ export default function Grile() {
                   ))}
                 </div>
               ) : (
-                // Single category (Basic Commands)
+                
                 <>
                   {user && (
                     <div className="progress-stats">
