@@ -198,8 +198,11 @@ export default function Quiz({ isExam = false }) {
         setExamMeta(null);
 
         if (mode === 'random') {
-          const typeParam = queryType ? `?type=${queryType}` : '';
-          const response = await fetch(`${API_BASE}/questions/random50${typeParam}`);
+          const params = new URLSearchParams();
+          if (queryType) params.append('type', queryType);
+          if (tagsParam) params.append('tags', tagsParam);
+          const queryString = params.toString() ? `?${params.toString()}` : '';
+          const response = await fetch(`${API_BASE}/questions/random50${queryString}`);
           data = await response.json();
         } else if (mode === 'unsolved') {
           const response = await fetch(`${API_BASE}/questions/unsolved`, {
@@ -212,10 +215,7 @@ export default function Quiz({ isExam = false }) {
         }
       }
 
-      // Filter on client side
       let filtered = data;
-
-      // Filter by type
       if (!isExam) {
         if (queryType === 'basic') {
           filtered = filtered.filter(q => q.type === 'basic');
@@ -293,7 +293,8 @@ export default function Quiz({ isExam = false }) {
           const base = prev || currentMeta || {};
           return { ...base, questionCount: filtered.length };
         });
-      } else {
+      } else if (mode !== 'random') {
+        
         let prefilledSelected = {};
         let prefilledSubmitted = {};
         try {
