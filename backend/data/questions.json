@@ -4457,5 +4457,781 @@
     "difficulty": "easy",
     "points": 2,
     "tags": ["ACADNET_2025_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ai nevoie să termini un proces care nu răspunde la comenzile normale. Ce semnal ar trebui să utilizezi cu comanda kill?",
+    "type": "acadnet",
+    "answers": ["SIGINT", "SIGSTOP", "SIGTERM", "SIGKILL"],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce este CMake?",
+    "type": "acadnet",
+    "answers": [
+      "Un mediu de dezvoltare integrat (IDE)",
+      "Un compilator pentru C/C++",
+      "Un sistem de gestiune a pachetelor",
+      "Un instrument de automatizare a procesului de construire a software-ului"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Dacă variabila de mediu $PATH are valoarea \"/bin/sh\", la ce se va expanda construcția ${PATH#/*/} ?",
+    "type": "acadnet",
+    "answers": ["sh", "/sh", "bin/sh", "/bin", "bin", "/bin/sh"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce este un semnal?",
+    "type": "acadnet",
+    "answers": [
+      "Un mesaj trimis unui proces pentru a-i solicita efectuarea unei anumite acțiuni",
+      "Un fișier de configurare",
+      "Un protocol de rețea",
+      "Un mesaj trimis unui proces pentru a-l informa despre un eveniment",
+      "Un tip de proces",
+      "O modalitate de comunicare între procese"
+    ],
+    "correctAnswers": [0, 3, 5],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele sunt caracteristici ale utilitarului rsync pentru backup-uri?",
+    "type": "acadnet",
+    "answers": [
+      "Suport pentru sincronizarea între mai multe calculatoare.",
+      "GUI ușor de folosit",
+      "Sincronizarea fișierele cu servicii de stocare cloud.",
+      "Suport pentru replicarea permisiunilor.",
+      "Criptarea în mod implicit a datelor în tranzit",
+      "Suport pentru replicare în timp real pe mai multe calculatoare."
+    ],
+    "correctAnswers": [0, 3],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care sunt etapele principale ale compilării din surse?",
+    "type": "acadnet",
+    "answers": [
+      "Obținerea codului sursă",
+      "Configurarea",
+      "Optimizarea aplicației",
+      "Descărcarea dependențelor"
+    ],
+    "correctAnswers": [0, 1],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este rolul unui NIC?",
+    "type": "acadnet",
+    "answers": [
+      "Controlează alocarea memoriei RAM",
+      "Permite conectarea unui sistem de calcul într-o rețea",
+      "Asigură stocarea permanentă a datelor",
+      "Optimizează viteza de acces la datele de pe disc"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Alegeți tripletele corecte de sistem de operare, sistem de fișiere și metodă de montare.",
+    "type": "acadnet",
+    "answers": [
+      "Linux - APFS - cu kext în kernel",
+      "Linux - ext4 - nativ",
+      "Windows - NTFS - nativ",
+      "macOS - ext4 - nativ",
+      "Linux - ZFS - nativ",
+      "Windows - FAT32 - nativ",
+      "Windows - APFS - driver opțional Microsoft",
+      "Windows - UDF - nativ",
+      "macOS - ZFS - nativ",
+      "Windows - ext4 - feature opțional nativ",
+      "Linux - exFAT - nativ",
+      "Linux - ReFS - cu modul de kernel open source"
+    ],
+    "correctAnswers": [5, 2, 7, 10, 1],
+    "multipleCorrect": true,
+    "difficulty": "hard",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele variante sunt distribuții de GNU/Linux?",
+    "type": "acadnet",
+    "answers": [
+      "CentOS",
+      "Arch",
+      "Fedora",
+      "FreeBSD",
+      "Shell",
+      "Android"
+    ],
+    "correctAnswers": [0, 1, 2],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este principalul rol al unui modul de kernel?",
+    "type": "acadnet",
+    "answers": [
+      "de a extinde funcționalitatea acestuia",
+      "de a optimiza performanța sistemului",
+      "de a îmbunătăți securitatea sistemului",
+      "de a corecta erori de kernel"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce este un fișier .jar într-o aplicație scrisă în limbajul Java?",
+    "type": "acadnet",
+    "answers": [
+      "o bibliotecă",
+      "un fișier care conține o imagine",
+      "un fișier temporar, generat automat în timpul compilării",
+      "un fișier care conține o bază de date",
+      "un fișier de configurare"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce caracteristică principală face ca Vim să fie considerat un editor mai dificil pentru începători?",
+    "type": "acadnet",
+    "answers": [
+      "Lipsa interfetei grafice și necesitatea de a memora comenzi",
+      "Interfața grafică complexă",
+      "Lipsa suportului pentru limbaje de programare",
+      "Instabilitatea pe sistemele Unix"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce face utilitarul fsck?",
+    "type": "acadnet",
+    "answers": [
+      "Verifică erorile de pe un sistem de fișiere",
+      "Optimizează performanța sistemului de fișiere prin defragmentare",
+      "Montează un sistem de fișiere",
+      "Formatează un disc"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Cum se poate păstra rezultatul unei adunări de numere într-o variabilă într-un shell de Unix/Linux?",
+    "type": "acadnet",
+    "answers": [
+      "result=$((5 + 3))",
+      "result=$(5 + 3)",
+      "result = $((5 + 3))",
+      "result=$(($5 + 3)"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Cum se poate asigura integritatea datelor pe un sistem de fișiere?",
+    "type": "acadnet",
+    "answers": [
+      "Prin salvarea datelor SMART ale discurilor",
+      "Prin folosirea permisiunilor pentru utilizatori",
+      "Prin scrierea datelor pe un singur disc",
+      "Prin evitarea redundanței",
+      "Prin jurnalizare",
+      "Prin calcularea unei sume de control"
+    ],
+    "correctAnswers": [4, 5],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele sunt elemente care fac parte din mediul grafic al unui desktop?",
+    "type": "acadnet",
+    "answers": [
+      "Window manager",
+      "File manager",
+      "Storage manager",
+      "Process manager"
+    ],
+    "correctAnswers": [0, 1],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce tip de variabilă este vizibilă și moștenită de procesele create din shell?",
+    "type": "acadnet",
+    "answers": [
+      "Variabilă temporară",
+      "Variabilă locală",
+      "Variabilă de mediu",
+      "Variabilă globală"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Cum se numește, în mod generic, limbajul care facilitează traducerile din limbaj în cod mașină?",
+    "type": "acadnet",
+    "answers": [
+      "Limbaj intermediar",
+      "Limbaj de asamblare",
+      "Limbaj interpretor",
+      "Limbaj de nivel scăzut"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care sunt avantajele utilizării containerelor software?",
+    "type": "acadnet",
+    "answers": [
+      "Portabilitate",
+      "Izolare",
+      "Ușurință în utilizare",
+      "Compatibilitate cu toate sistemele de operare"
+    ],
+    "correctAnswers": [0, 1],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Cum se numește primul sector de disc din schema de partiționare MBR (Master Boot Record)?",
+    "type": "acadnet",
+    "answers": [
+      "zero sector",
+      "master boot record",
+      "sda",
+      "boot",
+      "/boot",
+      "init sector",
+      "boot sector"
+    ],
+    "correctAnswers": [0, 1, 6],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Alegeți definiția potrivită pentru CLI:",
+    "type": "acadnet",
+    "answers": [
+      "Un program care interpretează și execută comenzi introduse de utilizator printr-o interfață text.",
+      "O aplicație folosită pentru scrierea de cod.",
+      "Un software care gestionează interacțiunile utilizatorului cu baza de date prin intermediul unei interfețe grafice.",
+      "O aplicație de tip interfață grafică care permite navigarea pe internet."
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce rol are modulul TPM?",
+    "type": "acadnet",
+    "answers": [
+      "Optimizează viteza de acces la fișiere",
+      "Monitorizează temperatura a diferite componente din sistem",
+      "Verifică starea bateriei sistemului",
+      "Asigură criptarea datelor stocate pe disc"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Pe ce dispozitive este întâlnit Linux?",
+    "type": "acadnet",
+    "answers": [
+      "Plită electrică",
+      "Smart TV",
+      "PlayStation",
+      "Rutere",
+      "Telefon fix",
+      "Nintendo Switch"
+    ],
+    "correctAnswers": [1, 3],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce comenzi ne vor afișa versiunea nucleului care rulează?",
+    "type": "acadnet",
+    "answers": [
+      "uname -a",
+      "kernel-info",
+      "cat /etc/kernel/version",
+      "cat /proc/version"
+    ],
+    "correctAnswers": [0, 3],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care sunt componentele principale ale unui proces?",
+    "type": "acadnet",
+    "answers": [
+      "Cod executabil, stivă, heap, date, sistem de fișiere",
+      "Cod executabil, stivă, heap, date, registrele procesorului, descriptorii de fișiere",
+      "Stivă, port de rețea, heap, registrele procesorului, adresa IP"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce este un fișier Makefile?",
+    "type": "acadnet",
+    "answers": [
+      "Un fișier ce conține codul sursă al unei aplicații",
+      "Un fișier ce conține instrucțiuni pentru procesul de construire a software-ului",
+      "Un fișier executabil",
+      "Un fișier de configurare"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce se întâmplă cu shell-ul după ce creează un proces copil?",
+    "type": "acadnet",
+    "answers": [
+      "Shell-ul rulează comenzi interne",
+      "Shell-ul continuă execuția normală",
+      "Shell-ul se blochează și așteaptă încheierea procesului copil",
+      "Shell-ul se închide automat"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele dispozitive reprezintă un dispozitiv virtual într-un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "/dev/cdrom",
+      "/dev/nvme0",
+      "/dev/full",
+      "/dev/sda1",
+      "/dev/virtual1"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Pe un sistem Linux, în ce director sunt localizate driverele?",
+    "type": "acadnet",
+    "answers": [
+      "/usr/bin/drivers",
+      "/lib/modules/<version>/kernel",
+      "/sys/kernel/drivers",
+      "/etc/kernel/<version>/drivers"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele comenzi va afișa cu succes conținutul unui fișier numit \"User's file\"?",
+    "type": "acadnet",
+    "answers": [
+      "cat User's\\ file",
+      "cat User\\'s file",
+      "cat 'User\\'s file'",
+      "cat 'User's file'",
+      "cat User\\'s\\ file",
+      "cat \"User\\'s file\""
+    ],
+    "correctAnswers": [4],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele componente intră în alcătuirea unui sistem informatic?",
+    "type": "acadnet",
+    "answers": [
+      "Infrastructură",
+      "Sisteme de calcul",
+      "Programe",
+      "Date",
+      "Cod",
+      "Comenzi"
+    ],
+    "correctAnswers": [1, 0, 3],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Selectați componente ale GUI.",
+    "type": "acadnet",
+    "answers": [
+      "Pointer",
+      "Folder",
+      "Shell",
+      "Window"
+    ],
+    "correctAnswers": [0, 3],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce sistem de gestiune a pachetelor este utilizat în distribuțiile bazate pe RedHat?",
+    "type": "acadnet",
+    "answers": [
+      "APT",
+      "Portage",
+      "Pacman",
+      "DNF"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele afirmații este adevărată în contextul diferenței dintre aplicațiile native și aplicațiile web?",
+    "type": "acadnet",
+    "answers": [
+      "Aplicațiile web sunt mai frecvent utilizate pe desktop, în timp ce pe dispozitivele mobile sunt mai des întâlnite aplicațiile native.",
+      "Aplicațiile web oferă o interfață grafică (GUI) și rulează de obicei pe un sistem de calcul independent.",
+      "Aplicațiile native sunt accesibile doar prin intermediul unui browser și nu pot fi instalate direct pe dispozitive.",
+      "Aplicațiile native rulează într-un browser și pot fi utilizate pe orice sistem de operare."
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Pe un sistem Linux, care este cea mai răspândită implementare de init?",
+    "type": "acadnet",
+    "answers": [
+      "upstart",
+      "sysvinit",
+      "cron",
+      "systemd"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele atribute ale unui proces pot fi modificate?",
+    "type": "acadnet",
+    "answers": [
+      "PPID",
+      "Programul executabil",
+      "PID",
+      "Prioritatea statică",
+      "Starea",
+      "GID"
+    ],
+    "correctAnswers": [0, 3, 4],
+    "multipleCorrect": true,
+    "difficulty": "hard",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce funcție realizează utilitarul tee într-un sistem Linux?",
+    "type": "acadnet",
+    "answers": [
+      "clonează ce primeste din standard input în fișiere",
+      "sortează liniile unui fișier text",
+      "elimină liniile duplicate",
+      "caută potrivirile unei expresii regulate într-un fișier text",
+      "afișează numărul liniei pentru fiecare linie a unui fișier text",
+      "creează un fișier nou"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce oferă sistemul de operare pentru a asigura integritatea și funcționarea corectă a fiecărui proces?",
+    "type": "acadnet",
+    "answers": [
+      "Acces liber la toate resursele sistemului",
+      "Izolarea resurselor proceselor",
+      "Prioritizarea proceselor intensive",
+      "Comunicare automată între procese"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele reprezintă componentele principale ale unui sistem de calcul, conform arhitecturii Von Neumann?",
+    "type": "acadnet",
+    "answers": [
+      "setul de instrucțiuni (ISA)",
+      "unitatea de memorie",
+      "unitatea de procesare grafică (GPU)",
+      "procesorul (CPU)",
+      "sistemul de operare",
+      "dispozitivele de intrare / ieșire"
+    ],
+    "correctAnswers": [3, 1, 5],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Pe ce port se conectează placa video (GPU) într-un sistem de tip desktop?",
+    "type": "acadnet",
+    "answers": [
+      "USB",
+      "PCIe",
+      "SATA",
+      "HDMI"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele variante este o definiție corectă a unei distribuții?",
+    "type": "acadnet",
+    "answers": [
+      "O interfață grafică pentru aplicații.",
+      "Un software care permite accesarea operațiunii de boot.",
+      "Un program care optimizează performanța dispozitivului.",
+      "Un cumul de componente software care sunt instalate pe un sistem de operare."
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce tehnologie este utilizată pentru a crea și gestiona containere software?",
+    "type": "acadnet",
+    "answers": [
+      "Flatpak",
+      "Docker",
+      "APT",
+      "DNF"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce poate face un utilizator obișnuit (neprivilegiat) cu valoarea nice a unui proces?",
+    "type": "acadnet",
+    "answers": [
+      "Poate scădea valoarea nice a procesului care îi aparţine",
+      "Poate modifica valoarea nice doar pentru procesele părinte",
+      "Poate creşte valoarea nice a procesului care îi aparţine",
+      "Poate modifica valoarea nice în orice fel"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ai scris un script bash care lansează mai multe procese în background. Cum poți aștepta ca toate aceste procese să se termine înainte de a continua execuția scriptului?",
+    "type": "acadnet",
+    "answers": [
+      "trap",
+      "wait",
+      "jobs",
+      "bg",
+      "fg"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce este un proces orfan?",
+    "type": "acadnet",
+    "answers": [
+      "Un proces zombie",
+      "Un proces care nu are un proces părinte",
+      "Un proces al cărui proces părinte s-a terminat",
+      "Un proces care nu poate fi terminat",
+      "Un proces care consumă prea multe resurse"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce înseamnă conceptul de virtualizare hardware?",
+    "type": "acadnet",
+    "answers": [
+      "Transformarea unui dispozitiv fizic într-un dispozitiv virtual",
+      "Îmbunătățirea performanței hardware-ului prin actualizări de firmware",
+      "Posibilitatea de a rula mai multe sisteme de operare simultan folosind aceleași resurse hardware",
+      "Crearea de simulări software pentru testarea hardware-ului fizic",
+      "Alocarea dinamică a resurselor hardware între diferite aplicații software"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Un proces care a fost terminat, dar ale cărui informații de stare încă ocupă spațiu în tabelul de procese se numește:",
+    "type": "acadnet",
+    "answers": [
+      "Proces orfan",
+      "Proces suspendat",
+      "Proces zombie",
+      "Proces daemon"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce este un proces background?",
+    "type": "acadnet",
+    "answers": [
+      "Un proces care rulează în fundal și nu interacționează cu utilizatorul",
+      "Un proces care rulează în fundal și interacționează cu utilizatorul",
+      "Un proces care a fost suspendat",
+      "Un proces care a fost terminat"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele afirmații este adevărată în ceea ce privește programele batch?",
+    "type": "acadnet",
+    "answers": [
+      "Se folosesc în principal în medii mobile",
+      "Oferă o interfață grafică (GUI)",
+      "Nu oferă nicio interfață cu utilizatorul, rulând în background",
+      "Oferă o interfață de linie de comandă (CLI)"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele reprezintă o diferență dintre utilitarele rev și tac?",
+    "type": "acadnet",
+    "answers": [
+      "tac inversează întreg fișierul, pe când rev inversează caracterele din fiecare linie",
+      "rev poate lucra doar cu standard input, iar tac poate lucra doar cu fișiere",
+      "tac inversează ordinea liniilor unui fișier, pe când rev inversează întreg fișierul",
+      "tac inversează ordinea liniilor unui fișier, pe când rev inversează caracterele din fiecare linie"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
   }
+
 ]
