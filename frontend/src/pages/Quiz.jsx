@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import '../styles/Quiz.css';
-
-const API_BASE = '/api';
+import { API_URL as API_BASE } from '../config';
 const DEFAULT_EXAM_DURATION_MIN = 60;
 const getExamStorageKey = (examId) => `exam_state_${examId}`;
 

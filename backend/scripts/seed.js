@@ -14,8 +14,16 @@ dotenv.config({ path: join(__dirname, '../../.env') });
 
 const seedDatabase = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('🔄 Connecting to MongoDB...');
+    console.log(`📍 URI: ${process.env.MONGODB_URI?.replace(/\/\/([^:]+):([^@]+)@/, '//$1:****@')}`);
+    
+    await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    
     console.log('[✔] Connected to MongoDB');
+    console.log(`[✔] Database: ${mongoose.connection.db.databaseName}`);
 
     const questionsData = JSON.parse(
       readFileSync(join(__dirname, '../data/questions.json'), 'utf-8')
