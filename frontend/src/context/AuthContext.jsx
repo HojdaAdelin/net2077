@@ -1,5 +1,4 @@
 import { createContext, useState, useEffect } from 'react';
-import { getMe, logout as apiLogout } from '../services/api';
 
 export const AuthContext = createContext();
 
@@ -13,8 +12,13 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      const data = await getMe();
-      if (data.user) {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/auth/me`, {
+        method: 'GET',
+        credentials: 'include'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
         setUser(data.user);
       } else {
         setUser(null);
@@ -32,7 +36,10 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await apiLogout();
+      await fetch(`${import.meta.env.VITE_API_URL || '/api'}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include'
+      });
     } catch (error) {
       console.error('Logout failed:', error);
     }
