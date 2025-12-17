@@ -17,7 +17,14 @@ dotenv.config({ path: envPath });
 
 const app = express();
 
-// Simplified for Vercel deployment
+// TEMPORARY: Allow all origins for testing
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
+
+// COMMENTED OUT FOR TESTING - CORS configuration
+/*
 const corsOptions = {
   origin: function (origin, callback) {
     // Debug logging
@@ -51,6 +58,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+*/
 app.use(cookieParser());
 app.use(express.json());
 
