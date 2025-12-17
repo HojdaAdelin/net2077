@@ -11,38 +11,42 @@ import progressRoutes from './routes/progressRoutes.js';
 import statsRoutes from './routes/statsRoutes.js';
 import examRoutes from './routes/examRoutes.js';
 
-dotenv.config({ path: '../.env' });
+import { existsSync } from 'fs';
+const envPath = existsSync('.env') ? '.env' : '../.env';
+dotenv.config({ path: envPath });
 
 const app = express();
 
-// Simplified for Vercel deployment
+const getLocalIp = () => {
+  const nets = os.networkInterfaces();
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name] || []) {
+      if (net.family === 'IPv4' && !net.internal) {
+        return net.address;
+      }
+    }
+  }
+  return 'localhost';
+};
 
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Debug logging
-    console.log('🔍 CORS Debug:');
-    console.log('  Origin:', origin);
-    console.log('  NODE_ENV:', process.env.NODE_ENV);
-    console.log('  ALLOWED_ORIGINS env:', process.env.ALLOWED_ORIGINS);
     
     if (!origin) return callback(null, true);
     
     const allowedOrigins = process.env.ALLOWED_ORIGINS 
-      ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
+      ? process.env.ALLOWED_ORIGINS.split(',')
       : [
           'http://localhost:5173',
-          'http://127.0.0.1:5173'
+          'http://127.0.0.1:5173',
+          `http://${getLocalIp()}:5173`,
+          'http://192.168.56.1:5173'
         ];
     
-    console.log('  Allowed origins:', allowedOrigins);
-    console.log('  Origin match:', allowedOrigins.indexOf(origin) !== -1);
-    
     if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
-      console.log('  ✅ CORS allowed');
       callback(null, true);
     } else {
-      console.log('  ❌ CORS blocked');
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -55,8 +59,6 @@ app.use(cookieParser());
 app.use(express.json());
 
 
-
-// MongoDB connection with better error handling
 mongoose.connect(process.env.MONGODB_URI, {
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
@@ -95,8 +97,11 @@ app.use('/api/progress', progressRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/exams', examRoutes);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
+const HOST = '0.0.0.0';
 
-app.listen(PORT, () => {
-  console.log(`[-] Backend running on port ${PORT}`);
+app.listen(PORT, HOST, () => {
+  const ip = getLocalIp();
+  console.log(`[-] Backend running on http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
+  console.log(`[-] Accessible on your network at: http://${ip}:${PORT}`);
 });
