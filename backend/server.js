@@ -97,11 +97,17 @@ app.use('/api/progress', progressRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/exams', examRoutes);
 
-const PORT = process.env.PORT || 5000;
-const HOST = '0.0.0.0';
+// Start server only in development (local)
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
+  const HOST = '0.0.0.0';
 
-app.listen(PORT, HOST, () => {
-  const ip = getLocalIp();
-  console.log(`[-] Backend running on http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
-  console.log(`[-] Accessible on your network at: http://${ip}:${PORT}`);
-});
+  app.listen(PORT, HOST, () => {
+    const ip = getLocalIp();
+    console.log(`[-] Backend running on http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
+    console.log(`[-] Accessible on your network at: http://${ip}:${PORT}`);
+  });
+}
+
+// Export for Vercel (production)
+export default app;
