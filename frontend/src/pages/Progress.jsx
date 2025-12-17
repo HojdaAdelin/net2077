@@ -54,7 +54,7 @@ export default function Progress() {
 
         <div className="stat-card-progress">
           <div className="stat-label-small">Simulations</div>
-          <div className="stat-value">{progress.simulations.length}</div>
+          <div className="stat-value">{progress.simulations?.length || 0}</div>
         </div>
       </div>
 
@@ -85,7 +85,7 @@ export default function Progress() {
         </div>
       </div>
 
-      {progress.simulations.length > 0 && (
+      {progress.simulations?.length > 0 && (
         <div className="simulations-section">
           <h2>Recent Simulations</h2>
           <div className="simulations-grid">
