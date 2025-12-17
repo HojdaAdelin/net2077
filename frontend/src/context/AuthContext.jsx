@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-import { API_URL } from '../config';
+import { getMe, logout as apiLogout } from '../services/api';
 
 export const AuthContext = createContext();
 
@@ -13,13 +13,8 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      const response = await fetch(`${API_URL}/auth/me`, {
-        method: 'GET',
-        credentials: 'include'
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
+      const data = await getMe();
+      if (data.user) {
         setUser(data.user);
       } else {
         setUser(null);
@@ -37,10 +32,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch(`${API_URL}/auth/logout`, {
-        method: 'POST',
-        credentials: 'include'
-      });
+      await apiLogout();
     } catch (error) {
       console.error('Logout failed:', error);
     }
