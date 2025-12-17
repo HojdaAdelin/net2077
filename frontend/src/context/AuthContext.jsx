@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/auth/me`, {
+      const response = await fetch(`${API_URL}/auth/me`, {
         method: 'GET',
         credentials: 'include'
       });
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch(`${API_URL}/api/auth/logout`, {
+      await fetch(`${API_URL}/auth/logout`, {
         method: 'POST',
         credentials: 'include'
       });
