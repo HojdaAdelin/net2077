@@ -17,11 +17,14 @@ export const register = async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     
+    // Configurație cookie optimizată pentru Vercel
+    const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // true pe Vercel, false local
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // none pentru cross-origin pe Vercel
-      maxAge: 7 * 24 * 60 * 60 * 1000 
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: '/'
     });
 
 
@@ -51,11 +54,14 @@ export const login = async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     
+    // Configurație cookie optimizată pentru Vercel
+    const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // true pe Vercel, false local
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // none pentru cross-origin pe Vercel
-      maxAge: 7 * 24 * 60 * 60 * 1000
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: '/'
     });
 
 
@@ -70,7 +76,13 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie('token');
+  const isProduction = process.env.NODE_ENV === 'production';
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
+    path: '/'
+  });
   res.json({ success: true, message: 'Logged out successfully' });
 };
 

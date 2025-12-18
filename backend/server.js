@@ -31,25 +31,7 @@ const getLocalIp = () => {
 
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    
-    if (!origin) return callback(null, true);
-    
-    const allowedOrigins = process.env.ALLOWED_ORIGINS 
-      ? process.env.ALLOWED_ORIGINS.split(',')
-      : [
-          'http://localhost:5173',
-          'http://127.0.0.1:5173',
-          `http://${getLocalIp()}:5173`,
-          'http://192.168.56.1:5173'
-        ];
-    
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: true, // Permite toate origin-urile temporar pentru debug
   credentials: true,
   optionsSuccessStatus: 200
 };
