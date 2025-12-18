@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../config';
 import '../styles/ExamSelection.css';
 
 export default function ExamSelection() {
@@ -15,7 +16,7 @@ export default function ExamSelection() {
 
   const loadExams = async () => {
     try {
-      const response = await fetch('/api/exams');
+      const response = await fetch(`${API_URL}/exams`);
       const data = await response.json();
       setExams(data);
     } catch (error) {

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import { getUserProgress } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
+import { API_URL } from '../config';
 import '../styles/Grile.css';
 
 function QuizModal({ type, onClose }) {
@@ -157,13 +158,13 @@ export default function Grile() {
   const loadData = async () => {
     try {
       
-      const basicRes = await fetch('/api/questions?type=basic');
+      const basicRes = await fetch(`${API_URL}/questions?type=basic`);
       const basic = await basicRes.json();
 
-      const allRes = await fetch('/api/questions?type=all');
+      const allRes = await fetch(`${API_URL}/questions?type=all`);
       const all = await allRes.json();
 
-      const acadnetRes = await fetch('/api/questions?type=acadnet');
+      const acadnetRes = await fetch(`${API_URL}/questions?type=acadnet`);
       const acadnet = await acadnetRes.json();
 
       const allLinux = all.filter(q => q.tags && q.tags.includes('LINUX'));
