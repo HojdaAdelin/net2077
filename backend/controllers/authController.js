@@ -17,18 +17,12 @@ export const register = async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     
-    const cookieOptions = {
+    res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // true pe Vercel, false local
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // none pentru cross-origin pe Vercel
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      // Pentru Vercel, nu setăm domain explicit - lasă browser-ul să decidă
-    };
-    
-    console.log('Setting cookie with options:', cookieOptions);
-    console.log('NODE_ENV:', process.env.NODE_ENV);
-    
-    res.cookie('token', token, cookieOptions);
+      maxAge: 7 * 24 * 60 * 60 * 1000 
+    });
 
 
 
@@ -57,18 +51,12 @@ export const login = async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     
-    const cookieOptions = {
+    res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // true pe Vercel, false local
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // none pentru cross-origin pe Vercel
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      // Pentru Vercel, nu setăm domain explicit - lasă browser-ul să decidă
-    };
-    
-    console.log('Setting cookie with options:', cookieOptions);
-    console.log('NODE_ENV:', process.env.NODE_ENV);
-    
-    res.cookie('token', token, cookieOptions);
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
 
 
 
