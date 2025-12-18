@@ -17,17 +17,14 @@ export const register = async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     
-    // Configurație cookie optimizată pentru Vercel
-    const isProduction = process.env.NODE_ENV === 'production';
+    // Configurație cookie pentru Vercel (cross-origin HTTPS)
     res.cookie('token', token, {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
+      secure: true,
+      sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: '/'
     });
-
-
 
     res.status(201).json({ 
       success: true,
@@ -54,17 +51,14 @@ export const login = async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     
-    // Configurație cookie optimizată pentru Vercel
-    const isProduction = process.env.NODE_ENV === 'production';
+    // Configurație cookie pentru Vercel (cross-origin HTTPS)
     res.cookie('token', token, {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
+      secure: true,
+      sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: '/'
     });
-
-
 
     res.json({ 
       success: true,
@@ -76,11 +70,10 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  const isProduction = process.env.NODE_ENV === 'production';
   res.clearCookie('token', {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? 'none' : 'lax',
+    secure: true,
+    sameSite: 'none',
     path: '/'
   });
   res.json({ success: true, message: 'Logged out successfully' });
