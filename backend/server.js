@@ -32,11 +32,14 @@ const getLocalIp = () => {
 
 const corsOptions = {
   origin: function (origin, callback) {
+    console.log('CORS Origin:', origin);
+    console.log('NODE_ENV:', process.env.NODE_ENV);
+    console.log('ALLOWED_ORIGINS:', process.env.ALLOWED_ORIGINS);
     
     if (!origin) return callback(null, true);
     
     const allowedOrigins = process.env.ALLOWED_ORIGINS 
-      ? process.env.ALLOWED_ORIGINS.split(',')
+      ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
       : [
           'http://localhost:5173',
           'http://127.0.0.1:5173',
@@ -44,9 +47,13 @@ const corsOptions = {
           'http://192.168.56.1:5173'
         ];
     
+    console.log('Allowed Origins:', allowedOrigins);
+    
     if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+      console.log('CORS: Origin allowed');
       callback(null, true);
     } else {
+      console.log('CORS: Origin blocked');
       callback(new Error('Not allowed by CORS'));
     }
   },
