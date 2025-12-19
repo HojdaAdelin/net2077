@@ -52,7 +52,6 @@ export const addSimulation = async (req, res) => {
       date: new Date() 
     });
     
-    // Calculate XP based on score percentage
     const percentage = totalPoints > 0 ? (score / totalPoints) * 100 : 0;
     user.xp += Math.floor(percentage) * 2;
     user.level = Math.floor(user.xp / 100) + 1;

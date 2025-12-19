@@ -17,7 +17,7 @@ export const register = async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     
-    // Configurație cookie pentru Vercel (cross-origin HTTPS)
+   
     res.cookie('token', token, {
       httpOnly: true,
       secure: true,
@@ -51,7 +51,6 @@ export const login = async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     
-    // Configurație cookie pentru Vercel (cross-origin HTTPS)
     res.cookie('token', token, {
       httpOnly: true,
       secure: true,

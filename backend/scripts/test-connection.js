@@ -12,7 +12,6 @@ const testConnection = async () => {
   try {
     console.log('🔄 Testing MongoDB connection...\n');
     
-    // Hide password in logs
     const maskedUri = process.env.MONGODB_URI?.replace(
       /\/\/([^:]+):([^@]+)@/,
       '//$1:****@'
@@ -31,14 +30,12 @@ const testConnection = async () => {
     console.log(`   Host: ${mongoose.connection.host}`);
     console.log(`   Port: ${mongoose.connection.port || 'N/A (Atlas)'}`);
     
-    // List collections
     const collections = await mongoose.connection.db.listCollections().toArray();
     console.log(`\n📚 Collections (${collections.length}):`);
     collections.forEach(col => {
       console.log(`   - ${col.name}`);
     });
 
-    // Count documents in each collection
     console.log('\n📈 Document Counts:');
     for (const col of collections) {
       const count = await mongoose.connection.db.collection(col.name).countDocuments();

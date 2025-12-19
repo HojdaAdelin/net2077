@@ -31,7 +31,7 @@ const getLocalIp = () => {
 
 
 const corsOptions = {
-  origin: true, // Permite toate origin-urile temporar pentru debug
+  origin: true, 
   credentials: true,
   optionsSuccessStatus: 200
 };
@@ -55,7 +55,6 @@ mongoose.connect(process.env.MONGODB_URI, {
     process.exit(1);
   });
 
-// Handle MongoDB connection events
 mongoose.connection.on('error', (err) => {
   console.error('[✘] MongoDB error:', err.message);
 });
@@ -79,7 +78,7 @@ app.use('/api/progress', progressRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/exams', examRoutes);
 
-// Start server only in development (local)
+
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 5000;
   const HOST = '0.0.0.0';
@@ -91,5 +90,5 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-// Export for Vercel (production)
+
 export default app;

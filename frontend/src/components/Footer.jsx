@@ -32,7 +32,7 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <p>© 2025 NET2077. All rights reserved.</p>
-          <p>Built for learners</p>
+          <p>Version: 1.0.0</p>
         </div>
       </div>
     </footer>
