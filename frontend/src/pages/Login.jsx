@@ -1,7 +1,9 @@
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import { login as apiLogin } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import '../styles/Auth.css';
 
 export default function Login() {
@@ -10,6 +12,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useContext(AuthContext);
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -35,18 +38,18 @@ export default function Login() {
         <div className="auth-container">
           <div className="auth-card">
             <div className="auth-header">
-              <h1>Welcome Back</h1>
-              <p className="auth-subtitle">Sign in to continue your learning journey</p>
+              <h1>{t('login.title')}</h1>
+              <p className="auth-subtitle">{t('login.subtitle')}</p>
             </div>
 
             {error && <div className="error-message">{error}</div>}
 
             <form onSubmit={handleSubmit} className="auth-form">
               <div className="form-group">
-                <label className="form-label">Email</label>
+                <label className="form-label">{t('login.email')}</label>
                 <input 
                   type="email" 
-                  placeholder="your@email.com" 
+                  placeholder={t('login.emailPlaceholder')} 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="form-input"
@@ -55,11 +58,11 @@ export default function Login() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Password</label>
+                <label className="form-label">{t('login.password')}</label>
                 <div className="password-input-wrapper">
                   <input 
                     type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password" 
+                    placeholder={t('login.passwordPlaceholder')} 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="form-input"
@@ -70,20 +73,20 @@ export default function Login() {
                     className="password-toggle"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? 'Hide' : 'Show'}
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
               </div>
 
               <button type="submit" className="btn btn-primary auth-submit">
-                Sign In
+                {t('login.signIn')}
               </button>
             </form>
 
-            <div className="auth-divider">or</div>
+            <div className="auth-divider">{t('login.or')}</div>
 
             <div className="auth-footer">
-              Don't have an account? <Link to="/register" className="auth-link">Sign up</Link>
+              {t('login.noAccount')} <Link to="/register" className="auth-link">{t('login.signUp')}</Link>
             </div>
           </div>
         </div>

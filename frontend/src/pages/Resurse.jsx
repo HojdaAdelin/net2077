@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getDictionary, getResources } from '../services/api';
+import { useLanguage } from '../context/LanguageContext';
 import '../styles/Resurse.css';
 
 export default function Resurse() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [dictionary, setDictionary] = useState([]);
   const [resources, setResources] = useState([]);
   const [search, setSearch] = useState('');
@@ -30,7 +32,8 @@ export default function Resurse() {
   return (
     <div className="container resurse-page">
       <div className="resurse-header">
-        <h1>Learning Resources</h1>
+        <h1>{t('resources.title')}</h1>
+        <p>{t('resources.subtitle')}</p>
       </div>
 
       <div className="tabs">
@@ -38,13 +41,13 @@ export default function Resurse() {
           className={`tab ${activeTab === 'dictionary' ? 'active' : ''}`}
           onClick={() => setActiveTab('dictionary')}
         >
-          Dictionary
+          {t('resources.dictionary')}
         </button>
         <button 
           className={`tab ${activeTab === 'resources' ? 'active' : ''}`}
           onClick={() => setActiveTab('resources')}
         >
-          Learning Roadmaps
+          {t('resources.roadmaps')}
         </button>
       </div>
 
@@ -53,7 +56,7 @@ export default function Resurse() {
           <div className="search-box">
             <input 
               type="text" 
-              placeholder="Search dictionary terms..." 
+              placeholder={t('resources.searchPlaceholder')} 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="search-input"
@@ -70,7 +73,7 @@ export default function Resurse() {
               ))
             ) : (
               <div className="empty-state">
-                <p>No terms found matching "{search}"</p>
+                <p>{t('resources.noResults')}</p>
               </div>
             )}
           </div>
@@ -99,7 +102,7 @@ export default function Resurse() {
                       </span>
                     </div>
                   </div>
-                  <div className="roadmap-arrow">→</div>
+                  <div className="roadmap-arrow">{t('resources.viewRoadmap')}</div>
                 </div>
               ))}
             </div>

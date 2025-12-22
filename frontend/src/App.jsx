@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { LanguageProvider } from './context/LanguageContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -16,24 +17,26 @@ import './styles/global.css';
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/grile" element={<Grile />} />
-          <Route path="/grile/:type/:mode" element={<Quiz />} />
-          <Route path="/exam-selection" element={<ExamSelection />} />
-          <Route path="/exam/:examId" element={<Quiz isExam={true} />} />
-          <Route path="/resurse" element={<Resurse />} />
-          <Route path="/roadmap/:title" element={<RoadmapPage />} />
-          <Route path="/progress" element={<Progress />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/updates" element={<Updates />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/grile" element={<Grile />} />
+            <Route path="/grile/:type/:mode" element={<Quiz />} />
+            <Route path="/exam-selection" element={<ExamSelection />} />
+            <Route path="/exam/:examId" element={<Quiz isExam={true} />} />
+            <Route path="/resurse" element={<Resurse />} />
+            <Route path="/roadmap/:title" element={<RoadmapPage />} />
+            <Route path="/progress" element={<Progress />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/updates" element={<Updates />} />
+          </Routes>
+          <Footer />
+        </BrowserRouter>
+      </AuthProvider>
+    </LanguageProvider>
   );
 }
