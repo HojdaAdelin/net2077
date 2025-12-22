@@ -46,6 +46,7 @@ export default function Navbar() {
         <div className={`nav-links ${mobileMenuOpen ? 'active' : ''}`}>
           <Link to="/grile" onClick={closeMobileMenu}>{t('navbar.questions')}</Link>
           <Link to="/resurse" onClick={closeMobileMenu}>{t('navbar.resources')}</Link>
+          <Link to="/leaderboard" onClick={closeMobileMenu}>Leaderboard</Link>
           {user && <Link to="/progress" onClick={closeMobileMenu}>{t('navbar.progress')}</Link>}
           
           <div className="nav-auth">

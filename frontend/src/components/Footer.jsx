@@ -36,7 +36,7 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <p>© 2025 NET2077. {t('footer.rights')}</p>
-          <p>{t('footer.version')} 1.1.0</p>
+          <p>{t('footer.version')} 1.2.0</p>
         </div>
       </div>
     </footer>

@@ -10,6 +10,7 @@ import resourceRoutes from './routes/resourceRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
 import statsRoutes from './routes/statsRoutes.js';
 import examRoutes from './routes/examRoutes.js';
+import leaderboardRoutes from './routes/leaderboardRoutes.js';
 
 import { existsSync } from 'fs';
 const envPath = existsSync('.env') ? '.env' : '../.env';
@@ -77,6 +78,7 @@ app.use('/api/resources', resourceRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/exams', examRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
 
 
 if (process.env.NODE_ENV !== 'production') {

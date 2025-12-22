@@ -64,3 +64,7 @@ export const register = async (username, email, password) => {
   });
   return res.json();
 };
+export const getLeaderboard = async () => {
+  const res = await fetch(`${API_URL}/leaderboard`);
+  return res.json();
+};
