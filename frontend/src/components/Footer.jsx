@@ -25,6 +25,7 @@ export default function Footer() {
           <div className="footer-section">
             <h3>LINKS</h3>
             <div className="footer-links">
+              <Link to="/updates">Updates</Link>
               <a href="https://github.com/HojdaAdelin/net2077" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
           </div>
@@ -32,7 +33,7 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <p>© 2025 NET2077. All rights reserved.</p>
-          <p>Version: 1.0.0</p>
+          <p>Version: 1.1.0</p>
         </div>
       </div>
     </footer>

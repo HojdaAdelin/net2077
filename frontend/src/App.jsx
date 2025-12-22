@@ -11,6 +11,7 @@ import RoadmapPage from './pages/RoadmapPage';
 import Progress from './pages/Progress';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Updates from './pages/Updates';
 import './styles/global.css';
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/progress" element={<Progress />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/updates" element={<Updates />} />
         </Routes>
         <Footer />
       </BrowserRouter>
