@@ -27,6 +27,14 @@ export default function Updates() {
               text: 'Enhanced user ranking and competitive learning experience'
             }
           ]
+        },
+        {
+          title: t('updates.improvements'),
+          icon: Zap,
+          items: [
+            { text: 'Extended multi-language support to Leaderboard and Questions pages' },
+            { text: 'Improved user interface translations for better accessibility' }
+          ]
         }
       ]
     },

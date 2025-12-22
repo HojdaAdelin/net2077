@@ -62,7 +62,7 @@ export default function Leaderboard() {
       <div className="container leaderboard-page">
         <div className="loading-state">
           <div className="loading-spinner"></div>
-          <p>Loading leaderboard...</p>
+          <p>{t('leaderboard.loading')}</p>
         </div>
       </div>
     );
@@ -74,7 +74,7 @@ export default function Leaderboard() {
         <div className="error-state">
           <p>{error}</p>
           <button onClick={fetchLeaderboard} className="btn btn-primary">
-            Try Again
+            {t('leaderboard.tryAgain')}
           </button>
         </div>
       </div>
@@ -85,16 +85,16 @@ export default function Leaderboard() {
     <div className="leaderboard-page">
       <div className="container">
         <div className="leaderboard-header">
-          <h1>Leaderboard</h1>
-          <p>Top performers ranked by experience points</p>
+          <h1>🏆 {t('leaderboard.title')}</h1>
+          <p>{t('leaderboard.subtitle')}</p>
         </div>
 
         <div className="leaderboard-container">
           {leaderboard.length === 0 ? (
             <div className="empty-leaderboard">
               <Trophy size={48} className="empty-icon" />
-              <h3>No rankings yet</h3>
-              <p>Be the first to earn XP and claim the top spot!</p>
+              <h3>{t('leaderboard.noRankings')}</h3>
+              <p>{t('leaderboard.noRankingsDesc')}</p>
             </div>
           ) : (
             <div className="leaderboard-list">
@@ -107,7 +107,7 @@ export default function Leaderboard() {
                   
                   <div className="user-info">
                     <div className="username">{user.username}</div>
-                    <div className="level">Level {user.level}</div>
+                    <div className="level">{t('leaderboard.level')} {user.level}</div>
                   </div>
                   
                   <div className="xp-section">

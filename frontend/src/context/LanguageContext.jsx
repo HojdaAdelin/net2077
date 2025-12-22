@@ -17,6 +17,7 @@ const translations = {
       questions: 'Questions',
       resources: 'Resources',
       progress: 'Progress',
+      leaderboard: 'Leaderboard',
       login: 'Login',
       register: 'Register',
       logout: 'Logout'
@@ -79,6 +80,32 @@ const translations = {
       signIn: 'Sign in',
       passwordRequirement: 'Password must be at least 6 characters',
       passwordMismatch: 'Passwords do not match'
+    },
+    leaderboard: {
+      title: 'Leaderboard',
+      subtitle: 'Top performers ranked by experience points',
+      loading: 'Loading leaderboard...',
+      tryAgain: 'Try Again',
+      noRankings: 'No rankings yet',
+      noRankingsDesc: 'Be the first to earn XP and claim the top spot!',
+      level: 'Level'
+    },
+    questions: {
+      chooseMode: 'Choose Quiz Mode',
+      selectMode: 'Select mode and optionally filter by tags',
+      quizMode: 'Quiz Mode',
+      unsolvedQuestions: 'Unsolved Questions',
+      unsolvedDesc: 'Practice questions you haven\'t answered yet',
+      allQuestions: 'All Questions',
+      allDesc: 'Practice all available questions',
+      randomQuestions: 'Random Questions',
+      randomDesc: 'Get 50 random questions for quick practice',
+      filterByTags: 'Filter by Tags',
+      selectTag: 'Select a tag to filter questions',
+      allTopics: 'All Topics',
+      startQuiz: 'Start Quiz',
+      selectModeFirst: 'Please select a quiz mode first',
+      selectTagFirst: 'Please select a tag for this mode'
     }
   },
   ro: {
@@ -87,6 +114,7 @@ const translations = {
       questions: 'Întrebări',
       resources: 'Resurse',
       progress: 'Progres',
+      leaderboard: 'Clasament',
       login: 'Conectare',
       register: 'Înregistrare',
       logout: 'Deconectare'
@@ -149,6 +177,32 @@ const translations = {
       signIn: 'Conectează-te',
       passwordRequirement: 'Parola trebuie să aibă cel puțin 6 caractere',
       passwordMismatch: 'Parolele nu se potrivesc'
+    },
+    leaderboard: {
+      title: 'Clasament',
+      subtitle: 'Cei mai buni performeri clasați după punctele de experiență',
+      loading: 'Se încarcă clasamentul...',
+      tryAgain: 'Încearcă din nou',
+      noRankings: 'Încă nu există clasamente',
+      noRankingsDesc: 'Fii primul care câștigă XP și revendică primul loc!',
+      level: 'Nivel'
+    },
+    questions: {
+      chooseMode: 'Alege Modul de Quiz',
+      selectMode: 'Selectează modul și opțional filtrează după etichete',
+      quizMode: 'Mod Quiz',
+      unsolvedQuestions: 'Întrebări Nerezolvate',
+      unsolvedDesc: 'Exersează întrebările la care nu ai răspuns încă',
+      allQuestions: 'Toate Întrebările',
+      allDesc: 'Exersează toate întrebările disponibile',
+      randomQuestions: 'Întrebări Aleatorii',
+      randomDesc: 'Obține 50 de întrebări aleatorii pentru practică rapidă',
+      filterByTags: 'Filtrează după Etichete',
+      selectTag: 'Selectează o etichetă pentru a filtra întrebările',
+      allTopics: 'Toate Subiectele',
+      startQuiz: 'Începe Quiz-ul',
+      selectModeFirst: 'Te rugăm să selectezi mai întâi un mod de quiz',
+      selectTagFirst: 'Te rugăm să selectezi o etichetă pentru acest mod'
     }
   }
 };
