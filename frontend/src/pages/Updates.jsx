@@ -23,9 +23,6 @@ export default function Updates() {
             link: { text: t('updates.updatesPage'), url: '/updates' }
           },
           {
-            text: 'Enhanced security with email verification during registration process'
-          },
-          {
             text: 'Added Romanian and English language options for better accessibility'
           }
         ]
@@ -35,16 +32,16 @@ export default function Updates() {
         icon: Zap,
         items: [
           { text: 'Enhanced user authentication system' },
-          { text: 'Improved cross-origin cookie handling for Vercel deployment' },
-          { text: 'Optimized API routing for production environment' }
+          { text: 'Improved cross-origin cookie handling' },
+          { text: 'Optimized API routing' }
         ]
       },
       {
         title: t('updates.bugFixes'),
         icon: Bug,
         items: [
-          { text: 'Fixed cookie persistence issues on page refresh' },
-          { text: 'Resolved CORS configuration for production deployment' },
+          { text: 'Fixed cookie persistence issues' },
+          { text: 'Resolved CORS configuration' },
           { text: 'Fixed progress tracking for simulation tests' }
         ]
       }
