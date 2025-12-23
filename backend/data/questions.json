@@ -5232,6 +5232,605 @@
     "difficulty": "medium",
     "points": 2,
     "tags": ["ACADNET_2025_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Which command is primarily used to list files and directories in Linux?",
+    "type": "all",
+    "answers": [
+      "cd",
+      "ls",
+      "pwd",
+      "touch"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "What is the main purpose of the chmod command?",
+    "type": "all",
+    "answers": [
+      "To change file ownership",
+      "To modify file timestamps",
+      "To change file permissions",
+      "To move files between directories"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "Which command is used to create an empty file in Linux?",
+    "type": "all",
+    "answers": [
+      "mkdir",
+      "nano",
+      "cat",
+      "touch"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "What does the rm -r command do?",
+    "type": "all",
+    "answers": [
+      "Removes only empty directories",
+      "Removes files recursively, including directories",
+      "Renames files recursively",
+      "Restores deleted files"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "Which permission allows a file to be executed?",
+    "type": "all",
+    "answers": [
+      "r",
+      "w",
+      "x",
+      "d"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "What is the effect of the command mv file1 file2?",
+    "type": "all",
+    "answers": [
+      "Copies file1 to file2",
+      "Deletes file1",
+      "Renames file1 to file2",
+      "Merges file1 and file2"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "Which command displays the current directory path?",
+    "type": "all",
+    "answers": [
+      "pwd",
+      "ls -l",
+      "whereis",
+      "tree"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "What does the -a option do when used with ls?",
+    "type": "all",
+    "answers": [
+      "Sorts files alphabetically",
+      "Shows file sizes",
+      "Displays hidden files",
+      "Shows only directories"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "Which command is used to change the owner of a file?",
+    "type": "all",
+    "answers": [
+      "chmod",
+      "chown",
+      "usermod",
+      "setfacl"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "What does the command cp -r dir1 dir2 do?",
+    "type": "all",
+    "answers": [
+      "Renames dir1 to dir2",
+      "Deletes dir1",
+      "Copies dir1 into dir2 recursively",
+      "Links dir1 to dir2"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "Which file contains information about file ownership and permissions?",
+    "type": "all",
+    "answers": [
+      "inode",
+      "fstab",
+      "shadow",
+      "passwd"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "What does the stat command display?",
+    "type": "all",
+    "answers": [
+      "File content",
+      "File metadata",
+      "Only file permissions",
+      "Directory structure"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "Which command is used to compare two text files?",
+    "type": "all",
+    "answers": [
+      "diff",
+      "cmp",
+      "comm",
+      "All of the above"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "What does the file command do?",
+    "type": "all",
+    "answers": [
+      "Edits a file",
+      "Determines file type",
+      "Compresses files",
+      "Changes file permissions"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "Which directory typically contains user home directories?",
+    "type": "all",
+    "answers": [
+      "/root",
+      "/etc",
+      "/home",
+      "/usr"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "What does the command ln -s create?",
+    "type": "all",
+    "answers": [
+      "A hard link",
+      "A symbolic link",
+      "A backup file",
+      "A compressed file"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "Which permission set allows full access to the owner only?",
+    "type": "all",
+    "answers": [
+      "777",
+      "755",
+      "700",
+      "644"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "What does umask influence?",
+    "type": "all",
+    "answers": [
+      "Default file permissions",
+      "File ownership",
+      "Disk quotas",
+      "File size limits"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "Which command shows disk usage of files and directories?",
+    "type": "all",
+    "answers": [
+      "df",
+      "du",
+      "ls -h",
+      "mount"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "What happens if rm is used on a write-protected file?",
+    "type": "all",
+    "answers": [
+      "The file is deleted silently",
+      "The system reboots",
+      "A confirmation is requested",
+      "The command fails without notice"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_FILES"]
+  },
+  {
+    "title": "How many layers does the OSI model have?",
+    "type": "all",
+    "answers": [
+      "4",
+      "5",
+      "6",
+      "7"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "Which OSI layer is responsible for transmitting raw bits over a physical medium?",
+    "type": "all",
+    "answers": [
+      "Data Link",
+      "Physical",
+      "Network",
+      "Transport"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "Which OSI layer handles logical addressing and routing?",
+    "type": "all",
+    "answers": [
+      "Transport",
+      "Session",
+      "Network",
+      "Data Link"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "Which layer is responsible for error detection using frames?",
+    "type": "all",
+    "answers": [
+      "Physical",
+      "Network",
+      "Data Link",
+      "Transport"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "Which OSI layer provides end-to-end communication and flow control?",
+    "type": "all",
+    "answers": [
+      "Network",
+      "Transport",
+      "Session",
+      "Application"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "At which OSI layer does encryption typically occur?",
+    "type": "all",
+    "answers": [
+      "Session",
+      "Presentation",
+      "Application",
+      "Transport"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "Which OSI layer is responsible for establishing, maintaining, and terminating sessions?",
+    "type": "all",
+    "answers": [
+      "Transport",
+      "Session",
+      "Presentation",
+      "Application"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "Which protocol operates at the Application layer?",
+    "type": "all",
+    "answers": [
+      "IP",
+      "TCP",
+      "HTTP",
+      "Ethernet"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "Which device primarily operates at the Network layer?",
+    "type": "all",
+    "answers": [
+      "Hub",
+      "Switch",
+      "Router",
+      "Repeater"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "What is the main function of the Presentation layer?",
+    "type": "all",
+    "answers": [
+      "Routing packets",
+      "Data formatting and encoding",
+      "Frame delivery",
+      "User authentication"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "Which OSI layer uses MAC addresses?",
+    "type": "all",
+    "answers": [
+      "Network",
+      "Physical",
+      "Data Link",
+      "Transport"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "Which layer ensures reliable data transfer with error recovery?",
+    "type": "all",
+    "answers": [
+      "Session",
+      "Transport",
+      "Network",
+      "Data Link"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "What type of data unit is used at the Network layer?",
+    "type": "all",
+    "answers": [
+      "Frame",
+      "Segment",
+      "Packet",
+      "Bit"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "Which OSI layer interacts directly with the end user?",
+    "type": "all",
+    "answers": [
+      "Presentation",
+      "Session",
+      "Application",
+      "Transport"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "Which layer is responsible for segmentation and reassembly?",
+    "type": "all",
+    "answers": [
+      "Network",
+      "Transport",
+      "Session",
+      "Data Link"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "At which OSI layer does IP operate?",
+    "type": "all",
+    "answers": [
+      "Data Link",
+      "Transport",
+      "Network",
+      "Session"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "Which OSI layer converts data into signals?",
+    "type": "all",
+    "answers": [
+      "Physical",
+      "Data Link",
+      "Network",
+      "Transport"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "Which layer ensures compatibility between different data formats?",
+    "type": "all",
+    "answers": [
+      "Session",
+      "Presentation",
+      "Application",
+      "Transport"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "Which OSI layer is closest to the physical network hardware?",
+    "type": "all",
+    "answers": [
+      "Physical",
+      "Data Link",
+      "Network",
+      "Transport"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
+  },
+  {
+    "title": "Which OSI layer is responsible for dialog control?",
+    "type": "all",
+    "answers": [
+      "Application",
+      "Session",
+      "Presentation",
+      "Transport"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 3,
+    "tags": ["OSI_1", "NETWORK"]
   }
-
 ]

@@ -98,5 +98,25 @@
     "tag": "NETWORK_3",
     "year": 2025,
     "phase": "county"
+  },
+  {
+    "id": "file_io_linux",
+    "title": "Linux - Manage Files",
+    "description": "NET2077 exam",
+    "duration": 10,
+    "totalPoints": 60,
+    "tag": "LINUX_FILES",
+    "year": 2025,
+    "phase": "county"
+  },
+  {
+    "id": "osi_network",
+    "title": "Network - OSI",
+    "description": "NET2077 exam",
+    "duration": 10,
+    "totalPoints": 60,
+    "tag": "OSI_1",
+    "year": 2025,
+    "phase": "county"
   }
 ]

@@ -85,7 +85,7 @@ export default function Leaderboard() {
     <div className="leaderboard-page">
       <div className="container">
         <div className="leaderboard-header">
-          <h1>🏆 {t('leaderboard.title')}</h1>
+          <h1>{t('leaderboard.title')}</h1>
           <p>{t('leaderboard.subtitle')}</p>
         </div>
 

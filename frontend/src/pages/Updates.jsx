@@ -25,6 +25,12 @@ export default function Updates() {
             },
             {
               text: 'Enhanced user ranking and competitive learning experience'
+            },
+            {
+              text: 'New Linux test \"Linux - Manage Files\"'
+            },
+            {
+              text: 'New Network test \"Network - OSI\"'
             }
           ]
         },

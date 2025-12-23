@@ -106,6 +106,35 @@ const translations = {
       startQuiz: 'Start Quiz',
       selectModeFirst: 'Please select a quiz mode first',
       selectTagFirst: 'Please select a tag for this mode'
+    },
+    progress: {
+      title: 'Your Progress',
+      loading: 'Loading your progress...',
+      currentLevel: 'Current Level',
+      progressToLevel: 'Progress to Level',
+      xpRemaining: 'remaining',
+      questionsSolved: 'Questions Solved',
+      simulations: 'Simulations',
+      progressByCategory: 'Progress by Category',
+      recentSimulations: 'Recent Simulations',
+      passed: 'Passed',
+      failed: 'Failed',
+      points: 'points',
+      correctAnswers: 'correct answers'
+    },
+    hero: {
+      title: 'Master Applied Informatics',
+      subtitle: 'Practice computer science fundamentals through interactive questions and curated learning resources',
+      browseQuestions: 'Browse Questions',
+      browseResources: 'Browse Resources',
+      practiceQuestions: 'Practice Questions',
+      activeLearners: 'Active Learners',
+      learningResources: 'Learning Resources',
+      startHere: 'Start Here',
+      linuxRoadmap: 'Linux Roadmap',
+      networkRoadmap: 'Network Roadmap',
+      easyExam: 'Easy Exam',
+      mediumExam: 'Medium Exam'
     }
   },
   ro: {
@@ -203,6 +232,35 @@ const translations = {
       startQuiz: 'Începe Quiz-ul',
       selectModeFirst: 'Te rugăm să selectezi mai întâi un mod de quiz',
       selectTagFirst: 'Te rugăm să selectezi o etichetă pentru acest mod'
+    },
+    progress: {
+      title: 'Progresul Tău',
+      loading: 'Se încarcă progresul...',
+      currentLevel: 'Nivelul Curent',
+      progressToLevel: 'Progres către Nivelul',
+      xpRemaining: 'rămas',
+      questionsSolved: 'Întrebări Rezolvate',
+      simulations: 'Simulări',
+      progressByCategory: 'Progres pe Categorii',
+      recentSimulations: 'Simulări Recente',
+      passed: 'Promovat',
+      failed: 'Respins',
+      points: 'puncte',
+      correctAnswers: 'răspunsuri corecte'
+    },
+    hero: {
+      title: 'Stăpânește Informatica Aplicată',
+      subtitle: 'Exersează fundamentele informaticii prin întrebări interactive și resurse de învățare',
+      browseQuestions: 'Răsfoiește Întrebările',
+      browseResources: 'Răsfoiește Resursele',
+      practiceQuestions: 'Întrebări de Practică',
+      activeLearners: 'Cursanți Activi',
+      learningResources: 'Resurse de Învățare',
+      startHere: 'Începe Aici',
+      linuxRoadmap: 'Plan Linux',
+      networkRoadmap: 'Plan Rețele',
+      easyExam: 'Examen Ușor',
+      mediumExam: 'Examen Mediu'
     }
   }
 };

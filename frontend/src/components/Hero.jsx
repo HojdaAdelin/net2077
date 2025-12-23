@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getStats } from '../services/api';
+import { useLanguage } from '../context/LanguageContext';
 import '../styles/Hero.css';
 
 export default function Hero() {
   const [stats, setStats] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
+  const { t } = useLanguage();
 
   useEffect(() => {
     getStats().then(setStats).catch(() => {});
@@ -14,34 +16,34 @@ export default function Hero() {
     <div className="hero">
       <div className="container">
         <div className="hero-content">
-          <h1 className="hero-title">Master Applied Informatics</h1>
+          <h1 className="hero-title">{t('hero.title')}</h1>
           <p className="hero-subtitle">
-            Practice computer science fundamentals through interactive questions and curated learning resources
+            {t('hero.subtitle')}
           </p>
           
           <div className="hero-cta">
-            <Link to="/grile" className="btn btn-primary">Browse Questions</Link>
-            <Link to="/resurse" className="btn btn-secondary">Browse Resources</Link>
+            <Link to="/grile" className="btn btn-primary">{t('hero.browseQuestions')}</Link>
+            <Link to="/resurse" className="btn btn-secondary">{t('hero.browseResources')}</Link>
           </div>
         </div>
 
         <div className="stats-grid">
           <div className="stat-item">
             <div className="stat-number">{stats.totalQuestions}</div>
-            <div className="stat-label">Practice Questions</div>
+            <div className="stat-label">{t('hero.practiceQuestions')}</div>
           </div>
           <div className="stat-item">
             <div className="stat-number">{stats.totalUsers}</div>
-            <div className="stat-label">Active Learners</div>
+            <div className="stat-label">{t('hero.activeLearners')}</div>
           </div>
           <div className="stat-item">
             <div className="stat-number">{stats.totalResources}</div>
-            <div className="stat-label">Learning Resources</div>
+            <div className="stat-label">{t('hero.learningResources')}</div>
           </div>
         </div>
 
         <div className="start-here-section">
-          <h2 className="start-here-title">Start Here</h2>
+          <h2 className="start-here-title">{t('hero.startHere')}</h2>
           
           <div className="learning-paths-grid">
             <div className="path-row">
@@ -50,14 +52,14 @@ export default function Hero() {
               </div>
               <div className="path-options">
                 <Link to="/roadmap/Linux" className="path-option roadmap-option">
-                  <span className="option-label">Linux Roadmap</span>
+                  <span className="option-label">{t('hero.linuxRoadmap')}</span>
                 </Link>
                 <div className="path-exams">
                   <Link to="/exam/easy_linux" className="path-option exam-option">
-                    <span className="option-label">Easy Exam</span>
+                    <span className="option-label">{t('hero.easyExam')}</span>
                   </Link>
                   <Link to="/exam/medium_linux" className="path-option exam-option">
-                    <span className="option-label">Medium Exam</span>
+                    <span className="option-label">{t('hero.mediumExam')}</span>
                   </Link>
                 </div>
               </div>
@@ -69,14 +71,14 @@ export default function Hero() {
               </div>
               <div className="path-options">
                 <Link to="/roadmap/Network" className="path-option roadmap-option">
-                  <span className="option-label">Network Roadmap</span>
+                  <span className="option-label">{t('hero.networkRoadmap')}</span>
                 </Link>
                 <div className="path-exams">
                   <Link to="/exam/easy_network" className="path-option exam-option">
-                    <span className="option-label">Easy Exam</span>
+                    <span className="option-label">{t('hero.easyExam')}</span>
                   </Link>
                   <Link to="/exam/medium_network" className="path-option exam-option">
-                    <span className="option-label">Medium Exam</span>
+                    <span className="option-label">{t('hero.mediumExam')}</span>
                   </Link>
                 </div>
               </div>
