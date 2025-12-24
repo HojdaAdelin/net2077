@@ -27,9 +27,15 @@ export const register = async (req, res) => {
       path: '/'
     });
 
+    const streakInfo = getStreakInfo(user);
+
     res.status(201).json({ 
       success: true,
-      user: { id: user._id, username }
+      user: { 
+        id: user._id, 
+        username,
+        streak: streakInfo
+      }
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -61,9 +67,15 @@ export const login = async (req, res) => {
       path: '/'
     });
 
+    const streakInfo = getStreakInfo(user);
+
     res.json({ 
       success: true,
-      user: { id: user._id, username: user.username }
+      user: { 
+        id: user._id, 
+        username: user.username,
+        streak: streakInfo
+      }
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
