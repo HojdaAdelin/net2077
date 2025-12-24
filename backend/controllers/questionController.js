@@ -1,5 +1,6 @@
 import Question from '../models/Question.js';
 import User from '../models/User.js';
+import { updateUserStreak } from '../utils/streakUtils.js';
 
 export const getQuestions = async (req, res) => {
   try {
@@ -79,6 +80,9 @@ export const markSolved = async (req, res) => {
       user.xp += question.points || 1;
       user.level = Math.floor(user.xp / 100) + 1;
       
+      // Update streak when solving a question
+      await updateUserStreak(user);
+      
       if (question.tags && question.tags.length > 0) {
         question.tags.forEach(tag => {
           if (tag === 'LINUX' || tag === 'NETWORK') {
@@ -100,7 +104,12 @@ export const markSolved = async (req, res) => {
       xp: user.xp, 
       level: user.level,
       solvedByTag: user.solvedByTag,
-      alreadySolved 
+      alreadySolved,
+      streak: {
+        current: user.streak?.current || 0,
+        max: user.streak?.max || 0,
+        isActive: true
+      }
     });
   } catch (error) {
     console.error('Error marking question as solved:', error);

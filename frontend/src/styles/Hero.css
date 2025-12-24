@@ -65,17 +65,6 @@
   position: relative;
 }
 
-.stat-item:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1px;
-  height: 40px;
-  background: var(--border);
-}
-
 .stat-number {
   font-size: 42px;
   font-weight: 600;
@@ -203,10 +192,6 @@
 
   .stat-item {
     padding: 32px 20px;
-  }
-
-  .stat-item:not(:last-child)::after {
-    display: none;
   }
 
   .stat-number {

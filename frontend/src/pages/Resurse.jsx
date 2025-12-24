@@ -102,7 +102,6 @@ export default function Resurse() {
                       </span>
                     </div>
                   </div>
-                  <div className="roadmap-arrow">{t('resources.viewRoadmap')}</div>
                 </div>
               ))}
             </div>

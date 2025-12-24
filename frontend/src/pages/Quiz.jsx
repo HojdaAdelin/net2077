@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import '../styles/Quiz.css';
 import { API_URL as API_BASE } from '../config';
+import { AuthContext } from '../context/AuthContext';
 const DEFAULT_EXAM_DURATION_MIN = 60;
 const getExamStorageKey = (examId) => `exam_state_${examId}`;
 
@@ -9,6 +10,7 @@ export default function Quiz({ isExam = false }) {
   const { type, mode, examId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const { updateUser } = useContext(AuthContext);
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({}); 
@@ -86,7 +88,15 @@ export default function Quiz({ isExam = false }) {
             correctAnswers,
             totalQuestions: questions.length
           })
-        }).catch(error => console.error('Error saving simulation:', error));
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Actualizez streak-ul în AuthContext dacă examenul a fost finalizat cu răspunsuri corecte
+          if (data.streak && correctAnswers > 0) {
+            updateUser({ streak: data.streak });
+          }
+        })
+        .catch(error => console.error('Error saving simulation:', error));
 
       /* Simulation logic */
       setFinishReason(reason);
@@ -455,7 +465,7 @@ export default function Quiz({ isExam = false }) {
     }
     if (!isExam && isCorrect) {
       try {
-        await fetch(`${API_BASE}/questions/markSolved`, {
+        const response = await fetch(`${API_BASE}/questions/markSolved`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -463,7 +473,16 @@ export default function Quiz({ isExam = false }) {
           credentials: 'include',
           body: JSON.stringify({ questionId: currentQuestion._id })
         });
-        console.log('Progress saved for question:', currentQuestion._id);
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Progress saved for question:', currentQuestion._id);
+          
+          // Actualizez streak-ul în AuthContext
+          if (data.streak) {
+            updateUser({ streak: data.streak });
+          }
+        }
       } catch (error) {
         console.error('Error saving progress:', error);
       }

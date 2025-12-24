@@ -3,6 +3,7 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { Languages, ChevronDown } from 'lucide-react';
+import StreakIndicator from './StreakIndicator';
 import '../styles/Navbar.css';
 
 export default function Navbar() {
@@ -75,9 +76,12 @@ export default function Navbar() {
             </div>
             
             {user ? (
-              <button onClick={() => { logout(); closeMobileMenu(); }} className="btn btn-secondary">
-                {t('navbar.logout')}
-              </button>
+              <>
+                <button onClick={() => { logout(); closeMobileMenu(); }} className="btn btn-secondary">
+                  {t('navbar.logout')}
+                </button>
+                <StreakIndicator streak={user.streak} />
+              </>
             ) : (
               <>
                 <Link to="/login" className="btn btn-secondary" onClick={closeMobileMenu}>

@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import { getStreakInfo } from '../utils/streakUtils.js';
 
 export const register = async (req, res) => {
   try {
@@ -86,7 +87,16 @@ export const getMe = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    res.json({ user: { id: user._id, username: user.username } });
+    
+    const streakInfo = getStreakInfo(user);
+    
+    res.json({ 
+      user: { 
+        id: user._id, 
+        username: user.username,
+        streak: streakInfo
+      } 
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

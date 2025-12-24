@@ -31,6 +31,9 @@ export default function Updates() {
             },
             {
               text: 'New Network test \"Network - OSI\"'
+            },
+            {
+              text: 'Streak system'
             }
           ]
         },

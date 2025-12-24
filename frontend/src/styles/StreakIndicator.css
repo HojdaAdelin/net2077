@@ -1,0 +1,105 @@
+.streak-indicator {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.streak-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  min-width: 50px;
+  justify-content: center;
+}
+
+.streak-button:hover {
+  color: var(--text-primary);
+  border-color: var(--primary);
+}
+
+.streak-button.active {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+.streak-button.inactive {
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+.streak-icon.active {
+  color: #f59e0b;
+  animation: flicker 2s ease-in-out infinite alternate;
+}
+
+.streak-icon.inactive {
+  color: var(--text-secondary);
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.streak-count {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.streak-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  min-width: 120px;
+  margin-top: 4px;
+}
+
+.streak-option {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.streak-option:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.streak-option:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.streak-option:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+@media (max-width: 768px) {
+  .streak-dropdown {
+    position: static;
+    box-shadow: none;
+    border: none;
+    background: var(--bg-secondary);
+    border-radius: 6px;
+    margin-top: 0;
+  }
+}

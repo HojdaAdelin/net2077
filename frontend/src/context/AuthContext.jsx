@@ -35,6 +35,10 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
   };
 
+  const updateUser = (userData) => {
+    setUser(prev => ({ ...prev, ...userData }));
+  };
+
   const logout = async () => {
     try {
       await fetch(`${API_URL}/auth/logout`, {
@@ -63,7 +67,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser, checkAuth }}>
       {children}
     </AuthContext.Provider>
   );

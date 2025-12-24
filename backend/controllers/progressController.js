@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import { updateUserStreak, getStreakInfo } from '../utils/streakUtils.js';
 
 export const getUserProgress = async (req, res) => {
   try {
@@ -14,13 +15,16 @@ export const getUserProgress = async (req, res) => {
       type: question.type
     }));
 
+    const streakInfo = getStreakInfo(user);
+
     res.json({
       solvedCount: solvedQuestions.length,
       solvedQuestions,
       solvedByTag: user.solvedByTag,
       simulations: user.simulations,
       xp: user.xp,
-      level: user.level
+      level: user.level,
+      streak: streakInfo
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -55,9 +59,20 @@ export const addSimulation = async (req, res) => {
     const percentage = totalPoints > 0 ? (score / totalPoints) * 100 : 0;
     user.xp += Math.floor(percentage) * 2;
     user.level = Math.floor(user.xp / 100) + 1;
+    
+    if (correctAnswers > 0) {
+      await updateUserStreak(user);
+    }
+    
     await user.save();
     
-    res.json({ xp: user.xp, level: user.level });
+    const streakInfo = getStreakInfo(user);
+    
+    res.json({ 
+      xp: user.xp, 
+      level: user.level,
+      streak: streakInfo
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
