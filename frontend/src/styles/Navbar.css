@@ -228,10 +228,4 @@
     border-radius: 6px;
     margin-top: 0;
   }
-}.nav-st
-reak {
-  position: absolute;
-@media (max-width: 768px) {
-  .mobile-menu-btn {
-    display: block;
-  }
+}
