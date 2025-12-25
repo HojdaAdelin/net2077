@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Languages, ChevronDown } from 'lucide-react';
+import { Languages, ChevronDown, LogIn, UserPlus, LogOut } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import '../styles/Navbar.css';
 
@@ -78,6 +78,7 @@ export default function Navbar() {
             {user ? (
               <>
                 <button onClick={() => { logout(); closeMobileMenu(); }} className="btn btn-secondary">
+                  <LogOut size={16} />
                   {t('navbar.logout')}
                 </button>
                 <StreakIndicator streak={user.streak} />
@@ -85,9 +86,11 @@ export default function Navbar() {
             ) : (
               <>
                 <Link to="/login" className="btn btn-secondary" onClick={closeMobileMenu}>
+                  <LogIn size={16} />
                   {t('navbar.login')}
                 </Link>
                 <Link to="/register" className="btn btn-primary" onClick={closeMobileMenu}>
+                  <UserPlus size={16} />
                   {t('navbar.register')}
                 </Link>
               </>

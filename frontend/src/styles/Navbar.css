@@ -58,6 +58,9 @@
 .nav-auth .btn {
   padding: 8px 16px;
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .mobile-menu-btn {
