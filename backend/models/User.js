@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
     current: { type: Number, default: 0 },
     max: { type: Number, default: 0 },
     lastActivity: { type: Date, default: null },
-    lastActivityDate: { type: String, default: null } // Format: YYYY-MM-DD pentru comparare sigură
+    lastActivityDate: { type: String, default: null } 
   },
   xp: { type: Number, default: 0 },
   level: { type: Number, default: 1 }
