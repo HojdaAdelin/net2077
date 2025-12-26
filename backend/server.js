@@ -18,6 +18,8 @@ dotenv.config({ path: envPath });
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 const getLocalIp = () => {
   const nets = os.networkInterfaces();
   for (const name of Object.keys(nets)) {
