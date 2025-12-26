@@ -123,7 +123,7 @@ const translations = {
       correctAnswers: 'correct answers'
     },
     hero: {
-      title: 'Master Applied Informatics',
+      title: 'Learn Applied Informatics',
       subtitle: 'Practice computer science fundamentals through interactive questions and curated learning resources',
       browseQuestions: 'Browse Questions',
       browseResources: 'Browse Resources',
@@ -249,7 +249,7 @@ const translations = {
       correctAnswers: 'răspunsuri corecte'
     },
     hero: {
-      title: 'Stăpânește Informatica Aplicată',
+      title: 'Învață Informatica Aplicată',
       subtitle: 'Exersează fundamentele informaticii prin întrebări interactive și resurse de învățare',
       browseQuestions: 'Răsfoiește Întrebările',
       browseResources: 'Răsfoiește Resursele',
