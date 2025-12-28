@@ -109,11 +109,28 @@
 .quiz-actions {
   display: flex;
   gap: 12px;
+  margin-top: 16px;
+  width: 100%;
 }
 
 .quiz-actions .btn {
   flex: 1;
   font-size: 14px;
+  background: #4a5568;
+  border-color: #4a5568;
+  color: white;
+}
+
+.quiz-actions .btn:hover:not(:disabled) {
+  background: #2d3748;
+  border-color: #2d3748;
+}
+
+.quiz-actions .btn:disabled {
+  background: #718096;
+  border-color: #718096;
+  opacity: 0.6;
+}
 }
 
 .quiz-content {

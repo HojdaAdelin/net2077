@@ -478,7 +478,6 @@ export default function Quiz({ isExam = false }) {
           const data = await response.json();
           console.log('Progress saved for question:', currentQuestion._id);
           
-          // Actualizez streak-ul în AuthContext
           if (data.streak) {
             updateUser({ streak: data.streak });
           }
@@ -486,6 +485,9 @@ export default function Quiz({ isExam = false }) {
       } catch (error) {
         console.error('Error saving progress:', error);
       }
+      setTimeout(() => {
+        handleNext();
+      }, 500);
     }
   };
 
@@ -659,19 +661,6 @@ export default function Quiz({ isExam = false }) {
             })}
           </div>
 
-          <div className="quiz-actions">
-            <button 
-              onClick={handlePrevious} 
-              disabled={currentIndex === 0}
-              className="btn btn-secondary"
-            >
-              Previous
-            </button>
-            <button onClick={handleNext} className="btn btn-secondary" disabled={currentIndex === questions.length - 1}>
-              Next
-            </button>
-          </div>
-
           <button 
             onClick={handleSubmitAll} 
             className="btn btn-primary"
@@ -809,6 +798,19 @@ export default function Quiz({ isExam = false }) {
                   Submit Answer
                 </button>
               )}
+
+              <div className="quiz-actions">
+                <button 
+                  onClick={handlePrevious} 
+                  disabled={currentIndex === 0}
+                  className="btn btn-secondary"
+                >
+                  Previous
+                </button>
+                <button onClick={handleNext} className="btn btn-secondary" disabled={currentIndex === questions.length - 1}>
+                  Next
+                </button>
+              </div>
 
               {submittedAnswers[currentQuestion._id] !== undefined && (
                 <div className={`answer-feedback ${submittedAnswers[currentQuestion._id] ? 'correct' : 'incorrect'}`}>
