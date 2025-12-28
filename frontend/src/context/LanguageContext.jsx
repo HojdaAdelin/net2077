@@ -134,7 +134,15 @@ const translations = {
       linuxRoadmap: 'Linux Roadmap',
       networkRoadmap: 'Network Roadmap',
       easyExam: 'Easy Exam',
-      mediumExam: 'Medium Exam'
+      mediumExam: 'Medium Exam',
+      benefitsTitle: 'Benefits of Creating an Account',
+      guest: 'Guest',
+      user: 'User',
+      accessQuestions: 'Access to all questions',
+      accessResources: 'Access to all resources',
+      trackProgress: 'Track progress',
+      betterExams: 'Better exam sessions',
+      registerNow: 'Register Now'
     }
   },
   ro: {
@@ -260,7 +268,15 @@ const translations = {
       linuxRoadmap: 'Plan Linux',
       networkRoadmap: 'Plan Rețele',
       easyExam: 'Examen Ușor',
-      mediumExam: 'Examen Mediu'
+      mediumExam: 'Examen Mediu',
+      benefitsTitle: 'Beneficiile Creării unui Cont',
+      guest: 'Vizitator',
+      user: 'Utilizator',
+      accessQuestions: 'Acces la toate întrebările',
+      accessResources: 'Acces la toate resursele',
+      trackProgress: 'Urmărire progres',
+      betterExams: 'Sesiuni de examen îmbunătățite',
+      registerNow: 'Înregistrează-te Acum'
     }
   }
 };

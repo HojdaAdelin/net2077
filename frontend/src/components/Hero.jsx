@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { getStats } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
+import { AuthContext } from '../context/AuthContext';
+import { Check, X } from 'lucide-react';
 import '../styles/Hero.css';
 
 export default function Hero() {
   const [stats, setStats] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
   const { t } = useLanguage();
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     getStats().then(setStats).catch(() => {});
@@ -85,6 +88,66 @@ export default function Hero() {
             </div>
           </div>
         </div>
+
+        {!user && (
+          <div className="benefits-section">
+            <h2 className="benefits-title">{t('hero.benefitsTitle')}</h2>
+            
+            <div className="benefits-table">
+              <div className="benefits-header">
+                <div className="benefit-feature"></div>
+                <div className="benefit-column">{t('hero.guest')}</div>
+                <div className="benefit-column">{t('hero.user')}</div>
+              </div>
+              
+              <div className="benefits-row">
+                <div className="benefit-feature">{t('hero.accessQuestions')}</div>
+                <div className="benefit-status">
+                  <Check size={20} className="check-icon" />
+                </div>
+                <div className="benefit-status">
+                  <Check size={20} className="check-icon" />
+                </div>
+              </div>
+              
+              <div className="benefits-row">
+                <div className="benefit-feature">{t('hero.accessResources')}</div>
+                <div className="benefit-status">
+                  <Check size={20} className="check-icon" />
+                </div>
+                <div className="benefit-status">
+                  <Check size={20} className="check-icon" />
+                </div>
+              </div>
+              
+              <div className="benefits-row">
+                <div className="benefit-feature">{t('hero.trackProgress')}</div>
+                <div className="benefit-status">
+                  <X size={20} className="x-icon" />
+                </div>
+                <div className="benefit-status">
+                  <Check size={20} className="check-icon" />
+                </div>
+              </div>
+              
+              <div className="benefits-row">
+                <div className="benefit-feature">{t('hero.betterExams')}</div>
+                <div className="benefit-status">
+                  <X size={20} className="x-icon" />
+                </div>
+                <div className="benefit-status">
+                  <Check size={20} className="check-icon" />
+                </div>
+              </div>
+            </div>
+            
+            <div className="benefits-cta">
+              <Link to="/register" className="btn btn-register">
+                {t('hero.registerNow')}
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

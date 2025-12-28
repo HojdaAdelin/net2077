@@ -13,7 +13,7 @@ export default function Updates() {
   const getUpdatesData = () => [
     {
       version: '1.2.0',
-      date: 'December 22, 2025',
+      date: 'December 30, 2025',
       sections: [
         {
           title: t('updates.newFeatures'),

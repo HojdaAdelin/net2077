@@ -489,6 +489,11 @@ export default function Quiz({ isExam = false }) {
         handleNext();
       }, 500);
     }
+    if (isExam && isCorrect) {
+      setTimeout(() => {
+        handleNext();
+      }, 500);
+    }
   };
 
   const handleSubmitAll = () => {
