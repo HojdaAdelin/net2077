@@ -34,6 +34,9 @@ export default function Updates() {
             },
             {
               text: 'Streak system'
+            },
+            {
+              text: 'Daily Challenge'
             }
           ]
         },

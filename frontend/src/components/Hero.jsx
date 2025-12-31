@@ -139,6 +139,15 @@ export default function Hero() {
                   <Check size={20} className="check-icon" />
                 </div>
               </div>
+              <div className="benefits-row">
+                <div className="benefit-feature">{t('hero.dailyChallenge')}</div>
+                <div className="benefit-status">
+                  <X size={20} className="x-icon" />
+                </div>
+                <div className="benefit-status">
+                  <Check size={20} className="check-icon" />
+                </div>
+              </div>
             </div>
             
             <div className="benefits-cta">

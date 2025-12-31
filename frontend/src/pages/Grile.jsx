@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
-import { getUserProgress } from '../services/api';
+import { getUserProgress, getDailyChallengeStatus } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
 import '../styles/Grile.css';
@@ -148,12 +148,25 @@ export default function Grile() {
   });
   const [showModal, setShowModal] = useState(false);
   const [selectedType, setSelectedType] = useState('');
+  const [dailyChallenge, setDailyChallenge] = useState(null);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     loadData();
+    if (user) {
+      loadDailyChallengeStatus();
+    }
   }, [user]);
+
+  const loadDailyChallengeStatus = async () => {
+    try {
+      const status = await getDailyChallengeStatus();
+      setDailyChallenge(status);
+    } catch (error) {
+      console.error('Error loading daily challenge status:', error);
+    }
+  };
 
   const loadData = async () => {
     try {
@@ -221,6 +234,9 @@ export default function Grile() {
   const handleContinue = (type) => {
     if (type === 'exam') {
       navigate('/exam-selection');
+    } else if (type === 'daily') {
+      
+      navigate('/grile/daily/challenge');
     } else {
       setSelectedType(type);
       setShowModal(true);
@@ -236,6 +252,14 @@ export default function Grile() {
       total: stats.basic,
       solved: solved.basic
     },
+    ...(user ? [{
+      title: 'Daily Challenge',
+      desc: '20 Linux questions with 2x XP bonus',
+      type: 'daily',
+      isDaily: true,
+      completed: dailyChallenge?.completed || false,
+      timeUntilNext: dailyChallenge?.timeUntilNext || ''
+    }] : []),
     { 
       title: 'All Questions', 
       desc: 'Complete collection covering Linux and Network topics',
@@ -249,7 +273,8 @@ export default function Grile() {
       title: 'Examination Subjects', 
       desc: 'Official examination practice with timer and scoring',
       type: 'exam',
-      isExam: true
+      isExam: true,
+      examTag: 'EXAM'
     }
   ];
 
@@ -262,14 +287,52 @@ export default function Grile() {
         
         <div className="cards-grid">
           {cards.map(card => (
-            <div key={card.type} className="question-card">
+            <div 
+              key={card.type} 
+              className={`question-card ${card.completed ? 'daily-completed' : ''} ${card.isExam ? 'exam-card' : ''}`}
+            >
               <div className="card-header">
                 <h2>{card.title}</h2>
                 {card.category && (
                   <span className="card-category">{card.category}</span>
                 )}
+                {card.isDaily && (
+                  <span className={`daily-status ${card.completed ? 'completed' : 'available'}`}>
+                    {card.completed ? 'Completed' : 'Available'}
+                  </span>
+                )}
+                {card.isExam && (
+                  <span className="exam-status">
+                    {card.examTag}
+                  </span>
+                )}
               </div>
               <p>{card.desc}</p>
+              
+              {card.isDaily && (
+                <div className="daily-info">
+                  {card.completed ? (
+                    <div className="daily-completed-info">
+                      <span className="completed-text">Challenge completed today!</span>
+                      <span className="next-reset">Next challenge in: {card.timeUntilNext}</span>
+                    </div>
+                  ) : (
+                    <div className="daily-available-info">
+                      <span className="bonus-text">2x XP Bonus</span>
+                      <span className="questions-count">20 Linux Questions</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {card.isExam && (
+                <div className="exam-info">
+                  <div className="exam-features">
+                    <span className="exam-feature">Timer & Scoring</span>
+                    <span className="exam-feature">Official Practice</span>
+                  </div>
+                </div>
+              )}
               
               {card.categories ? (
                 
@@ -296,7 +359,7 @@ export default function Grile() {
               ) : (
                 
                 <>
-                  {user && (
+                  {user && !card.isExam && !card.isDaily && (
                     <div className="progress-stats">
                       <div className="progress-stat">
                         <span className="stat-value">{card.solved}</span>
@@ -313,7 +376,7 @@ export default function Grile() {
                     </div>
                   )}
 
-                  {!user && (
+                  {!user && !card.isDaily && !card.isExam && (
                     <div className="question-count-badge">
                       {card.total} questions available
                     </div>
@@ -325,8 +388,9 @@ export default function Grile() {
                 <button 
                   onClick={() => handleContinue(card.type)}
                   className="btn btn-primary btn-full"
+                  disabled={card.isDaily && card.completed}
                 >
-                  Continue
+                  {card.isDaily && card.completed ? 'Completed Today' : 'Continue'}
                 </button>
               </div>
             </div>

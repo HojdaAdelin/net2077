@@ -142,6 +142,7 @@ const translations = {
       accessResources: 'Access to all resources',
       trackProgress: 'Track progress',
       betterExams: 'Better exam sessions',
+      dailyChallenge: 'Access to daily challenges',
       registerNow: 'Register Now'
     }
   },
@@ -276,6 +277,7 @@ const translations = {
       accessResources: 'Acces la toate resursele',
       trackProgress: 'Urmărire progres',
       betterExams: 'Sesiuni de examen îmbunătățite',
+      dailyChallenge: 'Acces la provocări zilnice',
       registerNow: 'Înregistrează-te Acum'
     }
   }

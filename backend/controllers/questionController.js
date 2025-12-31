@@ -80,7 +80,6 @@ export const markSolved = async (req, res) => {
       user.xp += question.points || 1;
       user.level = Math.floor(user.xp / 100) + 1;
       
-      // Update streak when solving a question
       await updateUserStreak(user);
       
       if (question.tags && question.tags.length > 0) {
@@ -118,35 +117,95 @@ export const markSolved = async (req, res) => {
 };
 
 
-export const examPoints = async (req, res) => {
+export const dailyLinux = async (req, res) => {
   try {
-    const { questionId } = req.body;
-    const user = await User.findById(req.userId);
-    const question = await Question.findById(questionId);
-    
-    if (!question) {
-      return res.status(404).json({ message: 'Question not found' });
-    }
+    const questions = await Question.aggregate([
+      { $match: { tags: { $in: ['LINUX'] } } },
+      { $sample: { size: 20 } }
+    ]);
+    res.json(questions);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
+export const getDailyChallengeStatus = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const points = question.points || 1;
-    user.xp += points;
+    const today = new Date().toISOString().split('T')[0]; 
+    const isCompleted = user.dailyChallenge && user.dailyChallenge.lastCompleted === today;
+    
+    const now = new Date();
+    const today13 = new Date();
+    today13.setHours(13, 0, 0, 0);
+    
+    let next13;
+    if (now >= today13) {
+      next13 = new Date(today13);
+      next13.setDate(next13.getDate() + 1);
+    } else {
+
+      next13 = today13;
+    }
+    
+    const diff = next13 - now;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    
+    res.json({
+      completed: isCompleted,
+      timeUntilNext: `${hours}h ${minutes}m`,
+      lastScore: user.dailyChallenge?.lastScore || 0,
+      lastTotalPoints: user.dailyChallenge?.lastTotalPoints || 0
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const completeDailyChallenge = async (req, res) => {
+  try {
+    const { score, totalPoints } = req.body;
+    const user = await User.findById(req.userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const today = new Date().toISOString().split('T')[0]; 
+    
+    if (user.dailyChallenge && user.dailyChallenge.lastCompleted === today) {
+      return res.status(400).json({ message: 'Daily challenge already completed today' });
+    }
+
+    const doubleXP = score * 2;
+    user.xp += doubleXP;
     user.level = Math.floor(user.xp / 100) + 1;
+    
+    if (!user.dailyChallenge) {
+      user.dailyChallenge = {};
+    }
+    user.dailyChallenge.lastCompleted = today;
+    user.dailyChallenge.lastScore = score;
+    user.dailyChallenge.lastTotalPoints = totalPoints;
     
     await user.save();
     
-    console.log(`[✔] Added ${points} exam points for question ${questionId} to user ${user.username}`);
+    console.log(`[✔] Daily challenge completed by user ${user.username}: ${score}/${totalPoints} points (${doubleXP} XP gained)`);
     
     res.json({ 
       xp: user.xp, 
       level: user.level,
-      pointsAdded: points
+      pointsAdded: doubleXP,
+      challengeCompleted: true
     });
   } catch (error) {
-    console.error('Error adding exam question points:', error);
+    console.error('Error completing daily challenge:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };

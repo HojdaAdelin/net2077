@@ -64,6 +64,18 @@ export const register = async (username, email, password) => {
   });
   return res.json();
 };
+export const getDailyLinux = async () => {
+  const res = await fetch(`${API_URL}/questions/dailyLinux`);
+  return res.json();
+};
+
+export const getDailyChallengeStatus = async () => {
+  const res = await fetch(`${API_URL}/questions/dailyChallengeStatus`, { 
+    credentials: 'include'
+  });
+  return res.json();
+};
+
 export const getLeaderboard = async () => {
   const res = await fetch(`${API_URL}/leaderboard`);
   return res.json();

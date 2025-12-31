@@ -25,6 +25,11 @@ const userSchema = new mongoose.Schema({
     lastActivity: { type: Date, default: null },
     lastActivityDate: { type: String, default: null } 
   },
+  dailyChallenge: {
+    lastCompleted: { type: String, default: null },
+    lastScore: { type: Number, default: 0 },
+    lastTotalPoints: { type: Number, default: 0 }
+  },
   xp: { type: Number, default: 0 },
   level: { type: Number, default: 1 }
 }, { timestamps: true });

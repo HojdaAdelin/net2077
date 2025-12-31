@@ -91,23 +91,49 @@ export default function Quiz({ isExam = false }) {
         })
         .then(response => response.json())
         .then(data => {
-          // Actualizez streak-ul în AuthContext dacă examenul a fost finalizat cu răspunsuri corecte
+          
           if (data.streak && correctAnswers > 0) {
             updateUser({ streak: data.streak });
           }
         })
         .catch(error => console.error('Error saving simulation:', error));
 
-      /* Simulation logic */
+
       setFinishReason(reason);
       setExamStarted(false);
       const duration = examDurationSeconds ?? 0;
       const elapsed = duration - (timeLeft ?? duration);
       setTimeSpent(Math.max(0, elapsed));
+    } else if (mode === 'challenge' && type === 'daily') {
+      
+      let score = 0;
+      let totalPoints = 0;
+      
+      questions.forEach((q) => {
+        totalPoints += q.points || 1;
+        const qUserAnswers = selectedAnswers[q._id] || [];
+        const qCorrectAnswers = q.correctAnswers || [q.correctIndex];
+        
+        if (
+          qUserAnswers.length === qCorrectAnswers.length &&
+          qUserAnswers.every(ans => qCorrectAnswers.includes(ans))
+        ) {
+          score += q.points || 1;
+        }
+      });
+
+      fetch(`${API_BASE}/questions/completeDailyChallenge`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ score, totalPoints })
+      }).catch(error => console.error('Error saving daily challenge:', error));
     }
 
     setShowResults(true);
-  }, [examDurationSeconds, isExam, showResults, timeLeft]);
+  }, [examDurationSeconds, isExam, showResults, timeLeft, mode, type, questions, selectedAnswers]);
 
   useEffect(() => {
     if (!isExam || !examStarted || showResults) return;
@@ -206,7 +232,11 @@ export default function Quiz({ isExam = false }) {
       } else {
         setExamMeta(null);
 
-        if (mode === 'random') {
+        if (mode === 'challenge' && type === 'daily') {
+          // Daily Challenge - 20 Linux questions
+          const response = await fetch(`${API_BASE}/questions/dailyLinux`);
+          data = await response.json();
+        } else if (mode === 'random') {
           const params = new URLSearchParams();
           if (queryType) params.append('type', queryType);
           if (tagsParam) params.append('tags', tagsParam);
@@ -225,7 +255,9 @@ export default function Quiz({ isExam = false }) {
       }
 
       let filtered = data;
-      if (!isExam) {
+      
+     
+      if (!isExam && !(mode === 'challenge' && type === 'daily')) {
         if (queryType === 'basic') {
           filtered = filtered.filter(q => q.type === 'basic');
         } else if (queryType === 'all') {
@@ -235,8 +267,8 @@ export default function Quiz({ isExam = false }) {
         }
       }
 
-      // Filter by tags
-      if (!isExam && tagsFilter) {
+  
+      if (!isExam && tagsFilter && !(mode === 'challenge' && type === 'daily')) {
         filtered = filtered.filter(q => q.tags && q.tags.includes(tagsFilter));
       } else if (isExam && tagsFilter) {
         filtered = filtered.filter(q => q.tags && q.tags.includes(tagsFilter));
@@ -302,8 +334,8 @@ export default function Quiz({ isExam = false }) {
           const base = prev || currentMeta || {};
           return { ...base, questionCount: filtered.length };
         });
-      } else if (mode !== 'random') {
-        
+      } else if (mode !== 'random' && !(mode === 'challenge' && type === 'daily')) {
+      
         let prefilledSelected = {};
         let prefilledSubmitted = {};
         try {
@@ -463,7 +495,8 @@ export default function Quiz({ isExam = false }) {
         [currentQuestion._id]: true
       }));
     }
-    if (!isExam && isCorrect) {
+    if (!isExam && isCorrect && !(mode === 'challenge' && type === 'daily')) {
+      
       try {
         const response = await fetch(`${API_BASE}/questions/markSolved`, {
           method: 'POST',
