@@ -13,7 +13,7 @@ export default function Updates() {
   const getUpdatesData = () => [
     {
       version: '1.2.0',
-      date: 'December 30, 2025',
+      date: 'January 2, 2026',
       sections: [
         {
           title: t('updates.newFeatures'),
@@ -46,6 +46,13 @@ export default function Updates() {
           items: [
             { text: 'Extended multi-language support to Leaderboard and Questions pages' },
             { text: 'Improved user interface translations for better accessibility' }
+          ]
+        },
+        {
+          title: t('updates.bugFixes'),
+          icon: Bug,
+          items: [
+            { text: 'Fixed exam points' }
           ]
         }
       ]

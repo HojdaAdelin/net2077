@@ -57,7 +57,7 @@ export const addSimulation = async (req, res) => {
     });
     
     const percentage = totalPoints > 0 ? (score / totalPoints) * 100 : 0;
-    user.xp += Math.floor(percentage) * 2;
+    user.xp += score; 
     user.level = Math.floor(user.xp / 100) + 1;
     
     if (correctAnswers > 0) {

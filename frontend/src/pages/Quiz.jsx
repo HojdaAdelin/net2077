@@ -129,7 +129,14 @@ export default function Quiz({ isExam = false }) {
         },
         credentials: 'include',
         body: JSON.stringify({ score, totalPoints })
-      }).catch(error => console.error('Error saving daily challenge:', error));
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.streak && score > 0) {
+          updateUser({ streak: data.streak });
+        }
+      })
+      .catch(error => console.error('Error saving daily challenge:', error));
     }
 
     setShowResults(true);
