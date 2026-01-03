@@ -44,11 +44,13 @@ export default function Login() {
 
             {error && <div className="error-message">{error}</div>}
 
-            <form onSubmit={handleSubmit} className="auth-form">
+            <form onSubmit={handleSubmit} className="auth-form" autoComplete="on">
               <div className="form-group">
                 <label className="form-label">{t('login.email')}</label>
                 <input 
                   type="email" 
+                  name="email"
+                  autoComplete="email"
                   placeholder={t('login.emailPlaceholder')} 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -62,6 +64,8 @@ export default function Login() {
                 <div className="password-input-wrapper">
                   <input 
                     type={showPassword ? "text" : "password"}
+                    name="password"
+                    autoComplete="current-password"
                     placeholder={t('login.passwordPlaceholder')} 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}

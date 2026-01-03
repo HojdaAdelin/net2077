@@ -73,11 +73,13 @@ export default function Register() {
 
             {error && <div className="error-message">{error}</div>}
 
-            <form onSubmit={handleSubmit} className="auth-form">
+            <form onSubmit={handleSubmit} className="auth-form" autoComplete="on">
               <div className="form-group">
                 <label className="form-label">{t('register.username')}</label>
                 <input 
                   type="text" 
+                  name="username"
+                  autoComplete="username"
                   placeholder={t('register.usernamePlaceholder')} 
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -90,6 +92,8 @@ export default function Register() {
                 <label className="form-label">{t('register.email')}</label>
                 <input 
                   type="email" 
+                  name="email"
+                  autoComplete="email"
                   placeholder={t('register.emailPlaceholder')} 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -103,6 +107,8 @@ export default function Register() {
                 <div className="password-input-wrapper">
                   <input 
                     type={showPassword ? "text" : "password"}
+                    name="password"
+                    autoComplete="new-password"
                     placeholder={t('register.passwordPlaceholder')} 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -141,6 +147,8 @@ export default function Register() {
                 <div className="password-input-wrapper">
                   <input 
                     type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    autoComplete="new-password"
                     placeholder={t('register.confirmPasswordPlaceholder')} 
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}

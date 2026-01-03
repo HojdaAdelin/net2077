@@ -5,7 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
 import '../styles/Grile.css';
 
-function QuizModal({ type, onClose }) {
+function QuizModal({ type, onClose, user }) {
   const [selectedMode, setSelectedMode] = useState('');
   const [selectedTag, setSelectedTag] = useState(type === 'basic' ? 'LINUX' : '');
   const navigate = useNavigate();
@@ -18,10 +18,12 @@ function QuizModal({ type, onClose }) {
   const isAllModeNoFilter = type === 'all' && selectedMode === 'all';
   const isTagRequired = type !== 'basic' && !isAllModeNoFilter;
   const needsTagAttention = isTagRequired && !selectedTag;
+  const needsAuth = selectedMode === 'unsolved' && !user;
 
   const handleStart = () => {
     if (!selectedMode) return;
     if (isTagRequired && !selectedTag) return;
+    if (needsAuth) return;
 
     let finalTag = '';
     if (type === 'basic') {
@@ -39,7 +41,7 @@ function QuizModal({ type, onClose }) {
     navigate(`/grile/${type}/${selectedMode}?${params.toString()}`);
   };
 
-  const canStart = selectedMode && (!isTagRequired || selectedTag);
+  const canStart = selectedMode && (!isTagRequired || selectedTag) && !needsAuth;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -74,6 +76,12 @@ function QuizModal({ type, onClose }) {
               <div className="mode-desc">Random 50 questions in test mode</div>
             </button>
           </div>
+          
+          {needsAuth && (
+            <p className="auth-required-message">
+              You need an account to track unsolved questions.
+            </p>
+          )}
         </div>
 
         {type !== 'basic' && (
@@ -401,6 +409,7 @@ export default function Grile() {
       {showModal && (
         <QuizModal 
           type={selectedType}
+          user={user}
           onClose={() => setShowModal(false)}
         />
       )}
