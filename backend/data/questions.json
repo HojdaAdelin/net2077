@@ -770,6 +770,231 @@
     "tags": ["LINUX"]
   },
   {
+    "title": "What does the command `cd ..` do when you are in the root directory `/`?",
+    "type": "basic",
+    "answers": [
+      "Moves to the /home directory",
+      "Returns an error",
+      "Stays in the root directory",
+      "Moves to the previous directory in history"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the command `cd ..` do when you are in `/home`?",
+    "type": "basic",
+    "answers": [
+      "Moves to /root",
+      "Moves to /home/user",
+      "Moves to /",
+      "Stays in /home"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which key must be pressed to see command auto-completion options in Bash?",
+    "type": "basic",
+    "answers": [
+      "Enter",
+      "Tab twice",
+      "Ctrl + Tab",
+      "Shift + Tab"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which keyboard shortcut clears the terminal screen in Bash?",
+    "type": "basic",
+    "answers": [
+      "Ctrl + C",
+      "Ctrl + Z",
+      "Ctrl + D",
+      "Ctrl + L"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which keyboard shortcut is used to search through command history in Bash?",
+    "type": "basic",
+    "answers": [
+      "Ctrl + H",
+      "Ctrl + R",
+      "Ctrl + S",
+      "Ctrl + P"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "How can you find the inode number of the `sudoers` file located in `/etc`?",
+    "type": "basic",
+    "answers": [
+      "stat /etc/sudoers",
+      "inode /etc/sudoers",
+      "ls -i /etc/sudoers",
+      "find /etc -inode sudoers"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "How can you create the directory `test1/test2/test` if the parent directories do not exist, using a single command?",
+    "type": "basic",
+    "answers": [
+      "mkdir test1/test2/test",
+      "dir -p test1/test2/test",
+      "mkdir -p test1/test2/test",
+      "touch test1/test2/test"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "How can you view the directory structure of the current directory?",
+    "type": "basic",
+    "answers": [
+      "ls -R",
+      "tree .",
+      "pwd",
+      "find . -type d"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 1,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "How can you see the inode number of the file `file1.txt` located in `/var/`?",
+    "type": "basic",
+    "answers": [
+      "stat /var/file1.txt",
+      "ls -l /var/file1.txt",
+      "inode /var/file1.txt",
+      "ls -i /var/file1.txt"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "If running `which python` returns no output, what does it mean?",
+    "type": "basic",
+    "answers": [
+      "Python is installed but not executable",
+      "Python is not installed or not in PATH",
+      "Python is running in the background",
+      "The command is invalid"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the following command do? `find / -name \"*.txt\" -size +25k -size -50k -newermt 2025-05-08 2>/dev/null`",
+    "type": "basic",
+    "answers": [
+      "Finds all text files modified before 2025",
+      "Finds all .txt files between 25KB and 50KB modified after May 8, 2025, ignoring errors",
+      "Deletes all .txt files larger than 50KB",
+      "Lists all .txt files in the home directory"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the following command do? `find / -type f -name \"*.cpp\" 2>/dev/null | wc -l`",
+    "type": "basic",
+    "answers": [
+      "Counts all directories containing .cpp files",
+      "Counts all .cpp files on the system while ignoring errors",
+      "Displays the content of all .cpp files",
+      "Deletes all .cpp files"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "How do you redirect standard error (STDERR) to a file?",
+    "type": "basic",
+    "answers": [
+      "1> file",
+      ">> file",
+      "2> file",
+      "&> file"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "How do you append standard output (STDOUT) to a file?",
+    "type": "basic",
+    "answers": [
+      "> file",
+      "2>> file",
+      ">> file",
+      "< file"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which tool can be used to sort the output of the command `cat /etc/passwd`?",
+    "type": "basic",
+    "answers": [
+      "grep",
+      "awk",
+      "sort",
+      "cut"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
     "title": "Which of the following are valid data structures?",
     "type": "all",
     "answers": [

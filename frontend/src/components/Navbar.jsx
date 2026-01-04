@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Languages, ChevronDown, LogIn, UserPlus, LogOut } from 'lucide-react';
+import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import '../styles/Navbar.css';
 
@@ -11,21 +11,33 @@ export default function Navbar() {
   const { language, changeLanguage, t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const profileDropdownRef = useRef(null);
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const closeMobileMenu = () => setMobileMenuOpen(false);
   const toggleLangDropdown = () => setLangDropdownOpen(!langDropdownOpen);
+  const toggleProfileDropdown = () => setProfileDropdownOpen(!profileDropdownOpen);
 
   const handleLanguageChange = (lang) => {
     changeLanguage(lang);
     setLangDropdownOpen(false);
   };
 
+  const handleLogout = () => {
+    logout();
+    setProfileDropdownOpen(false);
+    closeMobileMenu();
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setLangDropdownOpen(false);
+      }
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setProfileDropdownOpen(false);
       }
     };
 
@@ -77,10 +89,21 @@ export default function Navbar() {
             
             {user ? (
               <>
-                <button onClick={() => { logout(); closeMobileMenu(); }} className="btn btn-secondary">
-                  <LogOut size={16} />
-                  {t('navbar.logout')}
-                </button>
+                <div className="profile-selector" ref={profileDropdownRef}>
+                  <button className="profile-btn" onClick={toggleProfileDropdown}>
+                    <User size={16} />
+                    <span>{user.username}</span>
+                    <ChevronDown size={16} />
+                  </button>
+                  {profileDropdownOpen && (
+                    <div className="profile-dropdown">
+                      <button onClick={handleLogout}>
+                        <LogOut size={16} />
+                        {t('navbar.logout')}
+                      </button>
+                    </div>
+                  )}
+                </div>
                 <StreakIndicator streak={user.streak} />
               </>
             ) : (
