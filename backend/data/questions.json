@@ -995,6 +995,246 @@
     "tags": ["LINUX"]
   },
   {
+    "title": "What does the command `grep -E \"(my|false)\" /etc/passwd` do?",
+    "type": "basic",
+    "answers": [
+      "Counts the number of lines containing 'my'",
+      "Displays lines containing either 'my' or 'false' from /etc/passwd",
+      "Deletes lines containing 'false'",
+      "Displays lines containing both 'my' and 'false'"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the command `grep -E \"(my.*false)\" /etc/passwd` do?",
+    "type": "basic",
+    "answers": [
+      "Deletes lines containing 'false'",
+      "Displays lines containing both 'my' followed by 'false'",
+      "Counts lines containing 'my'",
+      "Displays lines containing either 'my' or 'false'"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which regex operator is used to match any string when both conditions are true?",
+    "type": "basic",
+    "answers": [
+      "?",
+      ".*",
+      "+",
+      "|"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which regex operator is used when at least one of the conditions is correct?",
+    "type": "basic",
+    "answers": [
+      ".*",
+      "|",
+      "+",
+      "?"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which option should be used with grep to enable extended regex?",
+    "type": "basic",
+    "answers": [
+      "-P",
+      "-E",
+      "-R",
+      "-G"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "If a file has permissions 'r-x' for the current user, what permissions does that mean?",
+    "type": "basic",
+    "answers": [
+      "Write and execute",
+      "Full permissions",
+      "Read and execute",
+      "Read and write"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the symbolic representation of permission 754?",
+    "type": "basic",
+    "answers": [
+      "rwxr-xr--",
+      "rwxrwxrwx",
+      "r-xr-xr-x",
+      "rw-r--r--"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which option needs to be set to create a home directory for a new user using `useradd`?",
+    "type": "basic",
+    "answers": [
+      "-r",
+      "-d",
+      "-m",
+      "-c"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which option needs to be set to execute a command as a different user using `su`?",
+    "type": "basic",
+    "answers": [
+      "-c",
+      "--command",
+      "--execute",
+      "-u"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "How can you start the OpenSSH service?",
+    "type": "basic",
+    "answers": [
+      "systemctl enable ssh",
+      "systemctl start ssh",
+      "service ssh enable",
+      "ssh start"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "How can you set SSH to start at system boot?",
+    "type": "basic",
+    "answers": [
+      "ssh --enable",
+      "systemctl enable ssh",
+      "systemctl start ssh",
+      "service ssh start"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the command `ps -aux | grep ssh` do?",
+    "type": "basic",
+    "answers": [
+      "Lists all users with SSH access",
+      "Checks if SSH is running",
+      "Starts the SSH service",
+      "Deletes SSH processes"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the command `systemctl list-units --type=service` do?",
+    "type": "basic",
+    "answers": [
+      "Displays only failed services",
+      "Enables a new service",
+      "Lists all active services",
+      "Starts all system services"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does `kill -l` display?",
+    "type": "basic",
+    "answers": [
+      "User IDs",
+      "All available signals",
+      "Memory usage",
+      "All running processes"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "SIGINT is triggered when...",
+    "type": "basic",
+    "answers": [
+      "The terminal is closed",
+      "A file is deleted",
+      "A process is interrupted",
+      "A service is started"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "How can you open a new tab in the terminal?",
+    "type": "basic",
+    "answers": [
+      "Shift + T",
+      "Ctrl + Shift + T",
+      "Ctrl + Alt + T",
+      "Ctrl + T"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
     "title": "Which of the following are valid data structures?",
     "type": "all",
     "answers": [
