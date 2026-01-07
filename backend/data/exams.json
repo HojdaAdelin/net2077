@@ -118,5 +118,15 @@
     "tag": "OSI_1",
     "year": 2025,
     "phase": "county"
+  },
+  {
+    "id": "acadnet2024county_11_12",
+    "title": "Acadnet 2024 - County Phase XI-XII",
+    "description": "Official county phase examination for Acadnet 2024",
+    "duration": 60,
+    "totalPoints": 100,
+    "tag": "ACADNET_2024_COUNTY_XI_XII",
+    "year": 2024,
+    "phase": "county"
   }
 ]
