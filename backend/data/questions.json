@@ -1234,6 +1234,21 @@
     "points": 2,
     "tags": ["LINUX"]
   },
+    {
+    "title": "Which keyboard shortcut is used to move a running process to the background?",
+    "type": "basic",
+    "answers": [
+      "Ctrl + C",
+      "Ctrl + Z",
+      "Ctrl + D",
+      "Ctrl + B"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
   {
     "title": "Which of the following are valid data structures?",
     "type": "all",

@@ -7,7 +7,8 @@
     "dev": "nodemon server.js",
     "seed": "node scripts/seed.js",
     "clear-db": "node scripts/clear-db.js",
-    "test-db": "node scripts/test-connection.js"
+    "test-db": "node scripts/test-connection.js",
+    "support": "node scripts/manageSupportRequests.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

@@ -37,6 +37,9 @@ export default function Updates() {
             },
             {
               text: 'Daily Challenge'
+            },
+            {
+              text: 'New support system'
             }
           ]
         },

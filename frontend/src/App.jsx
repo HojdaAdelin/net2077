@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import SupportButton from './components/SupportButton';
 import Home from './pages/Home';
 import Grile from './pages/Grile';
 import Quiz from './pages/Quiz';
@@ -37,6 +38,7 @@ export default function App() {
             <Route path="/leaderboard" element={<Leaderboard />} />
           </Routes>
           <Footer />
+          <SupportButton />
         </BrowserRouter>
       </AuthProvider>
     </LanguageProvider>
