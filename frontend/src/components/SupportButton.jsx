@@ -1,13 +1,14 @@
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { HelpCircle, Lock } from 'lucide-react';
+import { HelpCircle, Lock, X } from 'lucide-react';
 import './SupportButton.css';
 
 const SupportButton = () => {
   const { user } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -25,6 +26,27 @@ const SupportButton = () => {
     window.addEventListener('resize', checkDevice);
     return () => window.removeEventListener('resize', checkDevice);
   }, []);
+
+  // Popup timer effect
+  useEffect(() => {
+    if (!isDesktop || !user) return;
+
+    const showPopupTimer = () => {
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 5000); // Hide after 5 seconds
+    };
+
+    // Show popup immediately for testing, then every 10 minutes
+    const initialTimer = setTimeout(showPopupTimer, 2000); // Show after 2 seconds
+    const timer = setInterval(showPopupTimer, 10 * 60 * 1000); // 10 minutes
+
+    return () => {
+      clearTimeout(initialTimer);
+      clearInterval(timer);
+    };
+  }, [isDesktop, user]);
 
   if (!isDesktop) return null;
 
@@ -85,6 +107,20 @@ const SupportButton = () => {
       >
         <HelpCircle size={24} />
       </button>
+
+      {showPopup && (
+        <div className="support-popup">
+          <div className="popup-content">
+            <span className="popup-text">Want to request a feature?</span>
+            <button 
+              className="popup-close"
+              onClick={() => setShowPopup(false)}
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+      )}
 
       {isOpen && (
         <div className="support-overlay" onClick={() => setIsOpen(false)}>

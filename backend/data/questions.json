@@ -1250,6 +1250,276 @@
     "tags": ["LINUX"]
   },
   {
+    "title": "What does the rm -r command do?",
+    "type": "basic",
+    "answers": [
+      "Removes only empty directories",
+      "Removes files recursively, including directories",
+      "Renames files recursively",
+      "Restores deleted files"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the \"grep -R \"main\" src/\" command do?",
+    "type": "basic",
+    "answers": [
+      "Search recursively \"main\" in directory src",
+      "Removes files recursively, including directories",
+      "Renames files recursively",
+      "Restores deleted files"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the \"curl -d \"username=admin&password=1234\" http://example.com\" command do?",
+    "type": "basic",
+    "answers": [
+      "Sends a GET request with URL parameters",
+      "Downloads a file",
+      "Sends a POST request with form data",
+      "Sends only HTTP headers"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the \"awk '{print $1}' file.txt\" command do?",
+    "type": "basic",
+    "answers": [
+      "Prints the entire file",
+      "Prints the first column of each line",
+      "Prints the last column of each line",
+      "Counts the number of lines"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the \"awk '{print NR, $0}' file.txt\" command do?",
+    "type": "basic",
+    "answers": [
+      "Prints each line twice",
+      "Prints only empty lines",
+      "Prints line numbers followed by the line content",
+      "Prints the number of words per line"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the \"awk '$3 > 100 {sum += $3} END {print sum}' data.txt\" command do?",
+    "type": "basic",
+    "answers": [
+      "Prints all lines where the third column is greater than 100",
+      "Counts how many lines have a third column greater than 100",
+      "Calculates and prints the sum of the third column values that are greater than 100",
+      "Prints the maximum value from the third column"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the \"awk -F: '{print $1, $NF}' /etc/passwd\" command do?",
+    "type": "basic",
+    "answers": [
+      "Prints the first and second column",
+      "Prints the first and last field using : as the separator",
+      "Prints only usernames",
+      "Prints user IDs and group IDs"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the \"chmod 600 secret.txt\" command do?",
+    "type": "basic",
+    "answers": [
+      "Gives read and write permissions only to the file owner",
+      "Makes the file executable by everyone",
+      "Allows all users to read the file",
+      "Removes all permissions from the file"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the \"ls -l\" command help identify in terms of security?",
+    "type": "basic",
+    "answers": [
+      "Network connections",
+      "File permissions and ownership",
+      "Running processes",
+      "Open ports"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the \"whoami\" command do?",
+    "type": "basic",
+    "answers": [
+      "Shows all logged-in users",
+      "Displays the current user's username",
+      "Lists user groups",
+      "Shows user password hash"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the \"id\" command display?",
+    "type": "basic",
+    "answers": [
+      "System uptime",
+      "User UID, GID and group memberships",
+      "Running processes",
+      "File permissions"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the \"history\" command help with in security investigations?",
+    "type": "basic",
+    "answers": [
+      "Shows previously executed commands",
+      "Lists system logs",
+      "Displays kernel messages",
+      "Shows file access times"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the \"sudo -l\" command do?",
+    "type": "basic",
+    "answers": [
+      "Runs a command as root",
+      "Lists commands the user is allowed to run with sudo",
+      "Locks the sudo configuration",
+      "Changes the sudo password"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the \"find / -perm -4000 2>/dev/null\" command do?",
+    "type": "basic",
+    "answers": [
+      "Finds all writable files",
+      "Searches for SUID binaries on the system",
+      "Lists all executable files",
+      "Finds files owned by root"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the \"netstat -tulnp\" command help identify?",
+    "type": "basic",
+    "answers": [
+      "File permission changes",
+      "Active listening ports and associated processes",
+      "User login history",
+      "Kernel modules"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the security purpose of the \"iptables -L\" command?",
+    "type": "basic",
+    "answers": [
+      "Displays current firewall rules",
+      "Restarts the firewall service",
+      "Enables packet forwarding",
+      "Blocks all incoming traffic"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the \"grep -R \"password\" /etc\" command do?",
+    "type": "basic",
+    "answers": [
+      "Deletes all password files",
+      "Searches recursively for the word \"password\" in /etc",
+      "Encrypts configuration files",
+      "Changes user passwords"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the main security implication of a file with SUID bit set?",
+    "type": "basic",
+    "answers": [
+      "It runs with the permissions of the file owner",
+      "It cannot be executed",
+      "It is readable by everyone",
+      "It disables access control"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
     "title": "Which of the following are valid data structures?",
     "type": "all",
     "answers": [
@@ -7133,5 +7403,844 @@
     "difficulty": "hard",
     "points": 2,
     "tags": ["ACADNET_2024_COUNTY_XI_XII", "LINUX"]
+  },
+  {
+    "title": "Ce conține, în general, un pachet software?",
+    "type": "acadnet",
+    "answers": [
+      "Drivere hardware",
+      "Date",
+      "Componente hardware",
+      "Modificări asupra kernel-ului",
+      "Executabile",
+      "Fișiere de configurare",
+      "Documentație",
+      "Oferte promoționale"
+    ],
+    "correctAnswers": [1, 4, 5, 6],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este echivalentul în Windows al unui proces daemon din Linux?",
+    "type": "acadnet",
+    "answers": [
+      "Spooler",
+      "Scheduled Task",
+      "Service",
+      "Background Intelligent Transfer Service"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este instrumentul standard utilizat de Windows pentru instalarea și gestionarea pachetelor de software, care folosește fișiere cu extensia .msi?",
+    "type": "acadnet",
+    "answers": [
+      "Windows Installer",
+      "NSIS",
+      "InstallShield",
+      "Ninite",
+      "Chocolatey",
+      "Msconfig"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care argument în Command Prompt va afișa pe Windows informații despre comanda dată?",
+    "type": "acadnet",
+    "answers": [
+      "/Help",
+      "--help",
+      "/?",
+      "-?"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este rolul principal al unui manager de pachete?",
+    "type": "acadnet",
+    "answers": [
+      "Scanarea pachetelor instalate împotriva virușilor",
+      "Actualizarea pachetelor deja instalate",
+      "Dezinstalarea pachetelor",
+      "Localizarea, descărcarea și instalarea pachetelor",
+      "Oferirea de link-uri și instrucțiuni pentru instalarea pachetelor"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele comenzi afișează directorul de lucru curent?",
+    "type": "acadnet",
+    "answers": [
+      "wdir",
+      "pwd",
+      "wd",
+      "dir",
+      "crtdir"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele programe pot interacționa cu depozitele de pachete Linux?",
+    "type": "acadnet",
+    "answers": [
+      "pacman",
+      "apt-get",
+      "dpkg",
+      "make",
+      "clang",
+      "gcc",
+      "apt",
+      "rubygems",
+      "dnf"
+    ],
+    "correctAnswers": [0, 1, 6, 8],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este calea implicită a folderului unui utilizator numit oana în Linux?",
+    "type": "acadnet",
+    "answers": [
+      "/usr/oana",
+      "/home/oana",
+      "/root/oana",
+      "/usr/local/oana",
+      "/media/oana",
+      "/Users/oana",
+      "/home/Users/oana"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele variante de răspuns sunt tipurile de date considerate a fi metadate?",
+    "type": "acadnet",
+    "answers": [
+      "Data ultimei accesări",
+      "Datele de culoare dintr-o imagine",
+      "Conținutul unui fișier text",
+      "Dimensiunea unui fișier",
+      "Cadrele dintr-un fișier video",
+      "Creatorul fișierului"
+    ],
+    "correctAnswers": [0, 3, 5],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este rolul backup-urilor?",
+    "type": "acadnet",
+    "answers": [
+      "Pentru a putea partaja date pe rețea în timp real",
+      "Securitatea sistemelor software și de rețea",
+      "Administrarea bazelor de date stocate",
+      "Procesarea datelor despre clienții unei companii",
+      "Pentru a avea o copie a datelor dacă cele originale nu mai sunt accesibile",
+      "Optimizarea performanței calculatorului"
+    ],
+    "correctAnswers": [4],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care sunt, în general, pașii de bază pentru a compila și instala un program din codul sursă pe Linux?",
+    "type": "acadnet",
+    "answers": [
+      "Despachetarea arhivei cu codul sursă, modificarea script-ului configure și a altor fișiere de cod, rularea comenzii make, a script-ului configure modificat și a comenzii make install",
+      "Despachetarea arhivei cu codul sursă, rularea scriptului configure, a comenzii make și a comenzii make install",
+      "Descărcarea arhivei tar, despachetarea ei cu utilitarul unzip, compilarea manuală a tuturor fișierelor folosind doar clang și copierea executabilelor într-o locație arbitrară",
+      "Descărcarea codului sursă, găsirea manuală a dependențelor, copierea codului sursă al dependențelor în folderul programului de instalat, rularea scriptului configure și a comenzilor make și make install"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este interfața CLI implicită pe versiunile recente de Windows?",
+    "type": "acadnet",
+    "answers": [
+      "WS-Management",
+      "Zsh",
+      ".NET Shell",
+      "Command Prompt",
+      "PowerShell",
+      "Monad"
+    ],
+    "correctAnswers": [4],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce semnificație are acronimul WIMP în contextul interfeței grafice pe calculator?",
+    "type": "acadnet",
+    "answers": [
+      "Windows, Intune, Microsoft, Powerpoint",
+      "Window Interface with Mouse Pointer",
+      "Watch, iPhone, Mac, Pencil",
+      "Window, Icon, Menu, Pointer",
+      "Windows Interface Manipulation Program"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce sunt dependențele unui pachet?",
+    "type": "acadnet",
+    "answers": [
+      "Alte pachete cu funcții similare pachetului instalat deja",
+      "Documentația pachetului instalat",
+      "Alte pachete care trebuie să fie instalate pentru instalarea și rularea pachetului de bază",
+      "Alte biblioteci utile utilizatorului",
+      "Pachete care extind funcționalitatea programului instalat",
+      "Pachete care pot fi utile programului instalat, dar nu esențiale"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "În general, dispozitivele integrate/embedded vor rula un sistem de operare de uz general precum Windows?",
+    "type": "acadnet",
+    "answers": [
+      "Nu",
+      "Da"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care din următoarele componente hardware sunt identificate de capacitate de stocare?",
+    "type": "acadnet",
+    "answers": [
+      "hard disk drive",
+      "placă de rețea",
+      "southbridge",
+      "procesor",
+      "memorie RAM"
+    ],
+    "correctAnswers": [0, 4],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele variante de răspuns definește o comandă integrată în shell?",
+    "type": "acadnet",
+    "answers": [
+      "O comandă care folosește instrucțiuni speciale ale procesorului",
+      "O comandă care folosește API-uri speciale ale kernelului Linux",
+      "O comandă care este rulată de kernel",
+      "O comandă care nu este executată local",
+      "O comandă care este executată de shell, fără executabile externe"
+    ],
+    "correctAnswers": [4],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre rolurile următoare NU este un rol de bază al unui sistem de operare?",
+    "type": "acadnet",
+    "answers": [
+      "Securizarea și izolarea aplicațiilor",
+      "Abstractizarea hardware",
+      "Portabilitatea programelor",
+      "Medierea resurselor hardware",
+      "Crearea unor mijloace de divertisment"
+    ],
+    "correctAnswers": [4],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele variante de răspuns este sistemul de fișiere implicit pe Windows?",
+    "type": "acadnet",
+    "answers": [
+      "ZFS",
+      "exFAT",
+      "APFS",
+      "FAT32",
+      "NTFS",
+      "ReFS"
+    ],
+    "correctAnswers": [4],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este utilitarul în linia de comandă din Windows care permite administrarea utilizatorilor?",
+    "type": "acadnet",
+    "answers": [
+      "ndes",
+      "user",
+      "mscep",
+      "ipam",
+      "netsh",
+      "pwsh",
+      "net",
+      "ad",
+      "dsa.msc"
+    ],
+    "correctAnswers": [6],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este primul proces lansat de sistem?",
+    "type": "acadnet",
+    "answers": [
+      "manager",
+      "system",
+      "run",
+      "launchd",
+      "start",
+      "init",
+      "systemctl"
+    ],
+    "correctAnswers": [5],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care sunt două tipuri de shell-uri disponibile ca interfață a utilizatorului?",
+    "type": "acadnet",
+    "answers": [
+      "bash script",
+      "shell API",
+      "application binary shell",
+      "linie de comandă",
+      "shell grafic"
+    ],
+    "correctAnswers": [3, 4],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele sisteme de operare fac parte din familia Unix?",
+    "type": "acadnet",
+    "answers": [
+      "NetBSD",
+      "FreeBSD",
+      "Linux",
+      "Apple macOS",
+      "Windows",
+      "BeOS",
+      "DOS",
+      "ReactOS"
+    ],
+    "correctAnswers": [0, 1, 2, 3],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este denumirea bazei de date folosită pentru parole în Windows?",
+    "type": "acadnet",
+    "answers": [
+      "Security Account Manager - SAM",
+      "SQL",
+      "NTLM",
+      "Windows Internal Database - WID",
+      "Local Security Authority – LSA",
+      "Kerberos"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Cum se realizează căutarea exhaustivă a fișierelor?",
+    "type": "acadnet",
+    "answers": [
+      "Prin trecerea prin toate fișierele dintr-o zonă a sistemului de fișiere",
+      "Prin căutarea într-o bază de date indexată",
+      "Prin citirea fiecărui bit de pe disc",
+      "Prin examinarea doar a directorului curent"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele sunt scheme de partiționare?",
+    "type": "acadnet",
+    "answers": [
+      "MBR",
+      "BIOS",
+      "GRUB",
+      "GPT",
+      "UEFI"
+    ],
+    "correctAnswers": [0, 3],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Cum se numește suita de servicii Windows pentru autentificare centralizată?",
+    "type": "acadnet",
+    "answers": [
+      "Directory Services",
+      "Central Directory",
+      "Domain Service",
+      "Lightweight Directory Services",
+      "Active Directory"
+    ],
+    "correctAnswers": [4],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este rolul esențial, primar al utilizatorilor pe un sistem de operare?",
+    "type": "acadnet",
+    "answers": [
+      "Segmentarea permisiunilor",
+      "Implementarea unei rețele",
+      "Administrarea de hardware",
+      "Debugging",
+      "Optimizarea performanței"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele variante de răspuns sunt tipuri de memorie care se află în procesor?",
+    "type": "acadnet",
+    "answers": [
+      "registre",
+      "discheta",
+      "cache",
+      "USB",
+      "RAM"
+    ],
+    "correctAnswers": [0, 2],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este rolul principal al unui depozit de pachete?",
+    "type": "acadnet",
+    "answers": [
+      "Validarea pachetelor descărcate din alte surse",
+      "Listarea pachetelor disponibile",
+      "Distribuirea pachetelor corecte pentru distribuțiile suportate",
+      "Listarea dependențelor pentru pachete externe"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele variante de răspuns sunt denumirile celor 3 fișiere speciale de intrare/ieșire?",
+    "type": "acadnet",
+    "answers": [
+      "errfile",
+      "outstd",
+      "standard error",
+      "std-err",
+      "infile",
+      "standard input",
+      "errstd",
+      "std-in",
+      "instd",
+      "std-out",
+      "standard output",
+      "outfile"
+    ],
+    "correctAnswers": [2, 5, 10],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre cele enumerate mai jos sunt controller-e de stocare?",
+    "type": "acadnet",
+    "answers": [
+      "PCIe",
+      "PATA",
+      "SATA",
+      "PCI",
+      "SCSI",
+      "IDE",
+      "Floppy"
+    ],
+    "correctAnswers": [2, 4, 5],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este litera folosită în mod implicit pentru partiția primară pe Windows?",
+    "type": "acadnet",
+    "answers": [
+      "sdc",
+      "sda",
+      "C",
+      "A",
+      "sdb",
+      "B"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce este o legătură simbolică?",
+    "type": "acadnet",
+    "answers": [
+      "Un backup temporar al unui fișier",
+      "O copie imutabilă a unui fișier",
+      "O semnătură digitală a unui fișier",
+      "Un executabil ascuns",
+      "O referință la un fișier prin altă cale"
+    ],
+    "correctAnswers": [4],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care sunt, în general, cele mai răspândite utilizări ale arhivării cu compresie?",
+    "type": "acadnet",
+    "answers": [
+      "Scăderea performanței citirii fișierelor",
+      "Unirea mai multor fișiere în unul singur",
+      "Pierderea de metadate",
+      "Creșterea complexității administrării fișierelor",
+      "Creșterea dificultății de căutare",
+      "Reducerea spațiului de stocare necesar"
+    ],
+    "correctAnswers": [1, 5],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care componentă software se găsește cel mai aproape de hardware?",
+    "type": "acadnet",
+    "answers": [
+      "browser-ul",
+      "shell-ul",
+      "compilatorul",
+      "nucleul (kernel-ul)"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Cum se realizează implicit mutarea unui fișier în altă locație cu comanda mv?",
+    "type": "acadnet",
+    "answers": [
+      "Recursiv",
+      "Rapid",
+      "Prin cererea unei confirmări",
+      "Prin crearea unei legături simbolice",
+      "Prin redenumirea legăturii simbolice"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este sistemul de operare cel mai răspândit pe sisteme desktop?",
+    "type": "acadnet",
+    "answers": [
+      "Red Hat Enterprise Linux",
+      "GNU/Linux",
+      "Microsoft Windows",
+      "Ubuntu",
+      "Apple macOS"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este efectul în Windows al unei erori software nerecuperabile cauzate de hardware?",
+    "type": "acadnet",
+    "answers": [
+      "Eveniment în Event Viewer",
+      "Repornirea programelor active",
+      "Blue screen of death",
+      "Mesaj de eroare către utilizator"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Unde se găsesc configurările sistemului de operare pe Windows?",
+    "type": "acadnet",
+    "answers": [
+      "ntoskrnl.exe",
+      "Registry",
+      "UEFI",
+      "C:\\Windows\\System32"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este numele mecanismului din Windows pentru reglementarea accesului la privilegii de administrator?",
+    "type": "acadnet",
+    "answers": [
+      "User Account Control",
+      "User Authentication Capability",
+      "Unrestricted Access Control",
+      "User Authorization Control",
+      "Unauthorized Access Check",
+      "Universal Application Control"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Unde se pot găsi datele sistemului de operare Windows pe o instalare uzuală?",
+    "type": "acadnet",
+    "answers": [
+      "C:\\Windows",
+      "C:\\Documents and Settings\\Windows",
+      "C:\\Windows\\System32",
+      "C:\\Program Files\\Windows",
+      "A:\\Windows",
+      "\\Windows",
+      "/Windows"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele variante de răspuns includ indecșii descriptorilor fișierelor speciale?",
+    "type": "acadnet",
+    "answers": [
+      "in, out, err",
+      "nu există astfel de indecși",
+      "16, 32, 64",
+      "0, 1, 2",
+      "i, ii, iii"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele perechi caracter : semnificație sunt corecte pentru ls -l?",
+    "type": "acadnet",
+    "answers": [
+      "b : fișier binar",
+      "l : legătură simbolică",
+      "s : fișier salvat local",
+      "– : fișier inexistent",
+      "l : fișier logic",
+      "– : fișier normal",
+      "n : fișier NULL",
+      "c : fișier copiat",
+      "s : socket",
+      "d : director",
+      "p : proces"
+    ],
+    "correctAnswers": [1, 5, 8, 9],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Sub ce fel de structură sunt organizate fișierele într-un sistem de fișiere uzual?",
+    "type": "acadnet",
+    "answers": [
+      "tabelară",
+      "relațională",
+      "plată",
+      "ierarhică",
+      "de tip graf",
+      "cheie-valoare"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Unde se va găsi folderul de home al unui utilizator cu username-ul adina pe Windows 10?",
+    "type": "acadnet",
+    "answers": [
+      "C:\\Home\\adina",
+      "A:\\Users\\adina",
+      "C:\\Users\\adina",
+      "C:\\Documents and Settings\\adina"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care dintre următoarele sunt extensiile formatelor de pachete Red Hat și Debian?",
+    "type": "acadnet",
+    "answers": [
+      ".tar.gz",
+      ".rpm",
+      ".nupkg",
+      ".eopkg",
+      ".pet",
+      ".deb",
+      ".pkg.tar.zst"
+    ],
+    "correctAnswers": [1, 5],
+    "multipleCorrect": true,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este diferența dintre procesele interactive și cele neinteractive?",
+    "type": "acadnet",
+    "answers": [
+      "Procesele interactive au interfață grafică",
+      "Procesele neinteractive au efecte vizibile",
+      "Procesele interactive interacționează cu utilizatorul",
+      "Procesele neinteractive rulează cu permisiuni de root"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care este componenta centrală a sistemului de operare care abstractizează resursele hardware?",
+    "type": "acadnet",
+    "answers": [
+      "API",
+      "GUI",
+      "HAL",
+      "Chipset",
+      "Nucleul sistemului de operare"
+    ],
+    "correctAnswers": [4],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Care sunt atributele fișierului analizat mai jos care reies din output-ul următor?",
+    "type": "acadnet",
+    "answers": [
+      "Fișierul poate fi editat de toți utilizatorii",
+      "Fișierul poate fi citit de toți utilizatorii",
+      "Fișierul are dimensiunea de 1MB",
+      "Fișierul a fost modificat ultima dată pe 19 septembrie",
+      "Fișierul are dimensiunea de aproximativ 13 MB",
+      "Fișierul a fost creat pe 19 septembrie",
+      "Fișierul este deținut de utilizatorii elev și marian",
+      "Fișierul este deținut de grupul marian"
+    ],
+    "correctAnswers": [1, 3, 4, 7],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 2,
+    "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
   }
+
 ]

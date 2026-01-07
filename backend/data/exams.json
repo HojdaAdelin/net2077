@@ -128,5 +128,15 @@
     "tag": "ACADNET_2024_COUNTY_XI_XII",
     "year": 2024,
     "phase": "county"
+  },
+  {
+    "id": "acadnet2024county_9_10",
+    "title": "Acadnet 2024 - County Phase IX-X",
+    "description": "Official county phase examination for Acadnet 2024",
+    "duration": 60,
+    "totalPoints": 100,
+    "tag": "ACADNET_2024_COUNTY_IX_X",
+    "year": 2024,
+    "phase": "county"
   }
 ]
