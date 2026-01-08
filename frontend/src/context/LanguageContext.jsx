@@ -18,6 +18,7 @@ const translations = {
       resources: 'Resources',
       progress: 'Progress',
       leaderboard: 'Leaderboard',
+      lab: 'Lab',
       login: 'Login',
       register: 'Register',
       logout: 'Logout'
@@ -154,6 +155,7 @@ const translations = {
       resources: 'Resurse',
       progress: 'Progres',
       leaderboard: 'Clasament',
+      lab: 'Laborator',
       login: 'Conectare',
       register: 'Înregistrare',
       logout: 'Deconectare'

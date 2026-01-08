@@ -57,6 +57,10 @@ export default function Navbar() {
         </button>
 
         <div className={`nav-links ${mobileMenuOpen ? 'active' : ''}`}>
+          <Link to="/lab" className="nav-link-new" onClick={closeMobileMenu}>
+            {t('navbar.lab')}
+            <span className="new-badge">NEW</span>
+          </Link>
           <Link to="/grile" onClick={closeMobileMenu}>{t('navbar.questions')}</Link>
           <Link to="/resurse" onClick={closeMobileMenu}>{t('navbar.resources')}</Link>
           <Link to="/leaderboard" onClick={closeMobileMenu}>{t('navbar.leaderboard')}</Link>
