@@ -105,6 +105,18 @@ export default function Hero() {
                 AcadNet 2024 - County Phase IX-X
               </Link>
             </div>
+            <div className="new-exam-row">
+              <div className="new-tag">NEW</div>
+              <Link to="/exam/linux_security" className="exam-name">
+                Linux - Security
+              </Link>
+            </div>
+            <div className="new-exam-row">
+              <div className="new-tag">NEW</div>
+              <Link to="/exam/linux_permissions" className="exam-name">
+                Linux - Permissions
+              </Link>
+            </div>
           </div>
         </div>
 

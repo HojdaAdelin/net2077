@@ -138,5 +138,25 @@
     "tag": "ACADNET_2024_COUNTY_IX_X",
     "year": 2024,
     "phase": "county"
+  },
+  {
+    "id": "linux_security",
+    "title": "Linux - Security",
+    "description": "NET2077 exam",
+    "duration": 15,
+    "totalPoints": 80,
+    "tag": "LINUX_SECURITY",
+    "year": 2025,
+    "phase": "county"
+  },
+  {
+    "id": "linux_permissions",
+    "title": "Linux - Permissions",
+    "description": "NET2077 exam",
+    "duration": 15,
+    "totalPoints": 60,
+    "tag": "LINUX_PERMISSIONS",
+    "year": 2025,
+    "phase": "county"
   }
 ]

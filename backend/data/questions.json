@@ -1382,7 +1382,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["LINUX"]
+    "tags": ["LINUX", "LINUX_SECURITY"]
   },
   {
     "title": "What does the \"whoami\" command do?",
@@ -1397,7 +1397,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["LINUX"]
+    "tags": ["LINUX", "LINUX_SECURITY"]
   },
   {
     "title": "What does the \"id\" command display?",
@@ -1412,7 +1412,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["LINUX"]
+    "tags": ["LINUX", "LINUX_SECURITY"]
   },
   {
     "title": "What does the \"history\" command help with in security investigations?",
@@ -1427,7 +1427,7 @@
     "multipleCorrect": false,
     "difficulty": "easy",
     "points": 2,
-    "tags": ["LINUX"]
+    "tags": ["LINUX", "LINUX_SECURITY"]
   },
   {
     "title": "What does the \"sudo -l\" command do?",
@@ -1442,7 +1442,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX"]
+    "tags": ["LINUX", "LINUX_SECURITY"]
   },
   {
     "title": "What does the \"find / -perm -4000 2>/dev/null\" command do?",
@@ -1457,7 +1457,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX"]
+    "tags": ["LINUX", "LINUX_SECURITY"]
   },
   {
     "title": "What does the \"netstat -tulnp\" command help identify?",
@@ -1472,7 +1472,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX"]
+    "tags": ["LINUX", "LINUX_SECURITY"]
   },
   {
     "title": "What is the security purpose of the \"iptables -L\" command?",
@@ -1487,7 +1487,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX"]
+    "tags": ["LINUX", "LINUX_SECURITY"]
   },
   {
     "title": "What does the \"grep -R \"password\" /etc\" command do?",
@@ -1502,7 +1502,7 @@
     "multipleCorrect": false,
     "difficulty": "hard",
     "points": 5,
-    "tags": ["LINUX"]
+    "tags": ["LINUX", "LINUX_SECURITY"]
   },
   {
     "title": "What is the main security implication of a file with SUID bit set?",
@@ -1512,6 +1512,488 @@
       "It cannot be executed",
       "It is readable by everyone",
       "It disables access control"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_SECURITY"]
+  },
+  {
+    "title": "What is the purpose of the /etc/shadow file in Linux security?",
+    "type": "basic",
+    "answers": [
+      "Lists running services",
+      "Defines file permissions",
+      "Stores encrypted user passwords",
+      "Contains system startup scripts"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 4,
+    "tags": ["LINUX", "LINUX_SECURITY"]
+  },
+  {
+    "title": "What does the chmod 600 file.txt command enforce?",
+    "type": "basic",
+    "answers": [
+      "Full permissions for all users",
+      "Read permission for everyone",
+      "Execute permission for the owner",
+      "Read and write permissions for the owner only"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 4,
+    "tags": ["LINUX", "LINUX_SECURITY"]
+  },
+  {
+    "title": "Why is disabling root SSH login considered a security best practice?",
+    "type": "basic",
+    "answers": [
+      "It encrypts SSH traffic",
+      "It improves system performance",
+      "It reduces brute-force attack exposure",
+      "It removes the root account"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_SECURITY"]
+  },
+  {
+    "title": "What does the umask value control?",
+    "type": "basic",
+    "answers": [
+      "Firewall default rules",
+      "Default permission bits for newly created files",
+      "User password complexity",
+      "Process scheduling priority"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_SECURITY"]
+  },
+  {
+    "title": "What is the role of groups in Linux security?",
+    "type": "basic",
+    "answers": [
+      "They replace user accounts",
+      "They isolate kernel modules",
+      "They encrypt user data",
+      "They simplify permission management for multiple users"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_SECURITY"]
+  },
+  {
+    "title": "What security risk is introduced by world-writable files?",
+    "type": "basic",
+    "answers": [
+      "They automatically gain SUID privileges",
+      "Any user can modify critical data or inject malicious code",
+      "Files cannot be deleted",
+      "Only root can access them"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_SECURITY"]
+  },
+  {
+    "title": "What does the faillog command help administrators monitor?",
+    "type": "basic",
+    "answers": [
+      "Firewall rule violations",
+      "Kernel crashes",
+      "Disk usage errors",
+      "Failed login attempts"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_SECURITY"]
+  },
+  {
+    "title": "Why is running services with the least privilege principle important?",
+    "type": "basic",
+    "answers": [
+      "It disables network access",
+      "It simplifies logging configuration",
+      "It limits the impact of a compromised service",
+      "It increases service startup speed"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_SECURITY"]
+  },
+  {
+    "title": "What does the auditd service primarily provide?",
+    "type": "basic",
+    "answers": [
+      "User account synchronization",
+      "Automatic malware removal",
+      "Real-time network packet filtering",
+      "Detailed auditing of system events and security-relevant actions"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_SECURITY"]
+  },
+  {
+    "title": "What is a key security benefit of using SELinux or AppArmor?",
+    "type": "basic",
+    "answers": [
+      "They encrypt all files automatically",
+      "They replace traditional file permissions",
+      "They enforce mandatory access control policies",
+      "They disable sudo access"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_SECURITY"]
+  },
+  {
+    "title": "What does the read (r) permission allow on a file?",
+    "type": "basic",
+    "answers": [
+      "Execute the file",
+      "Modify file permissions",
+      "Read the file contents",
+      "Delete the file"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "What does the write (w) permission allow on a file?",
+    "type": "basic",
+    "answers": [
+      "Execute the file",
+      "Change file contents",
+      "Read file contents",
+      "Change file ownership"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "What does the execute (x) permission allow on a file?",
+    "type": "basic",
+    "answers": [
+      "Read the file",
+      "Edit the file",
+      "Delete the file",
+      "Run the file as a program"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "Which command is used to change file permissions?",
+    "type": "basic",
+    "answers": [
+      "chown",
+      "chmod",
+      "passwd",
+      "umask"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "What does the owner permission class represent?",
+    "type": "basic",
+    "answers": [
+      "All system users",
+      "Users in the same group",
+      "The file creator or owner",
+      "Only root"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "Which symbol represents execute permission?",
+    "type": "basic",
+    "answers": [
+      "r",
+      "w",
+      "x",
+      "e"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "What does chmod 644 file.txt set?",
+    "type": "basic",
+    "answers": [
+      "Owner: rw, Group: r, Others: r",
+      "Owner: rwx, Group: r, Others: r",
+      "Owner: r, Group: r, Others: r",
+      "Owner: rw, Group: rw, Others: rw"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "Which permission is required to enter a directory?",
+    "type": "basic",
+    "answers": [
+      "Read",
+      "Write",
+      "Execute",
+      "None"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+
+  {
+    "title": "What does read permission allow on a directory?",
+    "type": "basic",
+    "answers": [
+      "Delete files",
+      "List directory contents",
+      "Enter the directory",
+      "Modify file contents"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "What does write permission allow on a directory?",
+    "type": "basic",
+    "answers": [
+      "List files",
+      "Execute files",
+      "Create or delete files inside",
+      "Change ownership"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "What does chmod 755 file.sh mean?",
+    "type": "basic",
+    "answers": [
+      "Owner rwx, Group r-x, Others r-x",
+      "Owner rw-, Group rw-, Others rw-",
+      "Owner r-x, Group r-x, Others r-x",
+      "Owner rwx, Group rwx, Others rwx"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "Which command changes file ownership?",
+    "type": "basic",
+    "answers": [
+      "chmod",
+      "usermod",
+      "chown",
+      "setfacl"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "What does the group permission class apply to?",
+    "type": "basic",
+    "answers": [
+      "All users",
+      "Users in the file’s group",
+      "Only root",
+      "Only the owner"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "What numeric value represents read permission?",
+    "type": "basic",
+    "answers": [
+      "1",
+      "2",
+      "4",
+      "7"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "What numeric value represents write permission?",
+    "type": "basic",
+    "answers": [
+      "1",
+      "2",
+      "4",
+      "6"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "What numeric value represents execute permission?",
+    "type": "basic",
+    "answers": [
+      "1",
+      "2",
+      "4",
+      "8"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+
+  {
+    "title": "What is the effect of the SUID bit on an executable?",
+    "type": "basic",
+    "answers": [
+      "Runs with group privileges",
+      "Runs with owner privileges",
+      "Cannot be executed",
+      "Grants root shell automatically"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "What is the purpose of the SGID bit on a directory?",
+    "type": "basic",
+    "answers": [
+      "Files inherit the directory group",
+      "Files inherit owner permissions",
+      "Directory becomes read-only",
+      "Only root can access it"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "What does the sticky bit prevent in shared directories?",
+    "type": "basic",
+    "answers": [
+      "File execution",
+      "File reading",
+      "Unauthorized file deletion",
+      "File creation"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "Which command finds world-writable files?",
+    "type": "basic",
+    "answers": [
+      "find / -perm -222",
+      "ls -l",
+      "chmod -777",
+      "stat *"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_PERMISSIONS"]
+  },
+  {
+    "title": "What does the sticky bit prevent in shared directories?",
+    "type": "all",
+    "answers": [
+      "File execution",
+      "File reading",
+      "Unauthorized file deletion",
+      "File creation"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which command finds world-writable files?",
+    "type": "all",
+    "answers": [
+      "find / -perm -222",
+      "ls -l",
+      "chmod -777",
+      "stat *"
     ],
     "correctAnswers": [0],
     "multipleCorrect": false,
