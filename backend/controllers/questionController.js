@@ -209,3 +209,54 @@ export const completeDailyChallenge = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+export const resetBasicStats = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Get all basic commands questions (type: 'basic')
+    const basicQuestions = await Question.find({ type: 'basic' });
+    const basicQuestionIds = basicQuestions.map(q => q._id.toString());
+    
+    // Count how many basic questions the user has solved
+    const solvedBasicQuestions = user.solvedQuestions.filter(
+      questionId => basicQuestionIds.includes(questionId.toString())
+    );
+    
+    // Check if user has at least 50 solved basic questions
+    if (solvedBasicQuestions.length < 50) {
+      return res.status(400).json({ 
+        message: 'You need at least 50 solved basic commands questions to reset stats',
+        currentSolved: solvedBasicQuestions.length
+      });
+    }
+
+    // Remove basic questions from user solved questions
+    user.solvedQuestions = user.solvedQuestions.filter(
+      questionId => !basicQuestionIds.includes(questionId.toString())
+    );
+    
+    // Add XP for each solved basic question (1 point each)
+    const xpToAdd = solvedBasicQuestions.length;
+    user.xp += xpToAdd;
+    user.level = Math.floor(user.xp / 100) + 1;
+    
+    await user.save();
+    
+    console.log(`[✔] Basic stats reset for user ${user.username}: ${solvedBasicQuestions.length} questions reset, ${xpToAdd} XP added`);
+    
+    res.json({
+      message: 'Basic commands stats reset successfully',
+      questionsReset: solvedBasicQuestions.length,
+      xpAdded: xpToAdd,
+      newXp: user.xp,
+      newLevel: user.level
+    });
+  } catch (error) {
+    console.error('Error resetting basic stats:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

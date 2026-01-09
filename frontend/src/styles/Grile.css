@@ -603,3 +603,119 @@
     width: 100%;
   }
 }
+.card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reset-stats-btn {
+  font-size: 14px;
+  opacity: 0.9;
+  background: #404040 !important;
+  border-color: #505050 !important;
+  color: #ffffff !important;
+}
+
+.reset-stats-btn:hover:not(:disabled) {
+  background: #505050 !important;
+  border-color: #606060 !important;
+}
+
+.reset-stats-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #2a2a2a !important;
+  border-color: #333333 !important;
+  color: #666666 !important;
+}
+}
+
+.reset-modal-body {
+  padding: 20px 0;
+}
+
+.reset-info {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.reset-info p {
+  margin: 8px 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.reset-info strong {
+  color: var(--text-primary);
+}
+
+.reset-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.stat-label {
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+.reset-stats .stat-value {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 20px;
+}
+
+.stat-status.eligible {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.stat-status.not-eligible {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}

@@ -15,10 +15,14 @@ export const getUserProgress = async (req, res) => {
       type: question.type
     }));
 
+    const linuxSolved = user.solvedByTag?.LINUX || 0;
+    const networkSolved = user.solvedByTag?.NETWORK || 0;
+    const totalSolvedByCategories = linuxSolved + networkSolved;
+
     const streakInfo = getStreakInfo(user);
 
     res.json({
-      solvedCount: solvedQuestions.length,
+      solvedCount: totalSolvedByCategories,
       solvedQuestions,
       solvedByTag: user.solvedByTag,
       simulations: user.simulations,

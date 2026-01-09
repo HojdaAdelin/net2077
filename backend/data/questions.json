@@ -1972,6 +1972,306 @@
     "tags": ["LINUX", "LINUX_PERMISSIONS"]
   },
   {
+    "title": "What is the primary role of a package manager in Linux?",
+    "type": "basic",
+    "answers": [
+      "Manage hardware drivers",
+      "Install, update, and remove software",
+      "Control user permissions",
+      "Monitor system performance"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which package manager is commonly used on Debian-based systems?",
+    "type": "basic",
+    "answers": [
+      "yum",
+      "dnf",
+      "apt",
+      "pacman"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which command installs a package using apt?",
+    "type": "basic",
+    "answers": [
+      "apt remove package",
+      "apt install package",
+      "apt search package",
+      "apt update package"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does the apt update command do?",
+    "type": "basic",
+    "answers": [
+      "Upgrades installed packages",
+      "Removes obsolete packages",
+      "Refreshes the package index",
+      "Cleans cached files"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which file contains repository definitions on Debian-based systems?",
+    "type": "basic",
+    "answers": [
+      "/etc/passwd",
+      "/etc/apt/sources.list",
+      "/var/lib/dpkg/status",
+      "/etc/repos.conf"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does dpkg primarily handle?",
+    "type": "basic",
+    "answers": [
+      "Low-level package installation and removal",
+      "Kernel module loading",
+      "Network configuration",
+      "Service management"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which package manager is used by Red Hat–based distributions?",
+    "type": "basic",
+    "answers": [
+      "apt",
+      "pacman",
+      "dnf",
+      "zypper"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does yum or dnf resolve automatically when installing packages?",
+    "type": "basic",
+    "answers": [
+      "Kernel parameters",
+      "User permissions",
+      "Software dependencies",
+      "Disk partitions"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which command lists installed packages on a Debian-based system?",
+    "type": "basic",
+    "answers": [
+      "apt list --installed",
+      "apt show all",
+      "dpkg install",
+      "apt-cache search"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is a repository in the context of Linux software packages?",
+    "type": "basic",
+    "answers": [
+      "A local configuration file",
+      "A remote storage location for packages",
+      "A running system service",
+      "A compressed archive format"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does apt upgrade do?",
+    "type": "basic",
+    "answers": [
+      "Installs new packages only",
+      "Upgrades installed packages without removing any",
+      "Removes unused dependencies",
+      "Reinstalls the OS"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which command removes a package but keeps its configuration files?",
+    "type": "basic",
+    "answers": [
+      "apt purge package",
+      "apt autoremove package",
+      "apt remove package",
+      "dpkg --clean package"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the purpose of apt autoremove?",
+    "type": "basic",
+    "answers": [
+      "Remove unused dependencies",
+      "Upgrade all packages",
+      "Delete repository lists",
+      "Reinstall broken packages"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which package format is used by Debian-based distributions?",
+    "type": "basic",
+    "answers": [
+      ".rpm",
+      ".pkg",
+      ".deb",
+      ".tar"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "Which package format is used by Red Hat–based distributions?",
+    "type": "basic",
+    "answers": [
+      ".deb",
+      ".rpm",
+      ".pkg",
+      ".bin"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What does pacman manage?",
+    "type": "basic",
+    "answers": [
+      "Packages on Arch Linux",
+      "User accounts",
+      "Network interfaces",
+      "System logs"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the main risk of installing packages from untrusted repositories?",
+    "type": "basic",
+    "answers": [
+      "Slower system performance",
+      "Malicious or compromised software",
+      "Automatic system updates",
+      "Broken file permissions"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is a GPG key used for in package management?",
+    "type": "basic",
+    "answers": [
+      "Encrypting package files",
+      "Verifying package authenticity",
+      "Compressing repositories",
+      "Speeding up downloads"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What happens if a dependency is missing during package installation?",
+    "type": "basic",
+    "answers": [
+      "The system reboots",
+      "The installation may fail",
+      "The package installs anyway",
+      "The dependency is ignored permanently"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX"]
+  },
+  {
+    "title": "What is the purpose of a package version lock?",
+    "type": "basic",
+    "answers": [
+      "Prevent a package from being removed",
+      "Prevent a package from being updated",
+      "Encrypt a package",
+      "Speed up package downloads"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX"]
+  },
+  {
     "title": "What does the sticky bit prevent in shared directories?",
     "type": "all",
     "answers": [

@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from 'react';
 import { getUserProgress, getDailyChallengeStatus } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
+import { X } from 'lucide-react';
 import '../styles/Grile.css';
 
 function QuizModal({ type, onClose, user }) {
@@ -157,7 +158,9 @@ export default function Grile() {
   const [showModal, setShowModal] = useState(false);
   const [selectedType, setSelectedType] = useState('');
   const [dailyChallenge, setDailyChallenge] = useState(null);
-  const { user } = useContext(AuthContext);
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
+  const { user, updateUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -248,6 +251,43 @@ export default function Grile() {
     } else {
       setSelectedType(type);
       setShowModal(true);
+    }
+  };
+
+  const handleResetStats = async () => {
+    if (!user || solved.basic < 50) return;
+    
+    setIsResetting(true);
+    try {
+      const response = await fetch(`${API_URL}/questions/resetBasicStats`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        
+        updateUser({ 
+          xp: data.newXp, 
+          level: data.newLevel 
+        });
+
+        await loadData();
+        
+        setShowResetModal(false);
+        alert(`Stats reset successfully! ${data.questionsReset} questions reset, ${data.xpAdded} XP added.`);
+      } else {
+        alert(data.message || 'Failed to reset stats');
+      }
+    } catch (error) {
+      console.error('Error resetting stats:', error);
+      alert('Failed to reset stats. Please try again.');
+    } finally {
+      setIsResetting(false);
     }
   };
 
@@ -393,6 +433,16 @@ export default function Grile() {
               )}
               
               <div className="card-actions">
+                {card.type === 'basic' && user && (
+                  <button 
+                    onClick={() => setShowResetModal(true)}
+                    className="btn btn-secondary btn-full reset-stats-btn"
+                    disabled={solved.basic < 50}
+                    title={solved.basic < 50 ? 'You need at least 50 solved basic commands questions' : 'Reset your basic commands progress for XP'}
+                  >
+                    Reset Stats for XP ({solved.basic}/50)
+                  </button>
+                )}
                 <button 
                   onClick={() => handleContinue(card.type)}
                   className="btn btn-primary btn-full"
@@ -412,6 +462,63 @@ export default function Grile() {
           user={user}
           onClose={() => setShowModal(false)}
         />
+      )}
+
+      {showResetModal && (
+        <div className="modal-overlay" onClick={() => setShowResetModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Reset Basic Commands Stats</h3>
+              <button 
+                className="modal-close"
+                onClick={() => setShowResetModal(false)}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="reset-modal-body">
+              <div className="reset-info">
+                <p><strong>Total user XP won't be reset</strong>, only basic commands stats will be reset.</p>
+                <p>You will get <strong>1 point for every question solved</strong>.</p>
+                <p>You need at least <strong>50 solved basic commands questions</strong>.</p>
+              </div>
+              
+              <div className="reset-stats">
+                <div className="stat-item">
+                  <span className="stat-label">Currently solved:</span>
+                  <span className="stat-value">{solved.basic}</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">XP you'll gain:</span>
+                  <span className="stat-value">{solved.basic} XP</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">Status:</span>
+                  <span className={`stat-status ${solved.basic >= 50 ? 'eligible' : 'not-eligible'}`}>
+                    {solved.basic >= 50 ? 'Eligible' : `Need ${50 - solved.basic} more`}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button 
+                onClick={() => setShowResetModal(false)}
+                className="btn btn-secondary"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleResetStats}
+                className="btn btn-primary"
+                disabled={solved.basic < 50 || isResetting}
+              >
+                {isResetting ? 'Resetting...' : 'Confirm Reset'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </>
   );
