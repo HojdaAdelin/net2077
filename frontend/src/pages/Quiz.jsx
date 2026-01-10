@@ -104,7 +104,7 @@ export default function Quiz({ isExam = false }) {
       const duration = examDurationSeconds ?? 0;
       const elapsed = duration - (timeLeft ?? duration);
       setTimeSpent(Math.max(0, elapsed));
-    } else if (mode === 'challenge' && type === 'daily') {
+    } else if ((mode === 'challenge' || mode === 'network') && type === 'daily') {
       
       let score = 0;
       let totalPoints = 0;
@@ -240,8 +240,10 @@ export default function Quiz({ isExam = false }) {
         setExamMeta(null);
 
         if (mode === 'challenge' && type === 'daily') {
-          // Daily Challenge - 20 Linux questions
           const response = await fetch(`${API_BASE}/questions/dailyLinux`);
+          data = await response.json();
+        } else if (mode === 'network' && type === 'daily') {
+          const response = await fetch(`${API_BASE}/questions/dailyNetwork`);
           data = await response.json();
         } else if (mode === 'random') {
           const params = new URLSearchParams();
@@ -502,7 +504,7 @@ export default function Quiz({ isExam = false }) {
         [currentQuestion._id]: true
       }));
     }
-    if (!isExam && isCorrect && !(mode === 'challenge' && type === 'daily')) {
+    if (!isExam && isCorrect && !((mode === 'challenge' || mode === 'network') && type === 'daily')) {
       
       try {
         const response = await fetch(`${API_BASE}/questions/markSolved`, {

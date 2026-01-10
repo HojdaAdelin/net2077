@@ -8,7 +8,7 @@ import '../styles/Grile.css';
 
 function QuizModal({ type, onClose, user }) {
   const [selectedMode, setSelectedMode] = useState('');
-  const [selectedTag, setSelectedTag] = useState(type === 'basic' ? 'LINUX' : '');
+  const [selectedTag, setSelectedTag] = useState((type === 'basic' || type === 'daily') ? 'LINUX' : '');
   const navigate = useNavigate();
 
   const availableTags = [
@@ -22,6 +22,19 @@ function QuizModal({ type, onClose, user }) {
   const needsAuth = selectedMode === 'unsolved' && !user;
 
   const handleStart = () => {
+    // Special handling for daily challenge
+    if (type === 'daily') {
+      if (!selectedTag) return;
+      
+      if (selectedTag === 'LINUX') {
+        navigate('/grile/daily/challenge');
+      } else if (selectedTag === 'NETWORK') {
+        navigate('/grile/daily/network');
+      }
+      return;
+    }
+
+    // Regular quiz handling
     if (!selectedMode) return;
     if (isTagRequired && !selectedTag) return;
     if (needsAuth) return;
@@ -42,50 +55,52 @@ function QuizModal({ type, onClose, user }) {
     navigate(`/grile/${type}/${selectedMode}?${params.toString()}`);
   };
 
-  const canStart = selectedMode && (!isTagRequired || selectedTag) && !needsAuth;
+  const canStart = type === 'daily' ? selectedTag : (selectedMode && (!isTagRequired || selectedTag) && !needsAuth);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content modal-large" onClick={(e) => e.stopPropagation()}>
-        <h2>Choose Quiz Mode</h2>
-        <p>Select mode and optionally filter by tags</p>
+        <h2>{type === 'daily' ? 'Choose Daily Challenge Category' : 'Choose Quiz Mode'}</h2>
+        <p>{type === 'daily' ? 'Select Linux or Network for your daily challenge' : 'Select mode and optionally filter by tags'}</p>
         
-        <div className="modal-section">
-          <h3 className="section-title">Quiz Mode</h3>
-          <div className="mode-options">
-            <button 
-              className={`mode-option ${selectedMode === 'unsolved' ? 'selected' : ''}`}
-              onClick={() => setSelectedMode('unsolved')}
-            >
-              <div className="mode-title">Unsolved Questions</div>
-              <div className="mode-desc">Practice questions you haven't answered yet</div>
-            </button>
+        {type !== 'daily' && (
+          <div className="modal-section">
+            <h3 className="section-title">Quiz Mode</h3>
+            <div className="mode-options">
+              <button 
+                className={`mode-option ${selectedMode === 'unsolved' ? 'selected' : ''}`}
+                onClick={() => setSelectedMode('unsolved')}
+              >
+                <div className="mode-title">Unsolved Questions</div>
+                <div className="mode-desc">Practice questions you haven't answered yet</div>
+              </button>
+              
+              <button 
+                className={`mode-option ${selectedMode === 'all' ? 'selected' : ''}`}
+                onClick={() => setSelectedMode('all')}
+              >
+                <div className="mode-title">All Questions</div>
+                <div className="mode-desc">Practice all available questions</div>
+              </button>
+              
+              <button 
+                className={`mode-option ${selectedMode === 'random' ? 'selected' : ''}`}
+                onClick={() => setSelectedMode('random')}
+              >
+                <div className="mode-title">Simulation Test</div>
+                <div className="mode-desc">Random 50 questions in test mode</div>
+              </button>
+            </div>
             
-            <button 
-              className={`mode-option ${selectedMode === 'all' ? 'selected' : ''}`}
-              onClick={() => setSelectedMode('all')}
-            >
-              <div className="mode-title">All Questions</div>
-              <div className="mode-desc">Practice all available questions</div>
-            </button>
-            
-            <button 
-              className={`mode-option ${selectedMode === 'random' ? 'selected' : ''}`}
-              onClick={() => setSelectedMode('random')}
-            >
-              <div className="mode-title">Simulation Test</div>
-              <div className="mode-desc">Random 50 questions in test mode</div>
-            </button>
+            {needsAuth && (
+              <p className="auth-required-message">
+                You need an account to track unsolved questions.
+              </p>
+            )}
           </div>
-          
-          {needsAuth && (
-            <p className="auth-required-message">
-              You need an account to track unsolved questions.
-            </p>
-          )}
-        </div>
+        )}
 
-        {type !== 'basic' && (
+        {type !== 'basic' && type !== 'daily' && (
           <div className="modal-section">
             <h3 className="section-title">
               Select Category {isTagRequired ? '*' : <span className="optional-label">(optional)</span>}
@@ -121,6 +136,29 @@ function QuizModal({ type, onClose, user }) {
             <div className="info-box">
               <strong>Category:</strong> Linux (Basic Commands)
             </div>
+          </div>
+        )}
+
+        {type === 'daily' && (
+          <div className="modal-section">
+            <h3 className="section-title">Select Category *</h3>
+            <div className="tags-grid">
+              {availableTags.map(tag => (
+                <button
+                  key={tag.id}
+                  className={`tag-option ${selectedTag === tag.id ? 'selected' : ''}`}
+                  onClick={() => setSelectedTag(tag.id)}
+                  style={{
+                    '--tag-color': tag.color
+                  }}
+                >
+                  {tag.label}
+                </button>
+              ))}
+            </div>
+            <p className="tag-helper">
+              Choose Linux or Network for your daily challenge.
+            </p>
           </div>
         )}
 
@@ -245,9 +283,6 @@ export default function Grile() {
   const handleContinue = (type) => {
     if (type === 'exam') {
       navigate('/exam-selection');
-    } else if (type === 'daily') {
-      
-      navigate('/grile/daily/challenge');
     } else {
       setSelectedType(type);
       setShowModal(true);
@@ -302,7 +337,7 @@ export default function Grile() {
     },
     ...(user ? [{
       title: 'Daily Challenge',
-      desc: '20 Linux questions with 2x XP bonus',
+      desc: '20 questions with 2x XP bonus',
       type: 'daily',
       isDaily: true,
       completed: dailyChallenge?.completed || false,
@@ -367,7 +402,7 @@ export default function Grile() {
                   ) : (
                     <div className="daily-available-info">
                       <span className="bonus-text">2x XP Bonus</span>
-                      <span className="questions-count">20 Linux Questions</span>
+                      <span className="questions-count">20 Questions</span>
                     </div>
                   )}
                 </div>

@@ -129,6 +129,18 @@ export const dailyLinux = async (req, res) => {
   }
 };
 
+export const dailyNetwork = async (req, res) => {
+  try {
+    const questions = await Question.aggregate([
+      { $match: { tags: { $in: ['NETWORK'] } } },
+      { $sample: { size: 20 } }
+    ]);
+    res.json(questions);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 export const getDailyChallengeStatus = async (req, res) => {
   try {
     const user = await User.findById(req.userId);
