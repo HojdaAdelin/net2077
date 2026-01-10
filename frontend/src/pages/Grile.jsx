@@ -196,6 +196,7 @@ export default function Grile() {
   const [showModal, setShowModal] = useState(false);
   const [selectedType, setSelectedType] = useState('');
   const [dailyChallenge, setDailyChallenge] = useState(null);
+  const [dailyChallengeLoading, setDailyChallengeLoading] = useState(true);
   const [showResetModal, setShowResetModal] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const { user, updateUser } = useContext(AuthContext);
@@ -210,10 +211,13 @@ export default function Grile() {
 
   const loadDailyChallengeStatus = async () => {
     try {
+      setDailyChallengeLoading(true);
       const status = await getDailyChallengeStatus();
       setDailyChallenge(status);
     } catch (error) {
       console.error('Error loading daily challenge status:', error);
+    } finally {
+      setDailyChallengeLoading(false);
     }
   };
 
@@ -283,6 +287,9 @@ export default function Grile() {
   const handleContinue = (type) => {
     if (type === 'exam') {
       navigate('/exam-selection');
+    } else if (type === 'daily' && dailyChallengeLoading) {
+      // Prevent navigation while loading daily challenge status
+      return;
     } else {
       setSelectedType(type);
       setShowModal(true);
@@ -341,7 +348,8 @@ export default function Grile() {
       type: 'daily',
       isDaily: true,
       completed: dailyChallenge?.completed || false,
-      timeUntilNext: dailyChallenge?.timeUntilNext || ''
+      timeUntilNext: dailyChallenge?.timeUntilNext || '',
+      loading: dailyChallengeLoading
     }] : []),
     { 
       title: 'All Questions', 
@@ -394,7 +402,11 @@ export default function Grile() {
               
               {card.isDaily && (
                 <div className="daily-info">
-                  {card.completed ? (
+                  {card.loading ? (
+                    <div className="daily-loading-info">
+                      <span className="loading-text">Loading status...</span>
+                    </div>
+                  ) : card.completed ? (
                     <div className="daily-completed-info">
                       <span className="completed-text">Challenge completed today!</span>
                       <span className="next-reset">Next challenge in: {card.timeUntilNext}</span>
@@ -481,9 +493,10 @@ export default function Grile() {
                 <button 
                   onClick={() => handleContinue(card.type)}
                   className="btn btn-primary btn-full"
-                  disabled={card.isDaily && card.completed}
+                  disabled={(card.isDaily && card.completed) || (card.isDaily && card.loading)}
                 >
-                  {card.isDaily && card.completed ? 'Completed Today' : 'Continue'}
+                  {card.isDaily && card.loading ? 'Loading...' : 
+                   card.isDaily && card.completed ? 'Completed Today' : 'Continue'}
                 </button>
               </div>
             </div>

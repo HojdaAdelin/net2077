@@ -718,4 +718,16 @@
 .modal-close:hover {
   background: var(--bg-tertiary);
   color: var(--text-primary);
+}.
+daily-loading-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+
+.loading-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-style: italic;
 }
