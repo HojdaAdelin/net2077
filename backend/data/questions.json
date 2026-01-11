@@ -9006,7 +9006,7 @@
     "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
   },
   {
-    "title": "Care sunt atributele fișierului analizat mai jos care reies din output-ul următor?",
+    "title": "Care sunt atributele fișierului analizat mai jos care reies din output-ul următor?: elev@acadnet:~$ ls -l\ntotal 1\n-rwxr-xr-- 1 elev marian 13631488 Sep 19 23:21\nglobal_conver_a345421fcf.csv",
     "type": "acadnet",
     "answers": [
       "Fișierul poate fi editat de toți utilizatorii",
