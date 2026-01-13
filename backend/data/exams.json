@@ -110,6 +110,16 @@
     "phase": "county"
   },
   {
+    "id": "package_linux",
+    "title": "Linux - Packages",
+    "description": "NET2077 exam",
+    "duration": 15,
+    "totalPoints": 100,
+    "tag": "LINUX_PACKAGE",
+    "year": 2025,
+    "phase": "county"
+  },
+  {
     "id": "osi_network",
     "title": "Network - OSI",
     "description": "NET2077 exam",

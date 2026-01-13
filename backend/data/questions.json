@@ -7066,6 +7066,306 @@
     "tags": ["LINUX", "LINUX_FILES"]
   },
   {
+    "title": "Which command is primarily used to list files and directories in Linux?",
+    "type": "all",
+    "answers": ["cd", "ls", "pwd", "touch"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which package manager is used in Debian-based distributions?",
+    "type": "all",
+    "answers": ["yum", "dnf", "apt", "pacman"],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 4,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command updates the package list in Debian-based Linux?",
+    "type": "all",
+    "answers": ["apt update", "apt upgrade", "apt install", "apt remove"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command removes a package in RPM-based systems?",
+    "type": "all",
+    "answers": ["rpm -i", "rpm -e", "yum install", "dnf update"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 4,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command installs a package in Ubuntu?",
+    "type": "all",
+    "answers": ["apt install package", "yum remove package", "rpm -ivh package", "dpkg list package"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command shows detailed information about a package in Debian?",
+    "type": "all",
+    "answers": ["dpkg -l", "dpkg -s", "apt show", "apt search"],
+    "correctAnswers": [1, 2],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 4,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which file contains the list of repositories for apt?",
+    "type": "all",
+    "answers": ["/etc/apt/sources.list", "/etc/yum.repos.d", "/etc/pacman.conf", "/etc/dnf/dnf.conf"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command upgrades all packages in Ubuntu?",
+    "type": "all",
+    "answers": ["apt upgrade", "apt update", "apt install", "dpkg --remove"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 4,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command checks for package dependencies in RPM?",
+    "type": "all",
+    "answers": ["rpm -q --requires", "rpm -qa", "yum list installed", "dnf search"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command searches for a package in apt?",
+    "type": "all",
+    "answers": ["apt search package", "apt list package", "dpkg -l", "dpkg -s package"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command lists installed packages in Debian?",
+    "type": "all",
+    "answers": ["dpkg -l", "apt show", "apt update", "apt remove"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 4,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which package manager is used in Fedora?",
+    "type": "all",
+    "answers": ["apt", "dnf", "pacman", "zypper"],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command forces removal of a package in Debian?",
+    "type": "all",
+    "answers": ["apt remove --purge package", "apt remove package", "dpkg -i package", "apt update"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command shows which files belong to a package in RPM?",
+    "type": "all",
+    "answers": ["rpm -ql package", "rpm -qa", "rpm -q package", "yum list files package"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command checks for broken packages in Ubuntu?",
+    "type": "all",
+    "answers": ["apt check", "apt update", "dpkg -C", "apt upgrade"],
+    "correctAnswers": [0, 2],
+    "multipleCorrect": true,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command installs an RPM package locally?",
+    "type": "all",
+    "answers": ["rpm -ivh package.rpm", "yum install package", "apt install package", "dpkg -i package.deb"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 4,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command lists enabled repositories in Fedora?",
+    "type": "all",
+    "answers": ["dnf repolist enabled", "dnf list repo", "yum list enabled", "rpm -qa"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 4,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command cleans the local repository cache in apt?",
+    "type": "all",
+    "answers": ["apt clean", "apt update", "apt upgrade", "dpkg --clear"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 4,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command lists all files installed by a Debian package?",
+    "type": "all",
+    "answers": ["dpkg -L package", "dpkg -l package", "apt list package", "apt show package"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 4,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command shows the history of yum transactions?",
+    "type": "all",
+    "answers": ["yum history", "yum log", "rpm -qa", "dnf list history"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command searches for packages in dnf?",
+    "type": "all",
+    "answers": ["dnf search package", "yum search package", "rpm -q package", "apt search package"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 4,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command shows dependencies of a Debian package?",
+    "type": "all",
+    "answers": ["apt depends package", "dpkg -l", "apt show package", "apt list package"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command removes orphaned packages in Fedora?",
+    "type": "all",
+    "answers": ["dnf autoremove", "yum remove orphan", "rpm -e orphan", "apt autoremove"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 4,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command checks the integrity of installed RPM packages?",
+    "type": "all",
+    "answers": ["rpm -V package", "rpm -qa package", "yum verify package", "dnf check package"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command shows available versions of a package in apt?",
+    "type": "all",
+    "answers": ["apt list -a package", "apt show package", "apt search package", "dpkg -l package"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 4,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command simulates package installation in apt?",
+    "type": "all",
+    "answers": ["apt install --simulate package", "apt install package", "dpkg -i package", "apt remove --simulate package"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command removes configuration files with a package in Debian?",
+    "type": "all",
+    "answers": ["apt purge package", "apt remove package", "dpkg --remove package", "dpkg --purge package"],
+    "correctAnswers": [0, 3],
+    "multipleCorrect": true,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command lists groups of packages in Fedora?",
+    "type": "all",
+    "answers": ["dnf group list", "yum group list", "rpm -qa group", "dnf list groups"],
+    "correctAnswers": [0, 1],
+    "multipleCorrect": true,
+    "difficulty": "medium",
+    "points": 4,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command verifies GPG signatures of downloaded packages in Fedora?",
+    "type": "all",
+    "answers": ["rpm --checksig package.rpm", "rpm -V package", "dnf verify package", "yum check-signature package"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 5,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
+    "title": "Which command lists all repositories configured for dnf?",
+    "type": "all",
+    "answers": ["dnf repolist all", "dnf list repo", "yum list repos", "rpm -qa repo"],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "LINUX_PACKAGE"]
+  },
+  {
     "title": "How many layers does the OSI model have?",
     "type": "all",
     "answers": [
