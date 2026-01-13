@@ -33,7 +33,10 @@ export const getUnsolvedQuestions = async (req, res) => {
       filter.tags = { $in: tagArray };
     }
     
-    const questions = await Question.find(filter);
+    const questions = await Question.aggregate([
+      { $match: filter },
+      { $sample: { size: 10000 } }
+    ]);
     res.json(questions);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
