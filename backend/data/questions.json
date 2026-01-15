@@ -2272,6 +2272,216 @@
     "tags": ["LINUX"]
   },
   {
+    "title": "Which type of package use APT?",
+    "type": "basic",
+    "answers": [
+      ".rpm",
+      ".deb",
+      ".tar",
+      ".tar.gz"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "CHAPTER3"]
+  },
+  {
+    "title": "Which type of package use YUM & DNF?",
+    "type": "basic",
+    "answers": [
+      ".rpm",
+      ".deb",
+      ".tar",
+      ".tar.gz"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "CHAPTER3"]
+  },
+  {
+    "title": "Which type of package use Portage?",
+    "type": "basic",
+    "answers": [
+      ".rpm",
+      ".deb",
+      ".tar",
+      ".tar.gz"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "CHAPTER3"]
+  },
+  {
+    "title": "Which type of package use Pacman?",
+    "type": "basic",
+    "answers": [
+      ".rpm",
+      ".deb",
+      ".tar",
+      ".tar.gz"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "CHAPTER3"]
+  },
+  {
+    "title": "Which type of package manager use Arch",
+    "type": "basic",
+    "answers": [
+      "Pacman",
+      "Port",
+      "APT",
+      "YUM & DNF"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "CHAPTER3"]
+  },
+  {
+    "title": "Which type of package manager use FreeBSD",
+    "type": "basic",
+    "answers": [
+      "Pacman",
+      "Port",
+      "APT",
+      "YUM & DNF"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "CHAPTER3"]
+  },
+  {
+    "title": "Which type of package manager use RedHat",
+    "type": "basic",
+    "answers": [
+      "Pacman",
+      "Port",
+      "APT",
+      "YUM & DNF"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "CHAPTER3"]
+  },
+  {
+    "title": "Which type of package manager use Debian based systems",
+    "type": "basic",
+    "answers": [
+      "Pacman",
+      "Port",
+      "APT",
+      "YUM & DNF"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "CHAPTER3"]
+  },
+  {
+    "title": "In which directory you can find APT configurations",
+    "type": "basic",
+    "answers": [
+      "/etc/apt/sources.list",
+      "/etc/apt/config",
+      "/etc/apt/",
+      "/etc/apt/file.cfg"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "CHAPTER3"]
+  },
+  {
+    "title": "In which directory you can find DNF configurations",
+    "type": "basic",
+    "answers": [
+      "/etc/dnf/sources.list",
+      "/etc/dnf/config",
+      "/etc/dnf/",
+      "/etc/dnf/file.cfg"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "CHAPTER3"]
+  },
+  {
+    "title": "In which file you can find Pacman configurations",
+    "type": "basic",
+    "answers": [
+      "/usr/local/etc/pacman.conf",
+      "/usr/local/etc/conf",
+      "/usr/local/etc/config",
+      "/usr/local/etc/pacman/pacman.conf"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "CHAPTER3"]
+  },
+  {
+    "title": "How to view local installed packages with rpm",
+    "type": "basic",
+    "answers": [
+      "rpm -ql",
+      "rpm -qf",
+      "rpm -qi",
+      "rpm -qa"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER3"]
+  },
+  {
+    "title": "For what language is used 'pip' package manager",
+    "type": "basic",
+    "answers": [
+      "Ruby",
+      "Rust",
+      "Python",
+      "C#"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER3"]
+  },
+  {
+    "title": "For what language is used 'gem' package manager",
+    "type": "basic",
+    "answers": [
+      "Ruby",
+      "Rust",
+      "Python",
+      "C#"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER3"]
+  },
+  {
     "title": "What does the sticky bit prevent in shared directories?",
     "type": "all",
     "answers": [
