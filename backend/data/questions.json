@@ -2482,6 +2482,139 @@
     "tags": ["LINUX", "CHAPTER3"]
   },
   {
+    "title": "How to view the process of firefox in Linux",
+    "type": "basic",
+    "answers": [
+      "ps -ef | grep Firefox",
+      "ps -ef | grep firefox",
+      "ps -v | grep firefox",
+      "ps -l | grep firefox"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
+    "title": "Does top and ps are similar?",
+    "type": "basic",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "easy",
+    "points": 2,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
+    "title": "How to view all processes (full format)",
+    "type": "basic",
+    "answers": [
+      "ps -f",
+      "ps -e",
+      "ps -e -f",
+      "ps -ef"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
+    "title": "What is PID?",
+    "type": "basic",
+    "answers": [
+      "Process identifier",
+      "Process path",
+      "Parent process identifier",
+      "Permissions of process"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
+    "title": "What is PPID?",
+    "type": "basic",
+    "answers": [
+      "Process identifier",
+      "Process path",
+      "Parent process identifier",
+      "Permissions of process"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
+    "title": "What is UID/GID?",
+    "type": "basic",
+    "answers": [
+      "Process identifier",
+      "Process path",
+      "Parent process identifier",
+      "Permissions of process"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
+    "title": "How to view the hierarchy of system processes",
+    "type": "basic",
+    "answers": [
+      "pstree",
+      "pgrep",
+      "pmap",
+      "lsof"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
+    "title": "How to view the occupied zones of a process",
+    "type": "basic",
+    "answers": [
+      "pstree",
+      "pgrep",
+      "pmap",
+      "lsof"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
+    "title": "How to list the files opened by a process",
+    "type": "basic",
+    "answers": [
+      "pstree",
+      "pgrep",
+      "pmap",
+      "lsof"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
     "title": "What does the sticky bit prevent in shared directories?",
     "type": "all",
     "answers": [
