@@ -9666,6 +9666,20 @@
     "difficulty": "medium",
     "points": 2,
     "tags": ["ACADNET_2024_COUNTY_IX_X", "LINUX"]
+  },
+  {
+    "title": "Ce este Microsoft Word?",
+    "type": "all",
+    "answers": [
+      "Un program pentru navigarea pe internet",
+      "Un sistem de operare creat de Microsoft",
+      "Un program pentru realizarea de prezentări",
+      "Un program de procesare a textului realizat de Microsoft"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["TIC/ICT"]
   }
-
 ]

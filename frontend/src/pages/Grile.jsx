@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from 'react';
 import { getUserProgress, getDailyChallengeStatus } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { X } from 'lucide-react';
+import { X, Monitor, Wifi, Cpu } from 'lucide-react';
 import '../styles/Grile.css';
 
 function QuizModal({ type, onClose, user }) {
@@ -12,8 +12,9 @@ function QuizModal({ type, onClose, user }) {
   const navigate = useNavigate();
 
   const availableTags = [
-    { id: 'LINUX', label: 'Linux', color: '#f59e0b' },
-    { id: 'NETWORK', label: 'Network', color: '#3b82f6' }
+    { id: 'LINUX', label: 'Linux', color: '#f59e0b', icon: '🐧', desc: 'System administration & commands' },
+    { id: 'NETWORK', label: 'Network', color: '#3b82f6', icon: '🌐', desc: 'Networking protocols & security' },
+    { id: 'TIC/ICT', label: 'TIC/ICT', color: '#8b5cf6', icon: '💻', desc: 'Academic examination topics' }
   ];
 
   const isAllModeNoFilter = type === 'all' && selectedMode === 'all';
@@ -121,7 +122,7 @@ function QuizModal({ type, onClose, user }) {
             </div>
             {isTagRequired ? (
               <p className={`tag-helper ${needsTagAttention ? 'error' : ''}`}>
-                Choose Linux or Network to continue.
+                Choose a category to continue.
               </p>
             ) : (
               <p className="tag-helper">
@@ -143,7 +144,7 @@ function QuizModal({ type, onClose, user }) {
           <div className="modal-section">
             <h3 className="section-title">Select Category *</h3>
             <div className="tags-grid">
-              {availableTags.map(tag => (
+              {availableTags.slice(0, 2).map(tag => (
                 <button
                   key={tag.id}
                   className={`tag-option ${selectedTag === tag.id ? 'selected' : ''}`}
@@ -333,6 +334,18 @@ export default function Grile() {
     }
   };
 
+  const mainCard = { 
+    title: 'All Questions', 
+    desc: '',
+    type: 'all',
+    isMain: true,
+    categories: [
+      { name: 'Linux', total: stats.all.linux, solved: solved.all.linux, color: '#f59e0b', icon: <Monitor size={32} /> },
+      { name: 'Network', total: stats.all.network, solved: solved.all.network, color: '#3b82f6', icon: <Wifi size={32} /> },
+      { name: 'TIC/ICT', color: '#8b5cf6', icon: <Cpu size={32} />, hideStats: true }
+    ]
+  };
+
   const cards = [
     { 
       title: 'Basic Commands', 
@@ -352,15 +365,6 @@ export default function Grile() {
       loading: dailyChallengeLoading
     }] : []),
     { 
-      title: 'All Questions', 
-      desc: 'Complete collection covering Linux and Network topics',
-      type: 'all',
-      categories: [
-        { name: 'Linux', total: stats.all.linux, solved: solved.all.linux },
-        { name: 'Network', total: stats.all.network, solved: solved.all.network }
-      ]
-    },
-    { 
       title: 'Examination Subjects', 
       desc: 'Official examination practice with timer and scoring',
       type: 'exam',
@@ -374,6 +378,48 @@ export default function Grile() {
       <div className="container grile-page">
         <div className="grile-header">
           <h1>Practice Questions</h1>
+        </div>
+        
+        <div className="main-card-container">
+          <div className="main-question-card">
+            <div className="main-card-header">
+              <div className="main-card-title">
+                <h2>{mainCard.title}</h2>
+                
+              </div>
+              <p className="main-card-desc">{mainCard.desc}</p>
+            </div>
+            
+            <div className="main-categories-grid">
+              {mainCard.categories.map((cat, idx) => (
+                <div key={idx} className="main-category-card" style={{'--category-color': cat.color}}>
+                  <div className="category-icon">{cat.icon}</div>
+                  <div className="category-info">
+                    <h3>{cat.name}</h3>
+                    {!cat.hideStats && (
+                      user ? (
+                        <div className="category-stats">
+                          <span className="solved-count">{cat.solved}</span>
+                          <span className="total-count">/ {cat.total}</span>
+                        </div>
+                      ) : (
+                        <div className="category-total">{cat.total} questions</div>
+                      )
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="main-card-actions">
+              <button 
+                onClick={() => handleContinue(mainCard.type)}
+                className="btn btn-primary btn-large"
+              >
+                Start Practice
+              </button>
+            </div>
+          </div>
         </div>
         
         <div className="cards-grid">
