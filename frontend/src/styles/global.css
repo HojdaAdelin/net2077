@@ -15,6 +15,29 @@
   --success: #22c55e;
   --warning: #f59e0b;
   --error: #ef4444;
+  --navbar-bg: rgba(10, 10, 10, 0.8);
+  --navbar-backdrop: blur(12px);
+}
+
+[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --bg-card: #ffffff;
+  --accent-primary: #1e293b;
+  --accent-secondary: #64748b;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --border: #e2e8f0;
+  --border-light: #cbd5e1;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --shadow-hover: rgba(0, 0, 0, 0.15);
+  --success: #16a34a;
+  --warning: #d97706;
+  --error: #dc2626;
+  --navbar-bg: rgba(255, 255, 255, 0.9);
+  --navbar-backdrop: blur(12px);
 }
 
 * {

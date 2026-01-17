@@ -1,12 +1,11 @@
 .navbar {
-  background: var(--bg-primary);
+  background: var(--navbar-bg);
   border-bottom: 1px solid var(--border);
   padding: 0;
   position: sticky;
   top: 0;
   z-index: 1000;
-  backdrop-filter: blur(12px);
-  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: var(--navbar-backdrop);
 }
 
 .nav-content {
@@ -362,4 +361,24 @@
   100% {
     left: 100%;
   }
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.theme-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-light);
 }

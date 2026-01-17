@@ -331,9 +331,9 @@
 }
 
 .btn-register {
-  background: white;
-  color: #1a1a1a;
-  border: 1px solid var(--border);
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border: 1px solid var(--accent-primary);
   padding: 12px 32px;
   font-size: 14px;
   font-weight: 500;

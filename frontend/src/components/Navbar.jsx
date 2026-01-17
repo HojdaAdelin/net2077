@@ -2,13 +2,15 @@ import { Link } from 'react-router-dom';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
+import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import '../styles/Navbar.css';
 
 export default function Navbar() {
   const { user, logout } = useContext(AuthContext);
   const { language, changeLanguage, t } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -90,6 +92,10 @@ export default function Navbar() {
                 </div>
               )}
             </div>
+
+            <button className="theme-btn" onClick={toggleTheme} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
             
             {user ? (
               <>
@@ -116,7 +122,7 @@ export default function Navbar() {
                   <LogIn size={16} />
                   {t('navbar.login')}
                 </Link>
-                <Link to="/register" className="btn btn-primary" onClick={closeMobileMenu}>
+                <Link to="/register" className="btn btn-secondary" onClick={closeMobileMenu}>
                   <UserPlus size={16} />
                   {t('navbar.register')}
                 </Link>
