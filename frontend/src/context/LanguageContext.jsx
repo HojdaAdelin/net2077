@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
 
 const LanguageContext = createContext();
 
@@ -288,21 +288,26 @@ const translations = {
 };
 
 export const LanguageProvider = ({ children }) => {
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(() => {
+    const saved = localStorage.getItem('language');
+    return saved || 'en';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('language', language);
+  }, [language]);
+
+  const changeLanguage = (lang) => {
+    setLanguage(lang);
+  };
 
   const t = (key) => {
     const keys = key.split('.');
     let value = translations[language];
-    
     for (const k of keys) {
       value = value?.[k];
     }
-    
     return value || key;
-  };
-
-  const changeLanguage = (lang) => {
-    setLanguage(lang);
   };
 
   return (
