@@ -236,6 +236,7 @@ export default function Grile() {
 
       const allLinux = all.filter(q => q.tags && q.tags.includes('LINUX'));
       const allNetwork = all.filter(q => q.tags && q.tags.includes('NETWORK'));
+      const allTIC = all.filter(q => q.tags && q.tags.includes('TIC/ICT'));
       
       const acadnetLinux = acadnet.filter(q => q.tags && q.tags.includes('LINUX'));
       const acadnetNetwork = acadnet.filter(q => q.tags && q.tags.includes('NETWORK'));
@@ -244,13 +245,14 @@ export default function Grile() {
         basic: basic.length,
         allLinux: allLinux.length,
         allNetwork: allNetwork.length,
+        allTIC: allTIC.length,
         acadnetLinux: acadnetLinux.length,
         acadnetNetwork: acadnetNetwork.length
       });
 
       setStats({
         basic: basic.length,
-        all: { linux: allLinux.length, network: allNetwork.length },
+        all: { linux: allLinux.length, network: allNetwork.length, tic: allTIC.length },
         acadnet: { linux: acadnetLinux.length, network: acadnetNetwork.length }
       });
 
@@ -265,6 +267,7 @@ export default function Grile() {
         const basicSolved = basic.filter(q => solvedSet.has(q._id)).length;
         const allLinuxSolved = allLinux.filter(q => solvedSet.has(q._id)).length;
         const allNetworkSolved = allNetwork.filter(q => solvedSet.has(q._id)).length;
+        const allTICSolved = allTIC.filter(q => solvedSet.has(q._id)).length;
         const acadnetLinuxSolved = acadnetLinux.filter(q => solvedSet.has(q._id)).length;
         const acadnetNetworkSolved = acadnetNetwork.filter(q => solvedSet.has(q._id)).length;
 
@@ -272,7 +275,8 @@ export default function Grile() {
           basic: basicSolved,
           all: { 
             linux: allLinuxSolved, 
-            network: allNetworkSolved 
+            network: allNetworkSolved,
+            tic: allTICSolved
           },
           acadnet: { 
             linux: acadnetLinuxSolved, 
@@ -342,7 +346,7 @@ export default function Grile() {
     categories: [
       { name: 'Linux', total: stats.all.linux, solved: solved.all.linux, color: '#f59e0b', icon: <Monitor size={32} /> },
       { name: 'Network', total: stats.all.network, solved: solved.all.network, color: '#3b82f6', icon: <Wifi size={32} /> },
-      { name: 'TIC/ICT', color: '#8b5cf6', icon: <Cpu size={32} />, hideStats: true }
+      { name: 'TIC/ICT',total: stats.all.tic, solved: solved.all.tic, color: '#8b5cf6', icon: <Cpu size={32} />}
     ]
   };
 
