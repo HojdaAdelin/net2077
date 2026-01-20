@@ -2506,7 +2506,7 @@
     "correctAnswers": [0],
     "multipleCorrect": false,
     "difficulty": "easy",
-    "points": 2,
+    "points": 3,
     "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
   },
   {
@@ -2615,6 +2615,711 @@
     "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
   },
   {
+    "title": "At what moment is a process created?",
+    "type": "basic",
+    "answers": [
+      "loading",
+      "load-time",
+      "time-load",
+      "time-loading"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
+    "title": "How many parent processes can a process have?",
+    "type": "basic",
+    "answers": [
+      "0",
+      "2",
+      "unlimited",
+      "1"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
+    "title": "What group a parent process call to create a process? (in Linux) ",
+    "type": "basic",
+    "answers": [
+      "fork()",
+      "fork() and exec()",
+      "wait() and exec()",
+      "wait() and fork()"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
+    "title": "What group a parent process call to create a process? (in Windows) ",
+    "type": "basic",
+    "answers": [
+      "CreateProcess()",
+      "ceateProcess()",
+      "CreateProc()",
+      "Process()"
+    ],
+    "correctAnswers": [0],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
+    "title": "Who reports the exit status of a child process?",
+    "type": "basic",
+    "answers": [
+      "child process",
+      "parent process",
+      "fork()",
+      "wait()"
+    ],
+    "correctAnswers": [1],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
+    "title": "Which of the following is a valid process creation?",
+    "type": "basic",
+    "answers": [
+      "parent process -> fork() -> wait()",
+      "parent process -> fork() -> wait() -> exit() -> parent process",
+      "parent process -> fork() -> exec() -> exit() -> parent process",
+      "parent process -> fork() -> parent process"
+    ],
+    "correctAnswers": [2],
+    "multipleCorrect": false,
+    "difficulty": "hard",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
+    "title": "How do you view the system process hierarchy with PIDs?",
+    "type": "basic",
+    "answers": [
+      "pstree -A -P",
+      "pstree -ap",
+      "pstree -p",
+      "pstree -A -p"
+    ],
+    "correctAnswers": [3],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": ["LINUX", "CHAPTER4", "LINUX_PROCESSES"]
+  },
+  {
+    "title": "What is the role of the init process in a Linux system?",
+    "type": "basic",
+    "answers": [
+      "It manages user permissions and authentication.",
+      "It is the first process started by the kernel and is the ancestor of all other processes.",
+      "It handles hardware interrupts only.",
+      "It is responsible for file system mounting only."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4", "LINUX_PROCESSES"
+    ]
+  },
+  {
+    "title": "What happens to an orphan process in Linux?",
+    "type": "basic",
+    "answers": [
+      "It is immediately terminated by the kernel.",
+      "It continues running without a parent process.",
+      "It is adopted by the init process.",
+      "It becomes a zombie process."
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4", "LINUX_PROCESSES"
+    ]
+  },
+  {
+    "title": "What is a file descriptor in Linux?",
+    "type": "basic",
+    "answers": [
+      "A physical file stored on disk.",
+      "An index that identifies an open file within a process.",
+      "A type of filesystem.",
+      "A kernel thread."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4", "LINUX_PROCESSES"
+    ]
+  },
+  {
+    "title": "Which file descriptors are reserved for standard input, output, and error?",
+    "type": "basic",
+    "answers": [
+      "1, 2, and 3",
+      "0, 1, and 2",
+      "2, 3, and 4",
+      "0, 2, and 4"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4", "LINUX_PROCESSES"
+    ]
+  },
+  {
+    "title": "What does the lsof command do?",
+    "type": "all",
+    "answers": [
+      "Lists running processes only.",
+      "Lists loaded kernel modules.",
+      "Lists open files used by processes.",
+      "Lists file permissions."
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What is the purpose of redirecting standard output in Linux?",
+    "type": "all",
+    "answers": [
+      "To send output to another process memory.",
+      "To change process priority.",
+      "To save command output to a file or another command.",
+      "To terminate a process."
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What does the pipe operator '|' do in a Linux shell?",
+    "type": "all",
+    "answers": [
+      "Runs commands in parallel.",
+      "Redirects input from a file.",
+      "Sends the output of one command as input to another.",
+      "Terminates a command."
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What signal is sent when pressing Ctrl+C in a terminal?",
+    "type": "all",
+    "answers": [
+      "SIGTERM",
+      "SIGSTOP",
+      "SIGINT",
+      "SIGKILL"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "Which two signals cannot be ignored by a process?",
+    "type": "all",
+    "answers": [
+      "SIGINT and SIGTERM",
+      "SIGSTOP and SIGKILL",
+      "SIGQUIT and SIGINT",
+      "SIGUSR1 and SIGUSR2"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What is a daemon process in Linux?",
+    "type": "all",
+    "answers": [
+      "An interactive process started by the user.",
+      "A background process that provides system services and has init as parent.",
+      "A process that always runs in the foreground.",
+      "A temporary shell process."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What command is commonly used to display running processes?",
+    "type": "all",
+    "answers": [
+      "ls",
+      "ps",
+      "cd",
+      "mkdir"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What does the exit code 0 represent in Linux?",
+    "type": "all",
+    "answers": [
+      "Program terminated due to error.",
+      "Program was killed by a signal.",
+      "Program completed successfully.",
+      "Program is still running."
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "Which signal is used to gracefully terminate a process?",
+    "type": "all",
+    "answers": [
+      "SIGKILL",
+      "SIGSTOP",
+      "SIGTERM",
+      "SIGSEGV"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What is the purpose of the kill command?",
+    "type": "all",
+    "answers": [
+      "To suspend the terminal.",
+      "To delete a file.",
+      "To send signals to processes.",
+      "To change process priority."
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What does the Ctrl+Z key combination do?",
+    "type": "all",
+    "answers": [
+      "Terminates the process.",
+      "Suspends the process and puts it in background.",
+      "Logs out the user.",
+      "Restarts the process."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What does the pkill command do?",
+    "type": "all",
+    "answers": [
+      "Kills only one process by PID.",
+      "Kills processes based on attributes like name or user.",
+      "Restarts system services.",
+      "Lists kernel threads."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What is command chaining with '&&' used for?",
+    "type": "all",
+    "answers": [
+      "Run second command only if the first fails.",
+      "Run both commands in parallel.",
+      "Run second command only if the first succeeds.",
+      "Redirect output to a file."
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What is standard input associated with?",
+    "type": "all",
+    "answers": [
+      "File descriptor 1",
+      "File descriptor 2",
+      "File descriptor 0",
+      "File descriptor 3"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What does the nohup command do?",
+    "type": "all",
+    "answers": [
+      "Stops a process immediately.",
+      "Runs a process immune to SIGHUP.",
+      "Changes file permissions.",
+      "Starts a process in foreground only."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What happens when a shell is closed?",
+    "type": "all",
+    "answers": [
+      "All background processes automatically stop.",
+      "Shell sends SIGHUP to background processes.",
+      "Kernel reboots.",
+      "Nothing happens."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What is a background process?",
+    "type": "all",
+    "answers": [
+      "A process that cannot be terminated.",
+      "A process without access to standard input.",
+      "A process that always has a GUI.",
+      "A process started by init."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What directory contains process information in Linux?",
+    "type": "all",
+    "answers": [
+      "/sys",
+      "/dev",
+      "/proc",
+      "/bin"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What does /proc/[pid]/fd represent?",
+    "type": "all",
+    "answers": [
+      "Process memory usage.",
+      "Process environment variables.",
+      "File descriptor table of a process.",
+      "Kernel logs."
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What tool is used to monitor CPU usage dynamically?",
+    "type": "all",
+    "answers": [
+      "cat",
+      "top",
+      "grep",
+      "tar"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What does iotop monitor?",
+    "type": "all",
+    "answers": [
+      "Network traffic.",
+      "Disk I/O usage.",
+      "CPU temperature.",
+      "Memory allocation."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What is a zombie process?",
+    "type": "all",
+    "answers": [
+      "A process running in background.",
+      "A process waiting for user input.",
+      "A terminated process not yet reaped by its parent.",
+      "A kernel thread."
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What is the purpose of the pipe operator?",
+    "type": "all",
+    "answers": [
+      "Redirect input only.",
+      "Connect output of one process to input of another.",
+      "Terminate processes.",
+      "Start daemon processes."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What does the tty command display?",
+    "type": "all",
+    "answers": [
+      "Current user.",
+      "Current terminal.",
+      "System uptime.",
+      "Shell version."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "What is the main role of a shell?",
+    "type": "all",
+    "answers": [
+      "Manage hardware.",
+      "Provide a user interface to run commands.",
+      "Compile the kernel.",
+      "Store files."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
+    "title": "Which tool allows detaching and reattaching terminal sessions?",
+    "type": "all",
+    "answers": [
+      "nohup",
+      "tmux",
+      "kill",
+      "lsof"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER4"
+    ]
+  },
+  {
     "title": "What does the sticky bit prevent in shared directories?",
     "type": "all",
     "answers": [
@@ -2645,64 +3350,923 @@
     "tags": ["LINUX"]
   },
   {
-    "title": "Which of the following are valid data structures?",
+    "title": "What is the purpose of a user account in Linux?",
     "type": "all",
     "answers": [
-      "Stack",
-      "Queue",
-      "Tree",
-      "Loop",
-      "Graph"
+      "To identify a physical computer",
+      "To identify and authenticate a user",
+      "To store hardware drivers",
+      "To manage network packets"
     ],
     "correctAnswers": [
-      0,
-      1,
-      2,
-      4
+      1
     ],
-    "multipleCorrect": true,
+    "multipleCorrect": false,
     "difficulty": "medium",
-    "points": 2,
+    "points": 3,
     "tags": [
-      "LINUX"
+      "LINUX",
+      "CHAPTER5"
     ]
   },
   {
-    "title": "What is the time complexity of binary search?",
+    "title": "What does a multi-user operating system allow?",
     "type": "all",
     "answers": [
-      "O(log n)",
-      "O(n)",
-      "O(n²)",
-      "O(1)"
+      "Only one user at a time",
+      "Multiple users simultaneously",
+      "Only root access",
+      "Only GUI access"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What is the home directory of a user used for?",
+    "type": "all",
+    "answers": [
+      "System configuration",
+      "Temporary files",
+      "User personal files and processes",
+      "Kernel modules"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which user has full privileges on a Linux system?",
+    "type": "all",
+    "answers": [
+      "student",
+      "guest",
+      "root",
+      "nobody"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What symbol usually marks the root shell prompt?",
+    "type": "all",
+    "answers": [
+      "$",
+      "%",
+      "#",
+      "@"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which command switches to another user?",
+    "type": "all",
+    "answers": [
+      "login",
+      "sudo",
+      "su",
+      "whoami"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What does the su command require for authentication?",
+    "type": "all",
+    "answers": [
+      "Current user's password",
+      "Target user's password",
+      "No password",
+      "Root key"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What is sudo used for?",
+    "type": "all",
+    "answers": [
+      "Editing files",
+      "Running commands as another user",
+      "Creating users",
+      "Viewing logs"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which file controls sudo permissions?",
+    "type": "all",
+    "answers": [
+      "/etc/passwd",
+      "/etc/shadow",
+      "/etc/sudoers",
+      "/etc/group"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What happens if a command is prefixed with sudo?",
+    "type": "all",
+    "answers": [
+      "It runs slower",
+      "It runs as root or another user",
+      "It runs in background",
+      "It runs without permissions"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What is the UID?",
+    "type": "all",
+    "answers": [
+      "User name",
+      "User identifier number",
+      "Group name",
+      "Process name"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Where are user account details stored in Linux?",
+    "type": "all",
+    "answers": [
+      "/etc/passwd",
+      "/etc/login",
+      "/usr/users",
+      "/home"
     ],
     "correctAnswers": [
       0
     ],
     "multipleCorrect": false,
     "difficulty": "medium",
-    "points": 1,
+    "points": 3,
     "tags": [
-      "LINUX"
+      "LINUX",
+      "CHAPTER5"
     ]
   },
   {
-    "title": "Which data structure uses LIFO principle?",
+    "title": "Where are encrypted passwords stored?",
     "type": "all",
     "answers": [
-      "Stack",
-      "Queue",
-      "Array",
-      "Tree"
+      "/etc/passwd",
+      "/etc/group",
+      "/etc/shadow",
+      "/var/passwords"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Who can read /etc/shadow?",
+    "type": "all",
+    "answers": [
+      "Any user",
+      "Only root or privileged users",
+      "Guest users",
+      "System services"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What is a system user?",
+    "type": "all",
+    "answers": [
+      "A human user",
+      "A user without login shell",
+      "An admin user",
+      "A network user"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What does /bin/false as a shell mean?",
+    "type": "all",
+    "answers": [
+      "User can login",
+      "User gets bash",
+      "User cannot login",
+      "User is root"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which command shows the current user?",
+    "type": "all",
+    "answers": [
+      "id",
+      "users",
+      "whoami",
+      "groups"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which command lists logged-in users?",
+    "type": "all",
+    "answers": [
+      "id",
+      "who",
+      "ls",
+      "ps"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What is a group used for?",
+    "type": "all",
+    "answers": [
+      "Authentication",
+      "Resource sharing",
+      "Kernel control",
+      "Booting"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which file stores group information?",
+    "type": "all",
+    "answers": [
+      "/etc/passwd",
+      "/etc/group",
+      "/etc/shadow",
+      "/etc/users"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What is a primary group?",
+    "type": "all",
+    "answers": [
+      "First created group",
+      "Default group of a user",
+      "Admin group",
+      "Root group"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which command creates a new user?",
+    "type": "all",
+    "answers": [
+      "useradd",
+      "usermod",
+      "userdel",
+      "addgroup"
     ],
     "correctAnswers": [
       0
     ],
     "multipleCorrect": false,
     "difficulty": "medium",
-    "points": 1,
+    "points": 3,
     "tags": [
-      "LINUX"
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which command deletes a user?",
+    "type": "all",
+    "answers": [
+      "useradd",
+      "userdel",
+      "groupdel",
+      "passwd"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which command changes a user's password?",
+    "type": "all",
+    "answers": [
+      "chsh",
+      "passwd",
+      "usermod",
+      "login"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What does the passwd command modify?",
+    "type": "all",
+    "answers": [
+      "/etc/group",
+      "/etc/passwd",
+      "/etc/shadow",
+      "/home"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What is the purpose of setuid?",
+    "type": "all",
+    "answers": [
+      "Set group ID",
+      "Run program as file owner",
+      "Change password",
+      "Mount disks"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What does the 's' permission indicate?",
+    "type": "all",
+    "answers": [
+      "Sticky bit",
+      "Setuid or setgid",
+      "Symbolic link",
+      "Special file"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Why is setuid risky?",
+    "type": "all",
+    "answers": [
+      "Slow execution",
+      "Full root privileges",
+      "Network issues",
+      "File corruption"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What are Linux capabilities?",
+    "type": "all",
+    "answers": [
+      "Kernel bugs",
+      "Granular privileges",
+      "User groups",
+      "File systems"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which capability allows network configuration?",
+    "type": "all",
+    "answers": [
+      "cap_net_raw",
+      "cap_net_admin",
+      "cap_kill",
+      "cap_fowner"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What does cap_kill allow?",
+    "type": "all",
+    "answers": [
+      "Deleting files",
+      "Stopping services",
+      "Sending signals to any process",
+      "Rebooting"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which command edits sudoers safely?",
+    "type": "all",
+    "answers": [
+      "nano",
+      "vi",
+      "sudoedit",
+      "visudo"
+    ],
+    "correctAnswers": [
+      3
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Why should root login be avoided?",
+    "type": "all",
+    "answers": [
+      "It is slow",
+      "It is insecure",
+      "It is disabled",
+      "It uses RAM"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What is a login shell?",
+    "type": "all",
+    "answers": [
+      "Startup script",
+      "Program run after login",
+      "Kernel module",
+      "Daemon"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which command shows user groups?",
+    "type": "all",
+    "answers": [
+      "groups",
+      "id",
+      "users",
+      "who"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which file maps usernames to UIDs?",
+    "type": "all",
+    "answers": [
+      "/etc/group",
+      "/etc/passwd",
+      "/etc/shadow",
+      "/etc/login"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What does usermod do?",
+    "type": "all",
+    "answers": [
+      "Add user",
+      "Delete user",
+      "Modify user attributes",
+      "Change password"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which command adds a group?",
+    "type": "all",
+    "answers": [
+      "groupadd",
+      "adduser",
+      "usermod",
+      "newgrp"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which command removes a group?",
+    "type": "all",
+    "answers": [
+      "groupdel",
+      "deluser",
+      "userdel",
+      "rmgroup"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What is authentication?",
+    "type": "all",
+    "answers": [
+      "Authorization",
+      "User identification",
+      "Access control",
+      "Encryption"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What happens when a password expires?",
+    "type": "all",
+    "answers": [
+      "User is deleted",
+      "User must change password",
+      "System shuts down",
+      "User becomes root"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What does locking a password do?",
+    "type": "all",
+    "answers": [
+      "Deletes user",
+      "Prevents password login",
+      "Removes groups",
+      "Expires account"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which command expires a user account?",
+    "type": "all",
+    "answers": [
+      "passwd",
+      "usermod --expiredate",
+      "chage",
+      "login"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What does the id command display?",
+    "type": "all",
+    "answers": [
+      "Only UID",
+      "Only groups",
+      "User and group IDs",
+      "Processes"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "What is /etc/group used for?",
+    "type": "all",
+    "answers": [
+      "Passwords",
+      "Users",
+      "Groups",
+      "Shells"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
+    ]
+  },
+  {
+    "title": "Which utility shows detailed user info?",
+    "type": "all",
+    "answers": [
+      "whoami",
+      "finger",
+      "id",
+      "groups"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 3,
+    "tags": [
+      "LINUX",
+      "CHAPTER5"
     ]
   },
   {

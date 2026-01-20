@@ -120,6 +120,16 @@
     "phase": "county"
   },
   {
+    "id": "processes_linux",
+    "title": "Linux - Process",
+    "description": "NET2077 exam",
+    "duration": 15,
+    "totalPoints": 60,
+    "tag": "LINUX_PROCESSES",
+    "year": 2026,
+    "phase": "county"
+  },
+  {
     "id": "osi_network",
     "title": "Network - OSI",
     "description": "NET2077 exam",
