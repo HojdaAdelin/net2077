@@ -26,7 +26,7 @@ const seedDatabase = async () => {
     console.log(`[✔] Database: ${mongoose.connection.db.databaseName}`);
 
     const questionsData = JSON.parse(
-      readFileSync(join(__dirname, '../data/questions.json'), 'utf-8')
+      readFileSync(join(__dirname, '../data/main_questions.json'), 'utf-8')
     );
     const resourcesData = JSON.parse(
       readFileSync(join(__dirname, '../data/resources.json'), 'utf-8')
