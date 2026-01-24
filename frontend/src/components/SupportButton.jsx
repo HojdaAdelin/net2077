@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { HelpCircle, Lock, X } from 'lucide-react';
+import { BotMessageSquare, Lock, X } from 'lucide-react';
 import './SupportButton.css';
 
 const SupportButton = () => {
@@ -105,7 +105,7 @@ const SupportButton = () => {
         onClick={() => setIsOpen(true)}
         title="Support"
       >
-        <HelpCircle size={24} />
+        <BotMessageSquare size={36} />
       </button>
 
       {showPopup && (

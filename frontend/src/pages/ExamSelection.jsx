@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
 import '../styles/ExamSelection.css';
+import { Clock3, Tally5 } from 'lucide-react';
 
 export default function ExamSelection() {
   const [exams, setExams] = useState([]);
@@ -120,11 +121,11 @@ export default function ExamSelection() {
               
               <div className="exam-details">
                 <div className="exam-detail">
-                  <span className="detail-icon">⏱️</span>
+                  <span className="detail-icon"><Clock3 size={18}/></span>
                   <span className="detail-text">{exam.duration} minutes</span>
                 </div>
                 <div className="exam-detail">
-                  <span className="detail-icon">📊</span>
+                  <span className="detail-icon"><Tally5 size={18}/></span>
                   <span className="detail-text">{exam.totalPoints} points</span>
                 </div>
               </div>
