@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
+import { API_URL } from '../config';
 import '../styles/Terminal.css';
 
 export default function Terminal() {
@@ -40,7 +41,7 @@ export default function Terminal() {
 
   const fetchQuestions = async () => {
     try {
-      const response = await fetch('/api/terminal');
+      const response = await fetch(`${API_URL}/terminal`);
       const data = await response.json();
       setQuestions(data);
       setFilteredQuestions(data); // Initialize filtered questions
@@ -56,7 +57,7 @@ export default function Terminal() {
 
   const fetchUserProgress = async () => {
     try {
-      const response = await fetch('/api/terminal/progress', {
+      const response = await fetch(`${API_URL}/terminal/progress`, {
         credentials: 'include'
       });
       const data = await response.json();
@@ -87,7 +88,7 @@ export default function Terminal() {
     setTerminalHistory(prev => [...prev, newHistoryEntry]);
 
     try {
-      const response = await fetch('/api/terminal/submit', {
+      const response = await fetch(`${API_URL}/terminal/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -76,42 +76,6 @@ app.get('/', (req, res) => {
   });
 });
 
-// Endpoint pentru seeding manual pe producție
-app.get('/seed-terminal', async (req, res) => {
-  try {
-    const Terminal = (await import('./models/Terminal.js')).default;
-    const { readFileSync } = await import('fs');
-    const { fileURLToPath } = await import('url');
-    const { dirname, join } = await import('path');
-    
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-    
-    const terminalData = JSON.parse(
-      readFileSync(join(__dirname, 'data/terminal.json'), 'utf-8')
-    );
-    
-    let added = 0;
-    for (const questionData of terminalData) {
-      const existing = await Terminal.findOne({ title: questionData.title });
-      if (!existing) {
-        await Terminal.create(questionData);
-        added++;
-      }
-    }
-    
-    const total = await Terminal.countDocuments();
-    res.json({ 
-      message: 'Terminal questions seeded successfully',
-      added,
-      total
-    });
-  } catch (error) {
-    console.error('Seeding error:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
 app.use('/api/auth', authRoutes);
 app.use('/api/questions', questionRoutes);
 app.use('/api/resources', resourceRoutes);
