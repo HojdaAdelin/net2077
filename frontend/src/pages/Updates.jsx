@@ -13,7 +13,7 @@ export default function Updates() {
   const getUpdatesData = () => [
     {
       version: '1.2.0',
-      date: 'January 17, 2026',
+      date: 'January 25, 2026',
       sections: [
         {
           title: t('updates.newFeatures'),
@@ -43,6 +43,9 @@ export default function Updates() {
             },
             {
               text: 'Theme manager'
+            },
+            {
+              text: 'Terminal based questions'
             }
           ]
         },

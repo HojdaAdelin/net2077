@@ -6,6 +6,7 @@ import { readFileSync } from 'fs';
 import Question from '../models/Question.js';
 import Resource from '../models/Resource.js';
 import Exam from '../models/Exam.js';
+import Terminal from '../models/Terminal.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -34,6 +35,9 @@ const seedDatabase = async () => {
     const examsData = JSON.parse(
       readFileSync(join(__dirname, '../data/exams.json'), 'utf-8')
     );
+    const terminalData = JSON.parse(
+      readFileSync(join(__dirname, '../data/terminal.json'), 'utf-8')
+    );
 
     console.log('\n📊 Syncing Questions...');
     await syncQuestions(questionsData);
@@ -43,6 +47,9 @@ const seedDatabase = async () => {
 
     console.log('\n📝 Syncing Exams...');
     await syncExams(examsData);
+
+    console.log('\n💻 Syncing Terminal Questions...');
+    await syncTerminalQuestions(terminalData);
 
     console.log('\n🎉 Database synced successfully!');
     process.exit(0);
@@ -171,6 +178,45 @@ const syncExams = async (examsData) => {
 
   console.log(`   [✔] Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
   console.log(`   📝 Total exams in DB: ${jsonExams.size}`);
+};
+
+const syncTerminalQuestions = async (terminalData) => {
+  const jsonTerminals = new Map();
+  terminalData.forEach(t => {
+    jsonTerminals.set(t.title, t);
+  });
+
+  const existingTerminals = await Terminal.find({});
+  const existingMap = new Map();
+  existingTerminals.forEach(t => {
+    existingMap.set(t.title, t);
+  });
+
+  let added = 0;
+  let updated = 0;
+  let deleted = 0;
+
+  for (const [title, terminalQuestionData] of jsonTerminals) {
+    if (existingMap.has(title)) {
+      const existing = existingMap.get(title);
+      await Terminal.findByIdAndUpdate(existing._id, terminalQuestionData);
+      updated++;
+    } else {
+      await Terminal.create(terminalQuestionData);
+      added++;
+    }
+  }
+
+  for (const [title, existingTerminal] of existingMap) {
+    if (!jsonTerminals.has(title)) {
+      await Terminal.findByIdAndDelete(existingTerminal._id);
+      deleted++;
+      console.log(`   [-]  Deleted: "${title}"`);
+    }
+  }
+
+  console.log(`   [✔] Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
+  console.log(`   💻 Total terminal questions in DB: ${jsonTerminals.size}`);
 };
 
 seedDatabase();

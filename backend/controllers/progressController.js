@@ -25,6 +25,7 @@ export const getUserProgress = async (req, res) => {
       solvedCount: totalSolvedByCategories,
       solvedQuestions,
       solvedByTag: user.solvedByTag,
+      terminalStats: user.terminalStats,
       simulations: user.simulations,
       xp: user.xp,
       level: user.level,

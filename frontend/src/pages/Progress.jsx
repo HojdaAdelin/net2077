@@ -84,6 +84,17 @@ export default function Progress() {
               <div className="stat-text">{t('progress.questionsSolved')}</div>
             </div>
           </div>
+
+          <div className="category-progress-card">
+            <div className="category-header">
+              <h3>Terminal</h3>
+              <span className="category-badge terminal">TERMINAL</span>
+            </div>
+            <div className="category-stat-large">
+              <div className="stat-number">{progress.terminalStats?.solved || 0}</div>
+              <div className="stat-text">Terminal Commands</div>
+            </div>
+          </div>
         </div>
       </div>
 

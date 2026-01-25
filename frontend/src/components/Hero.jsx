@@ -45,6 +45,52 @@ export default function Hero() {
           </div>
         </div>
 
+        <div className="terminal-feature-card">
+          <div className="terminal-feature-content">
+            <div className="terminal-feature-badge">NEW FEATURE</div>
+            <h3 className="terminal-feature-title">Linux Terminal Practice</h3>
+            <p className="terminal-feature-description">
+              Practice real Linux commands in an interactive terminal environment. 
+              Master command-line skills with hands-on exercises.
+            </p>
+            {user ? (
+              <Link to="/terminal" className="btn btn-primary terminal-feature-btn">
+                Start Terminal Practice
+              </Link>
+            ) : (
+              <div className="terminal-feature-auth-required">
+                <p className="terminal-auth-text">Available for registered users only</p>
+                <Link to="/register" className="btn btn-secondary terminal-feature-btn">
+                  Register to Access
+                </Link>
+              </div>
+            )}
+          </div>
+          <div className="terminal-feature-visual">
+            <div className="terminal-preview">
+              <div className="terminal-preview-header">
+                <div className="terminal-preview-buttons">
+                  <span className="terminal-preview-button red"></span>
+                  <span className="terminal-preview-button yellow"></span>
+                  <span className="terminal-preview-button green"></span>
+                </div>
+                <div className="terminal-preview-title">user@net2077: ~</div>
+              </div>
+              <div className="terminal-preview-body">
+                <div className="terminal-preview-line">
+                  <span className="terminal-preview-prompt">user@net2077:~$ </span>
+                  <span className="terminal-preview-command">uname -r</span>
+                </div>
+                <div className="terminal-preview-output">5.15.0-generic</div>
+                <div className="terminal-preview-line">
+                  <span className="terminal-preview-prompt">user@net2077:~$ </span>
+                  <span className="terminal-preview-cursor">_</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="start-here-section">
           <h2 className="start-here-title">{t('hero.startHere')}</h2>
           
@@ -172,6 +218,15 @@ export default function Hero() {
               </div>
               <div className="benefits-row">
                 <div className="benefit-feature">{t('hero.dailyChallenge')}</div>
+                <div className="benefit-status">
+                  <X size={20} className="x-icon" />
+                </div>
+                <div className="benefit-status">
+                  <Check size={20} className="check-icon" />
+                </div>
+              </div>
+              <div className="benefits-row">
+                <div className="benefit-feature">{t('hero.terminal')}</div>
                 <div className="benefit-status">
                   <X size={20} className="x-icon" />
                 </div>

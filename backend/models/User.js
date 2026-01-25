@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
     LINUX: { type: Number, default: 0 },
     NETWORK: { type: Number, default: 0 }
   },
+  solvedTerminalQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Terminal' }],
+  terminalStats: {
+    solved: { type: Number, default: 0 }
+  },
   simulations: [{
     examId: String,
     examTitle: String,

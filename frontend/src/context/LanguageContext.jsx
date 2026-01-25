@@ -145,7 +145,8 @@ const translations = {
       trackProgress: 'Track progress',
       betterExams: 'Better exam sessions',
       dailyChallenge: 'Access to daily challenges',
-      registerNow: 'Register Now'
+      registerNow: 'Register Now',
+      terminal: 'Acces to terminal questions'
     }
   },
   ro: {
@@ -282,7 +283,8 @@ const translations = {
       trackProgress: 'Urmărire progres',
       betterExams: 'Sesiuni de examen îmbunătățite',
       dailyChallenge: 'Acces la provocări zilnice',
-      registerNow: 'Înregistrează-te Acum'
+      registerNow: 'Înregistrează-te Acum',
+      terminal: 'Acces la întrebările din terminal'
     }
   }
 };
