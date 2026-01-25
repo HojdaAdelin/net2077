@@ -118,5 +118,405 @@
     "points": 5,
     "difficulty": "hard",
     "order": 15
+  },
+  {
+    "title": "Change file permissions to read-write for owner only",
+    "description": "Set permissions on file.txt so only the owner can read and write",
+    "acceptedCommands": ["chmod 600 file.txt", "chmod u=rw,go= file.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 16
+  },
+  {
+    "title": "Search for text pattern in files",
+    "description": "Search for the word 'error' in all .log files in current directory",
+    "acceptedCommands": ["grep error *.log", "grep 'error' *.log"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 17
+  },
+  {
+    "title": "Display current logged-in user",
+    "description": "Show the username of the currently logged-in user",
+    "acceptedCommands": ["whoami"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 18
+  },
+  {
+    "title": "Create an empty file",
+    "description": "Create an empty file named 'test.txt'",
+    "acceptedCommands": ["touch test.txt"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 19
+  },
+  {
+    "title": "Copy a file",
+    "description": "Copy file1.txt to file2.txt",
+    "acceptedCommands": ["cp file1.txt file2.txt"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 20
+  },
+  {
+    "title": "Move or rename a file",
+    "description": "Rename old.txt to new.txt",
+    "acceptedCommands": ["mv old.txt new.txt"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 21
+  },
+  {
+    "title": "Display file contents",
+    "description": "Show the contents of file.txt",
+    "acceptedCommands": ["cat file.txt"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 22
+  },
+  {
+    "title": "Show first 10 lines of a file",
+    "description": "Display the first 10 lines of data.txt",
+    "acceptedCommands": ["head data.txt", "head -10 data.txt"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 23
+  },
+  {
+    "title": "Show last 10 lines of a file",
+    "description": "Display the last 10 lines of log.txt",
+    "acceptedCommands": ["tail log.txt", "tail -10 log.txt"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 24
+  },
+  {
+    "title": "Print text to terminal",
+    "description": "Print 'Hello World' to the terminal",
+    "acceptedCommands": ["echo Hello World", "echo 'Hello World'", "echo \"Hello World\""],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 25
+  },
+  {
+    "title": "Show manual page",
+    "description": "Display the manual page for the ls command",
+    "acceptedCommands": ["man ls"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 26
+  },
+  {
+    "title": "Display command history",
+    "description": "Show the command history",
+    "acceptedCommands": ["history"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 27
+  },
+  {
+    "title": "Clear terminal screen",
+    "description": "Clear the terminal screen",
+    "acceptedCommands": ["clear"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 28
+  },
+  {
+    "title": "Show all system information",
+    "description": "Display all system information including kernel version",
+    "acceptedCommands": ["uname -a"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 29
+  },
+  {
+    "title": "Show directory size",
+    "description": "Display the total size of the current directory in human-readable format",
+    "acceptedCommands": ["du -sh .", "du -sh"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 30
+  },
+  {
+    "title": "Create a directory",
+    "description": "Create a directory named 'testdir'",
+    "acceptedCommands": ["mkdir testdir"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 31
+  },
+  {
+    "title": "Remove a file",
+    "description": "Delete the file named 'unwanted.txt'",
+    "acceptedCommands": ["rm unwanted.txt"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 32
+  },
+  {
+    "title": "Remove directory recursively",
+    "description": "Remove directory 'olddir' and all its contents",
+    "acceptedCommands": ["rm -r olddir", "rm -rf olddir"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 33
+  },
+  {
+    "title": "Change directory",
+    "description": "Change to the home directory",
+    "acceptedCommands": ["cd ~", "cd", "cd $HOME"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 34
+  },
+  {
+    "title": "Show running processes with details",
+    "description": "Display all running processes with full details",
+    "acceptedCommands": ["ps -ef", "ps aux"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 35
+  },
+  {
+    "title": "Kill a process by PID",
+    "description": "Terminate process with PID 1234",
+    "acceptedCommands": ["kill 1234"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 36
+  },
+  {
+    "title": "Force kill a process",
+    "description": "Force terminate process with PID 5678",
+    "acceptedCommands": ["kill -9 5678", "kill -KILL 5678"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 37
+  },
+  {
+    "title": "Show disk usage in human readable format",
+    "description": "Display filesystem disk space usage in human readable format",
+    "acceptedCommands": ["df -h"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 38
+  },
+  {
+    "title": "Search for files recursively",
+    "description": "Find all .txt files starting from root directory",
+    "acceptedCommands": ["find / -name '*.txt'", "find / -name *.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 39
+  },
+  {
+    "title": "Compress files with tar",
+    "description": "Create a compressed tar archive of directory 'docs'",
+    "acceptedCommands": ["tar -czf docs.tar.gz docs", "tar -czvf docs.tar.gz docs"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 40
+  },
+  {
+    "title": "Show inode information",
+    "description": "Display inode numbers for files in current directory",
+    "acceptedCommands": ["ls -i", "ls -li"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 41
+  },
+  {
+    "title": "Synchronize files",
+    "description": "Sync files from source/ to destination/ preserving attributes",
+    "acceptedCommands": ["rsync -av source/ destination/"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 42
+  },
+  {
+    "title": "Set executable permissions",
+    "description": "Make script.sh executable for owner, group and others",
+    "acceptedCommands": ["chmod 755 script.sh", "chmod +x script.sh"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 43
+  },
+  {
+    "title": "Change file ownership",
+    "description": "Change ownership of file.txt to user 'john' and group 'users'",
+    "acceptedCommands": ["chown john:users file.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 44
+  },
+  {
+    "title": "Replace text in file",
+    "description": "Replace all occurrences of 'old' with 'new' in file.txt",
+    "acceptedCommands": ["sed -i 's/old/new/g' file.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 45
+  },
+  {
+    "title": "Print specific column",
+    "description": "Print the second column from data.txt",
+    "acceptedCommands": ["awk '{print $2}' data.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 46
+  },
+  {
+    "title": "Show listening TCP ports",
+    "description": "Display all listening TCP and UDP ports with process information",
+    "acceptedCommands": ["netstat -tulnp", "ss -tulnp"],
+    "points": 5,
+    "difficulty": "hard",
+    "order": 47
+  },
+  {
+    "title": "Monitor system processes",
+    "description": "Display real-time system processes and resource usage",
+    "acceptedCommands": ["top"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 48
+  },
+  {
+    "title": "Show who is logged in",
+    "description": "Display all currently logged in users",
+    "acceptedCommands": ["who", "w"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 49
+  },
+  {
+    "title": "Display user and group IDs",
+    "description": "Show current user's UID, GID and group memberships",
+    "acceptedCommands": ["id"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 50
+  },
+  {
+    "title": "Create directory with parents",
+    "description": "Create directory structure 'path/to/newdir' including parent directories",
+    "acceptedCommands": ["mkdir -p path/to/newdir"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 51
+  },
+  {
+    "title": "Show directory tree structure",
+    "description": "Display the directory tree structure of current directory",
+    "acceptedCommands": ["tree", "tree ."],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 52
+  },
+  {
+    "title": "Find command location",
+    "description": "Show the full path of the 'python' command",
+    "acceptedCommands": ["which python", "whereis python"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 53
+  },
+  {
+    "title": "Search for text with line numbers",
+    "description": "Search for 'error' in log.txt and show line numbers",
+    "acceptedCommands": ["grep -n error log.txt", "grep -n 'error' log.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 54
+  },
+  {
+    "title": "Count lines in file",
+    "description": "Count the number of lines in data.txt",
+    "acceptedCommands": ["wc -l data.txt"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 55
+  },
+  {
+    "title": "Sort file contents",
+    "description": "Sort the contents of names.txt alphabetically",
+    "acceptedCommands": ["sort names.txt"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 56
+  },
+  {
+    "title": "Remove duplicate lines",
+    "description": "Remove duplicate lines from sorted.txt",
+    "acceptedCommands": ["uniq sorted.txt"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 57
+  },
+  {
+    "title": "Show file type",
+    "description": "Determine the type of file 'mystery'",
+    "acceptedCommands": ["file mystery"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 58
+  },
+  {
+    "title": "Show file permissions in octal",
+    "description": "Display detailed file information including permissions for file.txt",
+    "acceptedCommands": ["stat file.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 59
+  },
+  {
+    "title": "Create symbolic link",
+    "description": "Create a symbolic link named 'link' pointing to 'target.txt'",
+    "acceptedCommands": ["ln -s target.txt link"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 60
+  },
+  {
+    "title": "Show processes using a file",
+    "description": "Show which processes are using the file '/var/log/syslog'",
+    "acceptedCommands": ["lsof /var/log/syslog"],
+    "points": 5,
+    "difficulty": "hard",
+    "order": 61
+  },
+  {
+    "title": "Show processes using port 80",
+    "description": "Display processes that are using port 80",
+    "acceptedCommands": ["lsof -i :80"],
+    "points": 5,
+    "difficulty": "hard",
+    "order": 62
+  },
+  {
+    "title": "Show routing table",
+    "description": "Display the system's routing table",
+    "acceptedCommands": ["route", "ip route", "ip route show"],
+    "points": 5,
+    "difficulty": "hard",
+    "order": 63
+  },
+  {
+    "title": "Show system logs from last hour",
+    "description": "Display system logs from the last hour using journalctl",
+    "acceptedCommands": ["journalctl --since '1 hour ago'"],
+    "points": 5,
+    "difficulty": "hard",
+    "order": 64
+  },
+  {
+    "title": "Monitor network traffic",
+    "description": "Capture network packets on interface eth0",
+    "acceptedCommands": ["tcpdump -i eth0"],
+    "points": 5,
+    "difficulty": "hard",
+    "order": 65
   }
 ]
