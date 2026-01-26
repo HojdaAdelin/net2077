@@ -2,6 +2,7 @@ import { useState, useEffect, useContext, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { API_URL } from '../config';
+import { CheckCircle, Lock, Unlock, X, Terminal as TerminalIcon } from 'lucide-react';
 import '../styles/Terminal.css';
 
 export default function Terminal() {
@@ -14,6 +15,8 @@ export default function Terminal() {
   const [terminalHistory, setTerminalHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [difficultyFilter, setDifficultyFilter] = useState('all');
+  const [showAnswersModal, setShowAnswersModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const terminalInputRef = useRef(null);
 
   useEffect(() => {
@@ -152,6 +155,52 @@ export default function Terminal() {
     return userProgress.solved.some(solved => solved._id === questionId);
   };
 
+  const handleShowAnswers = () => {
+    setShowConfirmModal(true);
+  };
+
+  const confirmShowAnswers = () => {
+    setShowConfirmModal(false);
+    setShowAnswersModal(true);
+  };
+
+  const closeAnswersModal = () => {
+    setShowAnswersModal(false);
+  };
+
+  const closeConfirmModal = () => {
+    setShowConfirmModal(false);
+  };
+
+  // Prevent copying in modals
+  const handleModalKeyDown = (e) => {
+    // Prevent Ctrl+C, Ctrl+A, Ctrl+V, etc.
+    if (e.ctrlKey && (e.key === 'c' || e.key === 'a' || e.key === 'v' || e.key === 'x')) {
+      e.preventDefault();
+      return false;
+    }
+    // Prevent F12, Ctrl+Shift+I, Ctrl+U
+    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'u')) {
+      e.preventDefault();
+      return false;
+    }
+  };
+
+  const handleModalContextMenu = (e) => {
+    e.preventDefault();
+    return false;
+  };
+
+  const handleModalSelectStart = (e) => {
+    e.preventDefault();
+    return false;
+  };
+
+  const handleModalDragStart = (e) => {
+    e.preventDefault();
+    return false;
+  };
+
   if (!user) {
     return (
       <div className="terminal-page">
@@ -229,7 +278,7 @@ export default function Terminal() {
                   >
                     <span className="terminal-question-number">{index + 1}</span>
                     <span className="terminal-question-title">{question.title}</span>
-                    {isQuestionSolved(question._id) && <span className="terminal-solved-indicator">✓</span>}
+                    {isQuestionSolved(question._id) && <CheckCircle size={16} className="terminal-solved-indicator" />}
                   </div>
                 ))}
               </div>
@@ -248,11 +297,45 @@ export default function Terminal() {
             {currentQuestion && (
               <>
                 <div className="terminal-question-header">
-                  <h2>{currentQuestion.title}</h2>
-                  <p>{currentQuestion.description}</p>
-                  <div className="terminal-question-meta">
-                    <span className={`terminal-difficulty ${currentQuestion.difficulty}`}>{currentQuestion.difficulty}</span>
-                    <span className="terminal-points">{currentQuestion.points} points</span>
+                  <div className="terminal-question-info">
+                    <h2>{currentQuestion.title}</h2>
+                    <p>{currentQuestion.description}</p>
+                    <div className="terminal-question-meta">
+                      <span className={`terminal-difficulty ${currentQuestion.difficulty}`}>{currentQuestion.difficulty}</span>
+                      <span className="terminal-points">{currentQuestion.points} points</span>
+                    </div>
+                  </div>
+                  
+                  <div className="terminal-answers-section">
+                    {isQuestionSolved(currentQuestion._id) ? (
+                      <div className="terminal-accepted-commands">
+                        <h3><CheckCircle size={16} /> Accepted Commands</h3>
+                        <div className="terminal-commands-list">
+                          {currentQuestion.acceptedCommands.slice(0, 3).map((cmd, index) => (
+                            <div key={index} className="terminal-command-item">
+                              <code>{cmd}</code>
+                            </div>
+                          ))}
+                          {currentQuestion.acceptedCommands.length > 3 && (
+                            <div className="terminal-more-commands">
+                              +{currentQuestion.acceptedCommands.length - 3} more commands
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="terminal-locked-answers">
+                        <h3><Lock size={16} /> Solution</h3>
+                        <p>Complete this question to see accepted commands</p>
+                        <button 
+                          className="terminal-unlock-btn"
+                          onClick={handleShowAnswers}
+                          title="Click to reveal solution"
+                        >
+                          <Unlock size={14} /> Show Answers
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -305,7 +388,7 @@ export default function Terminal() {
 
                     {isQuestionSolved(currentQuestion._id) && (
                       <div className="terminal-question-completed">
-                        ✅ Question completed! Great job!
+                        <CheckCircle size={16} /> Question completed! Great job!
                       </div>
                     )}
                   </div>
@@ -314,6 +397,75 @@ export default function Terminal() {
             )}
           </div>
         </div>
+
+        {/* Modal pentru confirmarea afișării răspunsurilor */}
+        {showConfirmModal && (
+          <div className="terminal-modal-overlay" onClick={closeConfirmModal}>
+            <div className="terminal-confirm-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="terminal-modal-header">
+                <h3><Lock size={20} /> Reveal Solution</h3>
+                <button className="terminal-modal-close" onClick={closeConfirmModal}>
+                  <X size={20} />
+                </button>
+              </div>
+              <div className="terminal-modal-body">
+                <p>Are you sure you want to see the accepted commands? This will reveal the solution for this question.</p>
+                <div className="terminal-confirm-buttons">
+                  <button className="terminal-btn-cancel" onClick={closeConfirmModal}>
+                    Cancel
+                  </button>
+                  <button className="terminal-btn-confirm" onClick={confirmShowAnswers}>
+                    <Unlock size={16} /> Show Solution
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal pentru afișarea răspunsurilor */}
+        {showAnswersModal && currentQuestion && (
+          <div className="terminal-modal-overlay" onClick={closeAnswersModal}>
+            <div 
+              className="terminal-modal" 
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={handleModalKeyDown}
+              onContextMenu={handleModalContextMenu}
+              onSelectStart={handleModalSelectStart}
+              onDragStart={handleModalDragStart}
+              tabIndex={-1}
+            >
+              <div className="terminal-modal-header">
+                <h3><TerminalIcon size={20} /> Accepted Commands: {currentQuestion.title}</h3>
+                <button className="terminal-modal-close" onClick={closeAnswersModal}>
+                  <X size={20} />
+                </button>
+              </div>
+              <div 
+                className="terminal-modal-body"
+                onKeyDown={handleModalKeyDown}
+                onContextMenu={handleModalContextMenu}
+                onSelectStart={handleModalSelectStart}
+                onDragStart={handleModalDragStart}
+              >
+                <div className="terminal-commands-list">
+                  {currentQuestion.acceptedCommands.map((cmd, index) => (
+                    <div 
+                      key={index} 
+                      className="terminal-command-item"
+                      onKeyDown={handleModalKeyDown}
+                      onContextMenu={handleModalContextMenu}
+                      onSelectStart={handleModalSelectStart}
+                      onDragStart={handleModalDragStart}
+                    >
+                      <code>{cmd}</code>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

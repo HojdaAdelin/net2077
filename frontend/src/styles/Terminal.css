@@ -461,4 +461,377 @@
     align-items: flex-start;
     gap: 0.5rem;
   }
+}/* Styl
+es for answers section */
+.terminal-question-header {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.terminal-question-info {
+  flex: 1;
+}
+
+.terminal-answers-section {
+  min-width: 250px;
+  max-width: 300px;
+}
+
+.terminal-accepted-commands {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid var(--success);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.terminal-accepted-commands h3 {
+  color: var(--success);
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.terminal-commands-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.terminal-command-item {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+
+.terminal-command-item code {
+  color: var(--text-primary);
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  background: none;
+  padding: 0;
+}
+
+.terminal-locked-answers {
+  background: rgba(156, 163, 175, 0.1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.terminal-locked-answers h3 {
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.terminal-locked-answers p {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.terminal-unlock-btn {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 auto;
+}
+
+.terminal-unlock-btn:hover {
+  background: var(--accent-secondary);
+  transform: translateY(-1px);
+}
+
+/* Modal styles */
+.terminal-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.terminal-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.terminal-modal-header {
+  background: var(--bg-tertiary);
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.terminal-modal-header h3 {
+  color: var(--text-primary);
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.terminal-modal-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.terminal-modal-close:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.terminal-modal-body {
+  padding: 1.5rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.terminal-modal-body .terminal-commands-list {
+  gap: 0.75rem;
+}
+
+.terminal-modal-body .terminal-command-item {
+  padding: 0.75rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+}
+
+.terminal-modal-body .terminal-command-item code {
+  font-size: 0.9rem;
+}
+
+/* Responsive adjustments for answers section */
+@media (max-width: 768px) {
+  .terminal-question-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .terminal-answers-section {
+    min-width: auto;
+    max-width: none;
+    width: 100%;
+  }
+  
+  .terminal-modal {
+    width: 95%;
+    margin: 1rem;
+  }
+  
+  .terminal-modal-header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .terminal-modal-body {
+    padding: 1rem;
+  }
+}/*
+ Updated styles for Lucide icons */
+.terminal-solved-indicator {
+  color: var(--success);
+}
+
+.terminal-question-item.active .terminal-solved-indicator {
+  color: var(--bg-primary);
+}
+
+.terminal-accepted-commands h3,
+.terminal-locked-answers h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.terminal-unlock-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.terminal-question-completed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.terminal-more-commands {
+  background: var(--bg-tertiary);
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  padding: 0.5rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+/* Confirm modal styles */
+.terminal-confirm-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.terminal-confirm-modal .terminal-modal-body p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.terminal-confirm-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.terminal-btn-cancel,
+.terminal-btn-confirm {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.terminal-btn-cancel {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+.terminal-btn-cancel:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.terminal-btn-confirm {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+}
+
+.terminal-btn-confirm:hover {
+  background: var(--accent-secondary);
+  transform: translateY(-1px);
+}
+
+.terminal-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive adjustments for confirm modal */
+@media (max-width: 480px) {
+  .terminal-confirm-modal {
+    width: 95%;
+    margin: 1rem;
+  }
+  
+  .terminal-confirm-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .terminal-btn-cancel,
+  .terminal-btn-confirm {
+    width: 100%;
+    justify-content: center;
+  }
+}/* P
+revent text selection and copying in modals */
+.terminal-modal,
+.terminal-confirm-modal {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.terminal-modal-body .terminal-command-item code {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  pointer-events: none;
+}
+
+.terminal-modal-body .terminal-commands-list {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Disable context menu on modal content */
+.terminal-modal *,
+.terminal-confirm-modal * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Additional protection against drag and drop */
+.terminal-modal-body .terminal-command-item {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
 }
