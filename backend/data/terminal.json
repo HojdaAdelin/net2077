@@ -518,5 +518,285 @@
     "points": 5,
     "difficulty": "hard",
     "order": 65
+  },
+  {
+    "title": "Display system architecture",
+    "description": "Show the system's hardware architecture (32-bit or 64-bit)",
+    "acceptedCommands": ["arch", "uname -m"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 66
+  },
+  {
+    "title": "Show available disk space for specific directory",
+    "description": "Display available disk space for the /home directory",
+    "acceptedCommands": ["df -h /home", "df /home"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 67
+  },
+  {
+    "title": "Find files modified in last 24 hours",
+    "description": "Find all files in current directory modified in the last 24 hours",
+    "acceptedCommands": ["find . -mtime -1", "find . -newermt '1 day ago'"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 68
+  },
+  {
+    "title": "Show system hostname",
+    "description": "Display the system's hostname",
+    "acceptedCommands": ["hostname"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 69
+  },
+  {
+    "title": "Display current date and time",
+    "description": "Show the current system date and time",
+    "acceptedCommands": ["date"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 70
+  },
+  {
+    "title": "Show calendar for current month",
+    "description": "Display a calendar for the current month",
+    "acceptedCommands": ["cal"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 71
+  },
+  {
+    "title": "Count words in file",
+    "description": "Count the number of words in document.txt",
+    "acceptedCommands": ["wc -w document.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 72
+  },
+  {
+    "title": "Show file size in bytes",
+    "description": "Display the size of file.txt in bytes",
+    "acceptedCommands": ["wc -c file.txt", "stat -c%s file.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 73
+  },
+  {
+    "title": "Display last login information",
+    "description": "Show the last login times for all users",
+    "acceptedCommands": ["last"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 74
+  },
+  {
+    "title": "Show system load average",
+    "description": "Display the current system load average",
+    "acceptedCommands": ["uptime", "cat /proc/loadavg"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 75
+  },
+  {
+    "title": "Find empty files",
+    "description": "Find all empty files in the current directory",
+    "acceptedCommands": ["find . -empty -type f", "find . -size 0"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 76
+  },
+  {
+    "title": "Show process tree",
+    "description": "Display running processes in a tree format",
+    "acceptedCommands": ["pstree"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 77
+  },
+  {
+    "title": "Display system timezone",
+    "description": "Show the current system timezone",
+    "acceptedCommands": ["timedatectl", "cat /etc/timezone"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 78
+  },
+  {
+    "title": "Show mounted USB devices",
+    "description": "Display all mounted USB storage devices",
+    "acceptedCommands": ["lsblk", "fdisk -l"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 79
+  },
+  {
+    "title": "Find files by extension",
+    "description": "Find all .pdf files in the current directory and subdirectories",
+    "acceptedCommands": ["find . -name '*.pdf'", "find . -name *.pdf"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 80
+  },
+  {
+    "title": "Show system services status",
+    "description": "Display the status of all system services",
+    "acceptedCommands": ["systemctl list-units --type=service"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 81
+  },
+  {
+    "title": "Display network connections",
+    "description": "Show all active network connections",
+    "acceptedCommands": ["netstat -an", "ss -an"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 82
+  },
+  {
+    "title": "Show system temperature",
+    "description": "Display CPU and system temperature information",
+    "acceptedCommands": ["sensors"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 83
+  },
+  {
+    "title": "Find largest files in directory",
+    "description": "Find the 10 largest files in the current directory",
+    "acceptedCommands": ["du -ah . | sort -rh | head -10"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 84
+  },
+  {
+    "title": "Show system kernel modules",
+    "description": "Display all loaded kernel modules",
+    "acceptedCommands": ["lsmod"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 85
+  },
+  {
+    "title": "Display system boot messages",
+    "description": "Show kernel boot messages",
+    "acceptedCommands": ["dmesg"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 86
+  },
+  {
+    "title": "Show file access permissions numerically",
+    "description": "Display file permissions in numeric format for script.sh",
+    "acceptedCommands": ["stat -c '%a' script.sh"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 87
+  },
+  {
+    "title": "Find files owned by specific user",
+    "description": "Find all files owned by user 'admin' in current directory",
+    "acceptedCommands": ["find . -user admin"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 88
+  },
+  {
+    "title": "Show system memory details",
+    "description": "Display detailed memory information including swap",
+    "acceptedCommands": ["cat /proc/meminfo"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 89
+  },
+  {
+    "title": "Display active system processes by CPU usage",
+    "description": "Show processes sorted by CPU usage in descending order",
+    "acceptedCommands": ["ps aux --sort=-%cpu"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 90
+  },
+  {
+    "title": "Show system disk partitions",
+    "description": "Display all disk partitions and their mount points",
+    "acceptedCommands": ["lsblk", "fdisk -l"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 91
+  },
+  {
+    "title": "Find and count specific file types",
+    "description": "Count the number of .txt files in current directory and subdirectories",
+    "acceptedCommands": ["find . -name '*.txt' | wc -l"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 92
+  },
+  {
+    "title": "Show system hardware information",
+    "description": "Display detailed hardware information about the system",
+    "acceptedCommands": ["lshw", "dmidecode"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 93
+  },
+  {
+    "title": "Display system users and groups",
+    "description": "Show all system users and their group memberships",
+    "acceptedCommands": ["cat /etc/passwd", "getent passwd"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 94
+  },
+  {
+    "title": "Show network interface statistics",
+    "description": "Display network interface statistics and packet counts",
+    "acceptedCommands": ["cat /proc/net/dev", "ip -s link"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 95
+  },
+  {
+    "title": "Find files with specific permissions",
+    "description": "Find all files with 777 permissions in current directory",
+    "acceptedCommands": ["find . -perm 777"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 96
+  },
+  {
+    "title": "Show system cron jobs",
+    "description": "Display all scheduled cron jobs for current user",
+    "acceptedCommands": ["crontab -l"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 97
+  },
+  {
+    "title": "Display system resource limits",
+    "description": "Show current user's resource limits",
+    "acceptedCommands": ["ulimit -a"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 98
+  },
+  {
+    "title": "Show system file descriptors",
+    "description": "Display all open file descriptors for current process",
+    "acceptedCommands": ["lsof -p $$"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 99
+  },
+  {
+    "title": "Monitor real-time system calls",
+    "description": "Trace system calls made by a running process with PID 1234",
+    "acceptedCommands": ["strace -p 1234"],
+    "points": 5,
+    "difficulty": "hard",
+    "order": 100
   }
 ]
