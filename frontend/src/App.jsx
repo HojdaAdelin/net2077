@@ -18,6 +18,7 @@ import Updates from './pages/Updates';
 import Leaderboard from './pages/Leaderboard';
 import Lab from './pages/Lab';
 import Terminal from './pages/Terminal';
+import IS from './pages/IS';
 import './styles/global.css';
 
 export default function App() {
@@ -42,6 +43,7 @@ export default function App() {
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/lab" element={<Lab />} />
               <Route path="/terminal" element={<Terminal />} />
+              <Route path="/is" element={<IS />} />
             </Routes>
             <Footer />
             <SupportButton />

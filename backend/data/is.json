@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Hello World",
+    "description": "Write a program that prints 'Hello World!' to the console.",
+    "xp": 10,
+    "input": "none",
+    "output": "Hello World!",
+    "samplecode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Hello world!\"\n    return 0;\n}",
+    "officialcode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Hello world!\";\n    return 0;\n}",
+    "language": "cpp"
+  },
+  {
+    "title": "Sum of Two Numbers",
+    "description": "Read two integers from input and print their sum.",
+    "xp": 15,
+    "input": "5 3",
+    "output": "8",
+    "samplecode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    a, b;\n    cin << a << b;\n    cout << a+b;\n    return 0;\n}",
+    "officialcode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    cout << a+b;\n    return 0;\n}",
+    "language": "cpp"
+  },
+  {
+    "title": "Maximum of Three Numbers",
+    "description": "Read three integers and print the maximum value among them.",
+    "xp": 20,
+    "input": "10 25 15",
+    "output": "25",
+    "samplecode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a, b, c;\n    cin >> a >> b >> c;\n    cout << max(a, max(b, c);\n    return 0;\n}",
+    "officialcode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a, b, c;\n    cin >> a >> b >> c;\n    cout << max(a, max(b, c));\n    return 0;\n}",
+    "language": "cpp"
+  },
+  {
+    "title": "Fenwick Tree Query",
+    "description": "Implement a Fenwick Tree (Binary Indexed Tree) to count inversions in an array. Read n numbers and for each number, output how many smaller numbers appeared before it.",
+    "xp": 100,
+    "input": "5\n3 1 4 2 5",
+    "output": "0 0 2 1 4 ",
+    "samplecode": "#include <bits/stdc++.h>\nusing namespace std;\n#define int long long;\nint n;\nint a[100001];\nint fenwick[100001];\n\nint query(int node) {\n    int ans=0;\n    for(int i = node; i > 0; i -= (i & -i)) {\n        ans += fenwick[i];\n    }\n    return ans;\n}\n\nvoid update(int node, int val) {\n    for(int i = node; i <= n; i += (i&-i)) {\n        fenwick[i] += val;\n    }\n}\n\nsigned main() {\n    cin >> n ;\n    for(int i = 1; i <= n; i++) {\n        cin >> a[j];\n    }\n    for(int i = 1; i <= n; i++) {\n        cout << query(a[i]-1) << \" \";\n        update(a[i], 1);\n    }\n    return 0;\n}",
+    "officialcode": "#include <bits/stdc++.h>\nusing namespace std;\n#define int long long\nint n;\nint a[100001];\nint fenwick[100001];\n\nint query(int node) {\n    int ans=0;\n    for(int i = node; i > 0; i -= (i & -i)) {\n        ans += fenwick[i];\n    }\n    return ans;\n}\n\nvoid update(int node, int val) {\n    for(int i = node; i <= n; i += (i&-i)) {\n        fenwick[i] += val;\n    }\n}\n\nsigned main() {\n    cin >> n ;\n    for(int i = 1; i <= n; i++) {\n        cin >> a[i];\n    }\n    for(int i = 1; i <= n; i++) {\n        cout << query(a[i]-1) << \" \";\n        update(a[i], 1);\n    }\n    return 0;\n}",
+    "language": "cpp"
+  },
+  {
+    "title": "Even Numbers Step by 2",
+    "description": "Print all even numbers from 0 to 100, incrementing by 2 each time.",
+    "xp": 20,
+    "input": "none",
+    "output": "0 2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48 50 52 54 56 58 60 62 64 66 68 70 72 74 76 78 80 82 84 86 88 90 92 94 96 98 100 ",
+    "samplecode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int i;\n    for (i = 0; i <= 100; i++) {\n        cout << i << \" \";\n    }\n    return 0;\n}",
+    "officialcode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int i;\n    for (i = 0; i <= 100; i++) {\n        cout << i << \" \";\n        i++;\n    }\n    return 0;\n}",
+    "language": "cpp"
+  },
+  {
+    "title": "Print Even Numbers from Array",
+    "description": "Read n numbers and print only the even numbers in the order they appear in the input.",
+    "xp": 50,
+    "input": "6\n1 2 3 4 5 6",
+    "output": "2 4 6 ",
+    "samplecode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int x[105], n, i;\n    cin >> n;\n    for (i = 1; i <= n; i++) {\n        cin >> x[i];\n    }\n    int j;\n    for (j = n; j <= 1; j++) {\n        if (x[j] % 2 == 0) {\n            cout << x[j] << \" \";\n        }\n    }\n    return 0;\n}",
+    "officialcode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int x[105], n, i;\n    cin >> n;\n    for (i = 1; i <= n; i++) {\n        cin >> x[i];\n    }\n    int j;\n    for (j = 1; j <= n; j++) {\n        if (x[j] % 2 == 0) {\n            cout << x[j] << \" \";\n        }\n    }\n    return 0;\n}",
+    "language": "cpp"
+  }
+]

@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
   terminalStats: {
     solved: { type: Number, default: 0 }
   },
+  solvedIS: [{ type: mongoose.Schema.Types.ObjectId, ref: 'IS' }],
+  isStats: {
+    solved: { type: Number, default: 0 }
+  },
   simulations: [{
     examId: String,
     examTitle: String,

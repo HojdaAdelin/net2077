@@ -1,0 +1,496 @@
+.is-page {
+  min-height: 100vh;
+  padding: 1rem 0;
+  background: var(--bg-primary);
+}
+
+.is-container {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.is-header {
+  text-align: center;
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+}
+
+.is-header h1 {
+  color: var(--text-primary);
+  font-size: 2.5rem;
+  margin-bottom: 0;
+}
+
+.is-auth-notice {
+  text-align: center;
+  padding: 3rem;
+  background: var(--bg-card);
+  border-radius: 12px;
+  margin: 2rem auto;
+  max-width: 500px;
+  border: 1px solid var(--border);
+}
+
+.is-auth-notice h2 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.is-auth-notice p {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.is-loading {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.is-content {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+  height: calc(100vh - 120px);
+  max-width: none;
+  margin: 0 2rem;
+  padding: 0;
+}
+
+.is-sidebar {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.is-sidebar h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.is-problems-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.is-problem-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.is-problem-card:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--border-light);
+}
+
+.is-problem-card.active {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border-color: var(--accent-primary);
+}
+
+.is-problem-card.completed {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: var(--success);
+}
+
+.is-problem-card.completed.active {
+  background: var(--success);
+  color: white;
+}
+
+.is-problem-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.is-problem-number {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.is-problem-card.active .is-problem-number {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--bg-primary);
+}
+
+.is-problem-card.completed .is-problem-number {
+  background: var(--success);
+  color: white;
+}
+
+.is-problem-header h4 {
+  margin: 0;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.is-completed-icon {
+  color: var(--success);
+}
+
+.is-problem-card.active .is-completed-icon {
+  color: var(--bg-primary);
+}
+
+.is-problem-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.is-problem-card.active .is-problem-meta {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.is-problem-card.completed .is-problem-meta {
+  color: var(--text-secondary);
+}
+
+.is-problem-card.completed.active .is-problem-meta {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.is-problem-xp,
+.is-problem-lang {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.is-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto;
+}
+
+.is-problem-details {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.is-problem-details h2 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.is-problem-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.is-problem-left {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.is-problem-left > *:first-child {
+  margin-top: 0;
+}
+
+.is-problem-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.is-problem-right > *:first-child {
+  margin-top: 0;
+}
+
+.is-problem-description h3,
+.is-problem-example h3 {
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.is-problem-example {
+  margin-top: 0;
+}
+
+.is-problem-description {
+  margin-top: 0;
+}
+
+.is-problem-description > *:first-child,
+.is-problem-example > *:first-child {
+  margin-top: 0 !important;
+}
+
+.is-problem-description p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.is-example-section {
+  display: grid;
+  gap: 1rem;
+}
+
+.is-input-section,
+.is-output-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.is-input-section strong,
+.is-output-section strong {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.is-input-section code,
+.is-output-section code {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.5rem;
+  font-family: 'Courier New', monospace;
+  color: var(--text-primary);
+}
+
+.is-problem-reward {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.is-code-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.is-code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.is-code-header h3 {
+  color: var(--text-primary);
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.is-language-badge {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.is-warning {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid var(--warning);
+  color: var(--warning);
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.is-code-editor {
+  flex: 1;
+  min-height: 300px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.is-code-editor:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+.is-code-editor::placeholder {
+  color: var(--text-secondary);
+}
+
+.is-submit-section {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.is-submit-btn {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.is-submit-btn:hover:not(:disabled) {
+  background: var(--accent-secondary);
+  transform: translateY(-1px);
+}
+
+.is-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.is-result {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid;
+}
+
+.is-result.success {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.is-result.error {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.is-result-message {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.is-result-xp {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .is-content {
+    grid-template-columns: 1fr;
+    height: auto;
+    margin: 0 1rem;
+  }
+  
+  .is-sidebar {
+    order: 2;
+    max-height: 300px;
+  }
+  
+  .is-main {
+    order: 1;
+  }
+  
+  .is-code-editor {
+    min-height: 250px;
+  }
+  
+  .is-header {
+    padding: 0 1rem;
+  }
+  
+  .is-problem-info {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .is-page {
+    padding: 0.5rem 0;
+  }
+  
+  .is-header h1 {
+    font-size: 2rem;
+  }
+  
+  .is-problem-details,
+  .is-code-section {
+    padding: 1rem;
+  }
+  
+  .is-submit-section {
+    justify-content: stretch;
+  }
+  
+  .is-submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .is-content {
+    margin: 0 0.5rem;
+  }
+  
+  .is-header {
+    padding: 0 0.5rem;
+  }
+  
+  .is-problem-info {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .is-problem-right {
+    gap: 1rem;
+  }
+}

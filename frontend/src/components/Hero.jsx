@@ -45,46 +45,110 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="terminal-feature-card">
-          <div className="terminal-feature-content">
-            <div className="terminal-feature-badge">NEW FEATURE</div>
-            <h3 className="terminal-feature-title">Linux Terminal Practice</h3>
-            <p className="terminal-feature-description">
-              Practice real Linux commands in an interactive terminal environment. 
-              Master command-line skills with hands-on exercises.
-            </p>
-            {user ? (
-              <Link to="/terminal" className="btn btn-primary terminal-feature-btn">
-                Start Terminal Practice
-              </Link>
-            ) : (
-              <div className="terminal-feature-auth-required">
-                <p className="terminal-auth-text">Available for registered users only</p>
-                <Link to="/register" className="btn btn-secondary terminal-feature-btn">
-                  Register to Access
+        <div className="features-section">
+          <div className="feature-card terminal-feature-card">
+            <div className="terminal-feature-content">
+              <div className="terminal-feature-badge">NEW FEATURE</div>
+              <h3 className="terminal-feature-title">Linux Terminal Practice</h3>
+              <p className="terminal-feature-description">
+                Practice real Linux commands in an interactive terminal environment. 
+                Master command-line skills with hands-on exercises.
+              </p>
+              {user ? (
+                <Link to="/terminal" className="btn btn-primary terminal-feature-btn">
+                  Start Terminal Practice
                 </Link>
+              ) : (
+                <div className="terminal-feature-auth-required">
+                  <p className="terminal-auth-text">Available for registered users only</p>
+                  <Link to="/register" className="btn btn-secondary terminal-feature-btn">
+                    Register to Access
+                  </Link>
+                </div>
+              )}
+            </div>
+            <div className="terminal-feature-visual">
+              <div className="terminal-preview">
+                <div className="terminal-preview-header">
+                  <div className="terminal-preview-buttons">
+                    <span className="terminal-preview-button red"></span>
+                    <span className="terminal-preview-button yellow"></span>
+                    <span className="terminal-preview-button green"></span>
+                  </div>
+                  <div className="terminal-preview-title">user@net2077: ~</div>
+                </div>
+                <div className="terminal-preview-body">
+                  <div className="terminal-preview-line">
+                    <span className="terminal-preview-prompt">user@net2077:~$ </span>
+                    <span className="terminal-preview-command">uname -r</span>
+                  </div>
+                  <div className="terminal-preview-output">5.15.0-generic</div>
+                  <div className="terminal-preview-line">
+                    <span className="terminal-preview-prompt">user@net2077:~$ </span>
+                    <span className="terminal-preview-cursor">_</span>
+                  </div>
+                </div>
               </div>
-            )}
+            </div>
           </div>
-          <div className="terminal-feature-visual">
-            <div className="terminal-preview">
-              <div className="terminal-preview-header">
-                <div className="terminal-preview-buttons">
-                  <span className="terminal-preview-button red"></span>
-                  <span className="terminal-preview-button yellow"></span>
-                  <span className="terminal-preview-button green"></span>
+
+          <div className="feature-card is-feature-card">
+            <div className="is-feature-content">
+              <div className="is-feature-badge">NEW SECTION</div>
+              <h3 className="is-feature-title">IS/Debug Environment</h3>
+              <p className="is-feature-description">
+                Solve programming challenges and debug code errors. 
+                Improve your coding skills with hands-on C++ problems.
+              </p>
+              {user ? (
+                <Link to="/is" className="btn btn-primary is-feature-btn">
+                  Start Coding Challenge
+                </Link>
+              ) : (
+                <div className="is-feature-auth-required">
+                  <p className="is-auth-text">Available for registered users only</p>
+                  <Link to="/register" className="btn btn-secondary is-feature-btn">
+                    Register to Access
+                  </Link>
                 </div>
-                <div className="terminal-preview-title">user@net2077: ~</div>
-              </div>
-              <div className="terminal-preview-body">
-                <div className="terminal-preview-line">
-                  <span className="terminal-preview-prompt">user@net2077:~$ </span>
-                  <span className="terminal-preview-command">uname -r</span>
+              )}
+            </div>
+            <div className="is-feature-visual">
+              <div className="code-preview">
+                <div className="code-preview-header">
+                  <div className="code-preview-buttons">
+                    <span className="code-preview-button red"></span>
+                    <span className="code-preview-button yellow"></span>
+                    <span className="code-preview-button green"></span>
+                  </div>
+                  <div className="code-preview-title">main.cpp</div>
                 </div>
-                <div className="terminal-preview-output">5.15.0-generic</div>
-                <div className="terminal-preview-line">
-                  <span className="terminal-preview-prompt">user@net2077:~$ </span>
-                  <span className="terminal-preview-cursor">_</span>
+                <div className="code-preview-body">
+                  <div className="code-preview-line">
+                    <span className="code-line-number">1</span>
+                    <span className="code-content">#include &lt;iostream&gt;</span>
+                  </div>
+                  <div className="code-preview-line">
+                    <span className="code-line-number">2</span>
+                    <span className="code-content">using namespace std;</span>
+                  </div>
+                  <div className="code-preview-line">
+                    <span className="code-line-number">3</span>
+                    <span className="code-content">int main() {'{'}</span>
+                  </div>
+                  <div className="code-preview-line error-line">
+                    <span className="code-line-number">4</span>
+                    <span className="code-content">    cout &lt;&lt; "Hello"</span>
+                    <span className="error-indicator">❌</span>
+                  </div>
+                  <div className="code-preview-line">
+                    <span className="code-line-number">5</span>
+                    <span className="code-content">    return 0;</span>
+                  </div>
+                  <div className="code-preview-line">
+                    <span className="code-line-number">6</span>
+                    <span className="code-content">{'}'}</span>
+                  </div>
                 </div>
               </div>
             </div>

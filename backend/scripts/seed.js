@@ -3,15 +3,42 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { readFileSync } from 'fs';
+import readline from 'readline';
 import Question from '../models/Question.js';
 import Resource from '../models/Resource.js';
 import Exam from '../models/Exam.js';
 import Terminal from '../models/Terminal.js';
+import IS from '../models/IS.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 dotenv.config({ path: join(__dirname, '../../.env') });
+
+// Create readline interface for interactive input
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+const askQuestion = (question) => {
+  return new Promise((resolve) => {
+    rl.question(question, resolve);
+  });
+};
+
+const showMenu = () => {
+  console.log('\n🔧 Database Sync Menu');
+  console.log('=====================');
+  console.log('1. Questions');
+  console.log('2. Resources');
+  console.log('3. Exams');
+  console.log('4. Terminal Questions');
+  console.log('5. IS Problems');
+  console.log('6. All Categories');
+  console.log('0. Exit');
+  console.log('=====================');
+};
 
 const seedDatabase = async () => {
   try {
@@ -26,6 +53,7 @@ const seedDatabase = async () => {
     console.log('[✔] Connected to MongoDB');
     console.log(`[✔] Database: ${mongoose.connection.db.databaseName}`);
 
+    // Load all data files
     const questionsData = JSON.parse(
       readFileSync(join(__dirname, '../data/main_questions.json'), 'utf-8')
     );
@@ -38,23 +66,81 @@ const seedDatabase = async () => {
     const terminalData = JSON.parse(
       readFileSync(join(__dirname, '../data/terminal.json'), 'utf-8')
     );
+    const isData = JSON.parse(
+      readFileSync(join(__dirname, '../data/is.json'), 'utf-8')
+    );
 
-    console.log('\n📊 Syncing Questions...');
-    await syncQuestions(questionsData);
-
-    console.log('\n📚 Syncing Resources...');
-    await syncResources(resourcesData);
-
-    console.log('\n📝 Syncing Exams...');
-    await syncExams(examsData);
-
-    console.log('\n💻 Syncing Terminal Questions...');
-    await syncTerminalQuestions(terminalData);
-
-    console.log('\n🎉 Database synced successfully!');
+    let continueMenu = true;
+    
+    while (continueMenu) {
+      showMenu();
+      const choice = await askQuestion('Select an option (0-6): ');
+      
+      switch (choice.trim()) {
+        case '1':
+          console.log('\n📊 Syncing Questions...');
+          await syncQuestions(questionsData);
+          break;
+          
+        case '2':
+          console.log('\n📚 Syncing Resources...');
+          await syncResources(resourcesData);
+          break;
+          
+        case '3':
+          console.log('\n📝 Syncing Exams...');
+          await syncExams(examsData);
+          break;
+          
+        case '4':
+          console.log('\n💻 Syncing Terminal Questions...');
+          await syncTerminalQuestions(terminalData);
+          break;
+          
+        case '5':
+          console.log('\n🔧 Syncing IS Problems...');
+          await syncISProblems(isData);
+          break;
+          
+        case '6':
+          console.log('\n🔄 Syncing All Categories...');
+          console.log('\n📊 Syncing Questions...');
+          await syncQuestions(questionsData);
+          console.log('\n📚 Syncing Resources...');
+          await syncResources(resourcesData);
+          console.log('\n📝 Syncing Exams...');
+          await syncExams(examsData);
+          console.log('\n💻 Syncing Terminal Questions...');
+          await syncTerminalQuestions(terminalData);
+          console.log('\n🔧 Syncing IS Problems...');
+          await syncISProblems(isData);
+          console.log('\n🎉 All categories synced successfully!');
+          break;
+          
+        case '0':
+          console.log('\n👋 Goodbye!');
+          continueMenu = false;
+          break;
+          
+        default:
+          console.log('\n❌ Invalid option. Please select 0-6.');
+          continue;
+      }
+      
+      if (continueMenu && choice !== '0') {
+        const continueChoice = await askQuestion('\nDo you want to sync another category? (y/n): ');
+        if (continueChoice.toLowerCase() !== 'y' && continueChoice.toLowerCase() !== 'yes') {
+          continueMenu = false;
+          console.log('\n👋 Goodbye!');
+        }
+      }
+    }
+    
+    rl.close();
     process.exit(0);
   } catch (error) {
     console.error('[✘] Error seeding database:', error);
+    rl.close();
     process.exit(1);
   }
 };
@@ -220,3 +306,41 @@ const syncTerminalQuestions = async (terminalData) => {
 };
 
 seedDatabase();
+const syncISProblems = async (isData) => {
+  const jsonISProblems = new Map();
+  isData.forEach(p => {
+    jsonISProblems.set(p.title, p);
+  });
+
+  const existingISProblems = await IS.find({});
+  const existingMap = new Map();
+  existingISProblems.forEach(p => {
+    existingMap.set(p.title, p);
+  });
+
+  let added = 0;
+  let updated = 0;
+  let deleted = 0;
+
+  for (const [title, problemData] of jsonISProblems) {
+    if (existingMap.has(title)) {
+      const existing = existingMap.get(title);
+      await IS.findByIdAndUpdate(existing._id, problemData);
+      updated++;
+    } else {
+      await IS.create(problemData);
+      added++;
+    }
+  }
+
+  for (const [title, existingProblem] of existingMap) {
+    if (!jsonISProblems.has(title)) {
+      await IS.findByIdAndDelete(existingProblem._id);
+      deleted++;
+      console.log(`   [-]  Deleted: "${title}"`);
+    }
+  }
+
+  console.log(`   [✔] Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
+  console.log(`   🔧 Total IS problems in DB: ${jsonISProblems.size}`);
+};
