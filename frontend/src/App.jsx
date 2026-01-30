@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { MessageProvider } from './context/MessageContext';
+import { ConfirmProvider } from './context/ConfirmContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SupportButton from './components/SupportButton';
@@ -26,28 +28,32 @@ export default function App() {
     <ThemeProvider>
       <LanguageProvider>
         <AuthProvider>
-          <BrowserRouter>
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/grile" element={<Grile />} />
-              <Route path="/grile/:type/:mode" element={<Quiz />} />
-              <Route path="/exam-selection" element={<ExamSelection />} />
-              <Route path="/exam/:examId" element={<Quiz isExam={true} />} />
-              <Route path="/resurse" element={<Resurse />} />
-              <Route path="/roadmap/:title" element={<RoadmapPage />} />
-              <Route path="/progress" element={<Progress />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/updates" element={<Updates />} />
-              <Route path="/leaderboard" element={<Leaderboard />} />
-              <Route path="/lab" element={<Lab />} />
-              <Route path="/terminal" element={<Terminal />} />
-              <Route path="/is" element={<IS />} />
-            </Routes>
-            <Footer />
-            <SupportButton />
-          </BrowserRouter>
+          <MessageProvider>
+            <ConfirmProvider>
+              <BrowserRouter>
+                <Navbar />
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/grile" element={<Grile />} />
+                  <Route path="/grile/:type/:mode" element={<Quiz />} />
+                  <Route path="/exam-selection" element={<ExamSelection />} />
+                  <Route path="/exam/:examId" element={<Quiz isExam={true} />} />
+                  <Route path="/resurse" element={<Resurse />} />
+                  <Route path="/roadmap/:title" element={<RoadmapPage />} />
+                  <Route path="/progress" element={<Progress />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/updates" element={<Updates />} />
+                  <Route path="/leaderboard" element={<Leaderboard />} />
+                  <Route path="/lab" element={<Lab />} />
+                  <Route path="/terminal" element={<Terminal />} />
+                  <Route path="/is" element={<IS />} />
+                </Routes>
+                <Footer />
+                <SupportButton />
+              </BrowserRouter>
+            </ConfirmProvider>
+          </MessageProvider>
         </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>

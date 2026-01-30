@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { BotMessageSquare, Lock, X } from 'lucide-react';
+import { CircleAlert, Lock, X } from 'lucide-react';
 import './SupportButton.css';
 
 const SupportButton = () => {
@@ -32,7 +32,7 @@ const SupportButton = () => {
     if (!isDesktop || !user) return;
 
     const showPopupTimer = () => {
-      setShowPopup(true);
+      setShowPopup(false);
       setTimeout(() => {
         setShowPopup(false);
       }, 5000); // Hide after 5 seconds
@@ -105,7 +105,7 @@ const SupportButton = () => {
         onClick={() => setIsOpen(true)}
         title="Support"
       >
-        <BotMessageSquare size={36} />
+        <CircleAlert size={32} />
       </button>
 
       {showPopup && (

@@ -3,24 +3,32 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
-import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon } from 'lucide-react';
+import { useMessage } from '../context/MessageContext';
+import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox } from 'lucide-react';
+import { API_URL } from '../config';
 import StreakIndicator from './StreakIndicator';
+import InboxDropdown from './InboxDropdown';
 import '../styles/Navbar.css';
 
 export default function Navbar() {
   const { user, logout } = useContext(AuthContext);
   const { language, changeLanguage, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
+  const { showMessage } = useMessage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [inboxDropdownOpen, setInboxDropdownOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const dropdownRef = useRef(null);
   const profileDropdownRef = useRef(null);
+  const inboxRef = useRef(null);
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const closeMobileMenu = () => setMobileMenuOpen(false);
   const toggleLangDropdown = () => setLangDropdownOpen(!langDropdownOpen);
   const toggleProfileDropdown = () => setProfileDropdownOpen(!profileDropdownOpen);
+  const toggleInboxDropdown = () => setInboxDropdownOpen(!inboxDropdownOpen);
 
   const handleLanguageChange = (lang) => {
     changeLanguage(lang);
@@ -33,6 +41,36 @@ export default function Navbar() {
     closeMobileMenu();
   };
 
+  const handleMessageClick = (message) => {
+    showMessage(message);
+    // Refresh unread count after viewing message
+    if (!message.isRead) {
+      fetchUnreadCount();
+    }
+  };
+
+  const fetchUnreadCount = async () => {
+    if (!user) return;
+    
+    try {
+      const response = await fetch(`${API_URL}/inbox/unread-count`, {
+        credentials: 'include'
+      });
+      const data = await response.json();
+      setUnreadCount(data.unreadCount);
+    } catch (error) {
+      console.error('Error fetching unread count:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUnreadCount();
+    
+    // Refresh unread count every 30 seconds
+    const interval = setInterval(fetchUnreadCount, 30000);
+    return () => clearInterval(interval);
+  }, [user]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -40,6 +78,9 @@ export default function Navbar() {
       }
       if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
         setProfileDropdownOpen(false);
+      }
+      if (inboxRef.current && !inboxRef.current.contains(event.target)) {
+        setInboxDropdownOpen(false);
       }
     };
 
@@ -117,6 +158,19 @@ export default function Navbar() {
                       </button>
                     </div>
                   )}
+                </div>
+                <div className="inbox-container" ref={inboxRef}>
+                  <button className="inbox-btn" onClick={toggleInboxDropdown} title="Inbox">
+                    <Inbox size={18} />
+                    {unreadCount > 0 && (
+                      <span className="inbox-badge">{unreadCount > 99 ? '99+' : unreadCount}</span>
+                    )}
+                  </button>
+                  <InboxDropdown 
+                    isOpen={inboxDropdownOpen}
+                    onClose={() => setInboxDropdownOpen(false)}
+                    onMessageClick={handleMessageClick}
+                  />
                 </div>
                 <StreakIndicator streak={user.streak} />
               </>

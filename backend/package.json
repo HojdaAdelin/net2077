@@ -8,7 +8,8 @@
     "seed": "node scripts/seed.js",
     "clear-db": "node scripts/clear-db.js",
     "test-db": "node scripts/test-connection.js",
-    "support": "node scripts/manageSupportRequests.js"
+    "support": "node scripts/manageSupportRequests.js",
+    "send-msg": "node scripts/sendInboxMessage.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

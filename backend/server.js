@@ -13,6 +13,7 @@ import examRoutes from './routes/examRoutes.js';
 import leaderboardRoutes from './routes/leaderboardRoutes.js';
 import supportRoutes from './routes/support.js';
 import terminalRoutes from './routes/terminalRoutes.js';
+import inboxRoutes from './routes/inboxRoutes.js';
 import isRoutes from './routes/isRoutes.js';
 
 import { existsSync } from 'fs';
@@ -86,6 +87,7 @@ app.use('/api/exams', examRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/support', supportRoutes);
 app.use('/api/terminal', terminalRoutes);
+app.use('/api/inbox', inboxRoutes);
 app.use('/api/is', isRoutes);
 
 
