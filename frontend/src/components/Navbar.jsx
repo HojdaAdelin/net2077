@@ -4,8 +4,8 @@ import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
+import { useInbox } from '../context/InboxContext';
 import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox } from 'lucide-react';
-import { API_URL } from '../config';
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
 import '../styles/Navbar.css';
@@ -15,11 +15,23 @@ export default function Navbar() {
   const { language, changeLanguage, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const { showMessage } = useMessage();
+  
+  // Try to use InboxContext, but provide fallback if not available
+  let unreadCount = 0;
+  let refreshUnreadCount = () => {};
+  
+  try {
+    const inboxContext = useInbox();
+    unreadCount = inboxContext.unreadCount;
+    refreshUnreadCount = inboxContext.refreshUnreadCount;
+  } catch (error) {
+    // InboxProvider not available, use default values
+  }
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [inboxDropdownOpen, setInboxDropdownOpen] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
   const dropdownRef = useRef(null);
   const profileDropdownRef = useRef(null);
   const inboxRef = useRef(null);
@@ -45,31 +57,9 @@ export default function Navbar() {
     showMessage(message);
     // Refresh unread count after viewing message
     if (!message.isRead) {
-      fetchUnreadCount();
+      refreshUnreadCount();
     }
   };
-
-  const fetchUnreadCount = async () => {
-    if (!user) return;
-    
-    try {
-      const response = await fetch(`${API_URL}/inbox/unread-count`, {
-        credentials: 'include'
-      });
-      const data = await response.json();
-      setUnreadCount(data.unreadCount);
-    } catch (error) {
-      console.error('Error fetching unread count:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchUnreadCount();
-    
-    // Refresh unread count every 30 seconds
-    const interval = setInterval(fetchUnreadCount, 30000);
-    return () => clearInterval(interval);
-  }, [user]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

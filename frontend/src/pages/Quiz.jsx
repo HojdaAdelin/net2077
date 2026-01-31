@@ -723,9 +723,9 @@ export default function Quiz({ isExam = false }) {
             <div className="exam-banner">
               <div className="exam-banner-header">
                 <div>
-                  <p className="exam-banner-phase">{examMeta.phase} phase</p>
                   <h2>{examMeta.title}</h2>
                   <p className="exam-banner-description">{examMeta.description}</p>
+                  <p className="exam-banner-phase">{examMeta.phase} phase</p>
                 </div>
               </div>
               <div className="exam-banner-meta">
@@ -747,21 +747,21 @@ export default function Quiz({ isExam = false }) {
 
           {isExam && !examStarted ? (
             <div className="exam-prep">
-              <h2>Ready to start the exam?</h2>
+              <h2>Ready to start the test?</h2>
               <p>
                 You will have {examDurationMinutes} minutes to solve {totalExamQuestions} questions. 
                 Once you submit an answer it is locked, and incorrect answers cannot be revisited.
               </p>
               <ul className="exam-prep-list">
-                <li>The timer starts as soon as you press Start Exam</li>
+                <li>The timer starts as soon as you press Start Test</li>
                 <li>Navigate forward carefully—wrong answers are locked</li>
-                <li>The exam ends when you submit all answers or time runs out</li>
+                <li>The test ends when you submit all answers or time runs out</li>
               </ul>
               <button 
                 onClick={handleStartExam}
                 className="btn btn-primary"
               >
-                Start Exam
+                Start Test
               </button>
             </div>
           ) : (

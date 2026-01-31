@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Trash2, Mail, MailOpen } from 'lucide-react';
 import { useConfirm } from '../context/ConfirmContext';
+import { useInbox } from '../context/InboxContext';
 import { API_URL } from '../config';
 import '../styles/InboxDropdown.css';
 
@@ -9,6 +10,16 @@ export default function InboxDropdown({ isOpen, onClose, onMessageClick }) {
   const [loading, setLoading] = useState(false);
   const { showConfirm } = useConfirm();
   const dropdownRef = useRef(null);
+  
+  // Try to use InboxContext, but provide fallback if not available
+  let refreshUnreadCount = () => {};
+  
+  try {
+    const inboxContext = useInbox();
+    refreshUnreadCount = inboxContext.refreshUnreadCount;
+  } catch (error) {
+    // InboxProvider not available, use default function
+  }
 
   useEffect(() => {
     if (isOpen) {
@@ -91,6 +102,9 @@ export default function InboxDropdown({ isOpen, onClose, onMessageClick }) {
       });
       
       setMessages(prev => prev.filter(msg => msg._id !== messageId));
+      
+      // Refresh unread count after deleting message
+      refreshUnreadCount();
     } catch (error) {
       console.error('Error deleting message:', error);
     }
