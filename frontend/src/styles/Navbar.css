@@ -250,7 +250,8 @@
   margin-top: 4px;
 }
 
-.profile-dropdown button {
+.profile-dropdown button,
+.profile-dropdown a {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -264,9 +265,11 @@
   font-size: 14px;
   transition: all 0.2s;
   border-radius: 8px;
+  text-decoration: none;
 }
 
-.profile-dropdown button:hover {
+.profile-dropdown button:hover,
+.profile-dropdown a:hover {
   background: var(--bg-secondary);
   color: var(--text-primary);
 }

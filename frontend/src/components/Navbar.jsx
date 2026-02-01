@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
 import { useInbox } from '../context/InboxContext';
-import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox } from 'lucide-react';
+import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox, UserCircle } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
 import '../styles/Navbar.css';
@@ -142,6 +142,10 @@ export default function Navbar() {
                   </button>
                   {profileDropdownOpen && (
                     <div className="profile-dropdown">
+                      <Link to={`/profile/${user.username}`} onClick={() => setProfileDropdownOpen(false)}>
+                        <UserCircle size={16} />
+                        Profile
+                      </Link>
                       <button onClick={handleLogout}>
                         <LogOut size={16} />
                         {t('navbar.logout')}

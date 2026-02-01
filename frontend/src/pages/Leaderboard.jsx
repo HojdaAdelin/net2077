@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Trophy, Medal, Award, Crown } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Trophy, Medal, Award, Crown, User } from 'lucide-react';
 import { getLeaderboard } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
 import '../styles/Leaderboard.css';
@@ -106,7 +107,22 @@ export default function Leaderboard() {
                   </div>
                   
                   <div className="user-info">
-                    <div className="username">{user.username}</div>
+                    <div className="username">
+                      <Link 
+                        to={`/profile/${user.username}`} 
+                        className="leaderboard-username-link"
+                        title={`View ${user.username}'s profile`}
+                      >
+                        {user.username}
+                      </Link>
+                      <Link 
+                        to={`/profile/${user.username}`} 
+                        className="leaderboard-profile-link"
+                        title={`View ${user.username}'s profile`}
+                      >
+                        <User size={14} />
+                      </Link>
+                    </div>
                     <div className="level">{t('leaderboard.level')} {user.level}</div>
                   </div>
                   
