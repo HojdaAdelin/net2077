@@ -205,14 +205,14 @@ export default function Hero() {
           <div className="new-exams-table">
             <div className="new-exam-row">
               <div className="new-tag">NEW</div>
-              <Link to="/exam/acadnet2024county_11_12" className="exam-name">
-                AcadNet 2024 - County Phase XI-XII
+              <Link to="/exam/acadnet2026local_11_12" className="exam-name">
+                AcadNet 2026 - Local Phase XI-XII
               </Link>
             </div>
             <div className="new-exam-row">
               <div className="new-tag">NEW</div>
-              <Link to="/exam/acadnet2024county_9_10" className="exam-name">
-                AcadNet 2024 - County Phase IX-X
+              <Link to="/exam/acadnet2024county_11_12" className="exam-name">
+                AcadNet 2024 - County Phase XI-XII
               </Link>
             </div>
             <div className="new-exam-row">

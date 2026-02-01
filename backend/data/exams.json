@@ -160,6 +160,16 @@
     "phase": "county"
   },
   {
+    "id": "acadnet2026local_11_12",
+    "title": "Acadnet 2026 - Local Phase XI-XII",
+    "description": "Official local phase examination for Acadnet 2026",
+    "duration": 60,
+    "totalPoints": 100,
+    "tag": "ACADNET_2026_LOCAL_IX_X",
+    "year": 2026,
+    "phase": "local"
+  },
+  {
     "id": "linux_security",
     "title": "Linux - Security",
     "description": "NET2077 exam",
