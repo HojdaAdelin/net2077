@@ -3,24 +3,44 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
-import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon } from 'lucide-react';
+import { useMessage } from '../context/MessageContext';
+import { useInbox } from '../context/InboxContext';
+import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
+import InboxDropdown from './InboxDropdown';
 import '../styles/Navbar.css';
 
 export default function Navbar() {
   const { user, logout } = useContext(AuthContext);
   const { language, changeLanguage, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
+  const { showMessage } = useMessage();
+  
+  // Try to use InboxContext, but provide fallback if not available
+  let unreadCount = 0;
+  let refreshUnreadCount = () => {};
+  
+  try {
+    const inboxContext = useInbox();
+    unreadCount = inboxContext.unreadCount;
+    refreshUnreadCount = inboxContext.refreshUnreadCount;
+  } catch (error) {
+    // InboxProvider not available, use default values
+  }
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [inboxDropdownOpen, setInboxDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const profileDropdownRef = useRef(null);
+  const inboxRef = useRef(null);
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const closeMobileMenu = () => setMobileMenuOpen(false);
   const toggleLangDropdown = () => setLangDropdownOpen(!langDropdownOpen);
   const toggleProfileDropdown = () => setProfileDropdownOpen(!profileDropdownOpen);
+  const toggleInboxDropdown = () => setInboxDropdownOpen(!inboxDropdownOpen);
 
   const handleLanguageChange = (lang) => {
     changeLanguage(lang);
@@ -33,6 +53,14 @@ export default function Navbar() {
     closeMobileMenu();
   };
 
+  const handleMessageClick = (message) => {
+    showMessage(message);
+    // Refresh unread count after viewing message
+    if (!message.isRead) {
+      refreshUnreadCount();
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -40,6 +68,9 @@ export default function Navbar() {
       }
       if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
         setProfileDropdownOpen(false);
+      }
+      if (inboxRef.current && !inboxRef.current.contains(event.target)) {
+        setInboxDropdownOpen(false);
       }
     };
 
@@ -117,6 +148,19 @@ export default function Navbar() {
                       </button>
                     </div>
                   )}
+                </div>
+                <div className="inbox-container" ref={inboxRef}>
+                  <button className="inbox-btn" onClick={toggleInboxDropdown} title="Inbox">
+                    <Inbox size={18} />
+                    {unreadCount > 0 && (
+                      <span className="inbox-badge">{unreadCount > 99 ? '99+' : unreadCount}</span>
+                    )}
+                  </button>
+                  <InboxDropdown 
+                    isOpen={inboxDropdownOpen}
+                    onClose={() => setInboxDropdownOpen(false)}
+                    onMessageClick={handleMessageClick}
+                  />
                 </div>
                 <StreakIndicator streak={user.streak} />
               </>

@@ -291,6 +291,16 @@
     justify-content: space-between;
   }
   
+  .inbox-container {
+    order: 2;
+    width: 100%;
+  }
+  
+  .inbox-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
   .lang-dropdown,
   .profile-dropdown {
     position: static;
@@ -381,4 +391,46 @@
 .theme-btn:hover {
   color: var(--text-primary);
   border-color: var(--border-light);
+}
+
+.inbox-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.inbox-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-light);
+  background: var(--bg-secondary);
+}
+
+.inbox-container {
+  position: relative;
+}
+
+.inbox-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 5px;
+  border-radius: 10px;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }

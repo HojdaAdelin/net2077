@@ -46,6 +46,9 @@ export default function Updates() {
             },
             {
               text: 'Terminal based questions'
+            },
+            {
+              text: 'IS/Debug section'
             }
           ]
         },

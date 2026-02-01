@@ -369,11 +369,11 @@ export default function Grile() {
       loading: dailyChallengeLoading
     }] : []),
     { 
-      title: 'Examination Subjects', 
-      desc: 'Official examination practice with timer and scoring',
+      title: 'Tests', 
+      desc: 'Official tests practice with timer and scoring',
       type: 'exam',
       isExam: true,
-      examTag: 'EXAM'
+      examTag: 'TEST'
     }
   ];
 
