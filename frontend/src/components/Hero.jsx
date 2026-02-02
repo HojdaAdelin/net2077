@@ -211,8 +211,8 @@ export default function Hero() {
             </div>
             <div className="new-exam-row">
               <div className="new-tag">NEW</div>
-              <Link to="/exam/acadnet2024county_11_12" className="exam-name">
-                AcadNet 2024 - County Phase XI-XII
+              <Link to="/exam/misc_linux" className="exam-name">
+                Linux - Misc
               </Link>
             </div>
             <div className="new-exam-row">

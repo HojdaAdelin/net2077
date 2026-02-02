@@ -188,5 +188,15 @@
     "tag": "LINUX_PERMISSIONS",
     "year": 2025,
     "phase": "county"
+  },
+  {
+    "id": "misc_linux",
+    "title": "Linux - Misc",
+    "description": "NET2077 exam",
+    "duration": 10,
+    "totalPoints": 43,
+    "tag": "LINUX_MISC",
+    "year": 2026,
+    "phase": "county"
   }
 ]
