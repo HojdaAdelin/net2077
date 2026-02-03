@@ -160,6 +160,16 @@
     "phase": "county"
   },
   {
+    "id": "acadnet2023national_11_12",
+    "title": "Acadnet 2023 - National Phase XI-XII",
+    "description": "Official national phase examination for Acadnet 2023",
+    "duration": 60,
+    "totalPoints": 100,
+    "tag": "ACADNET_2023_NATIONAL_XI_XII",
+    "year": 2023,
+    "phase": "national"
+  },
+  {
     "id": "acadnet2026local_11_12",
     "title": "Acadnet 2026 - Local Phase XI-XII",
     "description": "Official local phase examination for Acadnet 2026",
