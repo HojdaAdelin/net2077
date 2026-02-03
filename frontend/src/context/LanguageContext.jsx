@@ -14,7 +14,7 @@ const translations = {
   en: {
     navbar: {
       home: 'Home',
-      questions: 'Questions',
+      questions: 'Practice',
       resources: 'Resources',
       progress: 'Progress',
       leaderboard: 'Leaderboard',
@@ -152,7 +152,7 @@ const translations = {
   ro: {
     navbar: {
       home: 'Acasă',
-      questions: 'Întrebări',
+      questions: 'Practică',
       resources: 'Resurse',
       progress: 'Progres',
       leaderboard: 'Clasament',
