@@ -214,7 +214,6 @@ export default function Hero() {
               <Link to="/exam/misc_linux" className="exam-name">
                 Linux - Misc
               </Link>
-              
             </div>
             <div className="new-exam-row">
               <div className="new-tag">NEW</div>
