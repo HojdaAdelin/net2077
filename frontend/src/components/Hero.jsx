@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getStats } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
 import { AuthContext } from '../context/AuthContext';
-import { Check, X } from 'lucide-react';
+import { Check, X, Terminal, Network, Code, BookOpen, Play, Zap, Sparkles, Clock, User, UserPlus, BarChart3, Trophy, Calendar, Monitor } from 'lucide-react';
 import '../styles/Hero.css';
 
 export default function Hero() {
@@ -14,6 +14,16 @@ export default function Hero() {
   useEffect(() => {
     getStats().then(setStats).catch(() => {});
   }, []);
+
+  const scrollToNewExams = () => {
+    const newExamsSection = document.querySelector('.hero-exams-showcase');
+    if (newExamsSection) {
+      newExamsSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+  };
 
   return (
     <div className="hero">
@@ -27,6 +37,10 @@ export default function Hero() {
           <div className="hero-cta">
             <Link to="/grile" className="btn btn-primary">{t('hero.browseQuestions')}</Link>
             <Link to="/resurse" className="btn btn-secondary">{t('hero.browseResources')}</Link>
+            <button onClick={scrollToNewExams} className="btn btn-accent">
+              <Sparkles size={16} />
+              New Tests
+            </button>
           </div>
         </div>
 
@@ -155,43 +169,88 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="start-here-section">
-          <h2 className="start-here-title">{t('hero.startHere')}</h2>
+        <div className="hero-journey-section">
+          <h2 className="hero-journey-title">{t('hero.startHere')}</h2>
           
-          <div className="learning-paths-grid">
-            <div className="path-row">
-              <div className="path-category">
-                <h3>Linux</h3>
-              </div>
-              <div className="path-options">
-                <Link to="/roadmap/Linux" className="path-option roadmap-option">
-                  <span className="option-label">{t('hero.linuxRoadmap')}</span>
-                </Link>
-                <div className="path-exams">
-                  <Link to="/exam/easy_linux" className="path-option exam-option">
-                    <span className="option-label">{t('hero.easyExam')}</span>
+          <div className="hero-bubbles-container">
+            <div className="hero-bubble linux-bubble">
+              <div className="bubble-glow linux-glow"></div>
+              <div className="bubble-content">
+                <div className="bubble-icon">
+                  <Terminal size={32} />
+                </div>
+                <h3>Linux Administration</h3>
+                <p>Master command line and system administration with hands-on practice</p>
+                <div className="bubble-stats">
+                  <span className="stat-badge">50+ Commands</span>
+                  <span className="stat-badge">Interactive Terminal</span>
+                </div>
+                <div className="bubble-actions">
+                  <Link to="/roadmap/Linux" className="bubble-primary-btn">
+                    <BookOpen size={16} />
+                    Start Learning
                   </Link>
-                  <Link to="/exam/medium_linux" className="path-option exam-option">
-                    <span className="option-label">{t('hero.mediumExam')}</span>
+                  <Link to="/terminal" className="bubble-feature-btn">
+                    <Play size={16} />
+                    Try Terminal
                   </Link>
+                </div>
+                <div className="bubble-exams">
+                  <Link to="/exam/easy_linux" className="exam-bubble easy">Easy</Link>
+                  <Link to="/exam/medium_linux" className="exam-bubble medium">Medium</Link>
                 </div>
               </div>
             </div>
 
-            <div className="path-row">
-              <div className="path-category">
-                <h3>Network</h3>
-              </div>
-              <div className="path-options">
-                <Link to="/roadmap/Network" className="path-option roadmap-option">
-                  <span className="option-label">{t('hero.networkRoadmap')}</span>
-                </Link>
-                <div className="path-exams">
-                  <Link to="/exam/easy_network" className="path-option exam-option">
-                    <span className="option-label">{t('hero.easyExam')}</span>
+            <div className="hero-bubble network-bubble">
+              <div className="bubble-glow network-glow"></div>
+              <div className="bubble-content">
+                <div className="bubble-icon">
+                  <Network size={32} />
+                </div>
+                <h3>Network Engineering</h3>
+                <p>Build and secure modern network infrastructures from basics to advanced</p>
+                <div className="bubble-stats">
+                  <span className="stat-badge">Network Protocols</span>
+                  <span className="stat-badge">Security Concepts</span>
+                </div>
+                <div className="bubble-actions">
+                  <Link to="/roadmap/Network" className="bubble-primary-btn">
+                    <BookOpen size={16} />
+                    Start Learning
                   </Link>
-                  <Link to="/exam/medium_network" className="path-option exam-option">
-                    <span className="option-label">{t('hero.mediumExam')}</span>
+                  <Link to="/grile" className="bubble-feature-btn">
+                    <Zap size={16} />
+                    Practice Quiz
+                  </Link>
+                </div>
+                <div className="bubble-exams">
+                  <Link to="/exam/easy_network" className="exam-bubble easy">Easy</Link>
+                  <Link to="/exam/medium_network" className="exam-bubble medium">Medium</Link>
+                </div>
+              </div>
+            </div>
+
+            <div className="hero-bubble coding-bubble">
+              <div className="bubble-glow coding-glow"></div>
+              <div className="bubble-content">
+                <div className="bubble-icon">
+                  <Code size={32} />
+                </div>
+                <h3>Programming & Debug</h3>
+                <p>Develop problem-solving skills and debug real-world coding challenges</p>
+                <div className="bubble-stats">
+                  <span className="stat-badge">C++ Problems</span>
+                  <span className="stat-badge">Real-time Testing</span>
+                </div>
+                <div className="bubble-actions">
+                  <Link to="/is" className="bubble-primary-btn">
+                    <Code size={16} />
+                    Start Coding
+                  </Link>
+                  <Link to="/grile" className="bubble-feature-btn">
+                    <BookOpen size={16} />
+                    Theory
                   </Link>
                 </div>
               </div>
@@ -199,110 +258,185 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="new-exams-section">
-          <h2 className="new-exams-title">{t('hero.newExams')}</h2>
+        <div className="hero-exams-showcase">
+          <div className="showcase-header">
+            <div className="showcase-icon">
+              <Sparkles size={24} />
+            </div>
+            <h2 className="showcase-title">{t('hero.newExams')}</h2>
+            <div className="showcase-pulse"></div>
+          </div>
           
-          <div className="new-exams-table">
-            <div className="new-exam-row">
-              <div className="new-tag">NEW</div>
-              <Link to="/exam/acadnet2026local_11_12" className="exam-name">
-                AcadNet 2026 - Local Phase XI-XII
+          <div className="exams-carousel">
+            <div className="exam-card featured">
+              <div className="exam-glow"></div>
+              <div className="exam-badge">
+                <Clock size={12} />
+                <span>FRESH</span>
+              </div>
+              <Link to="/exam/acadnet2026local_11_12" className="exam-content">
+                <div className="exam-title">AcadNet 2026</div>
+                <div className="exam-subtitle">Local Phase XI-XII</div>
               </Link>
             </div>
-            <div className="new-exam-row">
-              <div className="new-tag">NEW</div>
-              <Link to="/exam/misc_linux" className="exam-name">
-                Linux - Misc
+
+            <div className="exam-card">
+              <div className="exam-glow"></div>
+              <div className="exam-badge">
+                <Clock size={12} />
+                <span>NEW</span>
+              </div>
+              <Link to="/exam/misc_linux" className="exam-content">
+                <div className="exam-title">Linux</div>
+                <div className="exam-subtitle">Misc</div>
               </Link>
             </div>
-            <div className="new-exam-row">
-              <div className="new-tag">NEW</div>
-              <Link to="/exam/acadnet2023national_11_12" className="exam-name">
-                AcadNet 2023 - National Phase XI-XII
+
+            <div className="exam-card">
+              <div className="exam-glow"></div>
+              <div className="exam-badge">
+                <Clock size={12} />
+                <span>NEW</span>
+              </div>
+              <Link to="/exam/acadnet2023national_11_12" className="exam-content">
+                <div className="exam-title">AcadNet 2023</div>
+                <div className="exam-subtitle">National Phase XI-XII</div>
               </Link>
             </div>
-            <div className="new-exam-row">
-              <div className="new-tag">NEW</div>
-              <Link to="/exam/linux_permissions" className="exam-name">
-                Linux - Permissions
+
+            <div className="exam-card">
+              <div className="exam-glow"></div>
+              <div className="exam-badge">
+                <Clock size={12} />
+                <span>NEW</span>
+              </div>
+              <Link to="/exam/linux_permissions" className="exam-content">
+                <div className="exam-title">Linux</div>
+                <div className="exam-subtitle">Permissions</div>
               </Link>
             </div>
           </div>
         </div>
 
         {!user && (
-          <div className="benefits-section">
-            <h2 className="benefits-title">{t('hero.benefitsTitle')}</h2>
+          <div className="hero-benefits-showcase">
+            <div className="benefits-header-section">
+              <div className="benefits-icon-wrapper">
+                <UserPlus size={32} className="benefits-main-icon" />
+                <div className="benefits-icon-glow"></div>
+              </div>
+              <h2 className="benefits-showcase-title">{t('hero.benefitsTitle')}</h2>
+              
+            </div>
             
-            <div className="benefits-table">
-              <div className="benefits-header">
-                <div className="benefit-feature"></div>
-                <div className="benefit-column">{t('hero.guest')}</div>
-                <div className="benefit-column">{t('hero.user')}</div>
-              </div>
-              
-              <div className="benefits-row">
-                <div className="benefit-feature">{t('hero.accessQuestions')}</div>
-                <div className="benefit-status">
-                  <Check size={20} className="check-icon" />
+            <div className="benefits-comparison-cards">
+              <div className="comparison-card guest-card">
+                <div className="card-header">
+                  <div className="card-icon">
+                    <User size={24} />
+                  </div>
+                  <h3>{t('hero.guest')}</h3>
+                  <div className="card-badge guest-badge">Limited</div>
                 </div>
-                <div className="benefit-status">
-                  <Check size={20} className="check-icon" />
-                </div>
-              </div>
-              
-              <div className="benefits-row">
-                <div className="benefit-feature">{t('hero.accessResources')}</div>
-                <div className="benefit-status">
-                  <Check size={20} className="check-icon" />
-                </div>
-                <div className="benefit-status">
-                  <Check size={20} className="check-icon" />
-                </div>
-              </div>
-              
-              <div className="benefits-row">
-                <div className="benefit-feature">{t('hero.trackProgress')}</div>
-                <div className="benefit-status">
-                  <X size={20} className="x-icon" />
-                </div>
-                <div className="benefit-status">
-                  <Check size={20} className="check-icon" />
-                </div>
-              </div>
-              
-              <div className="benefits-row">
-                <div className="benefit-feature">{t('hero.betterExams')}</div>
-                <div className="benefit-status">
-                  <X size={20} className="x-icon" />
-                </div>
-                <div className="benefit-status">
-                  <Check size={20} className="check-icon" />
-                </div>
-              </div>
-              <div className="benefits-row">
-                <div className="benefit-feature">{t('hero.dailyChallenge')}</div>
-                <div className="benefit-status">
-                  <X size={20} className="x-icon" />
-                </div>
-                <div className="benefit-status">
-                  <Check size={20} className="check-icon" />
+                <div className="features-list">
+                  <div className="feature-item available">
+                    <div className="feature-icon">
+                      <Check size={16} />
+                    </div>
+                    <span>{t('hero.accessQuestions')}</span>
+                  </div>
+                  <div className="feature-item available">
+                    <div className="feature-icon">
+                      <Check size={16} />
+                    </div>
+                    <span>{t('hero.accessResources')}</span>
+                  </div>
+                  <div className="feature-item unavailable">
+                    <div className="feature-icon">
+                      <X size={16} />
+                    </div>
+                    <span>{t('hero.trackProgress')}</span>
+                  </div>
+                  <div className="feature-item unavailable">
+                    <div className="feature-icon">
+                      <X size={16} />
+                    </div>
+                    <span>{t('hero.betterExams')}</span>
+                  </div>
+                  <div className="feature-item unavailable">
+                    <div className="feature-icon">
+                      <X size={16} />
+                    </div>
+                    <span>{t('hero.dailyChallenge')}</span>
+                  </div>
+                  <div className="feature-item unavailable">
+                    <div className="feature-icon">
+                      <X size={16} />
+                    </div>
+                    <span>{t('hero.terminal')}</span>
+                  </div>
                 </div>
               </div>
-              <div className="benefits-row">
-                <div className="benefit-feature">{t('hero.terminal')}</div>
-                <div className="benefit-status">
-                  <X size={20} className="x-icon" />
+
+              <div className="comparison-card user-card featured">
+                <div className="card-glow"></div>
+                <div className="card-header">
+                  <div className="card-icon">
+                    <Trophy size={24} />
+                  </div>
+                  <h3>{t('hero.user')}</h3>
+                  <div className="card-badge user-badge">Full Access</div>
                 </div>
-                <div className="benefit-status">
-                  <Check size={20} className="check-icon" />
+                <div className="features-list">
+                  <div className="feature-item available">
+                    <div className="feature-icon">
+                      <Check size={16} />
+                    </div>
+                    <span>{t('hero.accessQuestions')}</span>
+                  </div>
+                  <div className="feature-item available">
+                    <div className="feature-icon">
+                      <Check size={16} />
+                    </div>
+                    <span>{t('hero.accessResources')}</span>
+                  </div>
+                  <div className="feature-item available premium">
+                    <div className="feature-icon">
+                      <BarChart3 size={16} />
+                    </div>
+                    <span>{t('hero.trackProgress')}</span>
+                  </div>
+                  <div className="feature-item available premium">
+                    <div className="feature-icon">
+                      <Trophy size={16} />
+                    </div>
+                    <span>{t('hero.betterExams')}</span>
+                  </div>
+                  <div className="feature-item available premium">
+                    <div className="feature-icon">
+                      <Calendar size={16} />
+                    </div>
+                    <span>{t('hero.dailyChallenge')}</span>
+                  </div>
+                  <div className="feature-item available premium">
+                    <div className="feature-icon">
+                      <Monitor size={16} />
+                    </div>
+                    <span>{t('hero.terminal')}</span>
+                  </div>
+                </div>
+                <div className="premium-highlight">
+                  <Sparkles size={16} />
+                  <span>Premium Features</span>
                 </div>
               </div>
             </div>
             
-            <div className="benefits-cta">
-              <Link to="/register" className="btn btn-register">
+            <div className="benefits-cta-section">
+              <Link to="/register" className="benefits-cta-btn">
+                <UserPlus size={20} />
                 {t('hero.registerNow')}
+                <div className="btn-shine"></div>
               </Link>
             </div>
           </div>

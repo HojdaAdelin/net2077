@@ -6,9 +6,9 @@ import { API_URL } from '../config';
 import { X, Monitor, Wifi, Cpu } from 'lucide-react';
 import '../styles/Grile.css';
 
-function QuizModal({ type, onClose, user }) {
+function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
   const [selectedMode, setSelectedMode] = useState('');
-  const [selectedTag, setSelectedTag] = useState((type === 'basic' || type === 'daily') ? 'LINUX' : '');
+  const [selectedTag, setSelectedTag] = useState(preSelectedCategory || ((type === 'basic' || type === 'daily') ? 'LINUX' : ''));
   const navigate = useNavigate();
 
   const availableTags = [
@@ -196,6 +196,7 @@ export default function Grile() {
   });
   const [showModal, setShowModal] = useState(false);
   const [selectedType, setSelectedType] = useState('');
+  const [preSelectedCategory, setPreSelectedCategory] = useState('');
   const [dailyChallenge, setDailyChallenge] = useState(null);
   const [dailyChallengeLoading, setDailyChallengeLoading] = useState(true);
   const [showResetModal, setShowResetModal] = useState(false);
@@ -297,8 +298,20 @@ export default function Grile() {
       return;
     } else {
       setSelectedType(type);
+      setPreSelectedCategory(''); // Reset pre-selected category for regular flow
       setShowModal(true);
     }
+  };
+
+  const handleCategoryClick = (categoryName) => {
+    // Convert category name to tag format
+    const categoryTag = categoryName === 'LINUX' ? 'LINUX' : 
+                       categoryName === 'NETWORK' ? 'NETWORK' : 
+                       categoryName === 'TIC/ICT' ? 'TIC/ICT' : categoryName;
+    
+    setSelectedType('all');
+    setPreSelectedCategory(categoryTag);
+    setShowModal(true);
   };
 
   const handleResetStats = async () => {
@@ -396,7 +409,12 @@ export default function Grile() {
             
             <div className="main-categories-grid">
               {mainCard.categories.map((cat, idx) => (
-                <div key={idx} className="main-category-card" style={{'--category-color': cat.color}}>
+                <div 
+                  key={idx} 
+                  className="main-category-card clickable" 
+                  style={{'--category-color': cat.color}}
+                  onClick={() => handleCategoryClick(cat.name.toUpperCase())}
+                >
                   <div className="category-icon">{cat.icon}</div>
                   <div className="category-info">
                     <h3>{cat.name}</h3>
@@ -558,6 +576,7 @@ export default function Grile() {
         <QuizModal 
           type={selectedType}
           user={user}
+          preSelectedCategory={preSelectedCategory}
           onClose={() => setShowModal(false)}
         />
       )}
