@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getUserProgress } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
+import { Monitor, Globe, Award } from 'lucide-react';
 import '../styles/Progress.css';
 
 export default function Progress() {
@@ -21,6 +22,23 @@ export default function Progress() {
 
   const xpToNextLevel = 100 - (progress.xp % 100);
   const progressPercent = (progress.xp % 100);
+
+  // Badge requirements
+  const linuxBadgeRequired = 500;
+  const networkBadgeRequired = 50;
+  const terminalBadgeRequired = 50;
+  
+  const linuxSolved = progress.solvedByTag?.LINUX || 0;
+  const networkSolved = progress.solvedByTag?.NETWORK || 0;
+  const terminalSolved = progress.terminalStats?.solved || 0;
+  
+  const linuxBadgeUnlocked = linuxSolved >= linuxBadgeRequired;
+  const networkBadgeUnlocked = networkSolved >= networkBadgeRequired;
+  const terminalBadgeUnlocked = terminalSolved >= terminalBadgeRequired;
+  
+  const linuxRemaining = Math.max(0, linuxBadgeRequired - linuxSolved);
+  const networkRemaining = Math.max(0, networkBadgeRequired - networkSolved);
+  const terminalRemaining = Math.max(0, terminalBadgeRequired - terminalSolved);
 
   return (
     <div className="container progress-page">
@@ -69,8 +87,22 @@ export default function Progress() {
               <span className="category-badge linux">LINUX</span>
             </div>
             <div className="category-stat-large">
-              <div className="stat-number">{progress.solvedByTag?.LINUX || 0}</div>
+              <div className="stat-number">{linuxSolved}</div>
               <div className="stat-text">{t('progress.questionsSolved')}</div>
+            </div>
+            
+            {/* Badge Progress */}
+            <div className={`badge-progress ${linuxBadgeUnlocked ? 'unlocked' : ''}`}>
+              <div className="badge-progress-icon">
+                {linuxBadgeUnlocked ? <Award size={16} /> : <Monitor size={16} />}
+              </div>
+              <div className="badge-progress-text">
+                {linuxBadgeUnlocked ? (
+                  <span className="badge-unlocked-text">Linux Master Badge Unlocked!</span>
+                ) : (
+                  <span className="badge-locked-text">{linuxRemaining} more to unlock badge</span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -80,8 +112,22 @@ export default function Progress() {
               <span className="category-badge network">NETWORK</span>
             </div>
             <div className="category-stat-large">
-              <div className="stat-number">{progress.solvedByTag?.NETWORK || 0}</div>
+              <div className="stat-number">{networkSolved}</div>
               <div className="stat-text">{t('progress.questionsSolved')}</div>
+            </div>
+            
+            {/* Badge Progress */}
+            <div className={`badge-progress ${networkBadgeUnlocked ? 'unlocked' : ''}`}>
+              <div className="badge-progress-icon">
+                {networkBadgeUnlocked ? <Award size={16} /> : <Globe size={16} />}
+              </div>
+              <div className="badge-progress-text">
+                {networkBadgeUnlocked ? (
+                  <span className="badge-unlocked-text">Network Expert Badge Unlocked!</span>
+                ) : (
+                  <span className="badge-locked-text">{networkRemaining} more to unlock badge</span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -91,8 +137,22 @@ export default function Progress() {
               <span className="category-badge terminal">TERMINAL</span>
             </div>
             <div className="category-stat-large">
-              <div className="stat-number">{progress.terminalStats?.solved || 0}</div>
+              <div className="stat-number">{terminalSolved}</div>
               <div className="stat-text">Terminal Commands</div>
+            </div>
+            
+            {/* Badge Progress */}
+            <div className={`badge-progress ${terminalBadgeUnlocked ? 'unlocked' : ''}`}>
+              <div className="badge-progress-icon">
+                {terminalBadgeUnlocked ? <Award size={16} /> : <Terminal size={16} />}
+              </div>
+              <div className="badge-progress-text">
+                {terminalBadgeUnlocked ? (
+                  <span className="badge-unlocked-text">Terminal Pro Badge Unlocked!</span>
+                ) : (
+                  <span className="badge-locked-text">{terminalRemaining} more to unlock badge</span>
+                )}
+              </div>
             </div>
           </div>
         </div>

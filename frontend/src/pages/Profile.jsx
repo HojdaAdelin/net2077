@@ -2,8 +2,96 @@ import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { User, Trophy, Zap, Target, Calendar, Activity, Award, Monitor, Globe, Terminal, Wrench } from 'lucide-react';
+import { User, Trophy, Zap, Target, Calendar, Activity, Award, Monitor, Globe, Terminal, Wrench, Crown, Medal } from 'lucide-react';
 import '../styles/Profile.css';
+
+// Badge Component
+function Badge({ type, unlocked, rank }) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  
+  const badges = {
+    linux: {
+      icon: <Monitor size={20} />,
+      name: 'Linux Master',
+      description: '500+ Linux questions solved',
+      color: '#f97316' // Orange-600 - different from rank 1 gold
+    },
+    network: {
+      icon: <Globe size={20} />,
+      name: 'Network Expert',
+      description: '50+ Network questions solved',
+      color: '#3b82f6'
+    },
+    terminal: {
+      icon: <Terminal size={20} />,
+      name: 'Terminal Pro',
+      description: '50+ Terminal commands solved',
+      color: '#22c55e' // Green-500
+    },
+    top1: {
+      icon: <Crown size={20} />,
+      name: 'Champion',
+      description: 'Rank #1 on Leaderboard',
+      color: '#fbbf24' // Amber-400 - gold
+    },
+    top2: {
+      icon: <Medal size={20} />,
+      name: 'Runner-up',
+      description: 'Rank #2 on Leaderboard',
+      color: '#94a3b8'
+    },
+    top3: {
+      icon: <Trophy size={20} />,
+      name: 'Top 3',
+      description: 'Rank #3 on Leaderboard',
+      color: '#cd7f32'
+    }
+  };
+
+  const badge = badges[type];
+  if (!badge) return null;
+
+  return (
+    <div 
+      className={`profile-badge ${unlocked ? 'unlocked' : 'locked'}`}
+      style={{ '--badge-color': badge.color }}
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+    >
+      <div className="badge-icon">
+        {badge.icon}
+      </div>
+      {unlocked && rank && (
+        <div className="badge-rank">#{rank}</div>
+      )}
+      
+      {/* Custom Tooltip */}
+      {showTooltip && (
+        <div className="badge-tooltip">
+          <div className="badge-tooltip-header">
+            <div className="badge-tooltip-icon" style={{ color: badge.color }}>
+              {badge.icon}
+            </div>
+            <div className="badge-tooltip-title">{badge.name}</div>
+          </div>
+          <div className="badge-tooltip-description">
+            {unlocked ? badge.description : `🔒 ${badge.description}`}
+          </div>
+          {unlocked && (
+            <div className="badge-tooltip-status unlocked-status">
+              ✓ Unlocked
+            </div>
+          )}
+          {!unlocked && (
+            <div className="badge-tooltip-status locked-status">
+              Locked
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Profile() {
   const { username } = useParams();
@@ -78,19 +166,44 @@ export default function Profile() {
 
   const isOwnProfile = currentUser && currentUser.username === username;
 
+  // Determine unlocked badges
+  const badges = {
+    linux: profileData.categoryStats.linux >= 500,
+    network: profileData.categoryStats.network >= 50,
+    terminal: profileData.categoryStats.terminal >= 50,
+    top1: profileData.leaderboardRank === 1,
+    top2: profileData.leaderboardRank === 2,
+    top3: profileData.leaderboardRank === 3
+  };
+
   return (
     <div className="user-profile-page">
       <div className="container">
         <div className="user-profile-header">
-          <div className="user-profile-avatar">
-            <User size={48} />
-          </div>
-          <div className="user-profile-info">
-            <h1 className="user-profile-username">{profileData.username}</h1>
-            <div className="user-profile-badges">
-              <span className="user-profile-level">Level {profileData.level}</span>
-              <span className="user-profile-xp">{profileData.xp} XP</span>
+          <div className="user-profile-left">
+            <div className="user-profile-avatar">
+              <User size={48} />
             </div>
+            <div className="user-profile-info">
+              <h1 className="user-profile-username">{profileData.username}</h1>
+              <div className="user-profile-badges">
+                <span className="user-profile-level">Level {profileData.level}</span>
+                <span className="user-profile-xp">{profileData.xp} XP</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="user-profile-achievements">
+            <Badge type="linux" unlocked={badges.linux} />
+            <Badge type="network" unlocked={badges.network} />
+            <Badge type="terminal" unlocked={badges.terminal} />
+            {profileData.leaderboardRank <= 3 && (
+              <Badge 
+                type={`top${profileData.leaderboardRank}`} 
+                unlocked={true}
+                rank={profileData.leaderboardRank}
+              />
+            )}
           </div>
         </div>
 

@@ -1,0 +1,9 @@
+1. Cum opresti cu process cu PID-ul 15? (kill 15)
+2. Cum opresti toate procesele care contin 'abcd' in nume? (pkill abcd)
+3. Cum opresti toate procesele care contin 'abcd' in nume fortat? (pkill -9 abcd)
+4. Cum opresti toate procesele care contin 'abcd' in nume pentru userul 'tester'? (pkill -u tester abcd)
+5. malloc() este o alocare? (dinamica) 
+6. ce afiseaza ps fara niciun parametru? (afiseaza procesele din terminalul curent)
+7. cum se zice atunci cand un proces ajunge sa ruleze pe un processor? (scheduled)
+8. care este utilitarul pentru a schimba prioritatea unui proces in run-time? (renice)
+

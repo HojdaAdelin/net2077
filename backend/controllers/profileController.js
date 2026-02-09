@@ -11,7 +11,7 @@ export const getUserProfile = async (req, res) => {
     }
 
     // Calculate total questions solved
-    const totalQuestionsSolved = user.solvedQuestions.length + user.solvedTerminalQuestions.length + user.solvedIS.length;
+    const totalQuestionsSolved = user.solvedByTag.LINUX + user.solvedByTag.NETWORK + user.solvedTerminalQuestions.length + user.solvedIS.length;
     
     // Determine preferred category
     const categoryStats = {
@@ -25,6 +25,10 @@ export const getUserProfile = async (req, res) => {
       categoryStats[a[0]] > categoryStats[b[0]] ? a : b
     )[0];
 
+    // Calculate leaderboard rank
+    const usersAbove = await User.countDocuments({ xp: { $gt: user.xp } });
+    const leaderboardRank = usersAbove + 1;
+
     const profileData = {
       username: user.username,
       xp: user.xp,
@@ -36,6 +40,7 @@ export const getUserProfile = async (req, res) => {
       },
       preferredCategory: preferredCategory.charAt(0).toUpperCase() + preferredCategory.slice(1),
       categoryStats,
+      leaderboardRank,
       joinedAt: user.createdAt,
       lastActivity: user.streak.lastActivity
     };
@@ -56,7 +61,7 @@ export const getCurrentUserProfile = async (req, res) => {
     }
 
     // Calculate total questions solved
-    const totalQuestionsSolved = user.solvedQuestions.length + user.solvedTerminalQuestions.length + user.solvedIS.length;
+    const totalQuestionsSolved = user.solvedByTag.LINUX + user.solvedByTag.NETWORK + user.solvedTerminalQuestions.length + user.solvedIS.length;
     
     // Determine preferred category
     const categoryStats = {

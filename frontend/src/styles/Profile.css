@@ -24,7 +24,15 @@
   margin-bottom: 2rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 2rem;
+}
+
+.user-profile-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex: 1;
 }
 
 .user-profile-avatar {
@@ -270,5 +278,292 @@
   
   .user-profile-section {
     padding: 1rem;
+  }
+}
+/* Bad
+ge System Styles */
+.user-profile-achievements {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.profile-badge {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 2px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.profile-badge.unlocked {
+  background: linear-gradient(135deg, var(--badge-color), color-mix(in srgb, var(--badge-color) 80%, black));
+  border-color: var(--badge-color);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--badge-color) 30%, transparent);
+}
+
+.profile-badge.locked {
+  opacity: 0.3;
+  filter: grayscale(100%);
+}
+
+.profile-badge:hover {
+  transform: translateY(-4px) scale(1.05);
+}
+
+.profile-badge.unlocked:hover {
+  box-shadow: 0 8px 25px color-mix(in srgb, var(--badge-color) 40%, transparent);
+}
+
+.badge-icon {
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.profile-badge.locked .badge-icon {
+  color: var(--text-muted);
+}
+
+.badge-rank {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  background: var(--badge-color);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border: 2px solid var(--bg-card);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.profile-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.profile-badge.unlocked:hover::before {
+  opacity: 1;
+}
+
+/* Badge animations */
+.profile-badge.unlocked {
+  animation: badge-unlock 0.6s ease-out;
+}
+
+@keyframes badge-unlock {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(10deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Responsive Design for Badges */
+@media (max-width: 768px) {
+  .user-profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .user-profile-left {
+    width: 100%;
+  }
+  
+  .user-profile-achievements {
+    width: 100%;
+    justify-content: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  
+  .profile-badge {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .badge-rank {
+    width: 20px;
+    height: 20px;
+    font-size: 0.6rem;
+    bottom: -6px;
+    right: -6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-profile-achievements {
+    gap: 0.75rem;
+  }
+  
+  .profile-badge {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+/* Badge Tooltip Styles */
+.badge-tooltip {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  min-width: 200px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  animation: tooltip-appear-down 0.2s ease-out;
+  pointer-events: none;
+}
+
+.badge-tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: var(--border);
+}
+
+.badge-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom-color: var(--bg-card);
+  margin-bottom: -1px;
+}
+
+@keyframes tooltip-appear-down {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.badge-tooltip-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.badge-tooltip-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  flex-shrink: 0;
+}
+
+.badge-tooltip-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.badge-tooltip-description {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.badge-tooltip-status {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.unlocked-status {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--success);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.locked-status {
+  background: rgba(107, 114, 128, 0.1);
+  color: var(--text-muted);
+  border: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+/* Responsive Tooltip */
+@media (max-width: 768px) {
+  .badge-tooltip {
+    min-width: 180px;
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+  
+  .badge-tooltip-icon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .badge-tooltip-title {
+    font-size: 0.85rem;
+  }
+  
+  .badge-tooltip-description {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .badge-tooltip {
+    min-width: 160px;
+    padding: 8px;
+  }
+  
+  .badge-tooltip-header {
+    gap: 6px;
+    margin-bottom: 6px;
+    padding-bottom: 6px;
   }
 }
