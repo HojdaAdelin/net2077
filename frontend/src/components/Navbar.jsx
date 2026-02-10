@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
 import { useInbox } from '../context/InboxContext';
-import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox, UserCircle } from 'lucide-react';
+import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
 import '../styles/Navbar.css';
@@ -32,15 +32,18 @@ export default function Navbar() {
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [inboxDropdownOpen, setInboxDropdownOpen] = useState(false);
+  const [practiceDropdownOpen, setPracticeDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const profileDropdownRef = useRef(null);
   const inboxRef = useRef(null);
+  const practiceRef = useRef(null);
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const closeMobileMenu = () => setMobileMenuOpen(false);
   const toggleLangDropdown = () => setLangDropdownOpen(!langDropdownOpen);
   const toggleProfileDropdown = () => setProfileDropdownOpen(!profileDropdownOpen);
   const toggleInboxDropdown = () => setInboxDropdownOpen(!inboxDropdownOpen);
+  const togglePracticeDropdown = () => setPracticeDropdownOpen(!practiceDropdownOpen);
 
   const handleLanguageChange = (lang) => {
     changeLanguage(lang);
@@ -72,6 +75,9 @@ export default function Navbar() {
       if (inboxRef.current && !inboxRef.current.contains(event.target)) {
         setInboxDropdownOpen(false);
       }
+      if (practiceRef.current && !practiceRef.current.contains(event.target)) {
+        setPracticeDropdownOpen(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -98,7 +104,72 @@ export default function Navbar() {
           } 
           <Link to="/terminal" onClick={closeMobileMenu}>Terminal</Link>
           <Link to="/is" onClick={closeMobileMenu}>IS/Debug</Link>
-          <Link to="/grile" onClick={closeMobileMenu}>{t('navbar.questions')}</Link>
+          
+          <div 
+            className="practice-dropdown-container" 
+            ref={practiceRef}
+            onMouseEnter={() => setPracticeDropdownOpen(true)}
+            onMouseLeave={() => setPracticeDropdownOpen(false)}
+          >
+            <Link 
+              to="/grile" 
+              className="nav-link-with-dropdown"
+              onClick={() => {
+                closeMobileMenu();
+                setPracticeDropdownOpen(false);
+              }}
+            >
+              {t('navbar.questions')}
+              <ChevronDown size={16} className="dropdown-icon" />
+            </Link>
+            {practiceDropdownOpen && (
+              <div className="practice-dropdown">
+                <Link 
+                  to="/grile?filter=all" 
+                  className="practice-dropdown-item"
+                  onClick={() => {
+                    closeMobileMenu();
+                    setPracticeDropdownOpen(false);
+                  }}
+                >
+                  <BookOpen size={18} className="practice-item-icon" />
+                  <div className="practice-item-content">
+                    <div className="practice-item-title">All Questions</div>
+                    <div className="practice-item-desc">Practice all categories</div>
+                  </div>
+                </Link>
+                <Link 
+                  to="/grile?filter=linux" 
+                  className="practice-dropdown-item"
+                  onClick={() => {
+                    closeMobileMenu();
+                    setPracticeDropdownOpen(false);
+                  }}
+                >
+                  <Monitor size={18} className="practice-item-icon" />
+                  <div className="practice-item-content">
+                    <div className="practice-item-title">Linux</div>
+                    <div className="practice-item-desc">Linux questions & commands</div>
+                  </div>
+                </Link>
+                <Link 
+                  to="/grile?filter=network" 
+                  className="practice-dropdown-item"
+                  onClick={() => {
+                    closeMobileMenu();
+                    setPracticeDropdownOpen(false);
+                  }}
+                >
+                  <Globe size={18} className="practice-item-icon" />
+                  <div className="practice-item-content">
+                    <div className="practice-item-title">Network</div>
+                    <div className="practice-item-desc">Network questions & protocols</div>
+                  </div>
+                </Link>
+              </div>
+            )}
+          </div>
+          
           <Link to="/resurse" onClick={closeMobileMenu}>{t('navbar.resources')}</Link>
           <Link to="/leaderboard" onClick={closeMobileMenu}>{t('navbar.leaderboard')}</Link>
           {user && <Link to="/progress" onClick={closeMobileMenu}>{t('navbar.progress')}</Link>}

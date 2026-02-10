@@ -6,4 +6,7 @@
 6. ce afiseaza ps fara niciun parametru? (afiseaza procesele din terminalul curent)
 7. cum se zice atunci cand un proces ajunge sa ruleze pe un processor? (scheduled)
 8. care este utilitarul pentru a schimba prioritatea unui proces in run-time? (renice)
-
+9. În background procesele se pot gasi în doua stari: rulând ( running) sau suspendate
+(stopped, suspeneded, paused).
+10. ce face pidof
+11. ce face lshw

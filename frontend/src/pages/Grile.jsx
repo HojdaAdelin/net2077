@@ -1,9 +1,9 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import { getUserProgress, getDailyChallengeStatus } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { X, Monitor, Wifi, Cpu } from 'lucide-react';
+import { X, Monitor, Wifi, Cpu, BookOpen, Trophy, FileCheck } from 'lucide-react';
 import '../styles/Grile.css';
 
 function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
@@ -17,7 +17,7 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
     { id: 'TIC/ICT', label: 'TIC/ICT', color: '#8b5cf6', icon: '💻', desc: 'Academic examination topics' }
   ];
 
-  const isAllModeNoFilter = type === 'all' && selectedMode === 'all';
+  const isAllModeNoFilter = type === 'all' && selectedMode === 'all' && !selectedTag;
   const isTagRequired = type !== 'basic' && !isAllModeNoFilter;
   const needsTagAttention = isTagRequired && !selectedTag;
   const needsAuth = selectedMode === 'unsolved' && !user;
@@ -43,7 +43,8 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
     let finalTag = '';
     if (type === 'basic') {
       finalTag = 'LINUX';
-    } else if (isTagRequired) {
+    } else if (selectedTag) {
+      // If a tag is selected, always use it (even for "all" mode)
       finalTag = selectedTag;
     }
 
@@ -184,6 +185,7 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
 }
 
 export default function Grile() {
+  const [searchParams] = useSearchParams();
   const [stats, setStats] = useState({ 
     basic: 0, 
     all: { linux: 0, network: 0 }, 
@@ -201,6 +203,7 @@ export default function Grile() {
   const [dailyChallengeLoading, setDailyChallengeLoading] = useState(true);
   const [showResetModal, setShowResetModal] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('all'); // 'all', 'linux', 'network'
   const { user, updateUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -209,7 +212,16 @@ export default function Grile() {
     if (user) {
       loadDailyChallengeStatus();
     }
-  }, [user]);
+    
+    // Check for filter parameter in URL
+    const filterParam = searchParams.get('filter');
+    if (filterParam) {
+      const validFilters = ['all', 'linux', 'network'];
+      if (validFilters.includes(filterParam.toLowerCase())) {
+        setActiveFilter(filterParam.toLowerCase());
+      }
+    }
+  }, [user, searchParams]);
 
   const loadDailyChallengeStatus = async () => {
     try {
@@ -303,15 +315,16 @@ export default function Grile() {
     }
   };
 
-  const handleCategoryClick = (categoryName) => {
-    // Convert category name to tag format
-    const categoryTag = categoryName === 'LINUX' ? 'LINUX' : 
-                       categoryName === 'NETWORK' ? 'NETWORK' : 
-                       categoryName === 'TIC/ICT' ? 'TIC/ICT' : categoryName;
-    
-    setSelectedType('all');
-    setPreSelectedCategory(categoryTag);
-    setShowModal(true);
+  const handleCardClick = (card) => {
+    if (card.type === 'exam') {
+      navigate('/exam-selection');
+    } else if (card.type === 'daily' && dailyChallengeLoading) {
+      return;
+    } else {
+      setSelectedType(card.type);
+      setPreSelectedCategory(card.preSelectedTag || '');
+      setShowModal(true);
+    }
   };
 
   const handleResetStats = async () => {
@@ -351,26 +364,54 @@ export default function Grile() {
     }
   };
 
-  const mainCard = { 
-    title: 'All Questions', 
-    desc: '',
-    type: 'all',
-    isMain: true,
-    categories: [
-      { name: 'Linux', total: stats.all.linux, solved: solved.all.linux, color: '#f59e0b', icon: <Monitor size={32} /> },
-      { name: 'Network', total: stats.all.network, solved: solved.all.network, color: '#3b82f6', icon: <Wifi size={32} /> },
-      { name: 'TIC/ICT',total: stats.all.tic, solved: solved.all.tic, color: '#8b5cf6', icon: <Cpu size={32} />}
-    ]
-  };
-
-  const cards = [
+  // Define all cards
+  const allCards = [
+    { 
+      title: 'Linux Questions', 
+      desc: 'System administration, commands & concepts',
+      type: 'all',
+      category: 'Linux',
+      total: stats.all.linux,
+      solved: solved.all.linux,
+      color: '#f59e0b',
+      icon: <Monitor size={24} />,
+      filter: 'linux',
+      preSelectedTag: 'LINUX'
+    },
+    { 
+      title: 'Network Questions', 
+      desc: 'Networking protocols, security & infrastructure',
+      type: 'all',
+      category: 'Network',
+      total: stats.all.network,
+      solved: solved.all.network,
+      color: '#3b82f6',
+      icon: <Wifi size={24} />,
+      filter: 'network',
+      preSelectedTag: 'NETWORK'
+    },
+    { 
+      title: 'TIC/ICT Questions', 
+      desc: 'Academic examination topics',
+      type: 'all',
+      category: 'TIC/ICT',
+      total: stats.all.tic,
+      solved: solved.all.tic,
+      color: '#8b5cf6',
+      icon: <Cpu size={24} />,
+      filter: 'all',
+      preSelectedTag: 'TIC/ICT'
+    },
     { 
       title: 'Basic Commands', 
-      desc: 'Master fundamental Linux commands and concepts',
+      desc: 'Master fundamental Linux commands',
       type: 'basic',
       category: 'Linux',
       total: stats.basic,
-      solved: solved.basic
+      solved: solved.basic,
+      color: '#10b981',
+      icon: <Monitor size={24} />,
+      filter: 'linux'
     },
     ...(user ? [{
       title: 'Daily Challenge',
@@ -379,194 +420,135 @@ export default function Grile() {
       isDaily: true,
       completed: dailyChallenge?.completed || false,
       timeUntilNext: dailyChallenge?.timeUntilNext || '',
-      loading: dailyChallengeLoading
+      loading: dailyChallengeLoading,
+      color: '#f59e0b',
+      icon: <Trophy size={24} />,
+      filter: 'all'
     }] : []),
     { 
       title: 'Tests', 
-      desc: 'Official tests practice with timer and scoring',
+      desc: 'Practice with timer and scoring',
       type: 'exam',
       isExam: true,
-      examTag: 'TEST'
+      examTag: 'TEST',
+      color: '#3b82f6',
+      icon: <FileCheck size={24} />,
+      filter: 'all'
     }
   ];
+
+  // Filter cards based on active filter
+  const filteredCards = allCards.filter(card => {
+    if (activeFilter === 'all') return true;
+    return card.filter === activeFilter || card.filter === 'all';
+  });
 
   return (
     <>
       <div className="container grile-page">
         <div className="grile-header">
           <h1>Practice Questions</h1>
-        </div>
-        
-        <div className="main-card-container">
-          <div className="main-question-card">
-            <div className="main-card-header">
-              <div className="main-card-title">
-                <h2>{mainCard.title}</h2>
-                
-              </div>
-              <p className="main-card-desc">{mainCard.desc}</p>
-            </div>
-            
-            <div className="main-categories-grid">
-              {mainCard.categories.map((cat, idx) => (
-                <div 
-                  key={idx} 
-                  className="main-category-card clickable" 
-                  style={{'--category-color': cat.color}}
-                  onClick={() => handleCategoryClick(cat.name.toUpperCase())}
-                >
-                  <div className="category-icon">{cat.icon}</div>
-                  <div className="category-info">
-                    <h3>{cat.name}</h3>
-                    {!cat.hideStats && (
-                      user ? (
-                        <div className="category-stats">
-                          <span className="solved-count">{cat.solved}</span>
-                          <span className="total-count">/ {cat.total}</span>
-                        </div>
-                      ) : (
-                        <div className="category-total">{cat.total} questions</div>
-                      )
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <div className="main-card-actions">
-              <button 
-                onClick={() => handleContinue(mainCard.type)}
-                className="btn btn-primary btn-large"
-              >
-                Start Practice
-              </button>
-            </div>
+          <div className="filter-tabs">
+            <button 
+              className={`filter-tab ${activeFilter === 'all' ? 'active' : ''}`}
+              onClick={() => setActiveFilter('all')}
+            >
+              <BookOpen size={18} />
+              All Categories
+            </button>
+            <button 
+              className={`filter-tab ${activeFilter === 'linux' ? 'active' : ''}`}
+              onClick={() => setActiveFilter('linux')}
+            >
+              <Monitor size={18} />
+              Linux
+            </button>
+            <button 
+              className={`filter-tab ${activeFilter === 'network' ? 'active' : ''}`}
+              onClick={() => setActiveFilter('network')}
+            >
+              <Wifi size={18} />
+              Network
+            </button>
           </div>
         </div>
         
-        <div className="cards-grid">
-          {cards.map(card => (
+        <div className="compact-cards-grid">
+          {filteredCards.map((card, idx) => (
             <div 
-              key={card.type} 
-              className={`question-card ${card.completed ? 'daily-completed' : ''} ${card.isExam ? 'exam-card' : ''}`}
+              key={idx} 
+              className={`compact-card ${card.completed ? 'daily-completed' : ''} ${card.isExam ? 'exam-card' : ''}`}
+              style={{'--card-color': card.color}}
+              onClick={() => handleCardClick(card)}
             >
-              <div className="card-header">
-                <h2>{card.title}</h2>
-                {card.category && (
-                  <span className="card-category">{card.category}</span>
-                )}
+              <div className="compact-card-header">
+                <div className="compact-card-icon">{card.icon}</div>
+                <div className="compact-card-info">
+                  <h3>{card.title}</h3>
+                  <p>{card.desc}</p>
+                </div>
                 {card.isDaily && (
-                  <span className={`daily-status ${card.completed ? 'completed' : 'available'}`}>
-                    {card.completed ? 'Completed' : 'Available'}
+                  <span className={`compact-status ${card.completed ? 'completed' : 'available'}`}>
+                    {card.completed ? '✓' : '★'}
                   </span>
                 )}
                 {card.isExam && (
-                  <span className="exam-status">
-                    {card.examTag}
-                  </span>
+                  <span className="compact-status exam">TEST</span>
                 )}
               </div>
-              <p>{card.desc}</p>
               
-              {card.isDaily && (
-                <div className="daily-info">
-                  {card.loading ? (
-                    <div className="daily-loading-info">
-                      <span className="loading-text">Loading status...</span>
-                    </div>
-                  ) : card.completed ? (
-                    <div className="daily-completed-info">
-                      <span className="completed-text">Challenge completed today!</span>
-                      <span className="next-reset">Next challenge in: {card.timeUntilNext}</span>
-                    </div>
-                  ) : (
-                    <div className="daily-available-info">
-                      <span className="bonus-text">2x XP Bonus</span>
-                      <span className="questions-count">20 Questions</span>
-                    </div>
-                  )}
-                </div>
+              {card.type === 'basic' && user && (
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowResetModal(true);
+                  }}
+                  className="compact-reset-btn"
+                  disabled={solved.basic < 50}
+                  title={solved.basic < 50 ? `Need ${50 - solved.basic} more solved questions` : 'Reset stats for XP'}
+                >
+                  Reset for XP ({solved.basic}/50)
+                </button>
               )}
-
-              {card.isExam && (
-                <div className="exam-info">
-                  <div className="exam-features">
-                    <span className="exam-feature">Timer & Scoring</span>
-                    <span className="exam-feature">Official Practice</span>
+              
+              {user && !card.isDaily && !card.isExam && (
+                <div className="compact-stats">
+                  <div className="compact-stat">
+                    <span className="stat-value">{card.solved}</span>
+                    <span className="stat-label">Solved</span>
+                  </div>
+                  <div className="compact-stat-divider"></div>
+                  <div className="compact-stat">
+                    <span className="stat-value">{card.total}</span>
+                    <span className="stat-label">Total</span>
+                  </div>
+                  <div className="compact-progress-bar">
+                    <div 
+                      className="compact-progress-fill" 
+                      style={{ 
+                        width: `${card.total > 0 ? (card.solved / card.total * 100) : 0}%`,
+                        background: card.color
+                      }}
+                    />
                   </div>
                 </div>
               )}
-              
-              {card.categories ? (
-                
-                <div className="categories-stats">
-                  {card.categories.map((cat, idx) => (
-                    <div key={idx} className="category-stat-card">
-                      <div className="category-name">{cat.name}</div>
-                      {user ? (
-                        <div className="category-progress">
-                          <span className="progress-text">{cat.solved} / {cat.total}</span>
-                          <div className="mini-progress-bar">
-                            <div 
-                              className="mini-progress-fill" 
-                              style={{ width: `${cat.total > 0 ? (cat.solved / cat.total * 100) : 0}%` }}
-                            />
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="category-total">{cat.total} questions</div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                
-                <>
-                  {user && !card.isExam && !card.isDaily && (
-                    <div className="progress-stats">
-                      <div className="progress-stat">
-                        <span className="stat-value">{card.solved}</span>
-                        <span className="stat-label">Solved</span>
-                      </div>
-                      <div className="progress-stat">
-                        <span className="stat-value">{card.total - card.solved}</span>
-                        <span className="stat-label">Remaining</span>
-                      </div>
-                      <div className="progress-stat">
-                        <span className="stat-value">{card.total}</span>
-                        <span className="stat-label">Total</span>
-                      </div>
-                    </div>
-                  )}
 
-                  {!user && !card.isDaily && !card.isExam && (
-                    <div className="question-count-badge">
-                      {card.total} questions available
-                    </div>
-                  )}
-                </>
+              {!user && !card.isDaily && !card.isExam && (
+                <div className="compact-count">
+                  {card.total} questions
+                </div>
               )}
-              
-              <div className="card-actions">
-                {card.type === 'basic' && user && (
-                  <button 
-                    onClick={() => setShowResetModal(true)}
-                    className="btn btn-secondary btn-full reset-stats-btn"
-                    disabled={solved.basic < 50}
-                    title={solved.basic < 50 ? 'You need at least 50 solved basic commands questions' : 'Reset your basic commands progress for XP'}
-                  >
-                    Reset Stats for XP ({solved.basic}/50)
-                  </button>
-                )}
-                <button 
-                  onClick={() => handleContinue(card.type)}
-                  className="btn btn-primary btn-full"
-                  disabled={(card.isDaily && card.completed) || (card.isDaily && card.loading)}
-                >
-                  {card.isDaily && card.loading ? 'Loading...' : 
-                   card.isDaily && card.completed ? 'Completed Today' : 'Continue'}
-                </button>
-              </div>
+
+              {card.isDaily && !card.loading && (
+                <div className="compact-daily-info">
+                  {card.completed ? (
+                    <span className="daily-next">Next: {card.timeUntilNext}</span>
+                  ) : (
+                    <span className="daily-bonus">2x XP • 20 Questions</span>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>
