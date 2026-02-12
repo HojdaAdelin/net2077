@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
 import { useInbox } from '../context/InboxContext';
-import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe } from 'lucide-react';
+import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
 import '../styles/Navbar.css';
@@ -102,7 +102,6 @@ export default function Navbar() {
             <span className="new-badge">NEW</span>
           </Link> */
           } 
-          <Link to="/terminal" onClick={closeMobileMenu}>Terminal</Link>
           <Link to="/is" onClick={closeMobileMenu}>IS/Debug</Link>
           
           <div 
@@ -164,6 +163,20 @@ export default function Navbar() {
                   <div className="practice-item-content">
                     <div className="practice-item-title">Network</div>
                     <div className="practice-item-desc">Network questions & protocols</div>
+                  </div>
+                </Link>
+                <Link 
+                  to="/terminal" 
+                  className="practice-dropdown-item"
+                  onClick={() => {
+                    closeMobileMenu();
+                    setPracticeDropdownOpen(false);
+                  }}
+                >
+                  <Terminal size={18} className="practice-item-icon" />
+                  <div className="practice-item-content">
+                    <div className="practice-item-title">Terminal</div>
+                    <div className="practice-item-desc">Practice terminal commands</div>
                   </div>
                 </Link>
               </div>
