@@ -6,6 +6,9 @@ import User from '../models/User.js';
  * @param {Array|String} allowedRoles - Single role or array of allowed roles
  * @returns {Function} Express middleware function
  * 
+ * Role Hierarchy (lowest to highest):
+ * user < helper < mod < head-mod < admin < head-admin < root
+ * 
  * Usage:
  * - checkRole('admin') - only admin
  * - checkRole(['admin', 'mod']) - admin or mod
@@ -74,13 +77,31 @@ export const checkRole = (allowedRoles) => {
 export const isAdmin = checkRole('admin');
 
 /**
+ * Middleware to check if user is head admin or above
+ * Shorthand for checkRole(['head-admin', 'root'])
+ */
+export const isHeadAdmin = checkRole(['head-admin', 'root']);
+
+/**
+ * Middleware to check if user is root
+ * Shorthand for checkRole('root')
+ */
+export const isRoot = checkRole('root');
+
+/**
  * Middleware to check if user is admin or moderator
  * Shorthand for checkRole(['admin', 'mod'])
  */
-export const isModerator = checkRole(['admin', 'mod']);
+export const isModerator = checkRole(['admin', 'head-admin', 'root', 'mod', 'head-mod']);
+
+/**
+ * Middleware to check if user is head moderator or above
+ * Shorthand for checkRole(['head-mod', 'admin', 'head-admin', 'root'])
+ */
+export const isHeadMod = checkRole(['head-mod', 'admin', 'head-admin', 'root']);
 
 /**
  * Middleware to check if user is staff (admin, mod, or helper)
  * Shorthand for checkRole(['admin', 'mod', 'helper'])
  */
-export const isStaff = checkRole(['admin', 'mod', 'helper']);
+export const isStaff = checkRole(['admin', 'head-admin', 'root', 'mod', 'head-mod', 'helper']);

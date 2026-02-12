@@ -1,6 +1,6 @@
 import express from 'express';
 import { updateUserRole, getAllUsers, getRoleStats } from '../controllers/adminController.js';
-import { isAdmin, isModerator } from '../middleware/checkRole.js';
+import { isHeadAdmin, isModerator } from '../middleware/checkRole.js';
 import rateLimit from 'express-rate-limit';
 
 const router = express.Router();
@@ -16,8 +16,8 @@ const adminLimiter = rateLimit({
 router.use(adminLimiter);
 
 // Admin only routes
-router.post('/users/role', isAdmin, updateUserRole);
-router.get('/users/stats', isAdmin, getRoleStats);
+router.post('/users/role', isHeadAdmin, updateUserRole);
+router.get('/users/stats', isHeadAdmin, getRoleStats);
 
 // Admin and Moderator routes
 router.get('/users', isModerator, getAllUsers);

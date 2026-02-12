@@ -786,3 +786,217 @@ ge System Styles */
     padding-bottom: 6px;
   }
 }
+
+/* Head Mod - Enhanced Blue/Purple */
+.user-profile-role[data-role="head-mod"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #4facfe 100%);
+  background-size: 200% 200%;
+  animation: headModGradient 3s ease infinite;
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.5), 0 0 40px rgba(118, 75, 162, 0.3);
+}
+
+.user-profile-role[data-role="head-mod"]::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  animation: headModFlicker 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.user-profile-role[data-role="head-mod"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, 
+    transparent 30%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 70%
+  );
+  animation: headModShine 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes headModGradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes headModFlicker {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    opacity: 0.6;
+    transform: scale(1.1) rotate(5deg);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(0.95) rotate(-5deg);
+  }
+  75% {
+    opacity: 0.7;
+    transform: scale(1.05) rotate(3deg);
+  }
+}
+
+@keyframes headModShine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+/* Head Admin - Enhanced Fire with Gold */
+.user-profile-role[data-role="head-admin"] {
+  background: linear-gradient(135deg, #ffd700 0%, #ff8c00 50%, #ff4500 100%);
+  background-size: 200% 200%;
+  animation: headAdminGradient 3s ease infinite;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.6), 0 0 50px rgba(255, 140, 0, 0.4);
+}
+
+.user-profile-role[data-role="head-admin"]::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+  animation: headAdminFlicker 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.user-profile-role[data-role="head-admin"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, 
+    transparent 30%, 
+    rgba(255, 255, 255, 0.3) 50%, 
+    transparent 70%
+  );
+  animation: headAdminShine 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes headAdminGradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes headAdminFlicker {
+  0%, 100% {
+    opacity: 0.85;
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    opacity: 0.65;
+    transform: scale(1.12) rotate(6deg);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(0.93) rotate(-6deg);
+  }
+  75% {
+    opacity: 0.75;
+    transform: scale(1.08) rotate(4deg);
+  }
+}
+
+@keyframes headAdminShine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+/* Root - Ultimate Dark/Purple with intense effects */
+.user-profile-role[data-role="root"] {
+  background: linear-gradient(135deg, #1a0033 0%, #4a0080 30%, #8b00ff 60%, #ff00ff 100%);
+  background-size: 300% 300%;
+  animation: rootGradient 4s ease infinite;
+  box-shadow: 
+    0 0 30px rgba(138, 0, 255, 0.8), 
+    0 0 60px rgba(255, 0, 255, 0.5),
+    inset 0 0 30px rgba(138, 0, 255, 0.3);
+  border: 2px solid rgba(138, 0, 255, 0.5);
+}
+
+.user-profile-role[data-role="root"]::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, transparent 70%);
+  animation: rootFlicker 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.user-profile-role[data-role="root"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, 
+    transparent 20%, 
+    rgba(255, 255, 255, 0.4) 50%, 
+    transparent 80%
+  );
+  animation: rootShine 2.5s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rootGradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes rootFlicker {
+  0%, 100% {
+    opacity: 0.9;
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    opacity: 0.7;
+    transform: scale(1.15) rotate(8deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(0.92) rotate(-8deg);
+  }
+  75% {
+    opacity: 0.8;
+    transform: scale(1.1) rotate(5deg);
+  }
+}
+
+@keyframes rootShine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}

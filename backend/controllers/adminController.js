@@ -8,7 +8,7 @@ export const updateUserRole = async (req, res) => {
     const { userId, newRole } = req.body;
 
     // Validate role
-    const validRoles = ['user', 'helper', 'mod', 'admin'];
+    const validRoles = ['user', 'helper', 'mod', 'head-mod', 'admin', 'head-admin', 'root'];
     if (!validRoles.includes(newRole)) {
       return res.status(400).json({ 
         message: 'Invalid role',
@@ -16,16 +16,46 @@ export const updateUserRole = async (req, res) => {
       });
     }
 
+    // Role hierarchy for permission checking
+    const roleHierarchy = {
+      'user': 0,
+      'helper': 1,
+      'mod': 2,
+      'head-mod': 3,
+      'admin': 4,
+      'head-admin': 5,
+      'root': 6
+    };
+
     // Find target user
     const targetUser = await User.findById(userId);
     if (!targetUser) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Prevent self-demotion from admin
-    if (req.user.id === userId && targetUser.role === 'admin' && newRole !== 'admin') {
+    // Get current user's role level
+    const currentUserRoleLevel = roleHierarchy[req.user.role] || 0;
+    const targetUserRoleLevel = roleHierarchy[targetUser.role] || 0;
+    const newRoleLevel = roleHierarchy[newRole] || 0;
+
+    // Prevent modifying users with equal or higher role
+    if (targetUserRoleLevel >= currentUserRoleLevel && req.user.id !== userId) {
+      return res.status(403).json({ 
+        message: 'Cannot modify user with equal or higher role' 
+      });
+    }
+
+    // Prevent assigning role equal or higher than your own (except root can do anything)
+    if (newRoleLevel >= currentUserRoleLevel && req.user.role !== 'root') {
+      return res.status(403).json({ 
+        message: 'Cannot assign role equal or higher than your own' 
+      });
+    }
+
+    // Prevent self-demotion from critical roles
+    if (req.user.id === userId && ['root', 'head-admin'].includes(targetUser.role) && newRole !== targetUser.role) {
       return res.status(400).json({ 
-        message: 'Cannot demote yourself from admin role' 
+        message: 'Cannot demote yourself from critical role' 
       });
     }
 
@@ -58,7 +88,8 @@ export const getAllUsers = async (req, res) => {
     const query = {};
     
     // Filter by role if provided
-    if (role && ['user', 'helper', 'mod', 'admin'].includes(role)) {
+    const validRoles = ['user', 'helper', 'mod', 'head-mod', 'admin', 'head-admin', 'root'];
+    if (role && validRoles.includes(role)) {
       query.role = role;
     }
 
@@ -108,7 +139,10 @@ export const getRoleStats = async (req, res) => {
       user: 0,
       helper: 0,
       mod: 0,
-      admin: 0
+      'head-mod': 0,
+      admin: 0,
+      'head-admin': 0,
+      root: 0
     };
 
     stats.forEach(stat => {
