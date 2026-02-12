@@ -31,6 +31,7 @@ export const getUserProfile = async (req, res) => {
 
     const profileData = {
       username: user.username,
+      role: user.role,
       xp: user.xp,
       level: user.level,
       totalQuestionsSolved,
@@ -77,6 +78,7 @@ export const getCurrentUserProfile = async (req, res) => {
 
     const profileData = {
       username: user.username,
+      role: user.role,
       xp: user.xp,
       level: user.level,
       totalQuestionsSolved,

@@ -9,7 +9,9 @@
     "clear-db": "node scripts/clear-db.js",
     "test-db": "node scripts/test-connection.js",
     "support": "node scripts/manageSupportRequests.js",
-    "send-msg": "node scripts/sendInboxMessage.js"
+    "send-msg": "node scripts/sendInboxMessage.js",
+    "set-role": "node scripts/setUserRole.js",
+    "migrate-roles": "node scripts/migrateRoles.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

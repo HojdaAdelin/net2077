@@ -63,6 +63,95 @@
   gap: 1rem;
 }
 
+.user-profile-role {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  position: relative;
+  overflow: hidden;
+}
+
+.user-profile-role[data-role="admin"] {
+  background: linear-gradient(135deg, #ff6b00 0%, #ff0844 50%, #ffb800 100%);
+  background-size: 200% 200%;
+  animation: fireGradient 3s ease infinite;
+  box-shadow: 0 0 20px rgba(255, 107, 0, 0.5), 0 0 40px rgba(255, 8, 68, 0.3);
+}
+
+.user-profile-role[data-role="admin"]::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  animation: fireFlicker 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.user-profile-role[data-role="admin"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, 
+    transparent 30%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 70%
+  );
+  animation: fireShine 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes fireGradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes fireFlicker {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    opacity: 0.6;
+    transform: scale(1.1) rotate(5deg);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(0.95) rotate(-5deg);
+  }
+  75% {
+    opacity: 0.7;
+    transform: scale(1.05) rotate(3deg);
+  }
+}
+
+@keyframes fireShine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+.user-profile-role[data-role="mod"] {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.user-profile-role[data-role="helper"] {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
 .user-profile-level {
   background: var(--accent-primary);
   color: var(--bg-primary);

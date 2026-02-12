@@ -16,6 +16,7 @@ import terminalRoutes from './routes/terminalRoutes.js';
 import inboxRoutes from './routes/inboxRoutes.js';
 import isRoutes from './routes/isRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 import { existsSync } from 'fs';
 const envPath = existsSync('.env') ? '.env' : '../.env';
@@ -91,6 +92,7 @@ app.use('/api/terminal', terminalRoutes);
 app.use('/api/inbox', inboxRoutes);
 app.use('/api/is', isRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/admin', adminRoutes);
 
 
 if (process.env.NODE_ENV !== 'production') {

@@ -10,3 +10,6 @@
 (stopped, suspeneded, paused).
 10. ce face pidof
 11. ce face lshw
+12. ce afiseaza $?
+13. cum se mai numesc Procesele neinteractive (procese batch)
+14. 

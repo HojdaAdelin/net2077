@@ -6,3 +6,5 @@ build
 basiccommandslinux.txt
 main_questions.json
 test
+migrateRoles.js
+setUserRole.js

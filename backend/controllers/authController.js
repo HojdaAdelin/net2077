@@ -34,6 +34,7 @@ export const register = async (req, res) => {
       user: { 
         id: user._id, 
         username,
+        role: user.role,
         streak: streakInfo
       }
     });
@@ -74,6 +75,7 @@ export const login = async (req, res) => {
       user: { 
         id: user._id, 
         username: user.username,
+        role: user.role,
         streak: streakInfo
       }
     });
@@ -106,6 +108,7 @@ export const getMe = async (req, res) => {
       user: { 
         id: user._id, 
         username: user.username,
+        role: user.role,
         streak: streakInfo
       } 
     });

@@ -187,6 +187,9 @@ export default function Profile() {
             <div className="user-profile-info">
               <h1 className="user-profile-username">{profileData.username}</h1>
               <div className="user-profile-badges">
+                <span className="user-profile-role" data-role={profileData.role}>
+                  {profileData.role.charAt(0).toUpperCase() + profileData.role.slice(1)}
+                </span>
                 <span className="user-profile-level">Level {profileData.level}</span>
                 <span className="user-profile-xp">{profileData.xp} XP</span>
               </div>
