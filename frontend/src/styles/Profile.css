@@ -467,6 +467,16 @@
   
   .user-profile-badges {
     justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .user-profile-role,
+  .user-profile-level,
+  .user-profile-xp {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
   }
   
   .user-profile-stats-grid {
