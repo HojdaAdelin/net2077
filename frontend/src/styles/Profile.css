@@ -146,10 +146,140 @@
 
 .user-profile-role[data-role="mod"] {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background-size: 200% 200%;
+  animation: modGradient 3s ease infinite;
+  box-shadow: 0 0 20px rgba(79, 172, 254, 0.5), 0 0 40px rgba(0, 242, 254, 0.3);
+}
+
+.user-profile-role[data-role="mod"]::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  animation: modFlicker 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.user-profile-role[data-role="mod"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, 
+    transparent 30%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 70%
+  );
+  animation: modShine 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes modGradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes modFlicker {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    opacity: 0.6;
+    transform: scale(1.1) rotate(5deg);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(0.95) rotate(-5deg);
+  }
+  75% {
+    opacity: 0.7;
+    transform: scale(1.05) rotate(3deg);
+  }
+}
+
+@keyframes modShine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
 }
 
 .user-profile-role[data-role="helper"] {
   background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  background-size: 200% 200%;
+  animation: helperGradient 3s ease infinite;
+  box-shadow: 0 0 20px rgba(67, 233, 123, 0.5), 0 0 40px rgba(56, 249, 215, 0.3);
+}
+
+.user-profile-role[data-role="helper"]::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  animation: helperFlicker 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.user-profile-role[data-role="helper"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, 
+    transparent 30%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 70%
+  );
+  animation: helperShine 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes helperGradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes helperFlicker {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    opacity: 0.6;
+    transform: scale(1.1) rotate(5deg);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(0.95) rotate(-5deg);
+  }
+  75% {
+    opacity: 0.7;
+    transform: scale(1.05) rotate(3deg);
+  }
+}
+
+@keyframes helperShine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
 }
 
 .user-profile-level {
