@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
 /**
@@ -12,23 +11,19 @@ import User from '../models/User.js';
  * Usage:
  * - checkRole('admin') - only admin
  * - checkRole(['admin', 'mod']) - admin or mod
+ * 
+ * SECURITY: This middleware MUST be used AFTER authMiddleware
  */
 export const checkRole = (allowedRoles) => {
   return async (req, res, next) => {
     try {
-      // Get token from cookie
-      const token = req.cookies.token;
-      
-      if (!token) {
-        return res.status(401).json({ message: 'Authentication required' });
+      // Ensure authMiddleware was called first
+      if (!req.userId) {
+        return res.status(401).json({ message: 'Authentication required. Use authMiddleware first.' });
       }
 
-      // Verify token and extract user ID
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const userId = decoded.id;
-
       // Fetch user from database to get REAL role (not from token/request)
-      const user = await User.findById(userId).select('role username');
+      const user = await User.findById(req.userId).select('role username');
       
       if (!user) {
         return res.status(401).json({ message: 'User not found' });
@@ -48,7 +43,7 @@ export const checkRole = (allowedRoles) => {
 
       // Attach user info to request for use in route handlers
       req.user = {
-        id: userId,
+        id: req.userId,
         username: user.username,
         role: user.role
       };
@@ -56,15 +51,6 @@ export const checkRole = (allowedRoles) => {
       next();
     } catch (error) {
       console.error('Role check error:', error);
-      
-      if (error.name === 'JsonWebTokenError') {
-        return res.status(401).json({ message: 'Invalid token' });
-      }
-      
-      if (error.name === 'TokenExpiredError') {
-        return res.status(401).json({ message: 'Token expired' });
-      }
-      
       return res.status(500).json({ message: 'Authorization error' });
     }
   };

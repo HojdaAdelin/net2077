@@ -1,26 +1,27 @@
 .support-button {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
   width: 56px;
   height: 56px;
   background: var(--accent-primary);
   color: var(--bg-primary);
   border: none;
   border-radius: 50%;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px var(--shadow);
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
   z-index: 1000;
+  user-select: none;
 }
 
 .support-button:hover {
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px var(--shadow-hover);
   background: var(--accent-secondary);
+}
+
+.support-button:active {
+  box-shadow: 0 2px 8px var(--shadow);
 }
 
 .support-overlay {
@@ -230,22 +231,22 @@
 
 .support-popup {
   position: fixed;
-  bottom: 100px;
-  right: 24px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 8px;
   box-shadow: 0 4px 12px var(--shadow);
   z-index: 999;
   animation: slideInUp 0.3s ease;
-  transform-origin: bottom right;
+  transform-origin: bottom center;
+  pointer-events: auto;
 }
 
 .support-popup::after {
   content: '';
   position: absolute;
   bottom: -8px;
-  right: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 0;
   height: 0;
   border-left: 8px solid transparent;
@@ -257,7 +258,8 @@
   content: '';
   position: absolute;
   bottom: -9px;
-  right: 19px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 0;
   height: 0;
   border-left: 9px solid transparent;

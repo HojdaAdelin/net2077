@@ -22,6 +22,7 @@ import Lab from './pages/Lab';
 import Terminal from './pages/Terminal';
 import IS from './pages/IS';
 import Profile from './pages/Profile';
+import Forum from './pages/Forum';
 import './styles/global.css';
 
 export default function App() {
@@ -49,7 +50,9 @@ export default function App() {
                   <Route path="/lab" element={<Lab />} />
                   <Route path="/terminal" element={<Terminal />} />
                   <Route path="/is" element={<IS />} />
-              <Route path="/profile/:username" element={<Profile />} />
+                  <Route path="/forum" element={<Forum />} />
+                  <Route path="/forum/:zoneId/:itemId" element={<Forum />} />
+                  <Route path="/profile/:username" element={<Profile />} />
                 </Routes>
                 <Footer />
                 <SupportButton />

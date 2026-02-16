@@ -9,6 +9,9 @@ const SupportButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [position, setPosition] = useState({ x: window.innerWidth - 80, y: window.innerHeight - 80 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -20,6 +23,9 @@ const SupportButton = () => {
   useEffect(() => {
     const checkDevice = () => {
       setIsDesktop(window.innerWidth >= 1024);
+      if (window.innerWidth >= 1024) {
+        setPosition({ x: window.innerWidth - 80, y: window.innerHeight - 80 });
+      }
     };
 
     checkDevice();
@@ -35,12 +41,11 @@ const SupportButton = () => {
       setShowPopup(false);
       setTimeout(() => {
         setShowPopup(false);
-      }, 5000); // Hide after 5 seconds
+      }, 5000);
     };
 
-    // Show popup immediately for testing, then every 10 minutes
-    const initialTimer = setTimeout(showPopupTimer, 2000); // Show after 2 seconds
-    const timer = setInterval(showPopupTimer, 10 * 60 * 1000); // 10 minutes
+    const initialTimer = setTimeout(showPopupTimer, 2000);
+    const timer = setInterval(showPopupTimer, 10 * 60 * 1000);
 
     return () => {
       clearTimeout(initialTimer);
@@ -48,7 +53,50 @@ const SupportButton = () => {
     };
   }, [isDesktop, user]);
 
+  useEffect(() => {
+    if (isDragging) {
+      const handleMouseMove = (e) => {
+        const newX = e.clientX - dragStart.x;
+        const newY = e.clientY - dragStart.y;
+
+        const maxX = window.innerWidth - 56;
+        const maxY = window.innerHeight - 56;
+
+        setPosition({
+          x: Math.max(0, Math.min(newX, maxX)),
+          y: Math.max(0, Math.min(newY, maxY))
+        });
+      };
+
+      const handleMouseUp = () => {
+        setIsDragging(false);
+      };
+
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+      
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, dragStart, position]);
+
   if (!isDesktop) return null;
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setDragStart({
+      x: e.clientX - position.x,
+      y: e.clientY - position.y
+    });
+  };
+
+  const handleClick = (e) => {
+    if (!isDragging) {
+      setIsOpen(true);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -102,14 +150,26 @@ const SupportButton = () => {
     <>
       <button 
         className="support-button"
-        onClick={() => setIsOpen(true)}
-        title="Support"
+        onMouseDown={handleMouseDown}
+        onClick={handleClick}
+        style={{
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+          cursor: isDragging ? 'grabbing' : 'grab'
+        }}
+        title="Support (Drag to move)"
       >
         <CircleAlert size={32} />
       </button>
 
       {showPopup && (
-        <div className="support-popup">
+        <div 
+          className="support-popup"
+          style={{
+            left: `${position.x}px`,
+            top: `${position.y - 80}px`
+          }}
+        >
           <div className="popup-content">
             <span className="popup-text">Want to request a feature?</span>
             <button 

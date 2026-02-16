@@ -9,6 +9,12 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'helper', 'mod', 'head-mod', 'admin', 'head-admin', 'root'], 
     default: 'user' 
   },
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  friendRequests: [{
+    from: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    createdAt: { type: Date, default: Date.now }
+  }],
+  sentFriendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   solvedQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
   solvedByTag: {
     LINUX: { type: Number, default: 0 },

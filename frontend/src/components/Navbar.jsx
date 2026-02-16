@@ -5,9 +5,10 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
 import { useInbox } from '../context/InboxContext';
-import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal } from 'lucide-react';
+import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
+import SupportButton from './SupportButton';
 import '../styles/Navbar.css';
 
 export default function Navbar() {
@@ -103,6 +104,7 @@ export default function Navbar() {
           </Link> */
           } 
           <Link to="/is" onClick={closeMobileMenu}>IS/Debug</Link>
+          <Link to="/forum" onClick={closeMobileMenu}>Forum</Link>
           
           <div 
             className="practice-dropdown-container" 
