@@ -413,12 +413,12 @@
 }
 
 .message {
-  max-width: 70%;
-  padding: 0.75rem 1rem;
+  width: 40%;
+  padding: 1rem 1.25rem;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.35rem;
 }
 
 .message.sent {
@@ -434,15 +434,17 @@
 }
 
 .message-author {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  opacity: 0.8;
+  opacity: 0.85;
+  margin-bottom: 0.15rem;
 }
 
 .message-text {
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: 15px;
+  line-height: 1.6;
   word-wrap: break-word;
+  word-break: break-word;
 }
 
 .message-time {
@@ -517,7 +519,7 @@
   }
 
   .message {
-    max-width: 85%;
+    width: 60%;
   }
 }
 
@@ -544,7 +546,7 @@
   }
 
   .message {
-    max-width: 90%;
+    width: 75%;
   }
 }
 
