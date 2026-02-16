@@ -431,10 +431,26 @@ export default function Forum() {
                 <Users size={18} />
                 Friends
               </button>
-              <Link to={`/profile/${user.username}`} className="sidebar-nav-btn">
-                <UserIcon size={18} />
-                Profile
-              </Link>
+              {user.role && user.role !== 'user' ? (
+                <Link 
+                  to={`/profile/${user.username}`} 
+                  className="sidebar-profile-link"
+                  data-role={user.role}
+                >
+                  <div className="profile-link-left">
+                    <UserIcon size={18} />
+                    <span className="profile-username">{user.username}</span>
+                  </div>
+                  <span className="profile-role-badge">
+                    {user.role.replace('-', ' ')}
+                  </span>
+                </Link>
+              ) : (
+                <Link to={`/profile/${user.username}`} className="sidebar-nav-btn">
+                  <UserIcon size={18} />
+                  Profile
+                </Link>
+              )}
             </div>
 
             {activeView === 'friends' && (

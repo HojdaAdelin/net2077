@@ -1313,3 +1313,345 @@
     margin-left: auto;
   }
 }
+
+
+/* Sidebar Profile Link with Role Effects */
+.sidebar-profile-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-link-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.profile-username {
+  position: relative;
+  z-index: 1;
+}
+
+.profile-role-badge {
+  position: relative;
+  z-index: 1;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.25rem 0.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* Helper - Green/Cyan Gradient */
+.sidebar-profile-link[data-role="helper"] {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  background-size: 200% 200%;
+  animation: helperGradient 3s ease infinite;
+  box-shadow: 0 0 15px rgba(67, 233, 123, 0.4);
+}
+
+.sidebar-profile-link[data-role="helper"]::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  animation: helperFlicker 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.sidebar-profile-link[data-role="helper"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, 
+    transparent 30%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 70%
+  );
+  animation: helperShine 3s linear infinite;
+  pointer-events: none;
+}
+
+/* Mod - Blue Gradient */
+.sidebar-profile-link[data-role="mod"] {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background-size: 200% 200%;
+  animation: modGradient 3s ease infinite;
+  box-shadow: 0 0 15px rgba(79, 172, 254, 0.4);
+}
+
+.sidebar-profile-link[data-role="mod"]::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  animation: modFlicker 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.sidebar-profile-link[data-role="mod"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, 
+    transparent 30%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 70%
+  );
+  animation: modShine 3s linear infinite;
+  pointer-events: none;
+}
+
+/* Head Mod - Enhanced Blue/Purple */
+.sidebar-profile-link[data-role="head-mod"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #4facfe 100%);
+  background-size: 200% 200%;
+  animation: headModGradient 3s ease infinite;
+  box-shadow: 0 0 15px rgba(102, 126, 234, 0.4);
+}
+
+.sidebar-profile-link[data-role="head-mod"]::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  animation: headModFlicker 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.sidebar-profile-link[data-role="head-mod"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, 
+    transparent 30%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 70%
+  );
+  animation: headModShine 3s linear infinite;
+  pointer-events: none;
+}
+
+/* Admin - Fire Gradient */
+.sidebar-profile-link[data-role="admin"] {
+  background: linear-gradient(135deg, #ff6b00 0%, #ff0844 50%, #ffb800 100%);
+  background-size: 200% 200%;
+  animation: fireGradient 3s ease infinite;
+  box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
+}
+
+.sidebar-profile-link[data-role="admin"]::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  animation: fireFlicker 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.sidebar-profile-link[data-role="admin"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, 
+    transparent 30%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 70%
+  );
+  animation: fireShine 3s linear infinite;
+  pointer-events: none;
+}
+
+/* Head Admin - Enhanced Fire with Gold */
+.sidebar-profile-link[data-role="head-admin"] {
+  background: linear-gradient(135deg, #ffd700 0%, #ff8c00 50%, #ff4500 100%);
+  background-size: 200% 200%;
+  animation: headAdminGradient 3s ease infinite;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.sidebar-profile-link[data-role="head-admin"]::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+  animation: headAdminFlicker 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.sidebar-profile-link[data-role="head-admin"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, 
+    transparent 30%, 
+    rgba(255, 255, 255, 0.3) 50%, 
+    transparent 70%
+  );
+  animation: headAdminShine 3s linear infinite;
+  pointer-events: none;
+}
+
+/* Root - Ultimate Dark/Purple */
+.sidebar-profile-link[data-role="root"] {
+  background: linear-gradient(135deg, #1a0033 0%, #4a0080 30%, #8b00ff 60%, #ff00ff 100%);
+  background-size: 300% 300%;
+  animation: rootGradient 4s ease infinite;
+  box-shadow: 
+    0 0 20px rgba(138, 0, 255, 0.6), 
+    0 0 40px rgba(255, 0, 255, 0.4);
+}
+
+.sidebar-profile-link[data-role="root"]::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, transparent 70%);
+  animation: rootFlicker 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.sidebar-profile-link[data-role="root"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, 
+    transparent 20%, 
+    rgba(255, 255, 255, 0.4) 50%, 
+    transparent 80%
+  );
+  animation: rootShine 2s linear infinite;
+  pointer-events: none;
+}
+
+/* Animations */
+@keyframes helperGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes helperFlicker {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+@keyframes helperShine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes modGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes modFlicker {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+@keyframes modShine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes headModGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes headModFlicker {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+@keyframes headModShine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes fireGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes fireFlicker {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+@keyframes fireShine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes headAdminGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes headAdminFlicker {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+@keyframes headAdminShine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes rootGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes rootFlicker {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes rootShine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.sidebar-profile-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
