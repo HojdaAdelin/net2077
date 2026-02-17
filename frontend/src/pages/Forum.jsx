@@ -34,7 +34,7 @@ const getIconComponent = (iconName) => {
 export default function Forum() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const { zoneId, itemId } = useParams();
+  const { zoneId, itemId, topicId } = useParams();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeView, setActiveView] = useState('friends');
   const [friends, setFriends] = useState([]);
@@ -54,23 +54,40 @@ export default function Forum() {
   const [modalData, setModalData] = useState({ name: '', icon: 'MessageSquare', order: 1, zoneId: null });
   const [currentItem, setCurrentItem] = useState(null);
   const [topics, setTopics] = useState([]);
+  const [currentTopic, setCurrentTopic] = useState(null);
+  const [replies, setReplies] = useState([]);
+  const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1 });
+  const [replyContent, setReplyContent] = useState('');
+  const [editingTopic, setEditingTopic] = useState(false);
+  const [loadingTopic, setLoadingTopic] = useState(false);
+  const [loadingItem, setLoadingItem] = useState(false);
   const [editingZone, setEditingZone] = useState(null);
   const [editingItem, setEditingItem] = useState(null);
 
   useEffect(() => {
     if (user) {
       loadFriends();
-      if (zoneId && itemId) {
+      if (topicId) {
         setCurrentItem(null);
+        setCurrentTopic(null);
+        setTopics([]);
+        setReplies([]);
+        loadTopic();
+      } else if (zoneId && itemId) {
+        setCurrentTopic(null);
+        setCurrentItem(null);
+        setReplies([]);
         setTopics([]);
         loadItemTopics();
       } else {
+        setCurrentTopic(null);
         setCurrentItem(null);
         setTopics([]);
+        setReplies([]);
         loadForumStructure();
       }
     }
-  }, [user, zoneId, itemId]);
+  }, [user, zoneId, itemId, topicId]);
 
   useEffect(() => {
     if (messageWaitTime > 0) {
@@ -109,6 +126,7 @@ export default function Forum() {
   };
 
   const loadItemTopics = async () => {
+    setLoadingItem(true);
     try {
       const response = await fetch(`${API_URL}/forum/zones/${zoneId}/items/${itemId}/topics`, {
         credentials: 'include'
@@ -120,6 +138,8 @@ export default function Forum() {
       }
     } catch (error) {
       console.error('Error loading topics:', error);
+    } finally {
+      setLoadingItem(false);
     }
   };
 
@@ -153,6 +173,89 @@ export default function Forum() {
     } catch (error) {
       console.error('Error deleting topic:', error);
     }
+  };
+
+  const loadTopic = async (page = 1) => {
+    setLoadingTopic(true);
+    try {
+      const response = await fetch(`${API_URL}/forum/topics/${topicId}?page=${page}&limit=10`, {
+        credentials: 'include'
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setCurrentTopic(data.topic);
+        setReplies(data.replies || []);
+        setPagination(data.pagination);
+      }
+    } catch (error) {
+      console.error('Error loading topic:', error);
+    } finally {
+      setLoadingTopic(false);
+    }
+  };
+
+  const updateTopicContent = async (content, minRoleToReply) => {
+    try {
+      const response = await fetch(`${API_URL}/forum/topics/${topicId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ content, minRoleToReply })
+      });
+      if (response.ok) {
+        loadTopic(pagination.currentPage);
+        setEditingTopic(false);
+      }
+    } catch (error) {
+      console.error('Error updating topic:', error);
+    }
+  };
+
+  const createReply = async () => {
+    if (!replyContent.trim()) return;
+    
+    try {
+      const response = await fetch(`${API_URL}/forum/topics/${topicId}/replies`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ content: replyContent })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setReplyContent('');
+        loadTopic(pagination.currentPage);
+      } else {
+        alert(data.message || 'Error creating reply');
+      }
+    } catch (error) {
+      console.error('Error creating reply:', error);
+      alert('Error creating reply');
+    }
+  };
+
+  const deleteReply = async (replyId) => {
+    try {
+      const response = await fetch(`${API_URL}/forum/topics/${topicId}/replies/${replyId}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      if (response.ok) {
+        loadTopic(pagination.currentPage);
+      }
+    } catch (error) {
+      console.error('Error deleting reply:', error);
+    }
+  };
+
+  const canUserReply = () => {
+    if (!currentTopic || !user) return false;
+    
+    const roleHierarchy = ['user', 'helper', 'mod', 'head-mod', 'admin', 'head-admin', 'root'];
+    const userRoleIndex = roleHierarchy.indexOf(user.role || 'user');
+    const minRoleIndex = roleHierarchy.indexOf(currentTopic.minRoleToReply || 'user');
+    
+    return userRoleIndex >= minRoleIndex;
   };
 
   const createZone = async (name, order) => {
@@ -547,13 +650,23 @@ export default function Forum() {
           </button>
         )}
 
-        {(user?.role === 'root' || user?.role === 'head-admin') && currentItem && !selectedFriend && (
+        {(user?.role === 'root' || user?.role === 'head-admin') && currentItem && !selectedFriend && !currentTopic && (
           <button 
             className="edit-item-btn"
             onClick={openTopicModal}
           >
             <Plus size={18} />
             Add Topic
+          </button>
+        )}
+
+        {(user?.role === 'root' || user?.role === 'head-admin') && currentTopic && !selectedFriend && (
+          <button 
+            className="edit-topic-btn"
+            onClick={() => setEditingTopic(!editingTopic)}
+          >
+            {editingTopic ? <XIcon size={18} /> : <Settings size={18} />}
+            {editingTopic ? 'Cancel Edit' : 'Edit Topic'}
           </button>
         )}
         
@@ -600,7 +713,170 @@ export default function Forum() {
           </div>
         ) : (
           <div className="forum-content">
-            {currentItem ? (
+            {loadingTopic ? (
+              <div className="loading-container">
+                <div className="loading-spinner"></div>
+                <p>Loading topic...</p>
+              </div>
+            ) : loadingItem ? (
+              <div className="loading-container">
+                <div className="loading-spinner"></div>
+                <p>Loading topics...</p>
+              </div>
+            ) : currentTopic ? (
+              <div className="topic-view">
+                <div className="topic-view-header">
+                  <button 
+                    className="back-btn" 
+                    onClick={() => {
+                      setCurrentTopic(null);
+                      setReplies([]);
+                      setReplyContent('');
+                      navigate(`/forum/${currentTopic.zoneId}/${currentTopic.itemId}`);
+                    }}
+                  >
+                    <ArrowLeft size={20} />
+                    Back to Topics
+                  </button>
+                  <h2 className="topic-view-title">{currentTopic.title}</h2>
+                </div>
+
+                <div className="topic-main-content">
+                  <div className="topic-author-card">
+                    <Link to={`/profile/${currentTopic.author.username}`} className="author-link">
+                      <div className="author-avatar">
+                        {currentTopic.author.profilePicture ? (
+                          <img src={currentTopic.author.profilePicture} alt={currentTopic.author.username} />
+                        ) : (
+                          <UserIcon size={32} />
+                        )}
+                      </div>
+                      <div className="author-info">
+                        <span className="author-username">{currentTopic.author.username}</span>
+                        <span className="author-role" data-role={currentTopic.author.role}>
+                          {currentTopic.author.role}
+                        </span>
+                        <span className="author-level">Level {currentTopic.author.level}</span>
+                      </div>
+                    </Link>
+                  </div>
+
+                  <div className="topic-content-area">
+                    {editingTopic ? (
+                      <div className="topic-edit-form">
+                        <textarea
+                          value={currentTopic.content}
+                          onChange={(e) => setCurrentTopic({ ...currentTopic, content: e.target.value })}
+                          placeholder="Topic content..."
+                          rows="10"
+                        />
+                        <div className="topic-edit-controls">
+                          <label>
+                            Min Role to Reply:
+                            <select
+                              value={currentTopic.minRoleToReply}
+                              onChange={(e) => setCurrentTopic({ ...currentTopic, minRoleToReply: e.target.value })}
+                            >
+                              <option value="user">User</option>
+                              <option value="helper">Helper</option>
+                              <option value="mod">Mod</option>
+                              <option value="head-mod">Head Mod</option>
+                              <option value="admin">Admin</option>
+                              <option value="head-admin">Head Admin</option>
+                              <option value="root">Root</option>
+                            </select>
+                          </label>
+                          <div className="edit-buttons">
+                            <button onClick={() => updateTopicContent(currentTopic.content, currentTopic.minRoleToReply)}>
+                              Save
+                            </button>
+                            <button onClick={() => setEditingTopic(false)}>Cancel</button>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="topic-content-display">
+                        {currentTopic.content || <em>No content yet</em>}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="topic-replies-section">
+                  <h3>Replies ({currentTopic.replyCount || 0})</h3>
+                  
+                  <div className="replies-list">
+                    {replies.map((reply) => (
+                      <div key={reply._id} className="reply-card">
+                        <Link to={`/profile/${reply.author.username}`} className="reply-author">
+                          <div className="reply-avatar">
+                            {reply.author.profilePicture ? (
+                              <img src={reply.author.profilePicture} alt={reply.author.username} />
+                            ) : (
+                              <UserIcon size={24} />
+                            )}
+                          </div>
+                          <div className="reply-author-info">
+                            <span className="reply-username">{reply.author.username}</span>
+                            <span className="reply-role" data-role={reply.author.role}>
+                              {reply.author.role}
+                            </span>
+                          </div>
+                        </Link>
+                        <div className="reply-content">{reply.content}</div>
+                        <div className="reply-footer">
+                          <span className="reply-date">
+                            {new Date(reply.createdAt).toLocaleString()}
+                          </span>
+                          {(user?.role === 'root' || user?.role === 'head-admin') && (
+                            <button 
+                              className="delete-reply-btn"
+                              onClick={() => deleteReply(reply._id)}
+                            >
+                              <Trash2 size={14} />
+                              Delete
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {pagination.totalPages > 1 && (
+                    <div className="pagination">
+                      <button 
+                        disabled={pagination.currentPage === 1}
+                        onClick={() => loadTopic(pagination.currentPage - 1)}
+                      >
+                        Previous
+                      </button>
+                      <span>Page {pagination.currentPage} of {pagination.totalPages}</span>
+                      <button 
+                        disabled={pagination.currentPage === pagination.totalPages}
+                        onClick={() => loadTopic(pagination.currentPage + 1)}
+                      >
+                        Next
+                      </button>
+                    </div>
+                  )}
+
+                  {canUserReply() && (
+                    <div className="reply-form">
+                      <textarea
+                        value={replyContent}
+                        onChange={(e) => setReplyContent(e.target.value)}
+                        placeholder="Write your reply..."
+                        rows="4"
+                      />
+                      <button onClick={createReply} disabled={!replyContent.trim()}>
+                        <Send size={18} />
+                        Post Reply
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : currentItem ? (
               <div className="item-topics-view">
                 <div className="item-header">
                   <button 
@@ -630,7 +906,11 @@ export default function Forum() {
                     </div>
                   ) : (
                     topics.map((topic) => (
-                      <div key={topic._id} className="topic-card">
+                      <div 
+                        key={topic._id} 
+                        className="topic-card"
+                        onClick={() => navigate(`/forum/topic/${topic._id}`)}
+                      >
                         <div className="topic-left">
                           <h3 className="topic-title">{topic.title}</h3>
                           <div className="topic-meta">
@@ -647,7 +927,10 @@ export default function Forum() {
                         {(user?.role === 'root' || user?.role === 'head-admin') && (
                           <button 
                             className="delete-topic-btn"
-                            onClick={() => deleteTopic(topic._id)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteTopic(topic._id);
+                            }}
                           >
                             <Trash2 size={16} />
                           </button>

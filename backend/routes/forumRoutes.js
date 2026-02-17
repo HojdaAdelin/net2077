@@ -11,7 +11,11 @@ import {
   deleteItem,
   getItemTopics,
   createTopic,
-  deleteTopic
+  deleteTopic,
+  getTopic,
+  updateTopic,
+  createReply,
+  deleteReply
 } from '../controllers/forumController.js';
 
 const router = express.Router();
@@ -30,5 +34,11 @@ router.delete('/zones/:zoneId/items/:itemId', authMiddleware, isRoot, deleteItem
 router.get('/zones/:zoneId/items/:itemId/topics', authMiddleware, getItemTopics);
 router.post('/zones/:zoneId/items/:itemId/topics', authMiddleware, isHeadAdmin, createTopic);
 router.delete('/zones/:zoneId/items/:itemId/topics/:topicId', authMiddleware, isHeadAdmin, deleteTopic);
+
+// Single topic and replies
+router.get('/topics/:topicId', authMiddleware, getTopic);
+router.put('/topics/:topicId', authMiddleware, isHeadAdmin, updateTopic);
+router.post('/topics/:topicId/replies', authMiddleware, createReply);
+router.delete('/topics/:topicId/replies/:replyId', authMiddleware, isHeadAdmin, deleteReply);
 
 export default router;

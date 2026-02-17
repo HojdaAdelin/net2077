@@ -12,4 +12,7 @@
 11. ce face lshw
 12. ce afiseaza $?
 13. cum se mai numesc Procesele neinteractive (procese batch)
-14. 
+14. cum iesi din terminal daca esti in terminalul root? (exit)
+15. abrevierea setuid (set-user-id-on-execution)
+16. s reprezinta bitul (setuid)
+17. 

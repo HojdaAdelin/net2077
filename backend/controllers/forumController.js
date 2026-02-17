@@ -242,3 +242,145 @@ export const deleteTopic = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+
+// Get single topic with content
+export const getTopic = async (req, res) => {
+  try {
+    const { topicId } = req.params;
+    const { page = 1, limit = 10 } = req.query;
+
+    const topic = await ForumTopic.findById(topicId)
+      .populate('author', 'username level role profilePicture');
+
+    if (!topic) {
+      return res.status(404).json({ message: 'Topic not found' });
+    }
+
+    // Get replies with pagination
+    const ForumReply = (await import('../models/ForumReply.js')).default;
+    const skip = (page - 1) * limit;
+    
+    const replies = await ForumReply.find({ topicId })
+      .populate('author', 'username level role profilePicture')
+      .sort({ createdAt: 1 })
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    const totalReplies = await ForumReply.countDocuments({ topicId });
+
+    res.json({
+      topic,
+      replies,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(totalReplies / limit),
+        totalReplies,
+        limit: parseInt(limit)
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Update topic (content and minRoleToReply)
+export const updateTopic = async (req, res) => {
+  try {
+    const { topicId } = req.params;
+    const { content, minRoleToReply } = req.body;
+
+    const topic = await ForumTopic.findById(topicId);
+    if (!topic) {
+      return res.status(404).json({ message: 'Topic not found' });
+    }
+
+    if (content !== undefined) topic.content = content;
+    if (minRoleToReply !== undefined) topic.minRoleToReply = minRoleToReply;
+
+    await topic.save();
+
+    const updatedTopic = await ForumTopic.findById(topicId)
+      .populate('author', 'username level role profilePicture');
+
+    res.json({ message: 'Topic updated successfully', topic: updatedTopic });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Create reply
+export const createReply = async (req, res) => {
+  try {
+    const { topicId } = req.params;
+    const { content } = req.body;
+
+    if (!content || !content.trim()) {
+      return res.status(400).json({ message: 'Content is required' });
+    }
+
+    const topic = await ForumTopic.findById(topicId);
+    if (!topic) {
+      return res.status(404).json({ message: 'Topic not found' });
+    }
+
+    // Check if user has required role
+    const roleHierarchy = ['user', 'helper', 'mod', 'head-mod', 'admin', 'head-admin', 'root'];
+    const userRoleIndex = roleHierarchy.indexOf(req.user.role);
+    const minRoleIndex = roleHierarchy.indexOf(topic.minRoleToReply);
+
+    if (userRoleIndex < minRoleIndex) {
+      return res.status(403).json({ 
+        message: `You need at least ${topic.minRoleToReply} role to reply to this topic` 
+      });
+    }
+
+    const ForumReply = (await import('../models/ForumReply.js')).default;
+    const reply = new ForumReply({
+      topicId,
+      author: req.user.id,
+      content: content.trim()
+    });
+
+    await reply.save();
+
+    // Update reply count and last reply time
+    topic.replyCount = (topic.replyCount || 0) + 1;
+    topic.lastReply = new Date();
+    await topic.save();
+
+    const populatedReply = await ForumReply.findById(reply._id)
+      .populate('author', 'username level role profilePicture');
+
+    res.json({ message: 'Reply created successfully', reply: populatedReply });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Delete reply
+export const deleteReply = async (req, res) => {
+  try {
+    const { topicId, replyId } = req.params;
+
+    const ForumReply = (await import('../models/ForumReply.js')).default;
+    const reply = await ForumReply.findById(replyId);
+    
+    if (!reply) {
+      return res.status(404).json({ message: 'Reply not found' });
+    }
+
+    await ForumReply.findByIdAndDelete(replyId);
+
+    // Update reply count
+    const topic = await ForumTopic.findById(topicId);
+    if (topic && topic.replyCount > 0) {
+      topic.replyCount -= 1;
+      await topic.save();
+    }
+
+    res.json({ message: 'Reply deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

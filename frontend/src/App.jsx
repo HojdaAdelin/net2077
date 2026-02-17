@@ -52,6 +52,7 @@ export default function App() {
                   <Route path="/is" element={<IS />} />
                   <Route path="/forum" element={<Forum />} />
                   <Route path="/forum/:zoneId/:itemId" element={<Forum />} />
+                  <Route path="/forum/topic/:topicId" element={<Forum />} />
                   <Route path="/profile/:username" element={<Profile />} />
                 </Routes>
                 <Footer />
