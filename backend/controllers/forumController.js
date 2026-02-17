@@ -324,10 +324,18 @@ export const createReply = async (req, res) => {
       return res.status(404).json({ message: 'Topic not found' });
     }
 
+    // Get user from database
+    const User = (await import('../models/User.js')).default;
+    const user = await User.findById(req.userId).select('role');
+    
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+
     // Check if user has required role
     const roleHierarchy = ['user', 'helper', 'mod', 'head-mod', 'admin', 'head-admin', 'root'];
-    const userRoleIndex = roleHierarchy.indexOf(req.user.role);
-    const minRoleIndex = roleHierarchy.indexOf(topic.minRoleToReply);
+    const userRoleIndex = roleHierarchy.indexOf(user.role || 'user');
+    const minRoleIndex = roleHierarchy.indexOf(topic.minRoleToReply || 'user');
 
     if (userRoleIndex < minRoleIndex) {
       return res.status(403).json({ 
@@ -338,7 +346,7 @@ export const createReply = async (req, res) => {
     const ForumReply = (await import('../models/ForumReply.js')).default;
     const reply = new ForumReply({
       topicId,
-      author: req.user.id,
+      author: req.userId,
       content: content.trim()
     });
 
@@ -354,6 +362,7 @@ export const createReply = async (req, res) => {
 
     res.json({ message: 'Reply created successfully', reply: populatedReply });
   } catch (error) {
+    console.error('Create reply error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
