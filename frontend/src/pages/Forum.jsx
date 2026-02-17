@@ -640,7 +640,7 @@ export default function Forum() {
           </button>
         )}
         
-        {user?.role === 'root' && !selectedFriend && !currentItem && (
+        {user?.role === 'root' && !selectedFriend && !currentItem && !currentTopic && (
           <button 
             className="edit-forum-btn"
             onClick={() => setEditMode(!editMode)}

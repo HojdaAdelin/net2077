@@ -1744,6 +1744,7 @@
   align-items: center;
   justify-content: center;
   border: 3px solid var(--border);
+  color: var(--text-primary);
 }
 
 .author-avatar img {
@@ -1944,6 +1945,7 @@
   align-items: center;
   justify-content: center;
   border: 2px solid var(--border);
+  color: var(--text-primary);
 }
 
 .reply-avatar img {
