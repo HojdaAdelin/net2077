@@ -5,7 +5,7 @@ import { API_URL } from '../config';
 import { User, Trophy, Zap, Target, Calendar, Activity, Award, Monitor, Globe, Terminal, Wrench, Crown, Medal } from 'lucide-react';
 import '../styles/Profile.css';
 
-// Badge Component
+
 function Badge({ type, unlocked, rank }) {
   const [showTooltip, setShowTooltip] = useState(false);
   
@@ -14,7 +14,7 @@ function Badge({ type, unlocked, rank }) {
       icon: <Monitor size={20} />,
       name: 'Linux Master',
       description: '500+ Linux questions solved',
-      color: '#f97316' // Orange-600 - different from rank 1 gold
+      color: '#f97316' 
     },
     network: {
       icon: <Globe size={20} />,
@@ -26,13 +26,13 @@ function Badge({ type, unlocked, rank }) {
       icon: <Terminal size={20} />,
       name: 'Terminal Pro',
       description: '50+ Terminal commands solved',
-      color: '#22c55e' // Green-500
+      color: '#22c55e' 
     },
     top1: {
       icon: <Crown size={20} />,
       name: 'Champion',
       description: 'Rank #1 on Leaderboard',
-      color: '#fbbf24' // Amber-400 - gold
+      color: '#fbbf24'
     },
     top2: {
       icon: <Medal size={20} />,
@@ -166,7 +166,7 @@ export default function Profile() {
 
   const isOwnProfile = currentUser && currentUser.username === username;
 
-  // Determine unlocked badges
+
   const badges = {
     linux: profileData.categoryStats.linux >= 500,
     network: profileData.categoryStats.network >= 50,

@@ -10,10 +10,8 @@ export const getUserProfile = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Calculate total questions solved
     const totalQuestionsSolved = user.solvedByTag.LINUX + user.solvedByTag.NETWORK + user.solvedTerminalQuestions.length + user.solvedIS.length;
     
-    // Determine preferred category
     const categoryStats = {
       linux: user.solvedByTag.LINUX || 0,
       network: user.solvedByTag.NETWORK || 0,
@@ -25,7 +23,6 @@ export const getUserProfile = async (req, res) => {
       categoryStats[a[0]] > categoryStats[b[0]] ? a : b
     )[0];
 
-    // Calculate leaderboard rank
     const usersAbove = await User.countDocuments({ xp: { $gt: user.xp } });
     const leaderboardRank = usersAbove + 1;
 
@@ -61,10 +58,8 @@ export const getCurrentUserProfile = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Calculate total questions solved
     const totalQuestionsSolved = user.solvedByTag.LINUX + user.solvedByTag.NETWORK + user.solvedTerminalQuestions.length + user.solvedIS.length;
     
-    // Determine preferred category
     const categoryStats = {
       linux: user.solvedByTag.LINUX || 0,
       network: user.solvedByTag.NETWORK || 0,
