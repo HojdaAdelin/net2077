@@ -245,7 +245,23 @@ export const finishMatch = async (req, res) => {
       await creator.save();
       if (opponent) await opponent.save();
     } else if (match.mode === 'bloody') {
-      if (match.winner) {
+      if (creatorScore === opponentScore) {
+        // Draw: fiecare primește propriul scor
+        creator.xp += creatorScore;
+        creator.level = Math.floor(creator.xp / 100) + 1;
+        
+        if (opponent) {
+          opponent.xp += opponentScore;
+          opponent.level = Math.floor(opponent.xp / 100) + 1;
+        }
+
+        if (creatorScore > 0) await updateUserStreak(creator);
+        if (opponent && opponentScore > 0) await updateUserStreak(opponent);
+
+        await creator.save();
+        if (opponent) await opponent.save();
+      } else if (match.winner) {
+        // Win/Loss: doar câștigătorul primește tot XP-ul
         const winner = match.winner.toString() === creator._id.toString() ? creator : opponent;
         const totalXP = creatorScore + opponentScore;
         

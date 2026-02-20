@@ -42,10 +42,16 @@ export default function ArenaMatch() {
         let xpToAdd = 0;
         
         if (data.match.mode === 'bloody') {
-          if (data.match.winner && data.match.winner._id === user.id) {
+          if (myScore === opponentScore) {
+            // Draw: fiecare primește propriul scor
+            xpToAdd = myScore;
+          } else if (data.match.winner && data.match.winner._id === user.id) {
+            // Win: câștigătorul primește tot XP-ul
             xpToAdd = myScore + opponentScore;
           }
+          // Loss: pierzătorul nu primește nimic (xpToAdd rămâne 0)
         } else {
+          // Normal mode: fiecare primește propriul scor
           xpToAdd = myScore;
         }
         
