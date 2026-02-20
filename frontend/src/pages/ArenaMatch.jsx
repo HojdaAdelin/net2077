@@ -37,11 +37,22 @@ export default function ArenaMatch() {
         
         const isCreator = data.match.creator._id === user.id;
         const myScore = isCreator ? data.match.creatorScore : data.match.opponentScore;
+        const opponentScore = isCreator ? data.match.opponentScore : data.match.creatorScore;
         
-        if (myScore > 0) {
+        let xpToAdd = 0;
+        
+        if (data.match.mode === 'bloody') {
+          if (data.match.winner && data.match.winner._id === user.id) {
+            xpToAdd = myScore + opponentScore;
+          }
+        } else {
+          xpToAdd = myScore;
+        }
+        
+        if (xpToAdd > 0) {
           updateUser({ 
-            xp: user.xp + myScore,
-            level: Math.floor((user.xp + myScore) / 100) + 1
+            xp: user.xp + xpToAdd,
+            level: Math.floor((user.xp + xpToAdd) / 100) + 1
           });
         }
       }
