@@ -23,6 +23,8 @@ import Terminal from './pages/Terminal';
 import IS from './pages/IS';
 import Profile from './pages/Profile';
 import Forum from './pages/Forum';
+import Arena from './pages/Arena';
+import ArenaMatch from './pages/ArenaMatch';
 import './styles/global.css';
 
 export default function App() {
@@ -53,6 +55,8 @@ export default function App() {
                   <Route path="/forum" element={<Forum />} />
                   <Route path="/forum/:zoneId/:itemId" element={<Forum />} />
                   <Route path="/forum/topic/:topicId" element={<Forum />} />
+                  <Route path="/arena" element={<Arena />} />
+                  <Route path="/arena/match/:matchId" element={<ArenaMatch />} />
                   <Route path="/profile/:username" element={<Profile />} />
                 </Routes>
                 <Footer />

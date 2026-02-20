@@ -19,6 +19,7 @@ import profileRoutes from './routes/profileRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import friendsRoutes from './routes/friendsRoutes.js';
 import forumRoutes from './routes/forumRoutes.js';
+import arenaRoutes from './routes/arenaRoutes.js';
 
 import { existsSync } from 'fs';
 const envPath = existsSync('.env') ? '.env' : '../.env';
@@ -97,6 +98,7 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/friends', friendsRoutes);
 app.use('/api/forum', forumRoutes);
+app.use('/api/arena', arenaRoutes);
 
 
 if (process.env.NODE_ENV !== 'production') {

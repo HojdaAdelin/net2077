@@ -97,14 +97,12 @@ export default function Navbar() {
         </button>
 
         <div className={`nav-links ${mobileMenuOpen ? 'active' : ''}`}>
-          { /*
-          <Link to="/lab" className="nav-link-new" onClick={closeMobileMenu}>
-            {t('navbar.lab')}
-            <span className="new-badge">NEW</span>
-          </Link> */
-          } 
-          <Link to="/is" onClick={closeMobileMenu}>IS/Debug</Link>
           <Link to="/forum" onClick={closeMobileMenu}>Forum</Link>
+          <Link to="/arena" className="nav-link-new" onClick={closeMobileMenu}>
+            Arena
+            <span className="new-badge">NEW</span>
+          </Link>
+          <Link to="/is" onClick={closeMobileMenu}>IS/Debug</Link>
           
           <div 
             className="practice-dropdown-container" 

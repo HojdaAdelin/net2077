@@ -59,6 +59,87 @@ export default function Hero() {
           </div>
         </div>
 
+        <div className="arena-showcase-section">
+          <div className="feature-card arena-feature-card">
+            <div className="arena-feature-content">
+              <div className="arena-feature-badge">
+                <Sparkles size={12} />
+                COMPETE NOW
+              </div>
+              <h3 className="arena-feature-title">Arena - 1v1 Battles</h3>
+              <p className="arena-feature-description">
+                Challenge friends or compete publicly. Test your knowledge in real-time matches with instant feedback and XP rewards.
+              </p>
+              <div className="arena-feature-highlights">
+                <div className="arena-highlight">
+                  <Trophy size={16} />
+                  <span>Win XP</span>
+                </div>
+                <div className="arena-highlight">
+                  <Clock size={16} />
+                  <span>Timed Matches</span>
+                </div>
+                <div className="arena-highlight">
+                  <Zap size={16} />
+                  <span>Live Competition</span>
+                </div>
+              </div>
+              {user ? (
+                <Link to="/arena" className="btn btn-primary arena-feature-btn">
+                  <Trophy size={18} />
+                  Enter Arena
+                </Link>
+              ) : (
+                <div className="arena-feature-auth-required">
+                  <p className="arena-auth-text">Login to compete with others</p>
+                  <Link to="/login" className="btn btn-secondary arena-feature-btn">
+                    Login to Battle
+                  </Link>
+                </div>
+              )}
+            </div>
+            <div className="arena-feature-visual">
+              <div className="arena-preview">
+                <div className="arena-preview-header">
+                  <div className="arena-player">
+                    <div className="player-avatar">👤</div>
+                    <span className="player-name">You</span>
+                  </div>
+                  <div className="arena-vs">VS</div>
+                  <div className="arena-player">
+                    <div className="player-avatar">👤</div>
+                    <span className="player-name">Opponent</span>
+                  </div>
+                </div>
+                <div className="arena-preview-body">
+                  <div className="arena-timer">
+                    <Clock size={16} />
+                    <span>2:45</span>
+                  </div>
+                  <div className="arena-score">
+                    <div className="score-item">
+                      <span className="score-label">Your Score</span>
+                      <span className="score-value">15</span>
+                    </div>
+                    <div className="score-divider"></div>
+                    <div className="score-item">
+                      <span className="score-label">Opponent</span>
+                      <span className="score-value">12</span>
+                    </div>
+                  </div>
+                  <div className="arena-progress">
+                    <div className="progress-dot active"></div>
+                    <div className="progress-dot active"></div>
+                    <div className="progress-dot active"></div>
+                    <div className="progress-dot"></div>
+                    <div className="progress-dot"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="features-section">
           <div className="feature-card terminal-feature-card">
             <div className="terminal-feature-content">
@@ -264,7 +345,7 @@ export default function Hero() {
               <Sparkles size={24} />
             </div>
             <h2 className="showcase-title">{t('hero.newExams')}</h2>
-            <div className="showcase-pulse"></div>
+            
           </div>
           
           <div className="exams-carousel">
