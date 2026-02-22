@@ -49,6 +49,23 @@ const userSchema = new mongoose.Schema({
     lastScore: { type: Number, default: 0 },
     lastTotalPoints: { type: Number, default: 0 }
   },
+  arenaStats: {
+    wins: { type: Number, default: 0 },
+    losses: { type: Number, default: 0 },
+    totalXP: { type: Number, default: 0 },
+    matchHistory: [{
+      matchId: String,
+      opponent: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      opponentName: String,
+      myScore: Number,
+      opponentScore: Number,
+      result: { type: String, enum: ['win', 'loss', 'draw'] },
+      mode: { type: String, enum: ['normal', 'bloody'] },
+      category: String,
+      xpGained: Number,
+      date: { type: Date, default: Date.now }
+    }]
+  },
   xp: { type: Number, default: 0 },
   level: { type: Number, default: 1 }
 }, { timestamps: true });

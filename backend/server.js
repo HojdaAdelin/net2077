@@ -106,13 +106,25 @@ function startArenaCleanupJob() {
   setInterval(async () => {
     try {
       const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
-      const result = await ArenaMatch.deleteMany({
+      const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+      
+      // Delete waiting matches older than 2 minutes
+      const waitingResult = await ArenaMatch.deleteMany({
         status: 'waiting',
         createdAt: { $lt: twoMinutesAgo }
       });
       
-      if (result.deletedCount > 0) {
-        console.log(`[Arena] Cleaned up ${result.deletedCount} expired matches`);
+      // Delete finished matches older than 10 minutes (in case users don't view results)
+      const finishedResult = await ArenaMatch.deleteMany({
+        status: 'finished',
+        finishedAt: { $lt: tenMinutesAgo }
+      });
+      
+      if (waitingResult.deletedCount > 0) {
+        console.log(`[Arena] Cleaned up ${waitingResult.deletedCount} expired waiting matches`);
+      }
+      if (finishedResult.deletedCount > 0) {
+        console.log(`[Arena] Cleaned up ${finishedResult.deletedCount} old finished matches`);
       }
     } catch (error) {
       console.error('[Arena] Cleanup error:', error);

@@ -16,6 +16,8 @@ const arenaMatchSchema = new mongoose.Schema({
   creatorScore: { type: Number, default: 0 },
   opponentScore: { type: Number, default: 0 },
   winner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+  creatorViewed: { type: Boolean, default: false },
+  opponentViewed: { type: Boolean, default: false },
   startedAt: { type: Date, default: null },
   finishedAt: { type: Date, default: null }
 }, { timestamps: true });

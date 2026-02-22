@@ -165,7 +165,27 @@ export const finishMatch = async (req, res) => {
       return res.status(404).json({ message: 'Match not found' });
     }
 
+    // If match has no opponent (expired), just delete it
+    if (!match.opponent) {
+      await ArenaMatch.deleteOne({ matchId: match.matchId });
+      return res.status(400).json({ message: 'Match expired without opponent' });
+    }
+
     if (match.status === 'finished') {
+      // Mark that this user has viewed the results
+      const viewerIsCreator = match.creator._id.toString() === req.userId;
+      if (viewerIsCreator) {
+        match.creatorViewed = true;
+      } else {
+        match.opponentViewed = true;
+      }
+      await match.save();
+
+      // Delete match if both have viewed
+      if (match.creatorViewed && match.opponentViewed) {
+        await ArenaMatch.deleteOne({ matchId: match.matchId });
+      }
+
       return res.json({ 
         success: true, 
         match,
@@ -230,7 +250,15 @@ export const finishMatch = async (req, res) => {
     const creator = await User.findById(match.creator);
     const opponent = await User.findById(match.opponent);
 
+    let creatorXPGained = 0;
+    let opponentXPGained = 0;
+    let creatorResult = 'draw';
+    let opponentResult = 'draw';
+
     if (match.mode === 'normal') {
+      creatorXPGained = creatorScore;
+      opponentXPGained = opponentScore;
+      
       creator.xp += creatorScore;
       creator.level = Math.floor(creator.xp / 100) + 1;
       
@@ -241,12 +269,11 @@ export const finishMatch = async (req, res) => {
 
       if (creatorScore > 0) await updateUserStreak(creator);
       if (opponent && opponentScore > 0) await updateUserStreak(opponent);
-
-      await creator.save();
-      if (opponent) await opponent.save();
     } else if (match.mode === 'bloody') {
       if (creatorScore === opponentScore) {
-        // Draw: fiecare primește propriul scor
+        creatorXPGained = creatorScore;
+        opponentXPGained = opponentScore;
+        
         creator.xp += creatorScore;
         creator.level = Math.floor(creator.xp / 100) + 1;
         
@@ -257,26 +284,114 @@ export const finishMatch = async (req, res) => {
 
         if (creatorScore > 0) await updateUserStreak(creator);
         if (opponent && opponentScore > 0) await updateUserStreak(opponent);
-
-        await creator.save();
-        if (opponent) await opponent.save();
       } else if (match.winner) {
-        // Win/Loss: doar câștigătorul primește tot XP-ul
-        const winner = match.winner.toString() === creator._id.toString() ? creator : opponent;
         const totalXP = creatorScore + opponentScore;
         
-        winner.xp += totalXP;
-        winner.level = Math.floor(winner.xp / 100) + 1;
-        await updateUserStreak(winner);
-        await winner.save();
+        if (match.winner.toString() === creator._id.toString()) {
+          creatorXPGained = totalXP;
+          opponentXPGained = 0;
+          creator.xp += totalXP;
+          creator.level = Math.floor(creator.xp / 100) + 1;
+          await updateUserStreak(creator);
+        } else {
+          creatorXPGained = 0;
+          opponentXPGained = totalXP;
+          opponent.xp += totalXP;
+          opponent.level = Math.floor(opponent.xp / 100) + 1;
+          await updateUserStreak(opponent);
+        }
       }
+    }
+
+    // Determine results
+    if (creatorScore > opponentScore) {
+      creatorResult = 'win';
+      opponentResult = 'loss';
+    } else if (opponentScore > creatorScore) {
+      creatorResult = 'loss';
+      opponentResult = 'win';
+    }
+
+    // Update arena stats for creator
+    if (!creator.arenaStats) {
+      creator.arenaStats = { wins: 0, losses: 0, totalXP: 0, matchHistory: [] };
+    }
+
+    if (creatorResult === 'win') creator.arenaStats.wins += 1;
+    else if (creatorResult === 'loss') creator.arenaStats.losses += 1;
+
+    creator.arenaStats.totalXP += creatorXPGained;
+
+    // Add to creator match history (keep last 5)
+    if (!creator.arenaStats.matchHistory) {
+      creator.arenaStats.matchHistory = [];
+    }
+    creator.arenaStats.matchHistory.unshift({
+      matchId: match.matchId,
+      opponent: opponent._id,
+      opponentName: opponent.username,
+      myScore: creatorScore,
+      opponentScore: opponentScore,
+      result: creatorResult,
+      mode: match.mode,
+      category: match.category,
+      xpGained: creatorXPGained,
+      date: new Date()
+    });
+    if (creator.arenaStats.matchHistory.length > 5) {
+      creator.arenaStats.matchHistory = creator.arenaStats.matchHistory.slice(0, 5);
+    }
+
+    await creator.save();
+
+    // Update arena stats for opponent
+    if (opponent) {
+      if (!opponent.arenaStats) {
+        opponent.arenaStats = { wins: 0, losses: 0, totalXP: 0, matchHistory: [] };
+      }
+
+      if (opponentResult === 'win') opponent.arenaStats.wins += 1;
+      else if (opponentResult === 'loss') opponent.arenaStats.losses += 1;
+
+      opponent.arenaStats.totalXP += opponentXPGained;
+
+      // Add to opponent match history (keep last 5)
+      if (!opponent.arenaStats.matchHistory) {
+        opponent.arenaStats.matchHistory = [];
+      }
+      opponent.arenaStats.matchHistory.unshift({
+        matchId: match.matchId,
+        opponent: creator._id,
+        opponentName: creator.username,
+        myScore: opponentScore,
+        opponentScore: creatorScore,
+        result: opponentResult,
+        mode: match.mode,
+        category: match.category,
+        xpGained: opponentXPGained,
+        date: new Date()
+      });
+      if (opponent.arenaStats.matchHistory.length > 5) {
+        opponent.arenaStats.matchHistory = opponent.arenaStats.matchHistory.slice(0, 5);
+      }
+
+      await opponent.save();
     }
 
     await match.populate('creator', 'username level');
     await match.populate('opponent', 'username level');
     await match.populate('winner', 'username level');
 
-    res.json({ 
+    // Mark that this user has viewed the results
+    const viewerIsCreator = match.creator._id.toString() === req.userId;
+    if (viewerIsCreator) {
+      match.creatorViewed = true;
+    } else {
+      match.opponentViewed = true;
+    }
+    await match.save();
+
+    const responseData = { 
       success: true, 
       match,
       results: {
@@ -284,7 +399,14 @@ export const finishMatch = async (req, res) => {
         opponentScore,
         winner: match.winner
       }
-    });
+    };
+
+    // Delete match only if both players have viewed the results
+    if (match.creatorViewed && match.opponentViewed) {
+      await ArenaMatch.deleteOne({ matchId: match.matchId });
+    }
+
+    res.json(responseData);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -345,6 +467,61 @@ export const getMyWaitingMatch = async (req, res) => {
     }
 
     res.json({ match });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const getArenaLeaderboard = async (req, res) => {
+  try {
+    const users = await User.find({
+      'arenaStats.wins': { $gt: 0 }
+    })
+    .select('username level arenaStats')
+    .sort({ 
+      'arenaStats.wins': -1, 
+      'arenaStats.totalXP': -1 
+    })
+    .limit(5);
+
+    const leaderboard = users.map(user => ({
+      username: user.username,
+      level: user.level,
+      wins: user.arenaStats?.wins || 0,
+      losses: user.arenaStats?.losses || 0,
+      totalXP: user.arenaStats?.totalXP || 0,
+      winRate: user.arenaStats?.wins && (user.arenaStats.wins + user.arenaStats.losses) > 0
+        ? ((user.arenaStats.wins / (user.arenaStats.wins + user.arenaStats.losses)) * 100).toFixed(1)
+        : '0.0'
+    }));
+
+    res.json({ leaderboard });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const getMyArenaStats = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId)
+      .select('username level arenaStats')
+      .populate('arenaStats.matchHistory.opponent', 'username level');
+
+    if (!user.arenaStats) {
+      return res.json({
+        wins: 0,
+        losses: 0,
+        totalXP: 0,
+        matchHistory: []
+      });
+    }
+
+    res.json({
+      wins: user.arenaStats.wins || 0,
+      losses: user.arenaStats.losses || 0,
+      totalXP: user.arenaStats.totalXP || 0,
+      matchHistory: user.arenaStats.matchHistory || []
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
