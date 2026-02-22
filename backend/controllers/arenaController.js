@@ -306,3 +306,46 @@ export const getAvailableMatches = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+export const cancelMatch = async (req, res) => {
+  try {
+    const { matchId } = req.body;
+    
+    const match = await ArenaMatch.findOne({ matchId });
+
+    if (!match) {
+      return res.status(404).json({ message: 'Match not found' });
+    }
+
+    if (match.creator.toString() !== req.userId) {
+      return res.status(403).json({ message: 'Only the creator can cancel the match' });
+    }
+
+    if (match.status !== 'waiting') {
+      return res.status(400).json({ message: 'Can only cancel matches in waiting state' });
+    }
+
+    await ArenaMatch.deleteOne({ matchId });
+
+    res.json({ success: true, message: 'Match cancelled' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const getMyWaitingMatch = async (req, res) => {
+  try {
+    const match = await ArenaMatch.findOne({
+      creator: req.userId,
+      status: 'waiting'
+    }).populate('creator', 'username level');
+
+    if (!match) {
+      return res.json({ match: null });
+    }
+
+    res.json({ match });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

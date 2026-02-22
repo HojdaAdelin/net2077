@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import { Users, Swords, Clock, Trophy, Target, Flame, Monitor, Wifi } from 'lucide-react';
+import { Users, Swords, Trophy, Target, Flame, Monitor, Wifi } from 'lucide-react';
 import { API_URL } from '../config';
 import '../styles/Arena.css';
 
@@ -35,8 +35,59 @@ function ArenaFriend() {
   const [visibility, setVisibility] = useState('public');
   const [privateMatchId, setPrivateMatchId] = useState('');
   const [availableMatches, setAvailableMatches] = useState([]);
-  const [currentMatch, setCurrentMatch] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [myActiveMatch, setMyActiveMatch] = useState(null);
+
+  // Check for active waiting match on mount
+  useEffect(() => {
+    checkMyActiveMatch();
+  }, []);
+
+  // Poll for match status when we have an active match
+  useEffect(() => {
+    if (!myActiveMatch) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const response = await fetch(`${API_URL}/arena/${myActiveMatch.matchId}`, {
+          credentials: 'include'
+        });
+        
+        if (!response.ok) {
+          setMyActiveMatch(null);
+          return;
+        }
+
+        const data = await response.json();
+        
+        if (data.match.status === 'active') {
+          clearInterval(interval);
+          navigate(`/arena/match/${myActiveMatch.matchId}`);
+        } else if (data.match.status === 'cancelled' || data.match.status === 'finished') {
+          clearInterval(interval);
+          setMyActiveMatch(null);
+        }
+      } catch (error) {
+        console.error('Polling error:', error);
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [myActiveMatch, navigate]);
+
+  const checkMyActiveMatch = async () => {
+    try {
+      const response = await fetch(`${API_URL}/arena/my-waiting`, {
+        credentials: 'include'
+      });
+      const data = await response.json();
+      if (response.ok && data.match) {
+        setMyActiveMatch(data.match);
+      }
+    } catch (error) {
+      console.error('Error checking active match:', error);
+    }
+  };
 
   useEffect(() => {
     if (view === 'join') {
@@ -70,15 +121,17 @@ function ArenaFriend() {
 
       const data = await response.json();
       if (response.ok) {
-        setCurrentMatch(data.match);
-        setView('waiting');
-        startPolling(data.matchId);
+        navigate(`/arena/waiting/${data.matchId}`);
       }
     } catch (error) {
       console.error('Error creating match:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const returnToWaitingRoom = (match) => {
+    navigate(`/arena/waiting/${match.matchId}`);
   };
 
   const handleJoinMatch = async (matchId) => {
@@ -105,70 +158,10 @@ function ArenaFriend() {
     }
   };
 
-  const startPolling = (matchId) => {
-    const interval = setInterval(async () => {
-      try {
-        const response = await fetch(`${API_URL}/arena/${matchId}`, {
-          credentials: 'include'
-        });
-        const data = await response.json();
-        
-        if (data.match.status === 'active') {
-          clearInterval(interval);
-          navigate(`/arena/match/${matchId}`);
-        }
-      } catch (error) {
-        console.error('Polling error:', error);
-      }
-    }, 2000);
-
-    setTimeout(() => clearInterval(interval), 300000);
-  };
-
   const getDurationText = (count) => {
     const durations = { 10: '2 min', 20: '4 min', 30: '6 min' };
     return durations[count];
   };
-
-  if (view === 'waiting') {
-    return (
-      <div className="container arena-page">
-        <div className="arena-waiting">
-          <div className="waiting-animation">
-            <Swords size={64} className="swords-icon" />
-          </div>
-          <h2>Waiting for Opponent</h2>
-          <p>{visibility === 'private' ? 'Share this match ID with your friend:' : 'Waiting for someone to join...'}</p>
-          {visibility === 'private' && (
-            <div className="match-id-display">
-              <span className="match-id">{currentMatch.matchId}</span>
-            </div>
-          )}
-          <div className="match-details">
-            <div className="detail-item">
-              <Target size={18} />
-              <span>{category}</span>
-            </div>
-            <div className="detail-item">
-              <Trophy size={18} />
-              <span>{questionCount} Questions</span>
-            </div>
-            <div className="detail-item">
-              <Clock size={18} />
-              <span>{getDurationText(questionCount)}</span>
-            </div>
-            <div className="detail-item">
-              <Flame size={18} />
-              <span>{mode === 'bloody' ? 'Bloody Mode' : 'Normal Game'}</span>
-            </div>
-          </div>
-          <button onClick={() => { setView('menu'); setCurrentMatch(null); }} className="btn btn-secondary arena-back-btn">
-            Cancel
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   if (view === 'join') {
     return (
@@ -255,6 +248,21 @@ function ArenaFriend() {
     <div className="container arena-page">
       <div className="arena-friend-menu">
         <h2>Arena</h2>
+
+        {myActiveMatch && view === 'menu' && (
+          <div className="active-match-banner">
+            <div className="banner-content">
+              <Swords size={24} />
+              <div className="banner-info">
+                <h3>You have a match waiting</h3>
+                <p>Match ID: {myActiveMatch.matchId} • {myActiveMatch.visibility === 'private' ? 'Private' : 'Public'}</p>
+              </div>
+            </div>
+            <button onClick={() => returnToWaitingRoom(myActiveMatch)} className="btn btn-primary">
+              Return to Lobby
+            </button>
+          </div>
+        )}
 
         <div className="arena-actions">
           <button onClick={() => setView('join')} className="arena-action-card">

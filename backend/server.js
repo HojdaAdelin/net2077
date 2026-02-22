@@ -20,6 +20,7 @@ import adminRoutes from './routes/adminRoutes.js';
 import friendsRoutes from './routes/friendsRoutes.js';
 import forumRoutes from './routes/forumRoutes.js';
 import arenaRoutes from './routes/arenaRoutes.js';
+import ArenaMatch from './models/ArenaMatch.js';
 
 import { existsSync } from 'fs';
 const envPath = existsSync('.env') ? '.env' : '../.env';
@@ -61,6 +62,7 @@ mongoose.connect(process.env.MONGODB_URI, {
     console.log('[✔] MongoDB connected successfully');
     const dbName = mongoose.connection.db.databaseName;
     console.log(`[✔] Database: ${dbName}`);
+    startArenaCleanupJob();
   })
   .catch(err => {
     console.error('[✘] MongoDB connection error:', err.message);
@@ -100,6 +102,23 @@ app.use('/api/friends', friendsRoutes);
 app.use('/api/forum', forumRoutes);
 app.use('/api/arena', arenaRoutes);
 
+function startArenaCleanupJob() {
+  setInterval(async () => {
+    try {
+      const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
+      const result = await ArenaMatch.deleteMany({
+        status: 'waiting',
+        createdAt: { $lt: twoMinutesAgo }
+      });
+      
+      if (result.deletedCount > 0) {
+        console.log(`[Arena] Cleaned up ${result.deletedCount} expired matches`);
+      }
+    } catch (error) {
+      console.error('[Arena] Cleanup error:', error);
+    }
+  }, 30000); 
+}
 
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 5000;
