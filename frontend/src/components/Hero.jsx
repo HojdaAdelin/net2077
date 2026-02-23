@@ -404,7 +404,7 @@ export default function Hero() {
             <div className="benefits-header-section">
               <div className="benefits-icon-wrapper">
                 <UserPlus size={32} className="benefits-main-icon" />
-                <div className="benefits-icon-glow"></div>
+                
               </div>
               <h2 className="benefits-showcase-title">{t('hero.benefitsTitle')}</h2>
               

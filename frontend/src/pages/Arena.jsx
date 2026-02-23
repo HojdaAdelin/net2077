@@ -62,61 +62,61 @@ export default function Arena() {
 
   return (
     <div className="container arena-page">
-      <h1 className="arena-main-title">Arena</h1>
+      <h1 className="arena-new-main-title">Arena</h1>
       
-      <div className="arena-main-grid">
-        <div className="arena-leaderboard-card">
-          <div className="card-header">
+      <div className="arena-new-main-grid">
+        <div className="arena-new-leaderboard-card">
+          <div className="arena-new-card-header">
             <Trophy size={24} />
             <h2>Leaderboard</h2>
           </div>
-          <div className="leaderboard-list">
+          <div className="arena-new-leaderboard-list">
             {leaderboard.length === 0 ? (
-              <div className="empty-state">
+              <div className="arena-new-empty-state">
                 <p>No players yet. Be the first!</p>
               </div>
             ) : (
               leaderboard.map((player, idx) => (
-                <div key={idx} className="leaderboard-item">
-                  <div className="rank">#{idx + 1}</div>
-                  <div className="player-info">
-                    <div className="player-name">{player.username}</div>
-                    <div className="player-stats">
+                <div key={idx} className="arena-new-leaderboard-item">
+                  <div className="arena-new-rank">#{idx + 1}</div>
+                  <div className="arena-new-player-info">
+                    <div className="arena-new-player-name">{player.username}</div>
+                    <div className="arena-new-player-stats">
                       {player.wins}W / {player.losses}L • {player.winRate}% WR
                     </div>
                   </div>
-                  <div className="player-xp">{player.totalXP} XP</div>
+                  <div className="arena-new-player-xp">{player.totalXP} XP</div>
                 </div>
               ))
             )}
           </div>
         </div>
 
-        <div className="arena-play-card">
-          <div className="card-header">
+        <div className="arena-new-play-card">
+          <div className="arena-new-card-header">
             <Swords size={24} />
             <h2>Play Now</h2>
           </div>
-          <div className="play-card-content">
-            <div className="stats-overview">
+          <div className="arena-new-play-card-content">
+            <div className="arena-new-stats-overview">
               {myStats && (
                 <>
-                  <div className="stat-item">
-                    <div className="stat-value">{myStats.wins}</div>
-                    <div className="stat-label">Wins</div>
+                  <div className="arena-new-stat-item">
+                    <div className="arena-new-stat-value">{myStats.wins}</div>
+                    <div className="arena-new-stat-label">Wins</div>
                   </div>
-                  <div className="stat-item">
-                    <div className="stat-value">{myStats.losses}</div>
-                    <div className="stat-label">Losses</div>
+                  <div className="arena-new-stat-item">
+                    <div className="arena-new-stat-value">{myStats.losses}</div>
+                    <div className="arena-new-stat-label">Losses</div>
                   </div>
-                  <div className="stat-item">
-                    <div className="stat-value">{myStats.totalXP}</div>
-                    <div className="stat-label">Total XP</div>
+                  <div className="arena-new-stat-item">
+                    <div className="arena-new-stat-value">{myStats.totalXP}</div>
+                    <div className="arena-new-stat-label">Total XP</div>
                   </div>
                 </>
               )}
             </div>
-            <Link to="/arena/play" className="btn btn-primary btn-large play-btn">
+            <Link to="/arena/play" className="btn btn-primary btn-large arena-new-play-btn">
               <Swords size={20} />
               Start Playing
             </Link>

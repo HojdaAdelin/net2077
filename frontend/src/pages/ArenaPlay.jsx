@@ -370,19 +370,19 @@ export default function ArenaPlay() {
         </div>
 
         {matchHistory.length > 0 && (
-          <div className="match-history-section">
+          <div className="arena-new-match-history-section">
             <h3>Recent Matches</h3>
-            <div className="match-history-list">
+            <div className="arena-new-match-history-list">
               {matchHistory.map((match, idx) => (
-                <div key={idx} className={`history-item ${match.result}`}>
-                  <div className="history-result">
-                    <span className={`result-badge ${match.result}`}>
+                <div key={idx} className={`arena-new-history-item ${match.result}`}>
+                  <div className="arena-new-history-result">
+                    <span className={`arena-new-result-badge ${match.result}`}>
                       {match.result === 'win' ? 'W' : match.result === 'loss' ? 'L' : 'D'}
                     </span>
                   </div>
-                  <div className="history-info">
-                    <div className="history-opponent">vs {match.opponentName}</div>
-                    <div className="history-details">
+                  <div className="arena-new-history-info">
+                    <div className="arena-new-history-opponent">vs {match.opponentName}</div>
+                    <div className="arena-new-history-details">
                       <span>{match.myScore} - {match.opponentScore}</span>
                       <span>•</span>
                       <span>{match.category}</span>
@@ -390,7 +390,7 @@ export default function ArenaPlay() {
                       <span>+{match.xpGained} XP</span>
                     </div>
                   </div>
-                  <div className="history-date">
+                  <div className="arena-new-history-date">
                     {formatDate(match.date)}
                   </div>
                 </div>

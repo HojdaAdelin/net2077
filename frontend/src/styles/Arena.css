@@ -1226,7 +1226,7 @@
 }
 
 /* New Arena Main Page */
-.arena-main-title {
+.arena-new-main-title {
   font-size: 36px;
   font-weight: 700;
   text-align: center;
@@ -1234,7 +1234,7 @@
   color: var(--text-primary);
 }
 
-.arena-main-grid {
+.arena-new-main-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
@@ -1243,20 +1243,20 @@
 }
 
 @media (max-width: 968px) {
-  .arena-main-grid {
+  .arena-new-main-grid {
     grid-template-columns: 1fr;
   }
 }
 
-.arena-leaderboard-card,
-.arena-play-card {
+.arena-new-leaderboard-card,
+.arena-new-play-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 24px;
 }
 
-.card-header {
+.arena-new-card-header {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -1265,24 +1265,24 @@
   border-bottom: 1px solid var(--border);
 }
 
-.card-header svg {
+.arena-new-card-header svg {
   color: var(--accent-primary);
 }
 
-.card-header h2 {
+.arena-new-card-header h2 {
   font-size: 24px;
   font-weight: 600;
   margin: 0;
   color: var(--text-primary);
 }
 
-.leaderboard-list {
+.arena-new-leaderboard-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.leaderboard-item {
+.arena-new-leaderboard-item {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -1293,59 +1293,59 @@
   transition: all 0.2s;
 }
 
-.leaderboard-item:hover {
+.arena-new-leaderboard-item:hover {
   border-color: var(--accent-primary);
   transform: translateX(4px);
 }
 
-.leaderboard-item .rank {
+.arena-new-leaderboard-item .arena-new-rank {
   font-size: 20px;
   font-weight: 700;
   color: var(--accent-primary);
   min-width: 40px;
 }
 
-.leaderboard-item .player-info {
+.arena-new-leaderboard-item .arena-new-player-info {
   flex: 1;
 }
 
-.leaderboard-item .player-name {
+.arena-new-leaderboard-item .arena-new-player-name {
   font-size: 16px;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 4px;
 }
 
-.leaderboard-item .player-stats {
+.arena-new-leaderboard-item .arena-new-player-stats {
   font-size: 13px;
   color: var(--text-secondary);
 }
 
-.leaderboard-item .player-xp {
+.arena-new-leaderboard-item .arena-new-player-xp {
   font-size: 14px;
   font-weight: 600;
   color: var(--accent-primary);
 }
 
-.empty-state {
+.arena-new-empty-state {
   text-align: center;
   padding: 40px 20px;
   color: var(--text-secondary);
 }
 
-.play-card-content {
+.arena-new-play-card-content {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-.stats-overview {
+.arena-new-stats-overview {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
 
-.stat-item {
+.arena-new-stat-item {
   text-align: center;
   padding: 20px;
   background: var(--bg-secondary);
@@ -1353,19 +1353,19 @@
   border-radius: 8px;
 }
 
-.stat-value {
+.arena-new-stat-value {
   font-size: 32px;
   font-weight: 700;
   color: var(--accent-primary);
   margin-bottom: 8px;
 }
 
-.stat-label {
+.arena-new-stat-label {
   font-size: 14px;
   color: var(--text-secondary);
 }
 
-.play-btn {
+.arena-new-play-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1374,26 +1374,26 @@
 }
 
 /* Match History */
-.match-history-section {
+.arena-new-match-history-section {
   margin-top: 40px;
   padding-top: 32px;
   border-top: 1px solid var(--border);
 }
 
-.match-history-section h3 {
+.arena-new-match-history-section h3 {
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 16px;
   color: var(--text-primary);
 }
 
-.match-history-list {
+.arena-new-match-history-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.history-item {
+.arena-new-history-item {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -1404,15 +1404,15 @@
   transition: all 0.2s;
 }
 
-.history-item:hover {
+.arena-new-history-item:hover {
   border-color: var(--accent-primary);
 }
 
-.history-result {
+.arena-new-history-result {
   min-width: 40px;
 }
 
-.result-badge {
+.arena-new-result-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1423,40 +1423,40 @@
   font-size: 14px;
 }
 
-.result-badge.win {
+.arena-new-result-badge.win {
   background: rgba(34, 197, 94, 0.2);
   color: #22c55e;
 }
 
-.result-badge.loss {
+.arena-new-result-badge.loss {
   background: rgba(239, 68, 68, 0.2);
   color: #ef4444;
 }
 
-.result-badge.draw {
+.arena-new-result-badge.draw {
   background: rgba(156, 163, 175, 0.2);
   color: #9ca3af;
 }
 
-.history-info {
+.arena-new-history-info {
   flex: 1;
 }
 
-.history-opponent {
+.arena-new-history-opponent {
   font-size: 16px;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 4px;
 }
 
-.history-details {
+.arena-new-history-details {
   font-size: 13px;
   color: var(--text-secondary);
   display: flex;
   gap: 8px;
 }
 
-.history-date {
+.arena-new-history-date {
   font-size: 13px;
   color: var(--text-secondary);
 }
