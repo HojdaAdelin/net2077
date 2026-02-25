@@ -316,6 +316,11 @@ export default function Grile() {
   };
 
   const handleCardClick = (card) => {
+    // Prevent click if daily challenge is completed
+    if (card.type === 'daily' && card.completed) {
+      return;
+    }
+    
     if (card.type === 'exam') {
       navigate('/exam-selection');
     } else if (card.type === 'daily' && dailyChallengeLoading) {
@@ -480,6 +485,7 @@ export default function Grile() {
               className={`compact-card ${card.completed ? 'daily-completed' : ''} ${card.isExam ? 'exam-card' : ''}`}
               style={{'--card-color': card.color}}
               onClick={() => handleCardClick(card)}
+              data-disabled={card.type === 'daily' && card.completed ? 'true' : undefined}
             >
               <div className="compact-card-header">
                 <div className="compact-card-icon">{card.icon}</div>

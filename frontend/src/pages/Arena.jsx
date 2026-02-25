@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
-import { Trophy, Swords } from 'lucide-react';
+import { Trophy, Swords, Loader2 } from 'lucide-react';
 import { API_URL } from '../config';
 import '../styles/Arena.css';
 
@@ -9,6 +9,8 @@ export default function Arena() {
   const { user } = useContext(AuthContext);
   const [leaderboard, setLeaderboard] = useState([]);
   const [myStats, setMyStats] = useState(null);
+  const [leaderboardLoading, setLeaderboardLoading] = useState(true);
+  const [statsLoading, setStatsLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -19,6 +21,7 @@ export default function Arena() {
 
   const loadLeaderboard = async () => {
     try {
+      setLeaderboardLoading(true);
       const response = await fetch(`${API_URL}/arena/leaderboard`, {
         credentials: 'include'
       });
@@ -28,11 +31,14 @@ export default function Arena() {
       }
     } catch (error) {
       console.error('Error loading leaderboard:', error);
+    } finally {
+      setLeaderboardLoading(false);
     }
   };
 
   const loadMyStats = async () => {
     try {
+      setStatsLoading(true);
       const response = await fetch(`${API_URL}/arena/my-stats`, {
         credentials: 'include'
       });
@@ -42,6 +48,8 @@ export default function Arena() {
       }
     } catch (error) {
       console.error('Error loading stats:', error);
+    } finally {
+      setStatsLoading(false);
     }
   };
 
@@ -71,7 +79,12 @@ export default function Arena() {
             <h2>Leaderboard</h2>
           </div>
           <div className="arena-new-leaderboard-list">
-            {leaderboard.length === 0 ? (
+            {leaderboardLoading ? (
+              <div className="arena-new-loading-state">
+                <Loader2 size={32} className="spinner" />
+                <p>Loading leaderboard...</p>
+              </div>
+            ) : leaderboard.length === 0 ? (
               <div className="arena-new-empty-state">
                 <p>No players yet. Be the first!</p>
               </div>
@@ -99,7 +112,12 @@ export default function Arena() {
           </div>
           <div className="arena-new-play-card-content">
             <div className="arena-new-stats-overview">
-              {myStats && (
+              {statsLoading ? (
+                <div className="arena-new-loading-state arena-new-stats-loading">
+                  <Loader2 size={32} className="spinner" />
+                  <p>Loading stats...</p>
+                </div>
+              ) : myStats ? (
                 <>
                   <div className="arena-new-stat-item">
                     <div className="arena-new-stat-value">{myStats.wins}</div>
@@ -114,7 +132,7 @@ export default function Arena() {
                     <div className="arena-new-stat-label">Total XP</div>
                   </div>
                 </>
-              )}
+              ) : null}
             </div>
             <Link to="/arena/play" className="btn btn-primary btn-large arena-new-play-btn">
               <Swords size={20} />

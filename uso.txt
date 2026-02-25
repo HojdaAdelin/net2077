@@ -15,4 +15,6 @@
 14. cum iesi din terminal daca esti in terminalul root? (exit)
 15. abrevierea setuid (set-user-id-on-execution)
 16. s reprezinta bitul (setuid)
-17. 
+17. un grup poate avea 0 useri? (da)
+18. ce face chsh (modificare shell user)
+19. ce face chfn (modificare informatii utilizator)
