@@ -15,6 +15,7 @@ export default function Terminal() {
   const [terminalHistory, setTerminalHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [difficultyFilter, setDifficultyFilter] = useState('all');
+  const [showUnsolvedOnly, setShowUnsolvedOnly] = useState(false);
   const [showAnswersModal, setShowAnswersModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const terminalInputRef = useRef(null);
@@ -27,20 +28,36 @@ export default function Terminal() {
   }, [user]);
 
   useEffect(() => {
-    // Filter questions based on difficulty
+    // Filter questions based on difficulty and unsolved status
     let filtered = questions;
+    
+    // Apply difficulty filter
     if (difficultyFilter !== 'all') {
-      filtered = questions.filter(q => q.difficulty === difficultyFilter);
+      filtered = filtered.filter(q => q.difficulty === difficultyFilter);
     }
+    
+    // Apply unsolved filter
+    if (showUnsolvedOnly) {
+      filtered = filtered.filter(q => !isQuestionSolved(q._id));
+    }
+    
     setFilteredQuestions(filtered);
     
-    // Update current question if it's not in filtered list
-    if (currentQuestion && !filtered.find(q => q._id === currentQuestion._id)) {
-      setCurrentQuestion(filtered.length > 0 ? filtered[0] : null);
+    // Always set a current question if filtered list has items
+    if (filtered.length > 0) {
+      // If current question is not in filtered list, select first one
+      if (!currentQuestion || !filtered.find(q => q._id === currentQuestion._id)) {
+        setCurrentQuestion(filtered[0]);
+        setTerminalHistory([]);
+        setCommand('');
+      }
+    } else {
+      // No questions match the filter
+      setCurrentQuestion(null);
       setTerminalHistory([]);
       setCommand('');
     }
-  }, [questions, difficultyFilter, currentQuestion]);
+  }, [questions, difficultyFilter, showUnsolvedOnly, userProgress]);
 
   const fetchQuestions = async () => {
     try {
@@ -265,6 +282,18 @@ export default function Terminal() {
                   Hard
                 </button>
               </div>
+              
+              <div className="terminal-unsolved-filter">
+                <label className="terminal-checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={showUnsolvedOnly}
+                    onChange={(e) => setShowUnsolvedOnly(e.target.checked)}
+                    className="terminal-checkbox"
+                  />
+                  <span>Show Unsolved Only</span>
+                </label>
+              </div>
             </div>
 
             <div className="terminal-questions-list">
@@ -294,7 +323,7 @@ export default function Terminal() {
           </div>
 
           <div className="terminal-main">
-            {currentQuestion && (
+            {currentQuestion ? (
               <>
                 <div className="terminal-question-header">
                   <div className="terminal-question-info">
@@ -394,6 +423,12 @@ export default function Terminal() {
                   </div>
                 </div>
               </>
+            ) : (
+              <div className="terminal-no-questions">
+                <TerminalIcon size={64} />
+                <h3>No questions match your filters</h3>
+                <p>Try adjusting your difficulty or unsolved filters to see more questions.</p>
+              </div>
             )}
           </div>
         </div>
