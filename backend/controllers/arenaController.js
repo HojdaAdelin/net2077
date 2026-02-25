@@ -116,8 +116,6 @@ export const submitAnswer = async (req, res) => {
   try {
     const { matchId, questionId, answers } = req.body;
     
-    console.log('Submit answer:', { matchId, questionId, answers });
-    
     const match = await ArenaMatch.findOne({ matchId });
 
     if (!match) {
@@ -137,10 +135,8 @@ export const submitAnswer = async (req, res) => {
 
     if (isCreator) {
       match.creatorAnswers.set(questionId, answers);
-      console.log('Saved creator answer for question', questionId, ':', answers);
     } else {
       match.opponentAnswers.set(questionId, answers);
-      console.log('Saved opponent answer for question', questionId, ':', answers);
     }
 
     await match.save();
@@ -214,11 +210,6 @@ export const finishMatch = async (req, res) => {
       const creatorAnswers = match.creatorAnswers.get(question._id.toString()) || [];
       const opponentAnswers = match.opponentAnswers.get(question._id.toString()) || [];
 
-      console.log('Question:', question.title);
-      console.log('Correct answers:', correctAnswers);
-      console.log('Creator answers:', creatorAnswers);
-      console.log('Opponent answers:', opponentAnswers);
-
       const creatorCorrect = 
         creatorAnswers.length === correctAnswers.length &&
         creatorAnswers.every(ans => correctAnswers.includes(ans));
@@ -226,9 +217,6 @@ export const finishMatch = async (req, res) => {
       const opponentCorrect = 
         opponentAnswers.length === correctAnswers.length &&
         opponentAnswers.every(ans => correctAnswers.includes(ans));
-
-      console.log('Creator correct:', creatorCorrect);
-      console.log('Opponent correct:', opponentCorrect);
 
       if (creatorCorrect) creatorScore += points;
       if (opponentCorrect) opponentScore += points;
@@ -286,14 +274,15 @@ export const finishMatch = async (req, res) => {
         if (opponent && opponentScore > 0) await updateUserStreak(opponent);
       } else if (match.winner) {
         const totalXP = creatorScore + opponentScore;
+        const winnerId = match.winner._id ? match.winner._id.toString() : match.winner.toString();
         
-        if (match.winner.toString() === creator._id.toString()) {
+        if (winnerId === creator._id.toString()) {
           creatorXPGained = totalXP;
           opponentXPGained = 0;
           creator.xp += totalXP;
           creator.level = Math.floor(creator.xp / 100) + 1;
           await updateUserStreak(creator);
-        } else {
+        } else if (winnerId === opponent._id.toString()) {
           creatorXPGained = 0;
           opponentXPGained = totalXP;
           opponent.xp += totalXP;
