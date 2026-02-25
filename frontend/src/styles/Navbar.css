@@ -558,11 +558,12 @@
     box-shadow: none;
     border: none;
     border-radius: 0;
-    margin-top: 8px;
+    margin-top: 0;
     background: var(--bg-secondary);
+    padding: 8px 0;
   }
   
   .practice-dropdown-item {
-    padding: 12px 16px;
+    padding: 12px 24px;
   }
 }

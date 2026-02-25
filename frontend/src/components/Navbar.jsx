@@ -112,10 +112,17 @@ export default function Navbar() {
           >
             <Link 
               to="/grile" 
-              className="nav-link-with-dropdown"
-              onClick={() => {
-                closeMobileMenu();
-                setPracticeDropdownOpen(false);
+              className="nav-link-with-dropdown practice-link-desktop"
+              onClick={(e) => {
+                // On mobile, prevent navigation and toggle dropdown
+                if (window.innerWidth <= 768) {
+                  e.preventDefault();
+                  setPracticeDropdownOpen(!practiceDropdownOpen);
+                } else {
+                  // On desktop, allow normal navigation
+                  closeMobileMenu();
+                  setPracticeDropdownOpen(false);
+                }
               }}
             >
               {t('navbar.questions')}
