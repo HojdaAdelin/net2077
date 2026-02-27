@@ -66,6 +66,7 @@ const userSchema = new mongoose.Schema({
       date: { type: Date, default: Date.now }
     }]
   },
+  lastBasicReset: { type: Date, default: null },
   xp: { type: Number, default: 0 },
   level: { type: Number, default: 1 }
 }, { timestamps: true });

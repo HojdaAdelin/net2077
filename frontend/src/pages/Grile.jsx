@@ -203,6 +203,8 @@ export default function Grile() {
   const [dailyChallengeLoading, setDailyChallengeLoading] = useState(true);
   const [showResetModal, setShowResetModal] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [showResultModal, setShowResultModal] = useState(false);
+  const [resultMessage, setResultMessage] = useState({ type: '', title: '', message: '' });
   const [activeFilter, setActiveFilter] = useState('all'); // 'all', 'linux', 'network'
   const { user, updateUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -348,7 +350,6 @@ export default function Grile() {
       const data = await response.json();
 
       if (response.ok) {
-        
         updateUser({ 
           xp: data.newXp, 
           level: data.newLevel 
@@ -357,19 +358,42 @@ export default function Grile() {
         await loadData();
         
         setShowResetModal(false);
-        alert(`Stats reset successfully! ${data.questionsReset} questions reset, ${data.xpAdded} XP added.`);
+        setResultMessage({
+          type: 'success',
+          title: 'Stats Reset Successfully!',
+          message: `${data.questionsReset} questions reset, ${data.xpAdded} XP added.`
+        });
+        setShowResultModal(true);
       } else {
-        alert(data.message || 'Failed to reset stats');
+
+        if (response.status === 429 && data.hoursRemaining) {
+          setResultMessage({
+            type: 'error',
+            title: 'Reset Limit Reached',
+            message: `You can reset again in ${data.hoursRemaining} hour${data.hoursRemaining > 1 ? 's' : ''}. You can only reset once every 24 hours.`
+          });
+        } else {
+          setResultMessage({
+            type: 'error',
+            title: 'Reset Failed',
+            message: data.message || 'Failed to reset stats'
+          });
+        }
+        setShowResultModal(true);
       }
     } catch (error) {
       console.error('Error resetting stats:', error);
-      alert('Failed to reset stats. Please try again.');
+      setResultMessage({
+        type: 'error',
+        title: 'Error',
+        message: 'Failed to reset stats. Please try again.'
+      });
+      setShowResultModal(true);
     } finally {
       setIsResetting(false);
     }
   };
 
-  // Define all cards
   const allCards = [
     { 
       title: 'Linux Questions', 
@@ -622,6 +646,24 @@ export default function Grile() {
                 {isResetting ? 'Resetting...' : 'Confirm Reset'}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showResultModal && (
+        <div className="modal-overlay" onClick={() => setShowResultModal(false)}>
+          <div className="modal-content result-modal" onClick={(e) => e.stopPropagation()}>
+            <div className={`result-modal-icon ${resultMessage.type}`}>
+              {resultMessage.type === 'success' ? '✓' : '!'}
+            </div>
+            <h3 className="result-modal-title">{resultMessage.title}</h3>
+            <p className="result-modal-message">{resultMessage.message}</p>
+            <button 
+              onClick={() => setShowResultModal(false)}
+              className="btn btn-primary result-modal-btn"
+            >
+              OK
+            </button>
           </div>
         </div>
       )}

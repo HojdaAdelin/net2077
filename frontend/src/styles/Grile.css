@@ -1244,3 +1244,49 @@ daily-loading-info {
     font-size: 20px;
   }
 }
+/*
+ Result Modal */
+.result-modal {
+  text-align: center;
+  max-width: 400px;
+  padding: 2rem;
+}
+
+.result-modal-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0 auto 1.5rem;
+  color: white;
+}
+
+.result-modal-icon.success {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.result-modal-icon.error {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.result-modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.result-modal-message {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.result-modal-btn {
+  min-width: 120px;
+}

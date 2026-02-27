@@ -232,16 +232,28 @@ export const resetBasicStats = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Get all basic commands questions (type: 'basic')
+    if (user.lastBasicReset) {
+      const now = new Date();
+      const lastReset = new Date(user.lastBasicReset);
+      const hoursSinceReset = (now - lastReset) / (1000 * 60 * 60);
+      
+      if (hoursSinceReset < 24) {
+        const hoursRemaining = Math.ceil(24 - hoursSinceReset);
+        return res.status(429).json({ 
+          message: 'Reset limit reached. You can only reset once every 24 hours.',
+          hoursRemaining,
+          nextResetTime: new Date(lastReset.getTime() + 24 * 60 * 60 * 1000)
+        });
+      }
+    }
+
     const basicQuestions = await Question.find({ type: 'basic' });
     const basicQuestionIds = basicQuestions.map(q => q._id.toString());
     
-    // Count how many basic questions the user has solved
     const solvedBasicQuestions = user.solvedQuestions.filter(
       questionId => basicQuestionIds.includes(questionId.toString())
     );
     
-    // Check if user has at least 50 solved basic questions
     if (solvedBasicQuestions.length < 50) {
       return res.status(400).json({ 
         message: 'You need at least 50 solved basic commands questions to reset stats',
@@ -249,15 +261,15 @@ export const resetBasicStats = async (req, res) => {
       });
     }
 
-    // Remove basic questions from user solved questions
     user.solvedQuestions = user.solvedQuestions.filter(
       questionId => !basicQuestionIds.includes(questionId.toString())
     );
-    
-    // Add XP for each solved basic question (1 point each)
+
     const xpToAdd = solvedBasicQuestions.length;
     user.xp += xpToAdd;
     user.level = Math.floor(user.xp / 100) + 1;
+  
+    user.lastBasicReset = new Date();
     
     await user.save();
     
