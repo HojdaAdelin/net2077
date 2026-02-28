@@ -267,7 +267,7 @@ export default function Hero() {
                   <span className="stat-badge">Interactive Terminal</span>
                 </div>
                 <div className="bubble-actions">
-                  <Link to="/roadmap/Linux" className="bubble-primary-btn">
+                  <Link to="/grile?filter=linux" className="bubble-primary-btn">
                     <BookOpen size={16} />
                     Start Learning
                   </Link>
@@ -296,7 +296,7 @@ export default function Hero() {
                   <span className="stat-badge">Security Concepts</span>
                 </div>
                 <div className="bubble-actions">
-                  <Link to="/roadmap/Network" className="bubble-primary-btn">
+                  <Link to="/grile?filter=network" className="bubble-primary-btn">
                     <BookOpen size={16} />
                     Start Learning
                   </Link>

@@ -23,18 +23,13 @@ export const getRandom50 = async () => {
   return res.json();
 };
 
-export const getDictionary = async () => {
-  const res = await fetch(`${API_URL}/resources/dictionary`);
-  return res.json();
-};
-
 export const getResources = async () => {
   const res = await fetch(`${API_URL}/resources/predefined`);
   return res.json();
 };
 
-export const getRoadmap = async (title) => {
-  const res = await fetch(`${API_URL}/resources/roadmap/${title}`);
+export const getRoadmaps = async () => {
+  const res = await fetch(`${API_URL}/resources/roadmaps`);
   return res.json();
 };
 

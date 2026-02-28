@@ -15,7 +15,7 @@ const translations = {
     navbar: {
       home: 'Home',
       questions: 'Practice',
-      resources: 'Resources',
+      resources: 'Learn',
       progress: 'Progress',
       leaderboard: 'Leaderboard',
       lab: 'Lab',
@@ -45,12 +45,7 @@ const translations = {
     },
     resources: {
       title: 'Learning Resources',
-      subtitle: 'Comprehensive materials to enhance your learning experience',
-      dictionary: 'Dictionary',
-      roadmaps: 'Roadmaps',
-      searchPlaceholder: 'Search resources...',
-      noResults: 'No resources found matching your search.',
-      viewRoadmap: 'View Roadmap'
+      subtitle: 'Comprehensive materials to enhance your learning experience'
     },
     login: {
       title: 'Welcome Back',
@@ -132,8 +127,6 @@ const translations = {
       activeLearners: 'Active Learners',
       learningResources: 'Learning Resources',
       startHere: 'Start Here',
-      linuxRoadmap: 'Linux Roadmap',
-      networkRoadmap: 'Network Roadmap',
       easyExam: 'Easy Exam',
       mediumExam: 'Medium Exam',
       newExams: 'New Exams',
@@ -153,7 +146,7 @@ const translations = {
     navbar: {
       home: 'Acasă',
       questions: 'Practică',
-      resources: 'Resurse',
+      resources: 'Învață',
       progress: 'Progres',
       leaderboard: 'Clasament',
       lab: 'Laborator',
@@ -183,12 +176,7 @@ const translations = {
     },
     resources: {
       title: 'Resurse de Învățare',
-      subtitle: 'Materiale complete pentru a-ți îmbunătăți experiența de învățare',
-      dictionary: 'Dicționar',
-      roadmaps: 'Planuri de Învățare',
-      searchPlaceholder: 'Caută resurse...',
-      noResults: 'Nu s-au găsit resurse care să corespundă căutării.',
-      viewRoadmap: 'Vezi Planul'
+      subtitle: 'Materiale complete pentru a-ți îmbunătăți experiența de învățare'
     },
     login: {
       title: 'Bine ai revenit',
@@ -270,8 +258,6 @@ const translations = {
       activeLearners: 'Cursanți Activi',
       learningResources: 'Resurse de Învățare',
       startHere: 'Începe Aici',
-      linuxRoadmap: 'Plan Linux',
-      networkRoadmap: 'Plan Rețele',
       easyExam: 'Examen Ușor',
       mediumExam: 'Examen Mediu',
       newExams: 'Examene Noi',

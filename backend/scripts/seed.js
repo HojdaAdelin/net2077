@@ -9,6 +9,7 @@ import Resource from '../models/Resource.js';
 import Exam from '../models/Exam.js';
 import Terminal from '../models/Terminal.js';
 import IS from '../models/IS.js';
+import Roadmap from '../models/Roadmap.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -35,7 +36,8 @@ const showMenu = () => {
   console.log('3. Exams');
   console.log('4. Terminal Questions');
   console.log('5. IS Problems');
-  console.log('6. All Categories');
+  console.log('6. Roadmaps');
+  console.log('7. All Categories');
   console.log('0. Exit');
   console.log('=====================');
 };
@@ -69,12 +71,15 @@ const seedDatabase = async () => {
     const isData = JSON.parse(
       readFileSync(join(__dirname, '../data/is.json'), 'utf-8')
     );
+    const roadmapData = JSON.parse(
+      readFileSync(join(__dirname, '../data/roadmap.json'), 'utf-8')
+    );
 
     let continueMenu = true;
     
     while (continueMenu) {
       showMenu();
-      const choice = await askQuestion('Select an option (0-6): ');
+      const choice = await askQuestion('Select an option (0-7): ');
       
       switch (choice.trim()) {
         case '1':
@@ -103,6 +108,11 @@ const seedDatabase = async () => {
           break;
           
         case '6':
+          console.log('\n🗺️  Syncing Roadmaps...');
+          await syncRoadmaps(roadmapData);
+          break;
+          
+        case '7':
           console.log('\n🔄 Syncing All Categories...');
           console.log('\n📊 Syncing Questions...');
           await syncQuestions(questionsData);
@@ -114,6 +124,8 @@ const seedDatabase = async () => {
           await syncTerminalQuestions(terminalData);
           console.log('\n🔧 Syncing IS Problems...');
           await syncISProblems(isData);
+          console.log('\n🗺️  Syncing Roadmaps...');
+          await syncRoadmaps(roadmapData);
           console.log('\n🎉 All categories synced successfully!');
           break;
           
@@ -123,7 +135,7 @@ const seedDatabase = async () => {
           break;
           
         default:
-          console.log('\n❌ Invalid option. Please select 0-6.');
+          console.log('\n❌ Invalid option. Please select 0-7.');
           continue;
       }
       
@@ -343,4 +355,67 @@ const syncISProblems = async (isData) => {
 
   console.log(`   [✔] Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
   console.log(`   🔧 Total IS problems in DB: ${jsonISProblems.size}`);
+};
+
+const syncRoadmaps = async (roadmapData) => {
+  const jsonRoadmaps = new Map();
+  roadmapData.forEach(r => {
+    jsonRoadmaps.set(r.id, r);
+  });
+
+  const existingRoadmaps = await Roadmap.find({});
+  const existingMap = new Map();
+  existingRoadmaps.forEach(r => {
+    existingMap.set(r.id, r);
+  });
+
+  let added = 0;
+  let updated = 0;
+  let deleted = 0;
+
+  for (const [id, roadmapItem] of jsonRoadmaps) {
+    if (existingMap.has(id)) {
+      const existing = existingMap.get(id);
+      await Roadmap.findByIdAndUpdate(existing._id, roadmapItem);
+      updated++;
+    } else {
+      await Roadmap.create(roadmapItem);
+      added++;
+    }
+    
+    try {
+      const contentPath = join(__dirname, `../data/resources/${id}.json`);
+      const contentData = JSON.parse(readFileSync(contentPath, 'utf-8'));
+      
+      const existingResource = await Resource.findOne({ title: contentData.title });
+      if (existingResource) {
+        await Resource.findByIdAndUpdate(existingResource._id, {
+          title: contentData.title,
+          content: JSON.stringify(contentData.content),
+          category: 'resource',
+          type: 'roadmap-content'
+        });
+      } else {
+        await Resource.create({
+          title: contentData.title,
+          content: JSON.stringify(contentData.content),
+          category: 'resource',
+          type: 'roadmap-content'
+        });
+      }
+    } catch (error) {
+      console.log(`   [⚠] Warning: Could not load content for ${id}: ${error.message}`);
+    }
+  }
+
+  for (const [id, existingRoadmap] of existingMap) {
+    if (!jsonRoadmaps.has(id)) {
+      await Roadmap.findByIdAndDelete(existingRoadmap._id);
+      deleted++;
+      console.log(`   [-]  Deleted: "${existingRoadmap.title}"`);
+    }
+  }
+
+  console.log(`   [✔] Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
+  console.log(`   🗺️  Total roadmaps in DB: ${jsonRoadmaps.size}`);
 };

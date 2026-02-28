@@ -12,7 +12,6 @@ import Grile from './pages/Grile';
 import Quiz from './pages/Quiz';
 import ExamSelection from './pages/ExamSelection';
 import Resurse from './pages/Resurse';
-import RoadmapPage from './pages/RoadmapPage';
 import Progress from './pages/Progress';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -45,7 +44,6 @@ export default function App() {
                   <Route path="/exam-selection" element={<ExamSelection />} />
                   <Route path="/exam/:examId" element={<Quiz isExam={true} />} />
                   <Route path="/resurse" element={<Resurse />} />
-                  <Route path="/roadmap/:title" element={<RoadmapPage />} />
                   <Route path="/progress" element={<Progress />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />

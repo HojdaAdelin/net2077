@@ -1,130 +1,106 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getDictionary, getResources } from '../services/api';
-import { useLanguage } from '../context/LanguageContext';
+import { getRoadmaps } from '../services/api';
+import { BookOpen, Layers, Lock, Sparkles } from 'lucide-react';
 import '../styles/Resurse.css';
 
 export default function Resurse() {
-  const navigate = useNavigate();
-  const { t } = useLanguage();
-  const [dictionary, setDictionary] = useState([]);
-  const [resources, setResources] = useState([]);
-  const [search, setSearch] = useState('');
-  const [activeTab, setActiveTab] = useState('dictionary');
+  const [roadmaps, setRoadmaps] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getDictionary().then(setDictionary).catch(() => {});
-    getResources().then(setResources).catch(() => {});
+    getRoadmaps()
+      .then(setRoadmaps)
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
-  const filtered = dictionary.filter(item => 
-    item.title.toLowerCase().includes(search.toLowerCase()) ||
-    item.content.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const roadmaps = resources.filter(r => r.type === 'roadmap');
-  const otherResources = resources.filter(r => r.type !== 'roadmap');
-
-  const handleRoadmapClick = (title) => {
-    navigate(`/roadmap/${title}`);
-  };
+  if (loading) {
+    return (
+      <div className="container resurse-page">
+        <div className="learn-loading">
+          <div className="learn-spinner"></div>
+          <p>Loading learning paths...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container resurse-page">
-      <div className="resurse-header">
-        <h1>{t('resources.title')}</h1>
-        <p>{t('resources.subtitle')}</p>
+      <div className="learn-hero">
+        <div className="learn-hero-badge">
+          <Sparkles size={16} />
+          <span>Start Your Journey</span>
+        </div>
+        <h1 className="learn-hero-title">Choose Your Path</h1>
+        <p className="learn-hero-subtitle">
+          Structured learning paths designed to take you from beginner to expert. 
+          Master the skills that matter.
+        </p>
       </div>
 
-      <div className="tabs">
-        <button 
-          className={`tab ${activeTab === 'dictionary' ? 'active' : ''}`}
-          onClick={() => setActiveTab('dictionary')}
-        >
-          {t('resources.dictionary')}
-        </button>
-        <button 
-          className={`tab ${activeTab === 'resources' ? 'active' : ''}`}
-          onClick={() => setActiveTab('resources')}
-        >
-          {t('resources.roadmaps')}
-        </button>
-      </div>
-
-      {activeTab === 'dictionary' && (
-        <section className="section-content">
-          <div className="search-box">
-            <input 
-              type="text" 
-              placeholder={t('resources.searchPlaceholder')} 
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="search-input"
-            />
-          </div>
-          
-          <div className="dictionary-grid">
-            {filtered.length > 0 ? (
-              filtered.map(item => (
-                <div key={item._id} className="dictionary-card">
-                  <h3 className="term-title">{item.title}</h3>
-                  <p className="term-content">{item.content}</p>
-                </div>
-              ))
-            ) : (
-              <div className="empty-state">
-                <p>{t('resources.noResults')}</p>
+      {roadmaps.length > 0 ? (
+        <div className="learn-roadmaps-grid">
+          {roadmaps.map((roadmap) => (
+            <div key={roadmap._id} className="learn-roadmap-card">
+              <div className="learn-card-glow"></div>
+              
+              <div className="learn-card-image">
+                <img 
+                  src={`/${roadmap.image}`} 
+                  alt={roadmap.title}
+                  loading="lazy"
+                />
+                <div className="learn-card-overlay"></div>
               </div>
-            )}
-          </div>
-        </section>
-      )}
 
-      {activeTab === 'resources' && (
-        <section className="section-content">
-          {roadmaps.length > 0 && (
-            <div className="roadmaps-grid">
-              {roadmaps.map(roadmap => (
-                <div 
-                  key={roadmap._id} 
-                  className="roadmap-card"
-                  onClick={() => handleRoadmapClick(roadmap.title)}
-                >
-                  <div className="roadmap-content">
-                    <h3>{roadmap.title}</h3>
-                    <p>{roadmap.content}</p>
-                    <div className="roadmap-stats">
-                      <span className="stat-item">
-                        {roadmap.roadmap?.sections?.length || 0} sections
-                      </span>
-                      <span className="stat-item">
-                        Progress tracking
-                      </span>
+              <div className="learn-card-content">
+                <div className="learn-card-header">
+                  <h3 className="learn-card-title">{roadmap.title}</h3>
+                  {roadmap.type === 'premium' && (
+                    <div className="learn-premium-badge">
+                      <Lock size={14} />
+                      <span>Premium</span>
                     </div>
+                  )}
+                  {roadmap.type === 'free' && (
+                    <div className="learn-free-badge">
+                      <span>Free</span>
+                    </div>
+                  )}
+                </div>
+
+                <p className="learn-card-description">{roadmap.description}</p>
+
+                <div className="learn-card-stats">
+                  <div className="learn-stat-item">
+                    <Layers size={16} />
+                    <span>{roadmap.chapters?.length || 0} Chapters</span>
+                  </div>
+                  <div className="learn-stat-item">
+                    <BookOpen size={16} />
+                    <span>
+                      {roadmap.chapters?.reduce((acc, ch) => acc + (ch.topics?.length || 0), 0) || 0} Topics
+                    </span>
                   </div>
                 </div>
-              ))}
+
+                <button className="learn-card-button">
+                  <span>Start Learning</span>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </div>
             </div>
-          )}
-
-          {otherResources.length > 0 && (
-            <>
-              <h2 className="section-subtitle" style={{ marginTop: '48px' }}>Other Resources</h2>
-              <div className="resources-grid">
-                {otherResources.map(res => (
-                  <div key={res._id} className="resource-card">
-                    <h3>{res.title}</h3>
-                    <p>{res.content}</p>
-                    <div className="resource-footer">
-                      <span className="resource-badge">{res.type}</span>
-                      <button className="btn btn-secondary btn-sm">View Resource</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-        </section>
+          ))}
+        </div>
+      ) : (
+        <div className="learn-empty-state">
+          <BookOpen size={48} />
+          <h3>No learning paths available yet</h3>
+          <p>Check back soon for new content</p>
+        </div>
       )}
     </div>
   );

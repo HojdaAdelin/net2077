@@ -1,0 +1,80 @@
+[
+  {
+    "id": "linux-mastery",
+    "title": "Linux Mastery",
+    "description": "Master Linux from basics to advanced system administration. Learn command-line essentials, file management, networking, and automation.",
+    "chapters": [
+      {
+        "id": 1,
+        "title": "Getting Started",
+        "topics": ["Introduction to Linux", "Installing Linux", "Basic Commands", "File System Navigation"]
+      },
+      {
+        "id": 2,
+        "title": "File Management",
+        "topics": ["File Operations", "Permissions", "Ownership", "Links and Shortcuts"]
+      },
+      {
+        "id": 3,
+        "title": "User Management",
+        "topics": ["Creating Users", "Groups", "Sudo Access", "User Permissions"]
+      },
+      {
+        "id": 4,
+        "title": "Process Management",
+        "topics": ["Viewing Processes", "Killing Processes", "Background Jobs", "System Monitoring"]
+      },
+      {
+        "id": 5,
+        "title": "Networking",
+        "topics": ["Network Configuration", "SSH", "Firewall", "Network Troubleshooting"]
+      },
+      {
+        "id": 6,
+        "title": "Shell Scripting",
+        "topics": ["Bash Basics", "Variables", "Loops", "Functions", "Automation"]
+      }
+    ],
+    "type": "free",
+    "image": "linux.png"
+  },
+  {
+    "id": "network-engineering",
+    "title": "Network Engineering",
+    "description": "Build and secure modern networks. From fundamentals to advanced protocols, security, and infrastructure design.",
+    "chapters": [
+      {
+        "id": 1,
+        "title": "Network Fundamentals",
+        "topics": ["OSI Model", "TCP/IP", "IP Addressing", "Subnetting"]
+      },
+      {
+        "id": 2,
+        "title": "Network Devices",
+        "topics": ["Routers", "Switches", "Hubs", "Access Points", "Firewalls"]
+      },
+      {
+        "id": 3,
+        "title": "Routing & Switching",
+        "topics": ["Static Routing", "Dynamic Routing", "VLANs", "Trunking"]
+      },
+      {
+        "id": 4,
+        "title": "Network Protocols",
+        "topics": ["HTTP/HTTPS", "DNS", "DHCP", "FTP", "SMTP"]
+      },
+      {
+        "id": 5,
+        "title": "Network Security",
+        "topics": ["Firewalls", "VPN", "Encryption", "Access Control", "IDS/IPS"]
+      },
+      {
+        "id": 6,
+        "title": "Wireless Networks",
+        "topics": ["WiFi Standards", "Security Protocols", "Configuration", "Troubleshooting"]
+      }
+    ],
+    "type": "free",
+    "image": "network.png"
+  }
+]
