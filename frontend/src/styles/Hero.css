@@ -98,14 +98,14 @@
 
 .stat-item {
   background: var(--bg-card);
-  padding: 40px 24px;
+  padding: 40px 20px;
   text-align: center;
   position: relative;
   display: block !important;
 }
 
 .stat-number {
-  font-size: 42px;
+  font-size: 40px;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 8px;
@@ -115,7 +115,7 @@
 }
 
 .stat-label {
-  font-size: 13px;
+  font-size: 10px;
   color: var(--text-secondary);
   font-weight: 500;
   text-transform: uppercase;
@@ -349,13 +349,15 @@
   }
 
   .stat-number {
-    font-size: 36px;
+    font-size: 30px;
   }
-
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 0.1px;
+  }
 
 }
 
-/* Hero Benefits Showcase - Interactive Design */
 .hero-benefits-showcase {
   max-width: 1200px;
   margin: 100px auto 0;

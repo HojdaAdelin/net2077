@@ -125,7 +125,7 @@ const translations = {
       browseResources: 'Browse Resources',
       practiceQuestions: 'Practice Questions',
       activeLearners: 'Active Learners',
-      learningResources: 'Learning Resources',
+      learningResources: 'Roadmaps',
       startHere: 'Start Here',
       easyExam: 'Easy Exam',
       mediumExam: 'Medium Exam',
