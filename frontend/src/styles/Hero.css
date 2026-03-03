@@ -2285,3 +2285,823 @@ na Feature Card */
     font-size: 12px;
   }
 }
+
+/* ============================================
+   MAIN LEARNING SECTION - Unified Design
+   ============================================ */
+
+/* MLS-specific color variables */
+:root {
+  --mls-bg: #fafafa;
+  --mls-text-primary: #0a0a0a;
+  --mls-text-secondary: #525252;
+  --mls-border: #e5e5e5;
+  --mls-card-bg: #ffffff;
+  --mls-accent: #2563eb;
+  --mls-accent-hover: #1d4ed8;
+  --mls-track-linux: #22c55e;
+  --mls-track-network: #3b82f6;
+  --mls-track-code: #f59e0b;
+}
+
+[data-theme="dark"] {
+  --mls-bg: #0a0a0a;
+  --mls-text-primary: #fafafa;
+  --mls-text-secondary: #a3a3a3;
+  --mls-border: #262626;
+  --mls-card-bg: #171717;
+  --mls-accent: #3b82f6;
+  --mls-accent-hover: #2563eb;
+}
+
+.mls-section {
+  background: var(--mls-bg);
+  padding: 80px 0;
+  border-bottom: 1px solid var(--mls-border);
+}
+
+.mls-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Section Header */
+.mls-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.mls-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--mls-text-primary);
+  margin: 0 0 16px 0;
+  letter-spacing: -0.02em;
+}
+
+.mls-subtitle {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--mls-text-secondary);
+  margin: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Main Grid Layout */
+.mls-grid {
+  display: grid;
+  grid-template-columns: 65% 35%;
+  gap: 48px;
+  align-items: start;
+}
+
+/* Core Tracks Column (Left) */
+.mls-tracks-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mls-track-card {
+  background: var(--mls-card-bg);
+  border: 1px solid var(--mls-border);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  gap: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.mls-track-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-color: var(--mls-accent);
+}
+
+.mls-track-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.mls-track-card:nth-child(1) .mls-track-icon {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--mls-track-linux);
+}
+
+.mls-track-card:nth-child(2) .mls-track-icon {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--mls-track-network);
+}
+
+.mls-track-card:nth-child(3) .mls-track-icon {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--mls-track-code);
+}
+
+.mls-track-card:hover .mls-track-icon {
+  transform: scale(1.05);
+}
+
+.mls-track-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mls-track-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--mls-text-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.mls-track-description {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--mls-text-secondary);
+  margin: 0;
+}
+
+.mls-track-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mls-meta-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--mls-text-secondary);
+  background: var(--mls-bg);
+  border: 1px solid var(--mls-border);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.mls-track-card:hover .mls-meta-tag {
+  background: rgba(37, 99, 235, 0.05);
+  border-color: var(--mls-accent);
+  color: var(--mls-accent);
+}
+
+.mls-track-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.mls-track-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: var(--mls-accent);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.mls-track-primary:hover {
+  background: var(--mls-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.mls-track-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  background: transparent;
+  color: var(--mls-text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.mls-track-secondary:hover {
+  background: var(--mls-bg);
+  color: var(--mls-accent);
+}
+
+/* Practice Tools Column (Right) */
+.mls-tools-column {
+  background: var(--mls-card-bg);
+  border: 1px solid var(--mls-border);
+  border-radius: 12px;
+  padding: 28px;
+  position: sticky;
+  top: 100px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.mls-tools-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--mls-text-primary);
+  margin: 0 0 12px 0;
+  letter-spacing: -0.01em;
+}
+
+.mls-tools-description {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--mls-text-secondary);
+  margin: 0 0 24px 0;
+}
+
+.mls-tool-item {
+  padding: 20px 0;
+  border-top: 1px solid var(--mls-border);
+  display: flex;
+  gap: 16px;
+}
+
+.mls-tool-item:first-of-type {
+  padding-top: 0;
+  border-top: none;
+}
+
+.mls-tool-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: var(--mls-bg);
+  border: 1px solid var(--mls-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--mls-accent);
+  transition: all 0.3s ease;
+}
+
+.mls-tool-item:hover .mls-tool-icon {
+  background: rgba(37, 99, 235, 0.1);
+  border-color: var(--mls-accent);
+  transform: scale(1.05);
+}
+
+.mls-tool-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mls-tool-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--mls-text-primary);
+  margin: 0;
+}
+
+.mls-tool-desc {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--mls-text-secondary);
+  margin: 0;
+}
+
+.mls-tool-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--mls-accent);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  width: fit-content;
+  margin-top: 4px;
+}
+
+.mls-tool-cta:hover {
+  background: var(--mls-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.mls-tool-cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--mls-bg);
+  color: var(--mls-text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid var(--mls-border);
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  width: fit-content;
+  margin-top: 4px;
+}
+
+.mls-tool-cta-secondary:hover {
+  border-color: var(--mls-accent);
+  color: var(--mls-accent);
+  background: rgba(37, 99, 235, 0.04);
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .mls-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .mls-tools-column {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .mls-section {
+    padding: 60px 0;
+  }
+
+  .mls-header {
+    margin-bottom: 40px;
+  }
+
+  .mls-title {
+    font-size: 2rem;
+  }
+
+  .mls-subtitle {
+    font-size: 1rem;
+  }
+
+  .mls-track-card {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .mls-track-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .mls-track-actions {
+    flex-direction: column;
+  }
+
+  .mls-track-primary,
+  .mls-track-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .mls-tools-column {
+    padding: 24px;
+  }
+
+  .mls-tool-item {
+    flex-direction: column;
+  }
+
+  .mls-tool-cta,
+  .mls-tool-cta-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ============================================
+   EXAMS SECTION - Professional Design
+   ============================================ */
+
+/* Exams-specific color variables */
+:root {
+  --exams-bg: #fafafa;
+  --exams-text-primary: #0a0a0a;
+  --exams-text-secondary: #525252;
+  --exams-text-muted: #737373;
+  --exams-border: #e5e5e5;
+  --exams-card-bg: #ffffff;
+  --exams-accent: #2563eb;
+  --exams-accent-hover: #1d4ed8;
+}
+
+[data-theme="dark"] {
+  --exams-bg: #0a0a0a;
+  --exams-text-primary: #fafafa;
+  --exams-text-secondary: #a3a3a3;
+  --exams-text-muted: #737373;
+  --exams-border: #262626;
+  --exams-card-bg: #171717;
+  --exams-accent: #3b82f6;
+  --exams-accent-hover: #2563eb;
+}
+
+.exams-section {
+  background: var(--exams-bg);
+  padding: 80px 0 80px;
+  border-bottom: 1px solid var(--exams-border);
+}
+
+/* Remove bottom border and padding when it's the last section (user logged in) */
+.exams-section:last-child {
+  border-bottom: none;
+  padding-bottom: 100px;
+}
+
+.exams-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Exams Header */
+.exams-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 48px;
+  gap: 24px;
+}
+
+.exams-header-content {
+  flex: 1;
+}
+
+.exams-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--exams-text-primary);
+  margin: 0 0 12px 0;
+  letter-spacing: -0.02em;
+}
+
+.exams-subtitle {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--exams-text-secondary);
+  margin: 0;
+  max-width: 500px;
+}
+
+.exams-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--exams-text-primary);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.exams-view-all:hover {
+  color: var(--exams-accent);
+  background: rgba(37, 99, 235, 0.04);
+}
+
+/* Exams Grid */
+.exams-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.exam-card {
+  background: var(--exams-card-bg);
+  border: 1px solid var(--exams-border);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.exam-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-color: var(--exams-accent);
+}
+
+.exam-meta {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--exams-text-muted);
+}
+
+.exam-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--exams-text-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.exam-info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--exams-text-secondary);
+  margin-top: 4px;
+}
+
+.exam-info-row span:not(:nth-child(3n+2)) {
+  font-weight: 500;
+}
+
+.exam-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: var(--exams-accent);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 8px;
+  margin-top: 8px;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+
+.exam-card:hover .exam-cta {
+  background: var(--exams-accent-hover);
+  transform: translateX(2px);
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .exams-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .exams-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .exams-section {
+    padding: 60px 0;
+  }
+
+  .exams-section:last-child {
+    padding-bottom: 80px;
+  }
+
+  .exams-header {
+    margin-bottom: 32px;
+  }
+
+  .exams-title {
+    font-size: 1.75rem;
+  }
+
+  .exams-subtitle {
+    font-size: 0.9375rem;
+  }
+
+  .exams-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .exam-card {
+    padding: 20px;
+  }
+
+  .exams-view-all {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ============================================
+   ACCOUNT BENEFITS SECTION - Professional Comparison
+   ============================================ */
+
+/* Benefits-specific color variables */
+:root {
+  --benefits-bg: #fafafa;
+  --benefits-text-primary: #0a0a0a;
+  --benefits-text-secondary: #525252;
+  --benefits-border: #e5e5e5;
+  --benefits-column-bg: #ffffff;
+  --benefits-accent: #2563eb;
+  --benefits-accent-hover: #1d4ed8;
+  --benefits-check: #22c55e;
+  --benefits-x: #ef4444;
+}
+
+[data-theme="dark"] {
+  --benefits-bg: #0a0a0a;
+  --benefits-text-primary: #fafafa;
+  --benefits-text-secondary: #a3a3a3;
+  --benefits-border: #262626;
+  --benefits-column-bg: #171717;
+  --benefits-accent: #3b82f6;
+  --benefits-accent-hover: #2563eb;
+  --benefits-check: #22c55e;
+  --benefits-x: #ef4444;
+}
+
+.account-benefits-section {
+  background: var(--benefits-bg);
+  padding: 80px 0;
+  border-bottom: 1px solid var(--benefits-border);
+}
+
+.benefits-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Benefits Header */
+.benefits-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.benefits-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--benefits-text-primary);
+  margin: 0 0 12px 0;
+  letter-spacing: -0.02em;
+}
+
+.benefits-subtitle {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--benefits-text-secondary);
+  margin: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Benefits Comparison */
+.benefits-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.benefits-column {
+  background: var(--benefits-column-bg);
+  border: 1px solid var(--benefits-border);
+  border-radius: 12px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.user-column {
+  border-color: var(--benefits-accent);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.1);
+}
+
+.column-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--benefits-text-primary);
+  margin: 0 0 24px 0;
+  letter-spacing: -0.01em;
+}
+
+.benefits-feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9375rem;
+  color: var(--benefits-text-primary);
+}
+
+.benefit-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.benefit-item.available .benefit-icon {
+  color: var(--benefits-check);
+}
+
+.benefit-item.unavailable {
+  color: var(--benefits-text-secondary);
+  opacity: 0.6;
+}
+
+.benefit-item.unavailable .benefit-icon {
+  color: var(--benefits-x);
+}
+
+.benefits-register-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--benefits-accent);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  margin-top: 24px;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+}
+
+.benefits-register-cta:hover {
+  background: var(--benefits-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .benefits-comparison {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .benefits-column {
+    padding: 28px 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .account-benefits-section {
+    padding: 60px 0;
+  }
+
+  .benefits-header {
+    margin-bottom: 32px;
+  }
+
+  .benefits-title {
+    font-size: 1.75rem;
+  }
+
+  .benefits-subtitle {
+    font-size: 0.9375rem;
+  }
+
+  .benefits-column {
+    padding: 24px 20px;
+  }
+
+  .column-title {
+    font-size: 1.125rem;
+  }
+
+  .benefit-item {
+    font-size: 0.875rem;
+  }
+
+  .benefits-register-cta {
+    width: 100%;
+  }
+}
