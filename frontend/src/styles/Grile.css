@@ -1290,3 +1290,174 @@ daily-loading-info {
 .result-modal-btn {
   min-width: 120px;
 }
+
+/* ============================================
+   SKELETON LOADER - Grile Page (Practice Cards)
+   ============================================ */
+
+.compact-card-skeleton {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  cursor: default;
+  animation: grile-fadeIn 0.3s ease-in;
+}
+
+[data-theme="light"] .compact-card-skeleton {
+  background: #ffffff;
+  border-color: #d1d5db;
+}
+
+@keyframes grile-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.skeleton-compact-header {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.skeleton-compact-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--bg-secondary);
+  border-radius: 10px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="light"] .skeleton-compact-icon {
+  background: #e5e7eb;
+}
+
+.skeleton-compact-icon::after,
+.skeleton-compact-title::after,
+.skeleton-compact-desc::after,
+.skeleton-compact-stat::after,
+.skeleton-compact-progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: grile-shimmer 1.5s infinite;
+}
+
+[data-theme="light"] .skeleton-compact-icon::after,
+[data-theme="light"] .skeleton-compact-title::after,
+[data-theme="light"] .skeleton-compact-desc::after,
+[data-theme="light"] .skeleton-compact-stat::after,
+[data-theme="light"] .skeleton-compact-progress::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+}
+
+@keyframes grile-shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.skeleton-compact-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-compact-title {
+  height: 20px;
+  width: 70%;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="light"] .skeleton-compact-title {
+  background: #e5e7eb;
+}
+
+.skeleton-compact-desc {
+  height: 16px;
+  width: 90%;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="light"] .skeleton-compact-desc {
+  background: #e5e7eb;
+}
+
+.skeleton-compact-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeleton-compact-stat {
+  height: 40px;
+  width: 100%;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="light"] .skeleton-compact-stat {
+  background: #e5e7eb;
+}
+
+.skeleton-compact-progress {
+  height: 8px;
+  width: 100%;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  margin-top: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="light"] .skeleton-compact-progress {
+  background: #e5e7eb;
+}
+
+/* Responsive Skeleton */
+@media (max-width: 768px) {
+  .compact-card-skeleton {
+    padding: 20px;
+  }
+
+  .skeleton-compact-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .skeleton-compact-title {
+    height: 18px;
+  }
+
+  .skeleton-compact-desc {
+    height: 14px;
+  }
+
+  .skeleton-compact-stat {
+    height: 36px;
+  }
+}

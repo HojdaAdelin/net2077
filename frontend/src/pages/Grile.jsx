@@ -196,6 +196,7 @@ export default function Grile() {
     all: { linux: 0, network: 0 }, 
     acadnet: { linux: 0, network: 0 } 
   });
+  const [isLoadingData, setIsLoadingData] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedType, setSelectedType] = useState('');
   const [preSelectedCategory, setPreSelectedCategory] = useState('');
@@ -239,6 +240,7 @@ export default function Grile() {
 
   const loadData = async () => {
     try {
+      setIsLoadingData(true);
       
       const basicRes = await fetch(`${API_URL}/questions?type=basic`);
       const basic = await basicRes.json();
@@ -301,6 +303,8 @@ export default function Grile() {
       }
     } catch (error) {
       console.error('Error loading data:', error);
+    } finally {
+      setIsLoadingData(false);
     }
   };
 
@@ -503,7 +507,26 @@ export default function Grile() {
         </div>
         
         <div className="compact-cards-grid">
-          {filteredCards.map((card, idx) => (
+          {isLoadingData ? (
+            <>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="compact-card-skeleton">
+                  <div className="skeleton-compact-header">
+                    <div className="skeleton-compact-icon"></div>
+                    <div className="skeleton-compact-info">
+                      <div className="skeleton-compact-title"></div>
+                      <div className="skeleton-compact-desc"></div>
+                    </div>
+                  </div>
+                  <div className="skeleton-compact-stats">
+                    <div className="skeleton-compact-stat"></div>
+                    <div className="skeleton-compact-progress"></div>
+                  </div>
+                </div>
+              ))}
+            </>
+          ) : (
+            filteredCards.map((card, idx) => (
             <div 
               key={idx} 
               className={`compact-card ${card.completed ? 'daily-completed' : ''} ${card.isExam ? 'exam-card' : ''}`}
@@ -580,7 +603,7 @@ export default function Grile() {
                 </div>
               )}
             </div>
-          ))}
+          )))}
         </div>
       </div>
 
