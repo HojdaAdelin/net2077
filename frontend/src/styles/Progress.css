@@ -496,3 +496,255 @@
     font-size: 0.75rem;
   }
 }
+
+/* ============================================
+   SKELETON LOADER - Progress Page
+   ============================================ */
+
+.progress-skeleton {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.skeleton-header {
+  margin-top: 20px;
+  margin-bottom: 48px;
+}
+
+.skeleton-title {
+  height: 42px;
+  width: 200px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="light"] .skeleton-title,
+[data-theme="light"] .skeleton-level-text,
+[data-theme="light"] .skeleton-level-number,
+[data-theme="light"] .skeleton-progress-bar,
+[data-theme="light"] .skeleton-stat-label,
+[data-theme="light"] .skeleton-stat-value,
+[data-theme="light"] .skeleton-section-title,
+[data-theme="light"] .skeleton-category-header,
+[data-theme="light"] .skeleton-category-stat,
+[data-theme="light"] .skeleton-badge-progress {
+  background: #e5e7eb;
+}
+
+.skeleton-title::after,
+.skeleton-level-info::after,
+.skeleton-progress-bar::after,
+.skeleton-stat-label::after,
+.skeleton-stat-value::after,
+.skeleton-section-title::after,
+.skeleton-category-header::after,
+.skeleton-category-stat::after,
+.skeleton-badge-progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+[data-theme="light"] .skeleton-title::after,
+[data-theme="light"] .skeleton-level-info::after,
+[data-theme="light"] .skeleton-progress-bar::after,
+[data-theme="light"] .skeleton-stat-label::after,
+[data-theme="light"] .skeleton-stat-value::after,
+[data-theme="light"] .skeleton-section-title::after,
+[data-theme="light"] .skeleton-category-header::after,
+[data-theme="light"] .skeleton-category-stat::after,
+[data-theme="light"] .skeleton-badge-progress::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.skeleton-level-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 40px;
+}
+
+[data-theme="light"] .skeleton-level-card,
+[data-theme="light"] .skeleton-stat-card,
+[data-theme="light"] .skeleton-category-card {
+  background: #ffffff;
+  border-color: #d1d5db;
+}
+
+.skeleton-level-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-level-text {
+  height: 16px;
+  width: 120px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.skeleton-level-number {
+  height: 56px;
+  width: 80px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+}
+
+.skeleton-progress-bar {
+  height: 8px;
+  width: 100%;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  margin-top: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 32px;
+  text-align: center;
+}
+
+.skeleton-stat-label {
+  height: 14px;
+  width: 100px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  margin: 0 auto 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-stat-value {
+  height: 48px;
+  width: 80px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-category-section {
+  margin-bottom: 80px;
+}
+
+.skeleton-section-title {
+  height: 28px;
+  width: 250px;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.skeleton-category-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 32px;
+}
+
+.skeleton-category-header {
+  height: 24px;
+  width: 120px;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-category-stat {
+  height: 56px;
+  width: 100px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin: 0 auto 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-badge-progress {
+  height: 56px;
+  width: 100%;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Responsive Skeleton */
+@media (max-width: 1024px) {
+  .skeleton-category-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .skeleton-category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skeleton-level-card,
+  .skeleton-stat-card,
+  .skeleton-category-card {
+    padding: 28px;
+  }
+
+  .skeleton-level-number {
+    height: 48px;
+    width: 70px;
+  }
+
+  .skeleton-stat-value {
+    height: 42px;
+    width: 70px;
+  }
+
+  .skeleton-category-stat {
+    height: 48px;
+    width: 90px;
+  }
+}

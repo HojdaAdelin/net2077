@@ -15,7 +15,52 @@ export default function Progress() {
   if (!progress) {
     return (
       <div className="container progress-page">
-        <div className="loading">{t('progress.loading')}</div>
+        <div className="progress-skeleton">
+          <div className="skeleton-header">
+            <div className="skeleton-title"></div>
+          </div>
+
+          <div className="progress-grid">
+            <div className="skeleton-level-card">
+              <div className="skeleton-level-info">
+                <div className="skeleton-level-text"></div>
+                <div className="skeleton-level-number"></div>
+              </div>
+              <div className="skeleton-progress-bar"></div>
+            </div>
+
+            <div className="skeleton-stat-card">
+              <div className="skeleton-stat-label"></div>
+              <div className="skeleton-stat-value"></div>
+            </div>
+
+            <div className="skeleton-stat-card">
+              <div className="skeleton-stat-label"></div>
+              <div className="skeleton-stat-value"></div>
+            </div>
+          </div>
+
+          <div className="skeleton-category-section">
+            <div className="skeleton-section-title"></div>
+            <div className="skeleton-category-grid">
+              <div className="skeleton-category-card">
+                <div className="skeleton-category-header"></div>
+                <div className="skeleton-category-stat"></div>
+                <div className="skeleton-badge-progress"></div>
+              </div>
+              <div className="skeleton-category-card">
+                <div className="skeleton-category-header"></div>
+                <div className="skeleton-category-stat"></div>
+                <div className="skeleton-badge-progress"></div>
+              </div>
+              <div className="skeleton-category-card">
+                <div className="skeleton-category-header"></div>
+                <div className="skeleton-category-stat"></div>
+                <div className="skeleton-badge-progress"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
