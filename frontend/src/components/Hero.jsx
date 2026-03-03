@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getStats } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
 import { AuthContext } from '../context/AuthContext';
-import { Check, X, Terminal, Network, Code, BookOpen, Play, Zap, Sparkles, Clock, User, UserPlus, BarChart3, Trophy, Calendar, Monitor } from 'lucide-react';
+import { Check, X, Terminal, Network, Code, BookOpen, Play, Zap, Sparkles, Clock, User, UserPlus, BarChart3, Trophy, Calendar, Monitor, ArrowRight } from 'lucide-react';
 import '../styles/Hero.css';
 
 export default function Hero() {
@@ -27,119 +27,80 @@ export default function Hero() {
 
   return (
     <div className="hero">
-      <div className="container">
-        <div className="hero-content">
-          <h1 className="hero-title">{t('hero.title')}</h1>
-          <p className="hero-subtitle">
-            {t('hero.subtitle')}
-          </p>
-          
-          <div className="hero-cta">
-            <Link to="/grile" className="btn btn-primary">{t('hero.browseQuestions')}</Link>
-            <Link to="/resurse" className="btn btn-secondary">{t('hero.browseResources')}</Link>
-            <button onClick={scrollToNewExams} className="btn btn-accent">
-              <Sparkles size={16} />
-              New Tests
-            </button>
-          </div>
-        </div>
-
-        <div className="stats-grid">
-          <div className="stat-item">
-            <div className="stat-number">{stats.totalQuestions}</div>
-            <div className="stat-label">{t('hero.practiceQuestions')}</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-number">{stats.totalUsers}</div>
-            <div className="stat-label">{t('hero.activeLearners')}</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-number">{stats.totalResources}</div>
-            <div className="stat-label">{t('hero.learningResources')}</div>
-          </div>
-        </div>
-
-        <div className="arena-showcase-section">
-          <div className="feature-card arena-feature-card">
-            <div className="arena-feature-content">
-              <div className="arena-feature-badge">
-                <Sparkles size={12} />
-                COMPETE NOW
-              </div>
-              <h3 className="arena-feature-title">Arena - 1v1 Battles</h3>
-              <p className="arena-feature-description">
-                Challenge friends or compete publicly. Test your knowledge in real-time matches with instant feedback and XP rewards.
+      {/* New Hero Section */}
+      <section className="hero-section">
+        <div className="hero-container">
+          <div className="hero-grid">
+            <div className="hero-content">
+              <h1 className="hero-title">Master Applied Informatics</h1>
+              <p className="hero-subtitle">
+                Practice Linux, Networking and Programming through structured challenges, real-time battles and curated learning paths.
               </p>
-              <div className="arena-feature-highlights">
-                <div className="arena-highlight">
-                  <Trophy size={16} />
-                  <span>Win XP</span>
-                </div>
-                <div className="arena-highlight">
-                  <Clock size={16} />
-                  <span>Timed Matches</span>
-                </div>
-                <div className="arena-highlight">
-                  <Zap size={16} />
-                  <span>Live Competition</span>
-                </div>
-              </div>
-              {user ? (
-                <Link to="/arena" className="btn btn-primary arena-feature-btn">
-                  <Trophy size={18} />
-                  Enter Arena
+              
+              <div className="hero-cta-group">
+                <Link to="/grile" className="hero-primary-cta">
+                  Start Learning
+                  <ArrowRight size={18} />
                 </Link>
-              ) : (
-                <div className="arena-feature-auth-required">
-                  <p className="arena-auth-text">Login to compete with others</p>
-                  <Link to="/login" className="btn btn-secondary arena-feature-btn">
-                    Login to Battle
-                  </Link>
-                </div>
-              )}
+                <Link to="/roadmap/linux" className="hero-secondary-cta">
+                  View Roadmap
+                </Link>
+              </div>
+
+              <div className="hero-stats-inline">
+                <span className="hero-stat-item">{stats.totalQuestions}+ Questions</span>
+                <span className="hero-stat-separator">•</span>
+                <span className="hero-stat-item">{stats.totalUsers} Active Learners</span>
+                <span className="hero-stat-separator">•</span>
+                <span className="hero-stat-item">{stats.totalResources} Learning Roadmaps</span>
+              </div>
             </div>
-            <div className="arena-feature-visual">
-              <div className="arena-preview">
-                <div className="arena-preview-header">
-                  <div className="arena-player">
-                    <div className="player-avatar">👤</div>
-                    <span className="player-name">You</span>
-                  </div>
-                  <div className="arena-vs">VS</div>
-                  <div className="arena-player">
-                    <div className="player-avatar">👤</div>
-                    <span className="player-name">Opponent</span>
+
+            <div className="hero-preview">
+              <div className="hero-preview-card">
+                <div className="preview-header">
+                  <div className="preview-tabs">
+                    <div className="preview-tab active">Quiz</div>
+                    <div className="preview-tab">Terminal</div>
                   </div>
                 </div>
-                <div className="arena-preview-body">
-                  <div className="arena-timer">
-                    <Clock size={16} />
-                    <span>2:45</span>
+                <div className="preview-body">
+                  <div className="preview-question">
+                    <div className="question-badge">Linux</div>
+                    <p className="question-text">Which command displays the current directory?</p>
                   </div>
-                  <div className="arena-score">
-                    <div className="score-item">
-                      <span className="score-label">Your Score</span>
-                      <span className="score-value">15</span>
+                  <div className="preview-options">
+                    <div className="preview-option">
+                      <div className="option-radio"></div>
+                      <span>ls</span>
                     </div>
-                    <div className="score-divider"></div>
-                    <div className="score-item">
-                      <span className="score-label">Opponent</span>
-                      <span className="score-value">12</span>
+                    <div className="preview-option correct">
+                      <div className="option-radio checked"></div>
+                      <span>pwd</span>
+                    </div>
+                    <div className="preview-option">
+                      <div className="option-radio"></div>
+                      <span>cd</span>
                     </div>
                   </div>
-                  <div className="arena-progress">
-                    <div className="progress-dot active"></div>
-                    <div className="progress-dot active"></div>
-                    <div className="progress-dot active"></div>
-                    <div className="progress-dot"></div>
-                    <div className="progress-dot"></div>
+                  <div className="preview-footer">
+                    <div className="preview-progress">
+                      <div className="progress-dot filled"></div>
+                      <div className="progress-dot filled"></div>
+                      <div className="progress-dot current"></div>
+                      <div className="progress-dot"></div>
+                      <div className="progress-dot"></div>
+                    </div>
+                    <div className="preview-score">+10 XP</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </section>
 
+      <div className="container">
         <div className="features-section">
           <div className="feature-card terminal-feature-card">
             <div className="terminal-feature-content">
