@@ -9,6 +9,7 @@ import '../styles/Grile.css';
 function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
   const [selectedMode, setSelectedMode] = useState('');
   const [selectedTag, setSelectedTag] = useState(preSelectedCategory || ((type === 'basic' || type === 'daily') ? 'LINUX' : ''));
+  const [selectedChapters, setSelectedChapters] = useState([]);
   const navigate = useNavigate();
 
   const availableTags = [
@@ -16,6 +17,31 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
     { id: 'NETWORK', label: 'Network', color: '#3b82f6', icon: '🌐', desc: 'Networking protocols & security' },
     { id: 'TIC/ICT', label: 'TIC/ICT', color: '#8b5cf6', icon: '💻', desc: 'Academic examination topics' }
   ];
+
+  const chapterTags = [
+    { id: 'CHAPTER3', label: 'Chapter 1 - Packages' },
+    { id: 'CHAPTER4', label: 'Chapter 2 - Processes' },
+    { id: 'CHAPTER5', label: 'Chapter 3 - Users' },
+    { id: 'CHAPTER6', label: 'Chapter 4 - Dev' },
+    { id: 'CHAPTER7', label: 'Chapter 5 - CLI' },
+    { id: 'CHAPTER8', label: 'Chapter 6 - Hardware' },
+    { id: 'CHAPTER9', label: 'Chapter 7 - System' },
+    { id: 'CHAPTER10', label: 'Chapter 8 - System storage' },
+    { id: 'CHAPTER11', label: 'Chapter 9 - Network' },
+    { id: 'CHAPTER12', label: 'Chapter 10 - Security' },
+    { id: 'CHAPTER14', label: 'Chapter 11 - VM' },
+    { id: 'CHAPTER15', label: 'Chapter 12 - Embedded Systems' }
+  ];
+
+  const showChapterFilter = type === 'all' && selectedTag === 'LINUX' && selectedMode === 'unsolved';
+
+  const toggleChapter = (chapterId) => {
+    setSelectedChapters(prev => 
+      prev.includes(chapterId) 
+        ? prev.filter(id => id !== chapterId)
+        : [...prev, chapterId]
+    );
+  };
 
   const isAllModeNoFilter = type === 'all' && selectedMode === 'all' && !selectedTag;
   const isTagRequired = type !== 'basic' && !isAllModeNoFilter;
@@ -52,6 +78,9 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
     params.set('type', type);
     if (finalTag) {
       params.set('tags', finalTag);
+    }
+    if (selectedChapters.length > 0) {
+      params.set('chapters', selectedChapters.join(','));
     }
 
     navigate(`/grile/${type}/${selectedMode}?${params.toString()}`);
@@ -99,6 +128,31 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
                 You need an account to track unsolved questions.
               </p>
             )}
+          </div>
+        )}
+
+        {showChapterFilter && (
+          <div className="modal-section">
+            <h3 className="section-title">
+              Chapter <span className="optional-label">(optional)</span>
+            </h3>
+            <div className="chapter-tags-grid">
+              {chapterTags.map(chapter => (
+                <button
+                  key={chapter.id}
+                  className={`chapter-tag ${selectedChapters.includes(chapter.id) ? 'selected' : ''}`}
+                  onClick={() => toggleChapter(chapter.id)}
+                >
+                  {chapter.label}
+                </button>
+              ))}
+            </div>
+            <p className="tag-helper">
+              {selectedChapters.length === 0 
+                ? 'Optional: select one or more chapters to filter questions.'
+                : `${selectedChapters.length} chapter${selectedChapters.length > 1 ? 's' : ''} selected`
+              }
+            </p>
           </div>
         )}
 
@@ -165,19 +219,26 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
         )}
 
         <div className="modal-footer">
-          <button 
-            onClick={onClose}
-            className="btn btn-secondary"
-          >
-            Cancel
-          </button>
-          <button 
-            onClick={handleStart}
-            className="btn btn-primary"
-            disabled={!canStart}
-          >
-            Start Quiz
-          </button>
+          {showChapterFilter && (
+            <div className="modal-footer-note">
+              Chapters inspired from <a href="https://github.com/systems-cs-pub-ro/carte-uso" target="_blank" rel="noopener noreferrer" className="uso-link">USO</a>
+            </div>
+          )}
+          <div className="modal-footer-actions">
+            <button 
+              onClick={onClose}
+              className="btn btn-secondary"
+            >
+              Cancel
+            </button>
+            <button 
+              onClick={handleStart}
+              className="btn btn-primary"
+              disabled={!canStart}
+            >
+              Start Quiz
+            </button>
+          </div>
         </div>
       </div>
     </div>

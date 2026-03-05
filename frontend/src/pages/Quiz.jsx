@@ -204,6 +204,7 @@ export default function Quiz({ isExam = false }) {
     try {
       const urlParams = new URLSearchParams(location.search);
       const tagsParam = urlParams.get('tags');
+      const chaptersParam = urlParams.get('chapters');
       const queryType = urlParams.get('type') || type;
 
       let data = [];
@@ -281,6 +282,13 @@ export default function Quiz({ isExam = false }) {
         filtered = filtered.filter(q => q.tags && q.tags.includes(tagsFilter));
       } else if (isExam && tagsFilter) {
         filtered = filtered.filter(q => q.tags && q.tags.includes(tagsFilter));
+      }
+
+      if (chaptersParam && !isExam) {
+        const selectedChapters = chaptersParam.split(',');
+        filtered = filtered.filter(q => 
+          q.tags && q.tags.some(tag => selectedChapters.includes(tag))
+        );
       }
 
       let restoredState = null;
