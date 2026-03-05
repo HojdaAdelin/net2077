@@ -4,6 +4,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { MessageProvider } from './context/MessageContext';
 import { ConfirmProvider } from './context/ConfirmContext';
+import { HelmetProvider } from 'react-helmet-async';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SupportButton from './components/SupportButton';
@@ -31,12 +32,13 @@ import './styles/global.css';
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <AuthProvider>
-          <MessageProvider>
-            <ConfirmProvider>
-              <BrowserRouter>
+    <HelmetProvider>
+      <ThemeProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <MessageProvider>
+              <ConfirmProvider>
+                <BrowserRouter>
                 <Navbar />
                 <Routes>
                   <Route path="/" element={<Home />} />
@@ -71,5 +73,6 @@ export default function App() {
         </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>
+    </HelmetProvider>
   );
 }

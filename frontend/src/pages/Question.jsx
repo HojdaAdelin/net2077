@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { API_URL } from '../config';
 import '../styles/SharedQuestion.css';
 
@@ -82,9 +83,36 @@ export default function Question() {
   }
 
   const correctAnswers = question.correctAnswers || [question.correctIndex];
+  
+  const pageTitle = `${question.title} - Net2077`;
+  const pageDescription = `Practice question: ${question.title}. ${question.answers.length} possible answers. ${question.points || 1} points.`;
+  const pageUrl = `${window.location.origin}/question/${questionId}`;
+  const tagsText = question.tags ? question.tags.join(', ') : 'Quiz';
 
   return (
     <div className="sq-page">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:site_name" content="Net2077" />
+        
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content={pageUrl} />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+        
+        {/* Additional meta */}
+        <meta name="keywords" content={`${tagsText}, quiz, practice, learning, Net2077`} />
+        <link rel="canonical" href={pageUrl} />
+      </Helmet>
+      
       <div className="sq-container">
         <div className="sq-card">
           <div className="sq-header">
