@@ -10,6 +10,7 @@ import SupportButton from './components/SupportButton';
 import Home from './pages/Home';
 import Grile from './pages/Grile';
 import Quiz from './pages/Quiz';
+import Question from './pages/Question';
 import ExamSelection from './pages/ExamSelection';
 import Resurse from './pages/Resurse';
 import Progress from './pages/Progress';
@@ -41,6 +42,7 @@ export default function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/grile" element={<Grile />} />
                   <Route path="/grile/:type/:mode" element={<Quiz />} />
+                  <Route path="/question/:questionId" element={<Question />} />
                   <Route path="/exam-selection" element={<ExamSelection />} />
                   <Route path="/exam/:examId" element={<Quiz isExam={true} />} />
                   <Route path="/resurse" element={<Resurse />} />

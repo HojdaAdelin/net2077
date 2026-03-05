@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import '../styles/Quiz.css';
 import { API_URL as API_BASE } from '../config';
 import { AuthContext } from '../context/AuthContext';
+import { Share2, Check } from 'lucide-react';
 const DEFAULT_EXAM_DURATION_MIN = 60;
 const getExamStorageKey = (examId) => `exam_state_${examId}`;
 
@@ -24,6 +25,44 @@ export default function Quiz({ isExam = false }) {
   const [finishReason, setFinishReason] = useState(null);
   const [timeSpent, setTimeSpent] = useState(0);
   const [lockedQuestions, setLockedQuestions] = useState({});
+  const [showCopied, setShowCopied] = useState(false);
+
+  const handleShareQuestion = () => {
+    const questionId = currentQuestion._id;
+    const shareUrl = `${window.location.origin}/question/${questionId}`;
+    
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        setShowCopied(true);
+        setTimeout(() => setShowCopied(false), 2000);
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+        fallbackCopyToClipboard(shareUrl);
+      });
+    } else {
+      fallbackCopyToClipboard(shareUrl);
+    }
+  };
+
+  const fallbackCopyToClipboard = (text) => {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+      document.execCommand('copy');
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 2000);
+    } catch (err) {
+      console.error('Fallback: Failed to copy', err);
+    }
+    
+    document.body.removeChild(textArea);
+  };
 
   useEffect(() => {
     loadQuestions();
@@ -777,6 +816,14 @@ export default function Quiz({ isExam = false }) {
               <div className="question-header">
                 <span className="question-number">Question {currentIndex + 1}</span>
                 <div className="question-meta">
+                  <button 
+                    className="share-question-btn"
+                    onClick={handleShareQuestion}
+                    title="Share this question"
+                  >
+                    {showCopied ? <Check size={18} /> : <Share2 size={18} />}
+                    {showCopied && <span className="copied-text">Copied!</span>}
+                  </button>
                   <span className="question-type">{currentQuestion.type}</span>
                   <span className="question-points">{currentQuestion.points || 1} {currentQuestion.points === 1 ? 'point' : 'points'}</span>
                 </div>
