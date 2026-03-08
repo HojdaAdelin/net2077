@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getUserProgress } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
-import { Monitor, Globe, Award, Terminal } from 'lucide-react';
+import { Monitor, Globe, Award, Terminal, Info } from 'lucide-react';
 import '../styles/Progress.css';
 
 export default function Progress() {
@@ -70,8 +70,11 @@ export default function Progress() {
 
   // Badge requirements
   const linuxBadgeRequired = 500;
+  const linuxLegendaryRequired = 1000;
   const networkBadgeRequired = 50;
+  const networkLegendaryRequired = 300;
   const terminalBadgeRequired = 50;
+  const terminalLegendaryRequired = 150;
   
   const linuxSolved = progress.solvedByTag?.LINUX || 0;
   const networkSolved = progress.solvedByTag?.NETWORK || 0;
@@ -84,6 +87,10 @@ export default function Progress() {
   const linuxRemaining = Math.max(0, linuxBadgeRequired - linuxSolved);
   const networkRemaining = Math.max(0, networkBadgeRequired - networkSolved);
   const terminalRemaining = Math.max(0, terminalBadgeRequired - terminalSolved);
+  
+  const linuxLegendaryRemaining = Math.max(0, linuxLegendaryRequired - linuxSolved);
+  const networkLegendaryRemaining = Math.max(0, networkLegendaryRequired - networkSolved);
+  const terminalLegendaryRemaining = Math.max(0, terminalLegendaryRequired - terminalSolved);
 
   return (
     <div className="container progress-page">
@@ -141,11 +148,19 @@ export default function Progress() {
               <div className="badge-progress-icon">
                 {linuxBadgeUnlocked ? <Award size={16} /> : <Monitor size={16} />}
               </div>
-              <div className="badge-progress-text">
-                {linuxBadgeUnlocked ? (
-                  <span className="badge-unlocked-text">Linux Master Badge Unlocked!</span>
-                ) : (
-                  <span className="badge-locked-text">{linuxRemaining} more to unlock badge</span>
+              <div className="badge-progress-content">
+                <div className="badge-progress-text">
+                  {linuxBadgeUnlocked ? (
+                    <span className="badge-unlocked-text">Linux Master Badge Unlocked!</span>
+                  ) : (
+                    <span className="badge-locked-text">{linuxRemaining} more to unlock badge</span>
+                  )}
+                </div>
+                {linuxBadgeUnlocked && (
+                  <div className="badge-next-tier">
+                    <Info size={14} />
+                    <span className="next-tier-tooltip">{linuxLegendaryRemaining} more for Legendary</span>
+                  </div>
                 )}
               </div>
             </div>
@@ -166,11 +181,19 @@ export default function Progress() {
               <div className="badge-progress-icon">
                 {networkBadgeUnlocked ? <Award size={16} /> : <Globe size={16} />}
               </div>
-              <div className="badge-progress-text">
-                {networkBadgeUnlocked ? (
-                  <span className="badge-unlocked-text">Network Expert Badge Unlocked!</span>
-                ) : (
-                  <span className="badge-locked-text">{networkRemaining} more to unlock badge</span>
+              <div className="badge-progress-content">
+                <div className="badge-progress-text">
+                  {networkBadgeUnlocked ? (
+                    <span className="badge-unlocked-text">Network Expert Badge Unlocked!</span>
+                  ) : (
+                    <span className="badge-locked-text">{networkRemaining} more to unlock badge</span>
+                  )}
+                </div>
+                {networkBadgeUnlocked && (
+                  <div className="badge-next-tier">
+                    <Info size={14} />
+                    <span className="next-tier-tooltip">{networkLegendaryRemaining} more for Legendary</span>
+                  </div>
                 )}
               </div>
             </div>
@@ -191,11 +214,19 @@ export default function Progress() {
               <div className="badge-progress-icon">
                 {terminalBadgeUnlocked ? <Award size={16} /> : <Terminal size={16} />}
               </div>
-              <div className="badge-progress-text">
-                {terminalBadgeUnlocked ? (
-                  <span className="badge-unlocked-text">Terminal Pro Badge Unlocked!</span>
-                ) : (
-                  <span className="badge-locked-text">{terminalRemaining} more to unlock badge</span>
+              <div className="badge-progress-content">
+                <div className="badge-progress-text">
+                  {terminalBadgeUnlocked ? (
+                    <span className="badge-unlocked-text">Terminal Pro Badge Unlocked!</span>
+                  ) : (
+                    <span className="badge-locked-text">{terminalRemaining} more to unlock badge</span>
+                  )}
+                </div>
+                {terminalBadgeUnlocked && (
+                  <div className="badge-next-tier">
+                    <Info size={14} />
+                    <span className="next-tier-tooltip">{terminalLegendaryRemaining} more for Legendary</span>
+                  </div>
                 )}
               </div>
             </div>

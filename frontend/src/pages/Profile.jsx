@@ -6,45 +6,51 @@ import { User, Trophy, Zap, Target, Calendar, Activity, Award, Monitor, Globe, T
 import '../styles/Profile.css';
 
 
-function Badge({ type, unlocked, rank }) {
+function Badge({ type, unlocked, rank, count }) {
   const [showTooltip, setShowTooltip] = useState(false);
   
   const badges = {
     linux: {
       icon: <Monitor size={20} />,
-      name: 'Linux Master',
-      description: '500+ Linux questions solved',
-      color: '#f97316' 
+      name: count >= 1000 ? 'Legendary Linux' : 'Linux Master',
+      description: count >= 1000 ? '1000+ Linux questions solved' : '500+ Linux questions solved',
+      color: count >= 1000 ? '#60a5fa' : '#f97316',
+      isLegendary: count >= 1000
     },
     network: {
       icon: <Globe size={20} />,
-      name: 'Network Expert',
-      description: '50+ Network questions solved',
-      color: '#3b82f6'
+      name: count >= 300 ? 'Legendary Network' : 'Network Expert',
+      description: count >= 300 ? '300+ Network questions solved' : '50+ Network questions solved',
+      color: count >= 300 ? '#60a5fa' : '#3b82f6',
+      isLegendary: count >= 300
     },
     terminal: {
       icon: <Terminal size={20} />,
-      name: 'Terminal Pro',
-      description: '50+ Terminal commands solved',
-      color: '#22c55e' 
+      name: count >= 150 ? 'Legendary Terminal' : 'Terminal Pro',
+      description: count >= 150 ? '150+ Terminal commands solved' : '50+ Terminal commands solved',
+      color: count >= 150 ? '#60a5fa' : '#22c55e',
+      isLegendary: count >= 150
     },
     top1: {
       icon: <Crown size={20} />,
       name: 'Champion',
       description: 'Rank #1 on Leaderboard',
-      color: '#fbbf24'
+      color: '#fbbf24',
+      isLegendary: false
     },
     top2: {
       icon: <Medal size={20} />,
       name: 'Runner-up',
       description: 'Rank #2 on Leaderboard',
-      color: '#94a3b8'
+      color: '#94a3b8',
+      isLegendary: false
     },
     top3: {
       icon: <Trophy size={20} />,
       name: 'Top 3',
       description: 'Rank #3 on Leaderboard',
-      color: '#cd7f32'
+      color: '#cd7f32',
+      isLegendary: false
     }
   };
 
@@ -53,7 +59,7 @@ function Badge({ type, unlocked, rank }) {
 
   return (
     <div 
-      className={`profile-badge ${unlocked ? 'unlocked' : 'locked'}`}
+      className={`profile-badge ${unlocked ? 'unlocked' : 'locked'} ${badge.isLegendary ? 'legendary' : ''}`}
       style={{ '--badge-color': badge.color }}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
@@ -65,7 +71,6 @@ function Badge({ type, unlocked, rank }) {
         <div className="badge-rank">#{rank}</div>
       )}
       
-      {/* Custom Tooltip */}
       {showTooltip && (
         <div className="badge-tooltip">
           <div className="badge-tooltip-header">
@@ -197,9 +202,9 @@ export default function Profile() {
           </div>
           
           <div className="user-profile-achievements">
-            <Badge type="linux" unlocked={badges.linux} />
-            <Badge type="network" unlocked={badges.network} />
-            <Badge type="terminal" unlocked={badges.terminal} />
+            <Badge type="linux" unlocked={badges.linux} count={profileData.categoryStats.linux} />
+            <Badge type="network" unlocked={badges.network} count={profileData.categoryStats.network} />
+            <Badge type="terminal" unlocked={badges.terminal} count={profileData.categoryStats.terminal} />
             {profileData.leaderboardRank <= 3 && (
               <Badge 
                 type={`top${profileData.leaderboardRank}`} 

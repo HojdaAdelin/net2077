@@ -1010,3 +1010,26 @@ ge System Styles */
     transform: translateX(100%) translateY(100%) rotate(45deg);
   }
 }
+
+/* Legendary Badge Styles */
+.profile-badge.legendary {
+  animation: legendary-badge-glow 2s ease-in-out infinite;
+}
+
+@keyframes legendary-badge-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(96, 165, 250, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(96, 165, 250, 0.6);
+  }
+}
+
+.profile-badge.legendary .badge-icon {
+  animation: legendary-badge-pulse 2s ease-in-out infinite;
+}
+
+@keyframes legendary-badge-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}

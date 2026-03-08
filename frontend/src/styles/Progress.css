@@ -445,10 +445,23 @@
   50% { transform: scale(1.2) rotate(10deg); }
 }
 
-.badge-progress-text {
+.badge-progress.legendary .badge-progress-icon {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+  color: white;
+  animation: legendary-icon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes legendary-icon-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.badge-progress-content {
   flex: 1;
-  font-size: 0.85rem;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .badge-locked-text {
@@ -746,5 +759,97 @@
   .skeleton-category-stat {
     height: 48px;
     width: 90px;
+  }
+}
+
+/* Legendary Badge Styles */
+.badge-progress-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.badge-progress-text {
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.badge-next-tier {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+  cursor: help;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.badge-next-tier:hover {
+  background: var(--bg-tertiary);
+  color: #60a5fa;
+}
+
+.next-tier-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.badge-next-tier:hover .next-tier-tooltip {
+  opacity: 1;
+}
+
+.next-tier-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 12px;
+  border: 6px solid transparent;
+  border-top-color: var(--border);
+}
+
+[data-theme="dark"] .next-tier-tooltip {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Responsive for Legendary Badges */
+@media (max-width: 768px) {
+  .badge-progress-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .badge-next-tier {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .next-tier-tooltip {
+    right: 50%;
+    transform: translateX(50%);
+  }
+
+  .next-tier-tooltip::after {
+    right: 50%;
+    transform: translateX(50%);
   }
 }
