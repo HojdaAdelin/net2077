@@ -75,6 +75,8 @@ export default function Progress() {
   const networkLegendaryRequired = 300;
   const terminalBadgeRequired = 50;
   const terminalLegendaryRequired = 150;
+  const levelBadgeRequired = 50;
+  const levelLegendaryRequired = 100;
   
   const linuxSolved = progress.solvedByTag?.LINUX || 0;
   const networkSolved = progress.solvedByTag?.NETWORK || 0;
@@ -83,14 +85,17 @@ export default function Progress() {
   const linuxBadgeUnlocked = linuxSolved >= linuxBadgeRequired;
   const networkBadgeUnlocked = networkSolved >= networkBadgeRequired;
   const terminalBadgeUnlocked = terminalSolved >= terminalBadgeRequired;
+  const levelBadgeUnlocked = progress.level >= levelBadgeRequired;
   
   const linuxRemaining = Math.max(0, linuxBadgeRequired - linuxSolved);
   const networkRemaining = Math.max(0, networkBadgeRequired - networkSolved);
   const terminalRemaining = Math.max(0, terminalBadgeRequired - terminalSolved);
+  const levelRemaining = Math.max(0, levelBadgeRequired - progress.level);
   
   const linuxLegendaryRemaining = Math.max(0, linuxLegendaryRequired - linuxSolved);
   const networkLegendaryRemaining = Math.max(0, networkLegendaryRequired - networkSolved);
   const terminalLegendaryRemaining = Math.max(0, terminalLegendaryRequired - terminalSolved);
+  const levelLegendaryRemaining = Math.max(0, levelLegendaryRequired - progress.level);
 
   return (
     <div className="container progress-page">
@@ -115,6 +120,28 @@ export default function Progress() {
             </div>
             <div className="progress-bar">
               <div className="progress-fill" style={{ width: `${progressPercent}%` }}></div>
+            </div>
+          </div>
+
+          
+          <div className={`badge-progress ${levelBadgeUnlocked ? 'unlocked' : ''}`} style={{ marginTop: '24px' }}>
+            <div className="badge-progress-icon">
+              {levelBadgeUnlocked ? <Award size={16} /> : <Zap size={16} />}
+            </div>
+            <div className="badge-progress-content">
+              <div className="badge-progress-text">
+                {levelBadgeUnlocked ? (
+                  <span className="badge-unlocked-text">Master User Badge Unlocked!</span>
+                ) : (
+                  <span className="badge-locked-text">{levelRemaining} more levels to unlock badge</span>
+                )}
+              </div>
+              {levelBadgeUnlocked && (
+                <div className="badge-next-tier">
+                  <Info size={14} />
+                  <span className="next-tier-tooltip">{levelLegendaryRemaining} more levels for Legendary</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

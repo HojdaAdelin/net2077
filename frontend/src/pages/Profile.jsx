@@ -6,7 +6,7 @@ import { User, Trophy, Zap, Target, Calendar, Activity, Award, Monitor, Globe, T
 import '../styles/Profile.css';
 
 
-function Badge({ type, unlocked, rank, count }) {
+function Badge({ type, unlocked, rank, count, level }) {
   const [showTooltip, setShowTooltip] = useState(false);
   
   const badges = {
@@ -30,6 +30,13 @@ function Badge({ type, unlocked, rank, count }) {
       description: count >= 150 ? '150+ Terminal commands solved' : '50+ Terminal commands solved',
       color: count >= 150 ? '#60a5fa' : '#22c55e',
       isLegendary: count >= 150
+    },
+    level: {
+      icon: <Zap size={20} />,
+      name: level >= 100 ? 'Legendary User' : 'Master User',
+      description: level >= 100 ? 'Reached Level 100' : 'Reached Level 50',
+      color: level >= 100 ? '#60a5fa' : '#a855f7',
+      isLegendary: level >= 100
     },
     top1: {
       icon: <Crown size={20} />,
@@ -176,6 +183,7 @@ export default function Profile() {
     linux: profileData.categoryStats.linux >= 500,
     network: profileData.categoryStats.network >= 50,
     terminal: profileData.categoryStats.terminal >= 50,
+    level: profileData.level >= 50,
     top1: profileData.leaderboardRank === 1,
     top2: profileData.leaderboardRank === 2,
     top3: profileData.leaderboardRank === 3
@@ -205,6 +213,7 @@ export default function Profile() {
             <Badge type="linux" unlocked={badges.linux} count={profileData.categoryStats.linux} />
             <Badge type="network" unlocked={badges.network} count={profileData.categoryStats.network} />
             <Badge type="terminal" unlocked={badges.terminal} count={profileData.categoryStats.terminal} />
+            <Badge type="level" unlocked={badges.level} level={profileData.level} />
             {profileData.leaderboardRank <= 3 && (
               <Badge 
                 type={`top${profileData.leaderboardRank}`} 
