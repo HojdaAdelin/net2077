@@ -112,6 +112,43 @@
   background: rgba(37, 99, 235, 0.04);
 }
 
+.hero-season-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #f06595 100%);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-season-cta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.hero-season-cta:hover::before {
+  left: 100%;
+}
+
+.hero-season-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(255, 107, 107, 0.4);
+}
+
 .hero-stats-inline {
   display: flex;
   align-items: center;
@@ -3103,5 +3140,20 @@ na Feature Card */
 
   .benefits-register-cta {
     width: 100%;
+  }
+}
+
+/* Mobile Responsive for Season Button */
+@media (max-width: 768px) {
+  .hero-cta-group {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .hero-primary-cta,
+  .hero-secondary-cta,
+  .hero-season-cta {
+    width: 100%;
+    justify-content: center;
   }
 }

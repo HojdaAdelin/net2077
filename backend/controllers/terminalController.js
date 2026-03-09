@@ -1,6 +1,7 @@
 import Terminal from '../models/Terminal.js';
 import User from '../models/User.js';
 import { updateUserStreak } from '../utils/streakUtils.js';
+import { trackCompetitiveXP } from './competitiveController.js';
 
 export const getTerminalQuestions = async (req, res) => {
   try {
@@ -51,7 +52,6 @@ export const submitTerminalCommand = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Check if user already solved this question
     if (user.solvedTerminalQuestions.includes(questionId)) {
       return res.status(400).json({ message: 'Question already solved' });
     }
@@ -62,16 +62,16 @@ export const submitTerminalCommand = async (req, res) => {
     );
 
     if (isCorrect) {
-      // Add question to solved list
+      
       user.solvedTerminalQuestions.push(questionId);
       user.terminalStats.solved += 1;
       
-      // Add XP and calculate level (same as in questionController)
       user.xp += question.points;
       user.level = Math.floor(user.xp / 100) + 1;
       
-      // Update streak
+      
       await updateUserStreak(user);
+      await trackCompetitiveXP(user._id, question.points)
       
       await user.save();
 

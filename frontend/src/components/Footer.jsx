@@ -20,7 +20,7 @@ export default function Footer() {
             <h3>{t('footer.learn')}</h3>
             <div className="footer-links">
               <Link to="/grile">{t('footer.questions')}</Link>
-              <Link to="/resurse">{t('footer.resources')}</Link>
+              <Link to="/learn">{t('footer.resources')}</Link>
               <Link to="/progress">{t('footer.progress')}</Link>
             </div>
           </div>

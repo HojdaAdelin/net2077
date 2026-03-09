@@ -45,7 +45,7 @@ export default function App() {
                   <Route path="/question/:questionId" element={<Question />} />
                   <Route path="/exam-selection" element={<ExamSelection />} />
                   <Route path="/exam/:examId" element={<Quiz isExam={true} />} />
-                  <Route path="/resurse" element={<Resurse />} />
+                  <Route path="/learn" element={<Resurse />} />
                   <Route path="/progress" element={<Progress />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />

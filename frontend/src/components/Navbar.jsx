@@ -17,7 +17,6 @@ export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const { showMessage } = useMessage();
   
-  // Try to use InboxContext, but provide fallback if not available
   let unreadCount = 0;
   let refreshUnreadCount = () => {};
   
@@ -114,12 +113,12 @@ export default function Navbar() {
               to="/grile" 
               className="nav-link-with-dropdown practice-link-desktop"
               onClick={(e) => {
-                // On mobile, prevent navigation and toggle dropdown
+                
                 if (window.innerWidth <= 768) {
                   e.preventDefault();
                   setPracticeDropdownOpen(!practiceDropdownOpen);
                 } else {
-                  // On desktop, allow normal navigation
+                 
                   closeMobileMenu();
                   setPracticeDropdownOpen(false);
                 }
@@ -190,7 +189,7 @@ export default function Navbar() {
             )}
           </div>
           
-          <Link to="/resurse" onClick={closeMobileMenu}>{t('navbar.resources')}</Link>
+          <Link to="/learn" onClick={closeMobileMenu}>{t('navbar.resources')}</Link>
           <Link to="/leaderboard" onClick={closeMobileMenu}>{t('navbar.leaderboard')}</Link>
           {user && <Link to="/progress" onClick={closeMobileMenu}>{t('navbar.progress')}</Link>}
           
