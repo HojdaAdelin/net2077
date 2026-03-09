@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { API_URL } from '../config';
 import { CheckCircle, Code, Trophy, Play } from 'lucide-react';
+import LoginRequired from '../components/LoginRequired';
 import '../styles/IS.css';
 
 export default function IS() {
@@ -19,6 +20,16 @@ export default function IS() {
       fetchProblems();
     }
   }, [user]);
+
+  if (!user) {
+    return (
+      <LoginRequired 
+        icon={Code}
+        title="IS/Debug Access Required"
+        description="Please login to access programming challenges and debug real-world code problems."
+      />
+    );
+  }
 
   const fetchProblems = async () => {
     try {
@@ -83,22 +94,6 @@ export default function IS() {
       setSubmitting(false);
     }
   };
-
-  if (!user) {
-    return (
-      <div className="is-page">
-        <div className="is-container">
-          <div className="is-auth-notice">
-            <h2>Login Required</h2>
-            <p>Please login to access the IS/Debug environment.</p>
-            <Link to="/login" className="btn btn-primary">
-              Login
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (loading) {
     return (

@@ -1,16 +1,31 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import { getUserProgress } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
-import { Monitor, Globe, Award, Terminal, Info, Zap } from 'lucide-react';
+import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp } from 'lucide-react';
+import LoginRequired from '../components/LoginRequired';
 import '../styles/Progress.css';
 
 export default function Progress() {
+  const { user } = useContext(AuthContext);
   const [progress, setProgress] = useState(null);
   const { t } = useLanguage();
 
   useEffect(() => {
-    getUserProgress().then(setProgress).catch(() => {});
-  }, []);
+    if (user) {
+      getUserProgress().then(setProgress).catch(() => {});
+    }
+  }, [user]);
+
+  if (!user) {
+    return (
+      <LoginRequired 
+        icon={TrendingUp}
+        title="Progress Tracking Required"
+        description="Please login to track your learning progress, view statistics and earn badges."
+      />
+    );
+  }
 
   if (!progress) {
     return (

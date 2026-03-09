@@ -1,0 +1,95 @@
+.login-required-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 40px 20px;
+}
+
+.login-required-content {
+  text-align: center;
+  max-width: 480px;
+  padding: 48px 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.login-required-icon {
+  color: var(--primary);
+  margin-bottom: 24px;
+  opacity: 0.9;
+}
+
+.login-required-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 12px 0;
+}
+
+.login-required-description {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 32px 0;
+}
+
+.login-required-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.login-required-footer {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.login-required-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.login-required-link:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .login-required-content {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .login-required-container {
+    min-height: 50vh;
+    padding: 24px 16px;
+  }
+  
+  .login-required-content {
+    padding: 32px 24px;
+  }
+  
+  .login-required-icon {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .login-required-title {
+    font-size: 1.5rem;
+  }
+  
+  .login-required-description {
+    font-size: 0.9375rem;
+  }
+}

@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { API_URL } from '../config';
 import { CheckCircle, Lock, Unlock, X, Terminal as TerminalIcon } from 'lucide-react';
+import LoginRequired from '../components/LoginRequired';
 import '../styles/Terminal.css';
 
 export default function Terminal() {
@@ -21,11 +22,21 @@ export default function Terminal() {
   const terminalInputRef = useRef(null);
 
   useEffect(() => {
-    fetchQuestions();
     if (user) {
+      fetchQuestions();
       fetchUserProgress();
     }
   }, [user]);
+
+  if (!user) {
+    return (
+      <LoginRequired 
+        icon={TerminalIcon}
+        title="Terminal Access Required"
+        description="Please login to access the interactive Linux terminal and practice real commands."
+      />
+    );
+  }
 
   useEffect(() => {
     // Filter questions based on difficulty and unsolved status
@@ -217,22 +228,6 @@ export default function Terminal() {
     e.preventDefault();
     return false;
   };
-
-  if (!user) {
-    return (
-      <div className="terminal-page">
-        <div className="container">
-          <div className="terminal-auth-notice">
-            <h2>Login Required</h2>
-            <p>Please login to access the Terminal practice environment.</p>
-            <Link to="/login" className="btn btn-primary">
-              Login
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (loading) {
     return (

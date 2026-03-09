@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { Trophy, Swords, Loader2 } from 'lucide-react';
 import { API_URL } from '../config';
+import LoginRequired from '../components/LoginRequired';
 import '../styles/Arena.css';
 
 export default function Arena() {
@@ -55,16 +56,11 @@ export default function Arena() {
 
   if (!user) {
     return (
-      <div className="arena-page">
-        <div className="arena-auth-notice">
-          <Swords size={64} />
-          <h2>Login Required</h2>
-          <p>Please login to access the Arena and compete with other players.</p>
-          <Link to="/login" className="btn btn-primary">
-            Login
-          </Link>
-        </div>
-      </div>
+      <LoginRequired 
+        icon={Swords}
+        title="Arena Access Required"
+        description="Please login to access the Arena and compete with other players in real-time battles."
+      />
     );
   }
 
