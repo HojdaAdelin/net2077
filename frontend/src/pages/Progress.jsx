@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getUserProgress } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
-import { Monitor, Globe, Award, Terminal, Info } from 'lucide-react';
+import { Monitor, Globe, Award, Terminal, Info, Zap } from 'lucide-react';
 import '../styles/Progress.css';
 
 export default function Progress() {
