@@ -9,11 +9,54 @@ import '../styles/Hero.css';
 
 export default function Hero() {
   const [stats, setStats] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
+  const [displayStats, setDisplayStats] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
+  const [seasonNumber, setSeasonNumber] = useState(null);
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
     getStats().then(setStats).catch(() => {});
+    fetchSeasonNumber();
   }, []);
+
+  const fetchSeasonNumber = async () => {
+    try {
+      const response = await fetch(`${API_URL}/competitive/leaderboard`);
+      const data = await response.json();
+      if (data.periodNumber) {
+        setSeasonNumber(data.periodNumber);
+      }
+    } catch (error) {
+      console.error('Error fetching season number:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (stats.totalQuestions === 0 && stats.totalUsers === 0 && stats.totalResources === 0) return;
+
+    const duration = 2000; 
+    const steps = 60;
+    const stepDuration = duration / steps;
+
+    let currentStep = 0;
+
+    const interval = setInterval(() => {
+      currentStep++;
+      const progress = currentStep / steps;
+
+      setDisplayStats({
+        totalQuestions: Math.floor(stats.totalQuestions * progress),
+        totalUsers: Math.floor(stats.totalUsers * progress),
+        totalResources: Math.floor(stats.totalResources * progress)
+      });
+
+      if (currentStep >= steps) {
+        setDisplayStats(stats);
+        clearInterval(interval);
+      }
+    }, stepDuration);
+
+    return () => clearInterval(interval);
+  }, [stats]);
 
   return (
     <div className="hero">
@@ -34,18 +77,20 @@ export default function Hero() {
                 <Link to="/learn" className="hero-secondary-cta">
                   View Roadmaps
                 </Link>
-                <Link to="/leaderboard" className="hero-season-cta">
-                  <Flame size={18} />
-                  Season
-                </Link>
+                {seasonNumber && (
+                  <Link to="/leaderboard" className="hero-season-cta">
+                    <Flame size={18} />
+                    Season #{seasonNumber}
+                  </Link>
+                )}
               </div>
 
               <div className="hero-stats-inline">
-                <span className="hero-stat-item">{stats.totalQuestions}+ Questions</span>
+                <span className="hero-stat-item">{displayStats.totalQuestions}+ Questions</span>
                 <span className="hero-stat-separator">•</span>
-                <span className="hero-stat-item">{stats.totalUsers} Active Learners</span>
+                <span className="hero-stat-item">{displayStats.totalUsers} Active Learners</span>
                 <span className="hero-stat-separator">•</span>
-                <span className="hero-stat-item">{stats.totalResources} Learning Roadmaps</span>
+                <span className="hero-stat-item">{displayStats.totalResources} Learning Roadmaps</span>
               </div>
             </div>
 
