@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
 import { useInbox } from '../context/InboxContext';
-import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert } from 'lucide-react';
+import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
 import SupportButton from './SupportButton';
@@ -241,6 +241,10 @@ export default function Navbar() {
                         <LogOut size={16} />
                         {t('navbar.logout')}
                       </button>
+                      <div className="profile-dropdown-gold-item">
+                        <Coins size={16} className="gold-icon" />
+                        <span>Gold: {user.gold || 0}</span>
+                      </div>
                     </div>
                   )}
                 </div>

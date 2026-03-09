@@ -68,7 +68,13 @@ const userSchema = new mongoose.Schema({
   },
   lastBasicReset: { type: Date, default: null },
   xp: { type: Number, default: 0 },
-  level: { type: Number, default: 1 }
+  level: { type: Number, default: 1 },
+  gold: { type: Number, default: 0 },
+  competitiveStats: {
+    currentPeriodXP: { type: Number, default: 0 },
+    lastPeriodRank: { type: Number, default: null },
+    totalGoldEarned: { type: Number, default: 0 }
+  }
 }, { timestamps: true });
 
 export default mongoose.model('User', userSchema);

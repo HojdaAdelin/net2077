@@ -1,6 +1,7 @@
 import Question from '../models/Question.js';
 import User from '../models/User.js';
 import { updateUserStreak } from '../utils/streakUtils.js';
+import { trackCompetitiveXP } from './competitiveController.js';
 
 export const getQuestions = async (req, res) => {
   try {
@@ -94,9 +95,12 @@ export const markSolved = async (req, res) => {
     );
 
     if (!alreadySolved) {
+      const xpGained = question.points || 1;
       user.solvedQuestions.push(questionId);
-      user.xp += question.points || 1;
+      user.xp += xpGained;
       user.level = Math.floor(user.xp / 100) + 1;
+      
+      await trackCompetitiveXP(user._id, xpGained);
       
       await updateUserStreak(user);
       
@@ -216,6 +220,8 @@ export const completeDailyChallenge = async (req, res) => {
     const doubleXP = score * 2;
     user.xp += doubleXP;
     user.level = Math.floor(user.xp / 100) + 1;
+
+    await trackCompetitiveXP(user._id, doubleXP);
     
     if (!user.dailyChallenge) {
       user.dailyChallenge = {};
@@ -283,6 +289,7 @@ export const resetBasicStats = async (req, res) => {
     const xpToAdd = solvedBasicQuestions.length;
     user.xp += xpToAdd;
     user.level = Math.floor(user.xp / 100) + 1;
+    await trackCompetitiveXP(user._id, xpToAdd);
   
     user.lastBasicReset = new Date();
     

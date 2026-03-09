@@ -348,3 +348,266 @@
     height: 20px;
   }
 }
+
+/* ============================================
+   COMPETITIVE LEADERBOARD - 48h Season
+   ============================================ */
+
+.leaderboard-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  border-bottom: 2px solid var(--border);
+}
+
+.leaderboard-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s ease;
+}
+
+.leaderboard-tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+}
+
+.leaderboard-tab.active {
+  color: var(--accent-primary);
+  border-bottom-color: var(--accent-primary);
+}
+
+.leaderboard-tab.competitive {
+  color: #f59e0b;
+}
+
+.competitive-leaderboard-section {
+  margin-bottom: 60px;
+}
+
+.competitive-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 12px;
+}
+
+.competitive-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.competitive-icon {
+  color: #f59e0b;
+  animation: competitive-pulse 2s ease-in-out infinite;
+}
+
+@keyframes competitive-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.competitive-title h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+}
+
+.competitive-title p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.competitive-timer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.timer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timer-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.timer-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #f59e0b;
+  font-family: 'Courier New', monospace;
+}
+
+.competitive-leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.competitive-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.competitive-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.competitive-item.rank-1 {
+  border-color: #fbbf24;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), transparent);
+}
+
+.competitive-item.rank-2 {
+  border-color: #94a3b8;
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.1), transparent);
+}
+
+.competitive-item.rank-3 {
+  border-color: #cd7f32;
+  background: linear-gradient(135deg, rgba(205, 127, 50, 0.1), transparent);
+}
+
+.competitive-rank {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 80px;
+}
+
+.competitive-rank .rank-number {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.competitive-user {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.competitive-username {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.competitive-username:hover {
+  color: var(--accent-primary);
+}
+
+.competitive-level {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.competitive-xp {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(245, 158, 11, 0.1);
+  border-radius: 8px;
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.competitive-reward {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(234, 179, 8, 0.1));
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  border-radius: 8px;
+}
+
+.gold-icon {
+  color: #eab308;
+}
+
+.gold-amount {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #eab308;
+}
+
+.empty-competitive {
+  text-align: center;
+  padding: 60px 24px;
+  color: var(--text-secondary);
+}
+
+.empty-competitive svg {
+  color: #f59e0b;
+  margin-bottom: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .competitive-header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .competitive-timer {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .competitive-item {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .competitive-rank {
+    min-width: 60px;
+  }
+
+  .competitive-user {
+    flex: 1 1 100%;
+  }
+
+  .competitive-xp,
+  .competitive-reward {
+    flex: 1;
+  }
+}

@@ -567,3 +567,71 @@
     padding: 12px 24px;
   }
 }
+
+/* ============================================
+   PROFILE DROPDOWN - Gold Display
+   ============================================ */
+
+.profile-dropdown-header {
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-dropdown-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.profile-dropdown-gold {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(234, 179, 8, 0.1));
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  border-radius: 6px;
+}
+
+.profile-dropdown-gold .gold-icon {
+  color: #eab308;
+}
+
+.profile-dropdown-gold .gold-amount {
+  font-weight: 700;
+  color: #eab308;
+  font-size: 0.9375rem;
+}
+
+.profile-dropdown-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0;
+}
+
+.profile-dropdown-gold-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-secondary);
+  cursor: default;
+}
+
+.profile-dropdown-gold-item .gold-icon {
+  color: #eab308;
+}
+
+.profile-dropdown-gold-item span {
+  font-weight: 600;
+  color: #eab308;
+}

@@ -123,7 +123,6 @@ export default function Progress() {
             </div>
           </div>
 
-          
           <div className={`badge-progress ${levelBadgeUnlocked ? 'unlocked' : ''}`} style={{ marginTop: '24px' }}>
             <div className="badge-progress-icon">
               {levelBadgeUnlocked ? <Award size={16} /> : <Zap size={16} />}

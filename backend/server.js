@@ -20,7 +20,9 @@ import adminRoutes from './routes/adminRoutes.js';
 import friendsRoutes from './routes/friendsRoutes.js';
 import forumRoutes from './routes/forumRoutes.js';
 import arenaRoutes from './routes/arenaRoutes.js';
+import competitiveRoutes from './routes/competitiveRoutes.js';
 import ArenaMatch from './models/ArenaMatch.js';
+import { initializeCompetitiveSystem, checkAndResetPeriod } from './controllers/competitiveController.js';
 
 import { existsSync } from 'fs';
 const envPath = existsSync('.env') ? '.env' : '../.env';
@@ -63,6 +65,7 @@ mongoose.connect(process.env.MONGODB_URI, {
     const dbName = mongoose.connection.db.databaseName;
     console.log(`[✔] Database: ${dbName}`);
     startArenaCleanupJob();
+    startCompetitiveSystem();
   })
   .catch(err => {
     console.error('[✘] MongoDB connection error:', err.message);
@@ -101,20 +104,19 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/friends', friendsRoutes);
 app.use('/api/forum', forumRoutes);
 app.use('/api/arena', arenaRoutes);
+app.use('/api/competitive', competitiveRoutes);
 
 function startArenaCleanupJob() {
   setInterval(async () => {
     try {
       const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
       const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
-      
-      // Delete waiting matches older than 2 minutes
+     
       const waitingResult = await ArenaMatch.deleteMany({
         status: 'waiting',
         createdAt: { $lt: twoMinutesAgo }
       });
-      
-      // Delete finished matches older than 10 minutes (in case users don't view results)
+     
       const finishedResult = await ArenaMatch.deleteMany({
         status: 'finished',
         finishedAt: { $lt: tenMinutesAgo }
@@ -130,6 +132,15 @@ function startArenaCleanupJob() {
       console.error('[Arena] Cleanup error:', error);
     }
   }, 30000); 
+}
+
+function startCompetitiveSystem() {
+
+  initializeCompetitiveSystem();
+  
+  setInterval(async () => {
+    await checkAndResetPeriod();
+  }, 5 * 60 * 1000);
 }
 
 if (process.env.NODE_ENV !== 'production') {
