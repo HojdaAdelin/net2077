@@ -9,27 +9,11 @@ import '../styles/Hero.css';
 
 export default function Hero() {
   const [stats, setStats] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
-  const [seasonNumber, setSeasonNumber] = useState(null);
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
     getStats().then(setStats).catch(() => {});
-    fetchSeasonNumber();
   }, []);
-
-  const fetchSeasonNumber = async () => {
-    try {
-      const response = await fetch(`${API_URL}/competitive/leaderboard`);
-      const data = await response.json();
-      if (data.periodNumber) {
-        setSeasonNumber(data.periodNumber);
-      }
-    } catch (error) {
-      console.error('Error fetching season number:', error);
-    }
-  };
-
-
 
   return (
     <div className="hero">
@@ -50,12 +34,10 @@ export default function Hero() {
                 <Link to="/learn" className="hero-secondary-cta">
                   View Roadmaps
                 </Link>
-                {seasonNumber && (
-                  <Link to="/leaderboard" className="hero-season-cta">
-                    <Flame size={18} />
-                    Season #{seasonNumber}
-                  </Link>
-                )}
+                <Link to="/leaderboard" className="hero-season-cta">
+                  <Flame size={18} />
+                  Season
+                </Link>
               </div>
 
               <div className="hero-stats-inline">
