@@ -17,6 +17,8 @@ export default function Shop() {
   const [regularItems, setRegularItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [purchasing, setPurchasing] = useState(false);
+  const [dialog, setDialog] = useState({ show: false, type: '', title: '', message: '' });
 
   useEffect(() => {
     fetchShopItems();
@@ -48,7 +50,11 @@ export default function Shop() {
   };
 
   const handlePurchase = async (itemId) => {
+    if (purchasing) return; // Prevent spam
+    
     try {
+      setPurchasing(true);
+      
       const response = await fetch(`${API_URL}/shop/purchase/${itemId}`, {
         method: 'POST',
         credentials: 'include'
@@ -61,14 +67,38 @@ export default function Shop() {
           gold: data.remainingGold,
           inventory: data.inventory 
         });
-        alert(`✅ ${data.message}`);
+        setDialog({
+          show: true,
+          type: 'success',
+          title: 'Purchase Successful!',
+          message: data.message
+        });
       } else {
-        alert(`❌ ${data.message}`);
+        setDialog({
+          show: true,
+          type: 'error',
+          title: 'Purchase Failed',
+          message: data.message
+        });
       }
     } catch (error) {
       console.error('Error purchasing item:', error);
-      alert('❌ Failed to purchase item');
+      setDialog({
+        show: true,
+        type: 'error',
+        title: 'Purchase Failed',
+        message: 'Failed to purchase item. Please try again.'
+      });
+    } finally {
+      // Add delay to prevent spam
+      setTimeout(() => {
+        setPurchasing(false);
+      }, 1500);
     }
+  };
+
+  const closeDialog = () => {
+    setDialog({ show: false, type: '', title: '', message: '' });
   };
 
   const nextSlide = () => {
@@ -152,8 +182,12 @@ export default function Shop() {
                             <span>{item.price} Gold</span>
                           </div>
                         </div>
-                        <button className="btn btn-primary" onClick={() => handlePurchase(item.itemId)}>
-                          Purchase Now
+                        <button 
+                          className={`btn btn-primary ${purchasing ? 'disabled' : ''}`}
+                          onClick={() => handlePurchase(item.itemId)}
+                          disabled={purchasing}
+                        >
+                          {purchasing ? 'Processing...' : 'Purchase Now'}
                         </button>
                       </div>
                     );
@@ -203,7 +237,13 @@ export default function Shop() {
                         <span>{item.price}</span>
                       </div>
                     </div>
-                    <button className="btn btn-primary" onClick={() => handlePurchase(item.itemId)}>Buy</button>
+                    <button 
+                      className={`btn btn-primary ${purchasing ? 'disabled' : ''}`}
+                      onClick={() => handlePurchase(item.itemId)}
+                      disabled={purchasing}
+                    >
+                      {purchasing ? 'Processing...' : 'Buy'}
+                    </button>
                   </div>
                 </div>
               );
@@ -211,6 +251,28 @@ export default function Shop() {
           </div>
         </div>
       </div>
+
+      {/* Custom Dialog */}
+      {dialog.show && (
+        <div className="shop-dialog-overlay" onClick={closeDialog}>
+          <div className="shop-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className={`shop-dialog-header ${dialog.type}`}>
+              <div className="shop-dialog-icon">
+                {dialog.type === 'success' ? '✅' : '❌'}
+              </div>
+              <h3 className="shop-dialog-title">{dialog.title}</h3>
+            </div>
+            <div className="shop-dialog-body">
+              <p>{dialog.message}</p>
+            </div>
+            <div className="shop-dialog-footer">
+              <button className="btn btn-primary" onClick={closeDialog}>
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

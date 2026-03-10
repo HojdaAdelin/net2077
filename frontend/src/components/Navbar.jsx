@@ -35,6 +35,8 @@ export default function Navbar() {
   const [inventoryDropdownOpen, setInventoryDropdownOpen] = useState(false);
   const [inboxDropdownOpen, setInboxDropdownOpen] = useState(false);
   const [practiceDropdownOpen, setPracticeDropdownOpen] = useState(false);
+  const [usingItem, setUsingItem] = useState(false);
+  const [dialog, setDialog] = useState({ show: false, type: '', title: '', message: '' });
   const dropdownRef = useRef(null);
   const profileDropdownRef = useRef(null);
   const inventoryRef = useRef(null);
@@ -55,7 +57,11 @@ export default function Navbar() {
   };
 
   const handleUseItem = async (itemId) => {
+    if (usingItem) return; // Prevent spam
+    
     try {
+      setUsingItem(true);
+      
       const response = await fetch(`${API_URL}/shop/use/${itemId}`, {
         method: 'POST',
         credentials: 'include'
@@ -68,15 +74,38 @@ export default function Navbar() {
           inventory: data.inventory,
           activeBoosts: data.activeBoosts 
         });
-        alert(`✅ ${data.message}`);
+        setDialog({
+          show: true,
+          type: 'success',
+          title: 'Item Used Successfully!',
+          message: data.message
+        });
         setInventoryDropdownOpen(false);
       } else {
-        alert(`❌ ${data.message}`);
+        setDialog({
+          show: true,
+          type: 'error',
+          title: 'Failed to Use Item',
+          message: data.message
+        });
       }
     } catch (error) {
       console.error('Error using item:', error);
-      alert('❌ Failed to use item');
+      setDialog({
+        show: true,
+        type: 'error',
+        title: 'Failed to Use Item',
+        message: 'Failed to use item. Please try again.'
+      });
+    } finally {
+      setTimeout(() => {
+        setUsingItem(false);
+      }, 1000);
     }
+  };
+
+  const closeDialog = () => {
+    setDialog({ show: false, type: '', title: '', message: '' });
   };
 
   const handleLogout = () => {
@@ -119,6 +148,7 @@ export default function Navbar() {
   }, []);
 
   return (
+    <>
     <nav className="navbar">
       <div className="container nav-content">
         <Link to="/" className="logo" onClick={closeMobileMenu}>NET2077</Link>
@@ -325,20 +355,21 @@ export default function Navbar() {
                               </div>
                               <button 
                                 className={`inventory-use-btn ${
-                                  item.category === 'boost' && user.activeBoosts?.some(boost => 
+                                  (item.category === 'boost' && user.activeBoosts?.some(boost => 
                                     boost.type === 'xp_multiplier' && new Date(boost.expiresAt) > new Date()
-                                  ) ? 'disabled' : ''
+                                  )) || usingItem ? 'disabled' : ''
                                 }`}
                                 onClick={() => handleUseItem(item.itemId)}
                                 disabled={
-                                  item.category === 'boost' && user.activeBoosts?.some(boost => 
+                                  (item.category === 'boost' && user.activeBoosts?.some(boost => 
                                     boost.type === 'xp_multiplier' && new Date(boost.expiresAt) > new Date()
-                                  )
+                                  )) || usingItem
                                 }
                               >
-                                {item.category === 'boost' && user.activeBoosts?.some(boost => 
-                                  boost.type === 'xp_multiplier' && new Date(boost.expiresAt) > new Date()
-                                ) ? 'Active' : 'Use'}
+                                {usingItem ? 'Using...' : 
+                                 (item.category === 'boost' && user.activeBoosts?.some(boost => 
+                                   boost.type === 'xp_multiplier' && new Date(boost.expiresAt) > new Date()
+                                 ) ? 'Active' : 'Use')}
                               </button>
                             </div>
                           ))
@@ -383,5 +414,28 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
+
+    {/* Custom Dialog */}
+    {dialog.show && (
+      <div className="navbar-dialog-overlay" onClick={closeDialog}>
+        <div className="navbar-dialog" onClick={(e) => e.stopPropagation()}>
+          <div className={`navbar-dialog-header ${dialog.type}`}>
+            <div className="navbar-dialog-icon">
+              {dialog.type === 'success' ? '✅' : '❌'}
+            </div>
+            <h3 className="navbar-dialog-title">{dialog.title}</h3>
+          </div>
+          <div className="navbar-dialog-body">
+            <p>{dialog.message}</p>
+          </div>
+          <div className="navbar-dialog-footer">
+            <button className="btn btn-primary" onClick={closeDialog}>
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+  </>
   );
 }
