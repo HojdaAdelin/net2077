@@ -1,19 +1,23 @@
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { getUserProgress } from '../services/api';
+import { getUserProgress, checkPendingRewards, claimLevelRewards } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
-import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp } from 'lucide-react';
+import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp, Gift, X, Coins } from 'lucide-react';
 import LoginRequired from '../components/LoginRequired';
 import '../styles/Progress.css';
 
 export default function Progress() {
   const { user } = useContext(AuthContext);
   const [progress, setProgress] = useState(null);
+  const [pendingRewards, setPendingRewards] = useState(null);
+  const [claiming, setClaiming] = useState(false);
+  const [rewardDialog, setRewardDialog] = useState(null);
   const { t } = useLanguage();
 
   useEffect(() => {
     if (user) {
       getUserProgress().then(setProgress).catch(() => {});
+      checkPendingRewards().then(setPendingRewards).catch(() => {});
     }
   }, [user]);
 
@@ -83,6 +87,33 @@ export default function Progress() {
   const xpToNextLevel = 100 - (progress.xp % 100);
   const progressPercent = (progress.xp % 100);
 
+  const handleClaimRewards = async () => {
+    if (claiming || !pendingRewards?.hasPendingRewards) return;
+    
+    setClaiming(true);
+    try {
+      const result = await claimLevelRewards();
+      if (result.success) {
+
+        setRewardDialog({
+          goldEarned: result.goldEarned,
+          levelsRewarded: result.levelsRewarded,
+          newGoldTotal: result.newGoldTotal
+        });
+        
+
+        const newProgress = await getUserProgress();
+        setProgress(newProgress);
+        const newPending = await checkPendingRewards();
+        setPendingRewards(newPending);
+      }
+    } catch (error) {
+      console.error('Error claiming rewards:', error);
+    } finally {
+      setClaiming(false);
+    }
+  };
+
   // Badge requirements
   const linuxBadgeRequired = 500;
   const linuxLegendaryRequired = 1000;
@@ -125,6 +156,18 @@ export default function Progress() {
               <h2>{t('progress.currentLevel')}</h2>
               <div className="level-number">{progress.level}</div>
             </div>
+            {pendingRewards?.hasPendingRewards && (
+              <button 
+                className={`level-rewards-btn ${claiming ? 'claiming' : 'pulse'}`}
+                onClick={handleClaimRewards}
+                disabled={claiming}
+                title={`Claim ${pendingRewards.pendingGold} Gold for ${pendingRewards.pendingLevels} level(s)`}
+              >
+                <Gift size={18} />
+                <span>Lvl Rewards</span>
+                <span className="rewards-count">{pendingRewards.pendingGold}</span>
+              </button>
+            )}
             <div className="xp-badge">{progress.xp} XP</div>
           </div>
           
@@ -311,6 +354,43 @@ export default function Progress() {
                 </div>
               );
             })}
+          </div>
+        </div>
+      )}
+
+      {rewardDialog && (
+        <div className="reward-dialog-overlay" onClick={() => setRewardDialog(null)}>
+          <div className="reward-dialog" onClick={(e) => e.stopPropagation()}>
+            <button className="reward-dialog-close" onClick={() => setRewardDialog(null)}>
+              <X size={20} />
+            </button>
+            
+            <div className="reward-dialog-content">
+              <div className="reward-dialog-icon">
+                <Gift size={48} />
+              </div>
+              
+              <h3>Level Rewards Claimed!</h3>
+              
+              <div className="reward-dialog-info">
+                <div className="reward-amount">
+                  <Coins size={32} className="gold-icon" />
+                  <span className="gold-value">+{rewardDialog.goldEarned}</span>
+                </div>
+                
+                <p className="reward-description">
+                  Rewards for {rewardDialog.levelsRewarded} level{rewardDialog.levelsRewarded > 1 ? 's' : ''}
+                </p>
+                
+                <div className="reward-total">
+                  Total Gold: <span>{rewardDialog.newGoldTotal}</span>
+                </div>
+              </div>
+              
+              <button className="reward-dialog-btn" onClick={() => setRewardDialog(null)}>
+                Got it!
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -75,3 +75,18 @@ export const getLeaderboard = async () => {
   const res = await fetch(`${API_URL}/leaderboard`);
   return res.json();
 };
+
+export const checkPendingRewards = async () => {
+  const res = await fetch(`${API_URL}/progress/pending-rewards`, { 
+    credentials: 'include'
+  });
+  return res.json();
+};
+
+export const claimLevelRewards = async () => {
+  const res = await fetch(`${API_URL}/progress/claim-rewards`, {
+    method: 'POST',
+    credentials: 'include'
+  });
+  return res.json();
+};

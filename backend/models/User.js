@@ -70,6 +70,7 @@ const userSchema = new mongoose.Schema({
   xp: { type: Number, default: 0 },
   level: { type: Number, default: 1 },
   gold: { type: Number, default: 0 },
+  lastLevelRewarded: { type: Number, default: 1 },
   activeBoosts: [{
     type: { type: String, enum: ['xp_multiplier'] },
     multiplier: { type: Number },

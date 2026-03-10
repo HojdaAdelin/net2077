@@ -93,3 +93,79 @@ export const addSimulation = async (req, res) => {
 };
 
 
+
+export const claimLevelRewards = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Initialize lastLevelRewarded if it doesn't exist
+    if (!user.lastLevelRewarded) {
+      user.lastLevelRewarded = 1;
+    }
+
+    const currentLevel = user.level;
+    const lastRewarded = user.lastLevelRewarded;
+
+    // Check if there are rewards to claim
+    if (currentLevel <= lastRewarded) {
+      return res.json({ 
+        success: false, 
+        message: 'No rewards to claim',
+        pendingRewards: 0
+      });
+    }
+
+    // Calculate rewards (2 gold per level)
+    const levelsToReward = currentLevel - lastRewarded;
+    const goldReward = levelsToReward * 2;
+
+    // Update user
+    user.gold += goldReward;
+    user.lastLevelRewarded = currentLevel;
+    await user.save();
+
+    res.json({
+      success: true,
+      goldEarned: goldReward,
+      levelsRewarded: levelsToReward,
+      newGoldTotal: user.gold
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const checkPendingRewards = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Initialize lastLevelRewarded if it doesn't exist
+    if (!user.lastLevelRewarded) {
+      user.lastLevelRewarded = 1;
+      await user.save();
+    }
+
+    const currentLevel = user.level;
+    const lastRewarded = user.lastLevelRewarded;
+    const pendingLevels = Math.max(0, currentLevel - lastRewarded);
+    const pendingGold = pendingLevels * 2;
+
+    res.json({
+      hasPendingRewards: pendingLevels > 0,
+      pendingLevels,
+      pendingGold,
+      currentLevel,
+      lastRewarded
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

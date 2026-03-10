@@ -63,7 +63,7 @@ export default function Hero() {
                 <Link to="/learn" className="hero-secondary-cta">
                   View Roadmaps
                 </Link>
-                  <Link to="/leaderboard" className="hero-season-cta">
+                  <Link to="/leaderboard/season" className="hero-season-cta">
                     <Flame size={18} />
                     Season
                   </Link>
