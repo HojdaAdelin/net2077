@@ -624,7 +624,14 @@
   font-size: 14px;
   border-top: 1px solid var(--border);
   background: var(--bg-secondary);
-  cursor: default;
+  text-decoration: none;
+  transition: all 0.2s;
+  border-radius: 0 0 8px 8px;
+}
+
+.profile-dropdown-gold-item:hover {
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .profile-dropdown-gold-item .gold-icon {

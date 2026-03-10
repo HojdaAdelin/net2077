@@ -10,6 +10,7 @@ import Exam from '../models/Exam.js';
 import Terminal from '../models/Terminal.js';
 import IS from '../models/IS.js';
 import Roadmap from '../models/Roadmap.js';
+import ShopItem from '../models/ShopItem.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -37,7 +38,8 @@ const showMenu = () => {
   console.log('4. Terminal Questions');
   console.log('5. IS Problems');
   console.log('6. Roadmaps');
-  console.log('7. All Categories');
+  console.log('7. Shop Items');
+  console.log('8. All Categories');
   console.log('0. Exit');
   console.log('=====================');
 };
@@ -74,12 +76,15 @@ const seedDatabase = async () => {
     const roadmapData = JSON.parse(
       readFileSync(join(__dirname, '../data/roadmap.json'), 'utf-8')
     );
+    const shopData = JSON.parse(
+      readFileSync(join(__dirname, '../data/shop.json'), 'utf-8')
+    );
 
     let continueMenu = true;
     
     while (continueMenu) {
       showMenu();
-      const choice = await askQuestion('Select an option (0-7): ');
+      const choice = await askQuestion('Select an option (0-8): ');
       
       switch (choice.trim()) {
         case '1':
@@ -113,6 +118,11 @@ const seedDatabase = async () => {
           break;
           
         case '7':
+          console.log('\n🛍️  Syncing Shop Items...');
+          await syncShopItems(shopData);
+          break;
+          
+        case '8':
           console.log('\n🔄 Syncing All Categories...');
           console.log('\n📊 Syncing Questions...');
           await syncQuestions(questionsData);
@@ -126,6 +136,8 @@ const seedDatabase = async () => {
           await syncISProblems(isData);
           console.log('\n🗺️  Syncing Roadmaps...');
           await syncRoadmaps(roadmapData);
+          console.log('\n🛍️  Syncing Shop Items...');
+          await syncShopItems(shopData);
           console.log('\n🎉 All categories synced successfully!');
           break;
           
@@ -135,7 +147,7 @@ const seedDatabase = async () => {
           break;
           
         default:
-          console.log('\n❌ Invalid option. Please select 0-7.');
+          console.log('\n❌ Invalid option. Please select 0-8.');
           continue;
       }
       
@@ -418,4 +430,43 @@ const syncRoadmaps = async (roadmapData) => {
 
   console.log(`   [✔] Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
   console.log(`   🗺️  Total roadmaps in DB: ${jsonRoadmaps.size}`);
+};
+
+const syncShopItems = async (shopData) => {
+  const jsonShopItems = new Map();
+  shopData.forEach(item => {
+    jsonShopItems.set(item.itemId, item);
+  });
+
+  const existingItems = await ShopItem.find({});
+  const existingMap = new Map();
+  existingItems.forEach(item => {
+    existingMap.set(item.itemId, item);
+  });
+
+  let added = 0;
+  let updated = 0;
+  let deleted = 0;
+
+  for (const [itemId, itemData] of jsonShopItems) {
+    if (existingMap.has(itemId)) {
+      const existing = existingMap.get(itemId);
+      await ShopItem.findByIdAndUpdate(existing._id, itemData);
+      updated++;
+    } else {
+      await ShopItem.create(itemData);
+      added++;
+    }
+  }
+
+  for (const [itemId, existingItem] of existingMap) {
+    if (!jsonShopItems.has(itemId)) {
+      await ShopItem.findByIdAndDelete(existingItem._id);
+      deleted++;
+      console.log(`   [-]  Deleted: "${existingItem.name}"`);
+    }
+  }
+
+  console.log(`   [✔] Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
+  console.log(`   🛍️  Total shop items in DB: ${jsonShopItems.size}`);
 };

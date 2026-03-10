@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Trophy, Medal, Award, Crown, User, Coins, Clock, Zap } from 'lucide-react';
+import { Trophy, Medal, Award, Crown, User, Coins, Clock, Zap, ShoppingBag } from 'lucide-react';
 import { getLeaderboard } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
 import { API_URL } from '../config';
@@ -162,12 +162,18 @@ export default function Leaderboard() {
                   <p>Top 5 players earn Gold rewards every 24 hours</p>
                 </div>
               </div>
-              <div className="competitive-timer">
-                <Clock size={20} />
-                <div className="timer-content">
-                  <span className="timer-label">Resets in</span>
-                  <span className="timer-value">{timeRemaining}</span>
+              <div className="competitive-actions">
+                <div className="competitive-timer">
+                  <Clock size={20} />
+                  <div className="timer-content">
+                    <span className="timer-label">Resets in</span>
+                    <span className="timer-value">{timeRemaining}</span>
+                  </div>
                 </div>
+                <Link to="/shop" className="competitive-shop-link">
+                  <ShoppingBag size={18} />
+                  Visit Shop
+                </Link>
               </div>
             </div>
 

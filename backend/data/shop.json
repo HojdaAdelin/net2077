@@ -1,0 +1,53 @@
+[
+  {
+    "itemId": "2x_xp_5min",
+    "name": "2x XP Boost",
+    "description": "Double XP for 5 minutes",
+    "price": 20,
+    "category": "boost",
+    "icon": "Zap",
+    "duration": 5,
+    "multiplier": 2,
+    "isSpecialOffer": true,
+    "isActive": true,
+    "order": 1
+  },
+  {
+    "itemId": "2x_xp_10min",
+    "name": "2x XP Boost",
+    "description": "Double XP for 10 minutes",
+    "price": 35,
+    "originalPrice": 40,
+    "category": "boost",
+    "icon": "Zap",
+    "duration": 10,
+    "multiplier": 2,
+    "isSpecialOffer": true,
+    "isActive": true,
+    "order": 2
+  },
+  {
+    "itemId": "3x_xp_5min",
+    "name": "3x XP Boost",
+    "description": "Triple XP for 5 minutes",
+    "price": 50,
+    "category": "boost",
+    "icon": "Sparkles",
+    "duration": 5,
+    "multiplier": 3,
+    "isSpecialOffer": true,
+    "isActive": true,
+    "order": 3
+  },
+  {
+    "itemId": "reset_daily",
+    "name": "Reset Daily Challenge",
+    "description": "Reset your daily challenge instantly",
+    "price": 5,
+    "category": "reset",
+    "icon": "RotateCcw",
+    "isSpecialOffer": false,
+    "isActive": true,
+    "order": 4
+  }
+]

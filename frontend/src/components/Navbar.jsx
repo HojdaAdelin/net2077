@@ -240,10 +240,10 @@ export default function Navbar() {
                         <LogOut size={16} />
                         {t('navbar.logout')}
                       </button>
-                      <div className="profile-dropdown-gold-item">
+                      <Link to="/shop" className="profile-dropdown-gold-item" onClick={() => setProfileDropdownOpen(false)}>
                         <Coins size={16} className="gold-icon" />
                         <span>Gold: {user.gold || 0}</span>
-                      </div>
+                      </Link>
                     </div>
                   )}
                 </div>

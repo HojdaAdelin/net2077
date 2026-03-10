@@ -611,3 +611,44 @@
     flex: 1;
   }
 }
+
+.competitive-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.competitive-shop-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(234, 179, 8, 0.1));
+  border: 2px solid rgba(234, 179, 8, 0.4);
+  color: #eab308;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.competitive-shop-link:hover {
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.3), rgba(234, 179, 8, 0.15));
+  border-color: rgba(234, 179, 8, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(234, 179, 8, 0.3);
+}
+
+@media (max-width: 768px) {
+  .competitive-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+  
+  .competitive-shop-link {
+    width: 100%;
+    justify-content: center;
+  }
+}

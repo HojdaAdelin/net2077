@@ -27,6 +27,7 @@ import Arena from './pages/Arena';
 import ArenaPlay from './pages/ArenaPlay';
 import ArenaMatch from './pages/ArenaMatch';
 import ArenaWaiting from './pages/ArenaWaiting';
+import Shop from './pages/Shop';
 import './styles/global.css';
 
 export default function App() {
@@ -61,6 +62,7 @@ export default function App() {
                   <Route path="/arena/play" element={<ArenaPlay />} />
                   <Route path="/arena/waiting/:matchId" element={<ArenaWaiting />} />
                   <Route path="/arena/match/:matchId" element={<ArenaMatch />} />
+                  <Route path="/shop" element={<Shop />} />
                   <Route path="/profile/:username" element={<Profile />} />
                 </Routes>
                 <Footer />
