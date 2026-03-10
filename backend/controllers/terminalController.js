@@ -2,6 +2,7 @@ import Terminal from '../models/Terminal.js';
 import User from '../models/User.js';
 import { updateUserStreak } from '../utils/streakUtils.js';
 import { trackCompetitiveXP } from './competitiveController.js';
+import { calculateXPWithBoosts } from './shopController.js';
 
 export const getTerminalQuestions = async (req, res) => {
   try {
@@ -66,12 +67,14 @@ export const submitTerminalCommand = async (req, res) => {
       user.solvedTerminalQuestions.push(questionId);
       user.terminalStats.solved += 1;
       
-      user.xp += question.points;
+      const finalXP = await calculateXPWithBoosts(user._id, question.points);
+      
+      user.xp += finalXP;
       user.level = Math.floor(user.xp / 100) + 1;
       
       
       await updateUserStreak(user);
-      await trackCompetitiveXP(user._id, question.points)
+      await trackCompetitiveXP(user._id, finalXP)
       
       await user.save();
 

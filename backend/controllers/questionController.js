@@ -2,6 +2,7 @@ import Question from '../models/Question.js';
 import User from '../models/User.js';
 import { updateUserStreak } from '../utils/streakUtils.js';
 import { trackCompetitiveXP } from './competitiveController.js';
+import { calculateXPWithBoosts } from './shopController.js';
 
 export const getQuestions = async (req, res) => {
   try {
@@ -96,11 +97,12 @@ export const markSolved = async (req, res) => {
 
     if (!alreadySolved) {
       const xpGained = question.points || 1;
+      const finalXP = await calculateXPWithBoosts(user._id, xpGained);
       user.solvedQuestions.push(questionId);
-      user.xp += xpGained;
+      user.xp += finalXP;
       user.level = Math.floor(user.xp / 100) + 1;
       
-      await trackCompetitiveXP(user._id, xpGained);
+      await trackCompetitiveXP(user._id, finalXP);
       
       await updateUserStreak(user);
       

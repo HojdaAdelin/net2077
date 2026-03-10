@@ -64,7 +64,10 @@ export default function Navbar() {
       const data = await response.json();
       
       if (data.success) {
-        updateUser({ inventory: data.inventory });
+        updateUser({ 
+          inventory: data.inventory,
+          activeBoosts: data.activeBoosts 
+        });
         alert(`✅ ${data.message}`);
         setInventoryDropdownOpen(false);
       } else {
@@ -290,6 +293,24 @@ export default function Navbar() {
                         <span>Inventory</span>
                       </div>
                       <div className="inventory-items">
+                        {user.activeBoosts && user.activeBoosts.length > 0 && (
+                          <div className="active-boosts-section">
+                            <div className="active-boosts-header">Active Boosts</div>
+                            {user.activeBoosts.map((boost, index) => (
+                              <div key={index} className="active-boost-item">
+                                <div className="boost-icon">
+                                  <Zap size={16} />
+                                </div>
+                                <div className="boost-info">
+                                  <span className="boost-name">{boost.multiplier}x XP Boost</span>
+                                  <span className="boost-timer">
+                                    {Math.max(0, Math.ceil((new Date(boost.expiresAt) - new Date()) / 60000))} min left
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                         {user.inventory && user.inventory.length > 0 ? (
                           user.inventory.map((item, index) => (
                             <div key={index} className="inventory-item" title={item.name}>
@@ -303,10 +324,21 @@ export default function Navbar() {
                                 <span className="inventory-item-quantity">x{item.quantity}</span>
                               </div>
                               <button 
-                                className="inventory-use-btn"
+                                className={`inventory-use-btn ${
+                                  item.category === 'boost' && user.activeBoosts?.some(boost => 
+                                    boost.type === 'xp_multiplier' && new Date(boost.expiresAt) > new Date()
+                                  ) ? 'disabled' : ''
+                                }`}
                                 onClick={() => handleUseItem(item.itemId)}
+                                disabled={
+                                  item.category === 'boost' && user.activeBoosts?.some(boost => 
+                                    boost.type === 'xp_multiplier' && new Date(boost.expiresAt) > new Date()
+                                  )
+                                }
                               >
-                                Use
+                                {item.category === 'boost' && user.activeBoosts?.some(boost => 
+                                  boost.type === 'xp_multiplier' && new Date(boost.expiresAt) > new Date()
+                                ) ? 'Active' : 'Use'}
                               </button>
                             </div>
                           ))

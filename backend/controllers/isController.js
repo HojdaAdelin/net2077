@@ -1,5 +1,6 @@
 import IS from '../models/IS.js';
 import User from '../models/User.js';
+import { calculateXPWithBoosts } from './shopController.js';
 
 export const getAllISProblems = async (req, res) => {
   try {
@@ -64,16 +65,19 @@ export const submitISCode = async (req, res) => {
       user.solvedIS.push(problem._id);
       user.isStats.solved += 1;
       
+      // Calculate XP with active boosts
+      const finalXP = await calculateXPWithBoosts(user._id, problem.xp);
+      
       // Add XP
-      user.xp += problem.xp;
+      user.xp += finalXP;
       user.level = Math.floor(user.xp / 100) + 1;
       
       await user.save();
       
       return res.json({
         success: true,
-        message: `Correct! +${problem.xp} XP`,
-        xpGained: problem.xp,
+        message: `Correct! +${finalXP} XP`,
+        xpGained: finalXP,
         newXP: user.xp,
         newLevel: user.level
       });

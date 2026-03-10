@@ -821,4 +821,69 @@
     width: 100%;
     justify-content: center;
   }
+}/
+* Active Boosts Section */
+.active-boosts-section {
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.active-boosts-header {
+  padding: 12px 16px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.active-boost-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px 12px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+  border-left: 3px solid var(--primary);
+}
+
+.boost-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  border-radius: 6px;
+  color: white;
+}
+
+.boost-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.boost-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.boost-timer {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.inventory-use-btn.disabled {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.inventory-use-btn.disabled:hover {
+  background: var(--bg-secondary);
+  transform: none;
 }

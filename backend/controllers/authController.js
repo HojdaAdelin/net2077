@@ -37,7 +37,8 @@ export const register = async (req, res) => {
         role: user.role,
         streak: streakInfo,
         gold: user.gold || 0,
-        inventory: user.inventory || []
+        inventory: user.inventory || [],
+        activeBoosts: user.activeBoosts || []
       }
     });
   } catch (error) {
@@ -80,7 +81,8 @@ export const login = async (req, res) => {
         role: user.role,
         streak: streakInfo,
         gold: user.gold || 0,
-        inventory: user.inventory || []
+        inventory: user.inventory || [],
+        activeBoosts: user.activeBoosts || []
       }
     });
   } catch (error) {
@@ -106,6 +108,13 @@ export const getMe = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
     
+    const now = new Date();
+    const activeBoosts = user.activeBoosts?.filter(boost => boost.expiresAt > now) || [];
+    if (activeBoosts.length !== (user.activeBoosts?.length || 0)) {
+      user.activeBoosts = activeBoosts;
+      await user.save();
+    }
+    
     const streakInfo = getStreakInfo(user);
     
     res.json({ 
@@ -115,7 +124,8 @@ export const getMe = async (req, res) => {
         role: user.role,
         streak: streakInfo,
         gold: user.gold || 0,
-        inventory: user.inventory || []
+        inventory: user.inventory || [],
+        activeBoosts
       } 
     });
   } catch (error) {
