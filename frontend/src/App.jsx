@@ -52,6 +52,7 @@ export default function App() {
                   <Route path="/register" element={<Register />} />
                   <Route path="/updates" element={<Updates />} />
                   <Route path="/leaderboard" element={<Leaderboard />} />
+                  <Route path="/leaderboard/:tab" element={<Leaderboard />} />
                   <Route path="/lab" element={<Lab />} />
                   <Route path="/terminal" element={<Terminal />} />
                   <Route path="/is" element={<IS />} />

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Trophy, Medal, Award, Crown, User, Coins, Clock, Zap, ShoppingBag } from 'lucide-react';
 import { getLeaderboard } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
@@ -8,17 +8,24 @@ import '../styles/Leaderboard.css';
 
 export default function Leaderboard() {
   const { t } = useLanguage();
+  const { tab } = useParams();
+  const navigate = useNavigate();
   const [leaderboard, setLeaderboard] = useState([]);
   const [competitiveData, setCompetitiveData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [timeRemaining, setTimeRemaining] = useState('');
-  const [activeTab, setActiveTab] = useState('alltime'); 
+  const [activeTab, setActiveTab] = useState(tab === 'season' ? 'competitive' : 'alltime'); 
 
   useEffect(() => {
     fetchLeaderboard();
     fetchCompetitiveLeaderboard();
   }, []);
+
+  useEffect(() => {
+    // Update activeTab when URL parameter changes
+    setActiveTab(tab === 'season' ? 'competitive' : 'alltime');
+  }, [tab]);
 
   useEffect(() => {
     if (competitiveData) {
@@ -74,6 +81,12 @@ export default function Leaderboard() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleTabChange = (tabName) => {
+    setActiveTab(tabName);
+    const urlTab = tabName === 'competitive' ? 'season' : 'alltime';
+    navigate(`/leaderboard/${urlTab}`, { replace: true });
   };
 
   const getRankIcon = (rank) => {
@@ -137,14 +150,14 @@ export default function Leaderboard() {
         <div className="leaderboard-tabs">
           <div 
             className={`leaderboard-tab ${activeTab === 'alltime' ? 'active' : ''}`}
-            onClick={() => setActiveTab('alltime')}
+            onClick={() => handleTabChange('alltime')}
           >
             <Trophy size={20} />
             All-Time Rankings
           </div>
           <div 
             className={`leaderboard-tab ${activeTab === 'competitive' ? 'active' : ''}`}
-            onClick={() => setActiveTab('competitive')}
+            onClick={() => handleTabChange('competitive')}
           >
             <Zap size={20} />
             Competitive (24h)
