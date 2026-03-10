@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import { updateUserStreak, getStreakInfo } from '../utils/streakUtils.js';
 import { calculateXPWithBoosts } from './shopController.js';
+import { trackCompetitiveXP } from './competitiveController.js';
 
 export const getUserProgress = async (req, res) => {
   try {
@@ -65,10 +66,13 @@ export const addSimulation = async (req, res) => {
     });
     
     const percentage = totalPoints > 0 ? (score / totalPoints) * 100 : 0;
-    const finalXP = await calculateXPWithBoosts(user._id, question.points);
+    
+    const finalXP = await calculateXPWithBoosts(req.userId, score);
+    
     user.xp += finalXP; 
     user.level = Math.floor(user.xp / 100) + 1;
-    await trackCompetitiveXP(user._id, finalXP);
+    
+    await trackCompetitiveXP(req.userId, finalXP);
     
     if (correctAnswers > 0) {
       await updateUserStreak(user);
