@@ -5,14 +5,15 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
 import { useInbox } from '../context/InboxContext';
-import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins } from 'lucide-react';
+import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
 import SupportButton from './SupportButton';
+import { API_URL } from '../config';
 import '../styles/Navbar.css';
 
 export default function Navbar() {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout, updateUser } = useContext(AuthContext);
   const { language, changeLanguage, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const { showMessage } = useMessage();
@@ -31,10 +32,12 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [inventoryDropdownOpen, setInventoryDropdownOpen] = useState(false);
   const [inboxDropdownOpen, setInboxDropdownOpen] = useState(false);
   const [practiceDropdownOpen, setPracticeDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const profileDropdownRef = useRef(null);
+  const inventoryRef = useRef(null);
   const inboxRef = useRef(null);
   const practiceRef = useRef(null);
 
@@ -42,12 +45,35 @@ export default function Navbar() {
   const closeMobileMenu = () => setMobileMenuOpen(false);
   const toggleLangDropdown = () => setLangDropdownOpen(!langDropdownOpen);
   const toggleProfileDropdown = () => setProfileDropdownOpen(!profileDropdownOpen);
+  const toggleInventoryDropdown = () => setInventoryDropdownOpen(!inventoryDropdownOpen);
   const toggleInboxDropdown = () => setInboxDropdownOpen(!inboxDropdownOpen);
   const togglePracticeDropdown = () => setPracticeDropdownOpen(!practiceDropdownOpen);
 
   const handleLanguageChange = (lang) => {
     changeLanguage(lang);
     setLangDropdownOpen(false);
+  };
+
+  const handleUseItem = async (itemId) => {
+    try {
+      const response = await fetch(`${API_URL}/shop/use/${itemId}`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        updateUser({ inventory: data.inventory });
+        alert(`✅ ${data.message}`);
+        setInventoryDropdownOpen(false);
+      } else {
+        alert(`❌ ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Error using item:', error);
+      alert('❌ Failed to use item');
+    }
   };
 
   const handleLogout = () => {
@@ -71,6 +97,9 @@ export default function Navbar() {
       }
       if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
         setProfileDropdownOpen(false);
+      }
+      if (inventoryRef.current && !inventoryRef.current.contains(event.target)) {
+        setInventoryDropdownOpen(false);
       }
       if (inboxRef.current && !inboxRef.current.contains(event.target)) {
         setInboxDropdownOpen(false);
@@ -244,6 +273,50 @@ export default function Navbar() {
                         <Coins size={16} className="gold-icon" />
                         <span>Gold: {user.gold || 0}</span>
                       </Link>
+                    </div>
+                  )}
+                </div>
+                <div className="inventory-container" ref={inventoryRef}>
+                  <button className="inventory-btn" onClick={toggleInventoryDropdown} title="Inventory">
+                    <Package size={18} />
+                    {user.inventory && user.inventory.length > 0 && (
+                      <span className="inventory-badge">{user.inventory.length}</span>
+                    )}
+                  </button>
+                  {inventoryDropdownOpen && (
+                    <div className="inventory-dropdown">
+                      <div className="inventory-header">
+                        <Package size={18} />
+                        <span>Inventory</span>
+                      </div>
+                      <div className="inventory-items">
+                        {user.inventory && user.inventory.length > 0 ? (
+                          user.inventory.map((item, index) => (
+                            <div key={index} className="inventory-item" title={item.name}>
+                              <div className="inventory-item-icon">
+                                {item.icon === 'Zap' && <Zap size={16} />}
+                                {item.icon === 'Sparkles' && <CircleAlert size={16} />}
+                                {item.icon === 'RotateCcw' && <CircleAlert size={16} />}
+                              </div>
+                              <div className="inventory-item-info">
+                                <span className="inventory-item-name">{item.name}</span>
+                                <span className="inventory-item-quantity">x{item.quantity}</span>
+                              </div>
+                              <button 
+                                className="inventory-use-btn"
+                                onClick={() => handleUseItem(item.itemId)}
+                              >
+                                Use
+                              </button>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="inventory-empty">
+                            <Package size={32} />
+                            <p>No items in inventory</p>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>

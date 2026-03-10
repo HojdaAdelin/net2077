@@ -36,7 +36,8 @@ export const register = async (req, res) => {
         username,
         role: user.role,
         streak: streakInfo,
-        gold: user.gold || 0
+        gold: user.gold || 0,
+        inventory: user.inventory || []
       }
     });
   } catch (error) {
@@ -78,7 +79,8 @@ export const login = async (req, res) => {
         username: user.username,
         role: user.role,
         streak: streakInfo,
-        gold: user.gold || 0
+        gold: user.gold || 0,
+        inventory: user.inventory || []
       }
     });
   } catch (error) {
@@ -112,7 +114,8 @@ export const getMe = async (req, res) => {
         username: user.username,
         role: user.role,
         streak: streakInfo,
-        gold: user.gold || 0
+        gold: user.gold || 0,
+        inventory: user.inventory || []
       } 
     });
   } catch (error) {

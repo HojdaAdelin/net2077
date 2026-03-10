@@ -70,6 +70,14 @@ const userSchema = new mongoose.Schema({
   xp: { type: Number, default: 0 },
   level: { type: Number, default: 1 },
   gold: { type: Number, default: 0 },
+  inventory: [{
+    itemId: String,
+    name: String,
+    icon: String,
+    category: String,
+    quantity: { type: Number, default: 1 },
+    purchasedAt: { type: Date, default: Date.now }
+  }],
   competitiveStats: {
     currentPeriodXP: { type: Number, default: 0 },
     lastPeriodRank: { type: Number, default: null },

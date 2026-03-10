@@ -12,7 +12,7 @@ const iconMap = {
 };
 
 export default function Shop() {
-  const { user } = useContext(AuthContext);
+  const { user, updateUser } = useContext(AuthContext);
   const [specialOffers, setSpecialOffers] = useState([]);
   const [regularItems, setRegularItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,6 +44,30 @@ export default function Shop() {
       console.error('Error fetching shop items:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePurchase = async (itemId) => {
+    try {
+      const response = await fetch(`${API_URL}/shop/purchase/${itemId}`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        updateUser({ 
+          gold: data.remainingGold,
+          inventory: data.inventory 
+        });
+        alert(`✅ ${data.message}`);
+      } else {
+        alert(`❌ ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Error purchasing item:', error);
+      alert('❌ Failed to purchase item');
     }
   };
 
@@ -128,7 +152,9 @@ export default function Shop() {
                             <span>{item.price} Gold</span>
                           </div>
                         </div>
-                        <button className="btn btn-primary">Purchase Now</button>
+                        <button className="btn btn-primary" onClick={() => handlePurchase(item.itemId)}>
+                          Purchase Now
+                        </button>
                       </div>
                     );
                   })}
@@ -177,7 +203,7 @@ export default function Shop() {
                         <span>{item.price}</span>
                       </div>
                     </div>
-                    <button className="btn btn-primary">Buy</button>
+                    <button className="btn btn-primary" onClick={() => handlePurchase(item.itemId)}>Buy</button>
                   </div>
                 </div>
               );
