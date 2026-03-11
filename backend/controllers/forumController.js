@@ -251,7 +251,7 @@ export const getTopic = async (req, res) => {
     const { page = 1, limit = 10 } = req.query;
 
     const topic = await ForumTopic.findById(topicId)
-      .populate('author', 'username level role profilePicture');
+      .populate('author', 'username level role email');
 
     if (!topic) {
       return res.status(404).json({ message: 'Topic not found' });
@@ -262,7 +262,7 @@ export const getTopic = async (req, res) => {
     const skip = (page - 1) * limit;
     
     const replies = await ForumReply.find({ topicId })
-      .populate('author', 'username level role profilePicture')
+      .populate('author', 'username level role email')
       .sort({ createdAt: 1 })
       .skip(skip)
       .limit(parseInt(limit));
@@ -301,7 +301,7 @@ export const updateTopic = async (req, res) => {
     await topic.save();
 
     const updatedTopic = await ForumTopic.findById(topicId)
-      .populate('author', 'username level role profilePicture');
+      .populate('author', 'username level role email');
 
     res.json({ message: 'Topic updated successfully', topic: updatedTopic });
   } catch (error) {

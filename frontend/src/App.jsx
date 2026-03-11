@@ -4,6 +4,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { MessageProvider } from './context/MessageContext';
 import { ConfirmProvider } from './context/ConfirmContext';
+import { InboxProvider } from './context/InboxContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SupportButton from './components/SupportButton';
@@ -35,10 +36,11 @@ export default function App() {
     <ThemeProvider>
       <LanguageProvider>
         <AuthProvider>
-          <MessageProvider>
-            <ConfirmProvider>
-              <BrowserRouter>
-                <Navbar />
+          <InboxProvider>
+            <MessageProvider>
+              <ConfirmProvider>
+                <BrowserRouter>
+                  <Navbar />
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/grile" element={<Grile />} />
@@ -71,6 +73,7 @@ export default function App() {
               </BrowserRouter>
             </ConfirmProvider>
           </MessageProvider>
+          </InboxProvider>
         </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>

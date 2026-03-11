@@ -222,7 +222,7 @@ export default function Shop() {
                   {item.originalPrice && (
                     <span className="sale-badge">SALE</span>
                   )}
-                  <div className="item-icon">
+                  <div className="shop-item-icon">
                     <Icon size={32} />
                   </div>
                   <h3>{item.name}</h3>

@@ -41,6 +41,14 @@ export const InboxProvider = ({ children }) => {
   useEffect(() => {
     fetchUnreadCount();
 
+    // Poll for new messages every 30 seconds
+    const interval = setInterval(() => {
+      if (user) {
+        fetchUnreadCount();
+      }
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval);
   }, [user]);
 
   return (

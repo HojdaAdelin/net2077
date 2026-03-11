@@ -67,10 +67,11 @@ export default function InboxDropdown({ isOpen, onClose, onMessageClick }) {
           credentials: 'include'
         });
         
-        // Update local state
         setMessages(prev => prev.map(msg => 
           msg._id === message._id ? { ...msg, isRead: true, readAt: new Date() } : msg
         ));
+        
+        refreshUnreadCount();
       } catch (error) {
         console.error('Error marking message as read:', error);
       }

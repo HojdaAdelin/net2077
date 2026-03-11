@@ -117,9 +117,9 @@ export default function Navbar() {
   const handleMessageClick = (message) => {
     showMessage(message);
     // Refresh unread count after viewing message
-    if (!message.isRead) {
+    setTimeout(() => {
       refreshUnreadCount();
-    }
+    }, 500);
   };
 
   useEffect(() => {
