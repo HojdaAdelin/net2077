@@ -1,5 +1,6 @@
 import User from '../models/User.js';
 import CompetitivePeriod from '../models/CompetitivePeriod.js';
+import InboxMessage from '../models/InboxMessage.js';
 
 // Get next reset time (19:00 every 24h)
 const getNextResetTime = () => {
@@ -91,6 +92,17 @@ export const checkAndResetPeriod = async () => {
         user.competitiveStats.currentPeriodXP = 0;
         
         await user.save();
+        
+        const rankEmojis = ['🥇', '🥈', '🥉', '🏅', '🏅'];
+        const inboxMessage = new InboxMessage({
+          recipientId: user._id,
+          recipientUsername: user.username,
+          sender: 'NET2077 System',
+          title: `${rankEmojis[i]} Competitive Season #${activePeriod.periodNumber} - Rank ${i + 1}`,
+          description: `Congratulations! You finished Rank ${i + 1} in Competitive Season #${activePeriod.periodNumber}!\n\nYou earned ${topUsers[i].competitiveStats.currentPeriodXP} XP during this season.\n\n🏆 Reward: ${goldAwarded} Gold\n\nYour gold has been added to your account. Keep up the great work in the next season!`
+        });
+        
+        await inboxMessage.save();
         
         winners.push({
           userId: user._id,
