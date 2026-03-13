@@ -792,11 +792,144 @@
     "order": 99
   },
   {
+    "title": "Format the partition sdb1 with NTFS",
+    "description": "Format the partition sdb1 with NTFS",
+    "acceptedCommands": ["sudo mkfs.ntfs /dev/sdb1", "sudo mkfs -t ntfs /dev/sdb1"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 100
+  },
+  {
     "title": "Monitor real-time system calls",
     "description": "Trace system calls made by a running process with PID 1234",
     "acceptedCommands": ["strace -p 1234"],
     "points": 5,
     "difficulty": "hard",
-    "order": 100
+    "order": 101
+  },
+  {
+    "title": "Format the partition sdc1 with Ext4",
+    "description": "Format the partition sdc1 with Ext4",
+    "acceptedCommands": ["sudo mkfs.ext4 /dev/sdc1", "sudo mkfs -t ext4 /dev/sdc1"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 102
+  },
+  {
+    "title": "Mount sdb2 in /mnt/sdb2",
+    "description": "Mount partition sdb2 in /mnt/sdb2",
+    "acceptedCommands": ["sudo mount /dev/sdb2 /mnt/sdb2"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 103
+  },
+  {
+    "title": "Mount the ISO image test.iso",
+    "description": "Mount the ISO image test.iso in the directory /mnt/iso using a loop device",
+    "acceptedCommands": [
+      "sudo mount -o loop test.iso /mnt/iso",
+      "mount -o loop test.iso /mnt/iso"
+    ],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 104
+  }, 
+  {
+    "title": "Unmount /mnt/usb",
+    "description": "Unmount /mnt/usb",
+    "acceptedCommands": [
+      "sudo umount /mnt/usb",
+      "umount /mnt/usb"
+    ],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 105
+  },
+  {
+    "title": "Connecting to the SSH",
+    "description": "Connect using username 'user' at 'net2077'",
+    "acceptedCommands": [
+      "ssh user@net2077"
+    ],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 106
+  },
+  {
+    "title": "List informations about PCI devices",
+    "description": "List informations about PCI devices",
+    "acceptedCommands": [
+      "lspci"
+    ],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 107
+  },
+  {
+    "title": "Show DNS server configurations",
+    "description": "Show DNS server configurations",
+    "acceptedCommands": [
+      "cat /etc/resolv.conf"
+    ],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 108
+  },
+  {
+    "title": "Edit bash home configuration file using nano",
+    "description": "Edit bash home configuration file using nano",
+    "acceptedCommands": [
+      "nano ~/.bashrc"
+    ],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 109
+  },
+  {
+    "title": "Edit bash global configuration file using nano",
+    "description": "Edit the global bash configuration file using nano",
+    "acceptedCommands": [
+      "sudo nano /etc/bash.bashrc",
+      "sudo nano /etc/bashrc"
+    ],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 110
+  },
+  {
+    "title": "Show the public IP address using ifconfig.me",
+    "description": "Show the public IP address using ifconfig.me",
+    "acceptedCommands": [
+      "curl -s ifconfig.me",
+      "curl ifconfig.me",
+      "curl -s https://ifconfig.me"
+    ],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 111
+  },
+  {
+    "title": "Check 8.8.8.8 connection",
+    "description": "Check connectivity to 8.8.8.8 using ping",
+    "acceptedCommands": [
+      "ping 8.8.8.8",
+      "ping -c 4 8.8.8.8",
+      "ping -c 1 8.8.8.8"
+    ],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 112
+  },
+  {
+    "title": "Check NIC connection (enp0s3)",
+    "description": "Check the connection status of the network interface enp0s3",
+    "acceptedCommands": [
+      "sudo ethtool enp0s3",
+      "ethtool enp0s3",
+      "ip link show enp0s3"
+    ],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 113
   }
 ]
