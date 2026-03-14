@@ -1,21 +1,21 @@
 :root {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #f1f5f9;
-  --bg-tertiary: #e2e8f0;
-  --bg-card: #ffffff;
-  --accent-primary: #1e293b;
-  --accent-secondary: #64748b;
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --text-muted: #94a3b8;
-  --border: #e2e8f0;
-  --border-light: #cbd5e1;
-  --shadow: rgba(0, 0, 0, 0.1);
-  --shadow-hover: rgba(0, 0, 0, 0.15);
+  --bg-primary: #f9f9f9;        /* fundal principal */
+  --bg-secondary: #e3e3e3;      /* fundal sectiuni/sidebar */
+  --bg-tertiary: #c8c8c8;       /* hover states, fundal input focus */
+  --bg-card: #f9f9f9;           /* carduri pe fundal principal */
+  --accent-primary: #525252;    /* butoane/headings */
+  --accent-secondary: #787878;  /* hover accent */
+  --text-primary: #5c5c5c;      /* text principal */
+  --text-secondary: #787878;    /* text secundar */
+  --text-muted: #a8a8a8;        /* placeholder/muted */
+  --border: #c8c8c8;            /* borduri normale */
+  --border-light: #e3e3e3;      /* borduri subtile */
+  --shadow: rgba(0, 0, 0, 0.08);
+  --shadow-hover: rgba(0, 0, 0, 0.14);
   --success: #16a34a;
   --warning: #d97706;
   --error: #dc2626;
-  --navbar-bg: rgba(255, 255, 255, 0.9);
+  --navbar-bg: rgba(249, 249, 249, 0.9);
   --navbar-backdrop: blur(12px);
 }
 
