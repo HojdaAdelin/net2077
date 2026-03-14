@@ -1,25 +1,4 @@
 :root {
-  --bg-primary: #0a0a0a;
-  --bg-secondary: #111111;
-  --bg-tertiary: #1a1a1a;
-  --bg-card: #141414;
-  --accent-primary: #ffffff;
-  --accent-secondary: #a3a3a3;
-  --text-primary: #ffffff;
-  --text-secondary: #a3a3a3;
-  --text-muted: #737373;
-  --border: #262626;
-  --border-light: #333333;
-  --shadow: rgba(0, 0, 0, 0.3);
-  --shadow-hover: rgba(0, 0, 0, 0.5);
-  --success: #22c55e;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  --navbar-bg: rgba(10, 10, 10, 0.8);
-  --navbar-backdrop: blur(12px);
-}
-
-[data-theme="light"] {
   --bg-primary: #f8fafc;
   --bg-secondary: #f1f5f9;
   --bg-tertiary: #e2e8f0;
@@ -37,6 +16,27 @@
   --warning: #d97706;
   --error: #dc2626;
   --navbar-bg: rgba(255, 255, 255, 0.9);
+  --navbar-backdrop: blur(12px);
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0a0a0a;        /* Existential Angst */
+  --bg-secondary: #1f1f20;      /* Inkwell Inception */
+  --bg-tertiary: #373839;       /* Dark Summoning */
+  --bg-card: #1f1f20;           /* Inkwell Inception */
+  --accent-primary: #dbdbdb;    /* Pixel White */
+  --accent-secondary: #999999;  /* Million Grey */
+  --text-primary: #dbdbdb;      /* Pixel White */
+  --text-secondary: #999999;    /* Million Grey */
+  --text-muted: #5f6062;        /* Kettleman */
+  --border: #373839;            /* Dark Summoning */
+  --border-light: #5f6062;      /* Kettleman */
+  --shadow: rgba(0, 0, 0, 0.4);
+  --shadow-hover: rgba(0, 0, 0, 0.6);
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --navbar-bg: rgba(10, 10, 10, 0.85);
   --navbar-backdrop: blur(12px);
 }
 

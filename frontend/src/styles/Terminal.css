@@ -342,7 +342,7 @@
 .terminal-body {
   flex: 1;
   padding: 1rem;
-  background: #1a1a1a;
+  background: var(--bg-card);
   color: #00ff00;
   font-family: 'Courier New', monospace;
   font-size: 0.9rem;

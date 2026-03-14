@@ -14,11 +14,11 @@
 }
 
 [data-theme="dark"] {
-  --hero-bg: #0a0a0a;
-  --hero-text-primary: #fafafa;
-  --hero-text-secondary: #a3a3a3;
-  --hero-border: #262626;
-  --hero-card-bg: #171717;
+  --hero-bg: var(--bg-primary);
+  --hero-text-primary: var(--text-primary);
+  --hero-text-secondary: var(--text-secondary);
+  --hero-border: var(--border);
+  --hero-card-bg: var(--bg-card);
   --hero-accent: #3b82f6;
   --hero-accent-hover: #2563eb;
 }
@@ -606,7 +606,7 @@
 }
 
 .terminal-preview {
-  background: #1a1a1a;
+  background: var(--bg-card);
   border-radius: 8px;
   overflow: hidden;
   width: 100%;
@@ -1511,7 +1511,7 @@
 }
 
 .code-preview {
-  background: #1a1a1a;
+  background: var(--bg-card);
   border-radius: 8px;
   overflow: hidden;
   width: 100%;
@@ -2342,11 +2342,11 @@ na Feature Card */
 }
 
 [data-theme="dark"] {
-  --mls-bg: #0a0a0a;
-  --mls-text-primary: #fafafa;
-  --mls-text-secondary: #a3a3a3;
-  --mls-border: #262626;
-  --mls-card-bg: #171717;
+  --mls-bg: var(--bg-primary);
+  --mls-text-primary: var(--text-primary);
+  --mls-text-secondary: var(--text-secondary);
+  --mls-border: var(--border);
+  --mls-card-bg: var(--bg-card);
   --mls-accent: #3b82f6;
   --mls-accent-hover: #2563eb;
 }
@@ -2743,12 +2743,12 @@ na Feature Card */
 }
 
 [data-theme="dark"] {
-  --exams-bg: #0a0a0a;
-  --exams-text-primary: #fafafa;
-  --exams-text-secondary: #a3a3a3;
-  --exams-text-muted: #737373;
-  --exams-border: #262626;
-  --exams-card-bg: #171717;
+  --exams-bg: var(--bg-primary);
+  --exams-text-primary: var(--text-primary);
+  --exams-text-secondary: var(--text-secondary);
+  --exams-text-muted: var(--text-muted);
+  --exams-border: var(--border);
+  --exams-card-bg: var(--bg-card);
   --exams-accent: #3b82f6;
   --exams-accent-hover: #2563eb;
 }
@@ -2960,11 +2960,11 @@ na Feature Card */
 }
 
 [data-theme="dark"] {
-  --benefits-bg: #0a0a0a;
-  --benefits-text-primary: #fafafa;
-  --benefits-text-secondary: #a3a3a3;
-  --benefits-border: #262626;
-  --benefits-column-bg: #171717;
+  --benefits-bg: var(--bg-primary);
+  --benefits-text-primary: var(--text-primary);
+  --benefits-text-secondary: var(--text-secondary);
+  --benefits-border: var(--border);
+  --benefits-column-bg: var(--bg-card);
   --benefits-accent: #3b82f6;
   --benefits-accent-hover: #2563eb;
   --benefits-check: #22c55e;
