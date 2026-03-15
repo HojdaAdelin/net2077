@@ -59,7 +59,7 @@ export default function InboxDropdown({ isOpen, onClose, onMessageClick }) {
   };
 
   const handleMessageClick = async (message) => {
-    // Mark as read if not already read
+
     if (!message.isRead) {
       try {
         await fetch(`${API_URL}/inbox/${message._id}/read`, {

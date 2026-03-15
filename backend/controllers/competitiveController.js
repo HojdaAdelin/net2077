@@ -73,7 +73,6 @@ export const checkAndResetPeriod = async () => {
         const user = topUsers[i];
         const goldAwarded = goldRewards[i];
         
-        // Initialize fields if they don't exist (for old users)
         if (user.gold === undefined) user.gold = 0;
         if (!user.competitiveStats) {
           user.competitiveStats = {
@@ -99,7 +98,7 @@ export const checkAndResetPeriod = async () => {
           recipientUsername: user.username,
           sender: 'NET2077 System',
           title: `${rankEmojis[i]} Competitive Season #${activePeriod.periodNumber} - Rank ${i + 1}`,
-          description: `Congratulations! You finished Rank ${i + 1} in Competitive Season #${activePeriod.periodNumber}!\n\nYou earned ${topUsers[i].competitiveStats.currentPeriodXP} XP during this season.\n\n🏆 Reward: ${goldAwarded} Gold\n\nYour gold has been added to your account. Keep up the great work in the next season!`
+          description: `Congratulations! You finished Rank ${i + 1} in Competitive Season #${activePeriod.periodNumber}!\n\n🏆 Reward: ${goldAwarded} Gold\n\nYour gold has been added to your account. Keep up the great work in the next season!`
         });
         
         await inboxMessage.save();
