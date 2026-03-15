@@ -915,22 +915,22 @@
 .reset-stats-btn {
   font-size: 14px;
   opacity: 0.9;
-  background: #404040 !important;
-  border-color: #505050 !important;
-  color: #ffffff !important;
+  background: var(--bg-tertiary) !important;
+  border-color: var(--border-light) !important;
+  color: var(--text-primary) !important;
 }
 
 .reset-stats-btn:hover:not(:disabled) {
-  background: #505050 !important;
-  border-color: #606060 !important;
+  background: var(--border-light) !important;
+  border-color: var(--text-muted) !important;
 }
 
 .reset-stats-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background: #2a2a2a !important;
-  border-color: #333333 !important;
-  color: #666666 !important;
+  background: var(--bg-secondary) !important;
+  border-color: var(--border) !important;
+  color: var(--text-muted) !important;
 }
 }
 
