@@ -115,7 +115,6 @@
 
 .stat-card-progress:hover {
   border-color: var(--border-light);
-  background: var(--bg-tertiary);
 }
 
 .stat-label-small {
@@ -162,7 +161,6 @@
 
 .category-progress-card:hover {
   border-color: var(--border-light);
-  background: var(--bg-tertiary);
 }
 
 .category-header {
@@ -269,7 +267,6 @@
 
 .simulation-card:hover {
   border-color: var(--border-light);
-  background: var(--bg-tertiary);
 }
 
 .simulation-header {
@@ -471,10 +468,6 @@
 .badge-unlocked-text {
   color: var(--success);
   font-weight: 600;
-}
-
-.category-progress-card:hover .badge-progress {
-  background: var(--bg-tertiary);
 }
 
 .category-progress-card:hover .badge-progress.unlocked {

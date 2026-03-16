@@ -381,7 +381,7 @@
   font-weight: 600;
   font-size: 14px;
   flex-shrink: 0;
-  color: azure;
+  color: var(--text-primary);
 }
 
 .answer-option.selected .answer-letter {
