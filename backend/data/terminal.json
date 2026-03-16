@@ -931,5 +931,56 @@
     "points": 5,
     "difficulty": "medium",
     "order": 113
+  },
+  {
+    "title": "Download from marcus@net2077.com the file creds.txt to the current directory.",
+    "description": "Download from marcus@net2077.com the file creds.txt to the current directory.",
+    "acceptedCommands": [
+      "scp marcus@net2077.com:creds.txt ."
+    ],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 114
+  },
+  {
+    "title": "Upload the file ~/hack.elf to marcus@net2077.com.",
+    "description": "Upload the file ~/hack.elf to marcus@net2077.com.",
+    "acceptedCommands": [
+      "scp ~/hack.elf marcus@net2077.com:"
+    ],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 115
+  },
+  {
+    "title": "Generate a pair of private/public ssh key.",
+    "description": "Generate a pair of private/public ssh key.",
+    "acceptedCommands": [
+      "ssh-keygen"
+    ],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 116
+  },
+  {
+    "title": "List all ssh keys for the current user.",
+    "description": "List all ssh keys for the current user.",
+    "acceptedCommands": [
+      "ls ~/.ssh/",
+      "ls ~/.ssh/*.pub"
+    ],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 117
+  },
+  {
+    "title": "Copy the public key to marcus@net2077.com.",
+    "description": "Copy the public key to marcus@net2077.com.",
+    "acceptedCommands": [
+      "ssh-copy-id marcus@net2077.com"
+    ],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 118
   }
 ]

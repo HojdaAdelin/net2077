@@ -126,8 +126,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-secondary);
-  border: 2px solid var(--border);
+  border: 2px solid var(--card-color);
   border-radius: 10px;
   color: var(--card-color);
   transition: all 0.3s ease;
@@ -346,7 +345,7 @@
 
 .question-card:hover {
   border-color: var(--border-light);
-  background: var(--bg-tertiary);
+  /*background: var(--bg-tertiary);*/
 }
 
 .question-card.daily-completed {
