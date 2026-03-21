@@ -14,6 +14,8 @@ import Quiz from './pages/Quiz';
 import Question from './pages/Question';
 import ExamSelection from './pages/ExamSelection';
 import Resurse from './pages/Resurse';
+import RoadmapDetail from './pages/RoadmapDetail';
+import LessonView from './pages/LessonView';
 import Progress from './pages/Progress';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -49,6 +51,8 @@ export default function App() {
                   <Route path="/exam-selection" element={<ExamSelection />} />
                   <Route path="/exam/:examId" element={<Quiz isExam={true} />} />
                   <Route path="/learn" element={<Resurse />} />
+                  <Route path="/learn/roadmap/:roadmapId" element={<RoadmapDetail />} />
+                  <Route path="/learn/lesson/:lessonId" element={<LessonView />} />
                   <Route path="/progress" element={<Progress />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />

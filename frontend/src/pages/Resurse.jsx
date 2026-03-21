@@ -1,9 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getRoadmaps, createRoadmap, updateRoadmap, deleteRoadmap } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import * as LucideIcons from 'lucide-react';
 import LoginRequired from '../components/LoginRequired';  
-import { Plus, X, Layers, BookOpen, Trash2, BookOpenText, EyeOff, Pencil } from 'lucide-react';
+import { Plus, X, Layers, BookOpen, Trash2, BookOpenText, EyeOff, Pencil, PencilLine } from 'lucide-react';
 import '../styles/Resurse.css';
 
 function RoadmapIcon({ name, size = 32 }) {
@@ -34,6 +35,7 @@ export default function Resurse() {
   const [error, setError] = useState('');
 
   const isRoot = user?.role === 'root';
+  const navigate = useNavigate();
 
   useEffect(() => {
     getRoadmaps()
@@ -190,10 +192,13 @@ export default function Resurse() {
                 </div>
               </div>
               <div className="learn-card-actions">
-                <button className="btn btn-primary learn-start-btn">Start Learning</button>
+                <button className="btn btn-primary learn-start-btn" onClick={() => navigate(`/learn/roadmap/${roadmap._id}`)}>Start Learning</button>
                 {isRoot && (
                   <>
-                    <button className="learn-edit-btn" onClick={() => handleEdit(roadmap)} title="Edit roadmap">
+                    <button className="learn-edit-btn" title="Edit content (chapters & lessons)" onClick={() => navigate(`/learn/roadmap/${roadmap._id}`)}>
+                      <PencilLine size={16} />
+                    </button>
+                    <button className="learn-edit-btn" onClick={() => handleEdit(roadmap)} title="Edit roadmap info">
                       <Pencil size={16} />
                     </button>
                     <button className="learn-delete-btn" onClick={() => handleDelete(roadmap)} title="Delete roadmap">
