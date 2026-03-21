@@ -33,6 +33,34 @@ export const getRoadmaps = async () => {
   return res.json();
 };
 
+export const createRoadmap = async (data) => {
+  const res = await fetch(`${API_URL}/resources/roadmaps`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(data),
+  });
+  return res.json();
+};
+
+export const updateRoadmap = async (roadmapId, data) => {
+  const res = await fetch(`${API_URL}/resources/roadmaps/${roadmapId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(data),
+  });
+  return res.json();
+};
+
+export const deleteRoadmap = async (roadmapId) => {
+  const res = await fetch(`${API_URL}/resources/roadmaps/${roadmapId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  return res.json();
+};
+
 export const getUserProgress = async () => {
   const res = await fetch(`${API_URL}/progress/user`, { 
     credentials: 'include'
