@@ -20,6 +20,12 @@ const router = express.Router();
 
 router.get('/all', getAllResources);
 router.get('/predefined', getPredefined);
+
+// Public route - only visible roadmaps, no auth needed
+router.get('/roadmaps/public', getRoadmaps);
+// Root route - all roadmaps including hidden
+router.get('/roadmaps/root', authMiddleware, isRoot, getRoadmaps);
+// Legacy with optionalAuth (kept for compatibility)
 router.get('/roadmaps', optionalAuth, getRoadmaps);
 
 router.post('/roadmaps', authMiddleware, isRoot, createRoadmap);

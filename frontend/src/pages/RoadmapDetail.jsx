@@ -54,7 +54,7 @@ export default function RoadmapDetail() {
   const loadAll = async () => {
     try {
       const [roadmaps, chs, prog] = await Promise.all([
-        api.getRoadmaps(),
+        api.getRoadmaps(isRoot),
         api.getChapters(roadmapId),
         api.getRoadmapProgress(roadmapId),
       ]);

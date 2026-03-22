@@ -38,11 +38,11 @@ export default function Resurse() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getRoadmaps()
+    getRoadmaps(isRoot)
       .then(setRoadmaps)
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, []);
+  }, [isRoot]);
 
   if (!user) {
     return (

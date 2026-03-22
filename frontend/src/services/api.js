@@ -28,8 +28,9 @@ export const getResources = async () => {
   return res.json();
 };
 
-export const getRoadmaps = async () => {
-  const res = await fetch(`${API_URL}/resources/roadmaps`);
+export const getRoadmaps = async (isRoot = false) => {
+  const endpoint = isRoot ? `${API_URL}/resources/roadmaps/root` : `${API_URL}/resources/roadmaps/public`;
+  const res = await fetch(endpoint, { credentials: 'include' });
   return res.json();
 };
 

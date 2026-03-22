@@ -21,9 +21,13 @@ export const getPredefined = async (req, res) => {
 
 export const getRoadmaps = async (req, res) => {
   try {
-    // Check if requester is root (token present and valid)
+    // req.user is set by isRoot middleware (root route)
+    // req.userId is set by optionalAuth (legacy route)
     let isRoot = false;
-    if (req.userId) {
+
+    if (req.user?.role === 'root') {
+      isRoot = true;
+    } else if (req.userId) {
       const User = (await import('../models/User.js')).default;
       const user = await User.findById(req.userId).select('role');
       isRoot = user?.role === 'root';
