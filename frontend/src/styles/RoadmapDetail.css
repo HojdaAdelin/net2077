@@ -98,7 +98,7 @@
 }
 
 .rd-progress-sub {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-muted);
   margin-top: 4px;
   display: block;
@@ -182,7 +182,7 @@
 .rd-chapter-progress .rd-progress-bar { flex: 1; }
 
 .rd-chapter-pct {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--accent-primary);
   white-space: nowrap;

@@ -32,7 +32,7 @@
 }
 
 .lv-progress-sub {
-  font-size: 12px;
+  font-size: 15px;
   color: var(--text-muted);
 }
 
@@ -82,14 +82,14 @@
 }
 
 .lv-h2 {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--text-primary);
   margin: 4px 0 0 0;
 }
 
 .lv-paragraph {
-  font-size: 15px;
+  font-size: 18px;
   line-height: 1.75;
   color: var(--text-secondary);
   margin: 0;
@@ -102,7 +102,7 @@
   padding: 14px 16px;
   border-radius: 8px;
   border-left: 3px solid;
-  font-size: 14px;
+  font-size: 18px;
   line-height: 1.6;
 }
 
@@ -144,7 +144,7 @@
 }
 
 .lv-question-text {
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 500;
   color: var(--text-primary);
   margin: 0;
@@ -162,7 +162,7 @@
   border: 1px solid var(--border);
   border-radius: 6px;
   color: var(--text-primary);
-  font-size: 14px;
+  font-size: 18px;
   font-family: inherit;
   outline: none;
   transition: border-color 0.2s;
@@ -219,7 +219,7 @@
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--accent-primary);
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 500;
   text-decoration: none;
   transition: all 0.2s;
