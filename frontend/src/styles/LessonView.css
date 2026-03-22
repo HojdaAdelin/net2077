@@ -88,11 +88,75 @@
   margin: 4px 0 0 0;
 }
 
+.lv-paragraph-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .lv-paragraph {
   font-size: 18px;
   line-height: 1.75;
   color: var(--text-secondary);
   margin: 0;
+}
+
+.lv-code-block-wrap {
+  position: relative;
+}
+
+.lv-copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+  z-index: 1;
+}
+
+.lv-copy-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+.lv-code-block {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-primary);
+  border-radius: 8px;
+  padding: 16px 20px;
+  padding-right: 90px;
+  overflow-x: auto;
+  margin: 0;
+}
+
+.lv-code-block code {
+  font-family: 'Fira Code', 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-primary);
+  white-space: pre;
+}
+
+.lv-inline-code {
+  font-family: 'Fira Code', 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+  font-size: 15px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: var(--text-primary);
 }
 
 /* Cards */

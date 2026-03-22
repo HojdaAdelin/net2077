@@ -5,7 +5,8 @@ import * as api from '../services/api';
 import {
   ChevronRight, Plus, Trash2, GripVertical, Save,
   Lightbulb, AlertCircle, Info, Link as LinkIcon,
-  CheckCircle, XCircle, Send, ChevronLeft, ChevronRight as ChevronRightIcon
+  CheckCircle, XCircle, Send, ChevronLeft, ChevronRight as ChevronRightIcon,
+  Copy, Check as CheckIcon
 } from 'lucide-react';
 import '../styles/LessonView.css';
 
@@ -27,13 +28,60 @@ function newItem(type, order) {
 }
 
 // ── Viewer components ─────────────────────────────────────────────────────────
+function CodeBlock({ code }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    // fallback for non-HTTPS environments
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code).catch(() => fallbackCopy(code));
+    } else {
+      fallbackCopy(code);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  const fallbackCopy = (text) => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  };
+  return (
+    <div className="lv-code-block-wrap">
+      <button className="lv-copy-btn" onClick={handleCopy} title="Copy code">
+        {copied ? <CheckIcon size={14} /> : <Copy size={14} />}
+        {copied ? 'Copied' : 'Copy'}
+      </button>
+      <pre className="lv-code-block"><code>{code}</code></pre>
+    </div>
+  );
+}
+
 function renderParagraph(content) {
-  // Support **bold**, *italic*, __underline__
-  let html = content
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/__(.+?)__/g, '<u>$1</u>');
-  return <p className="lv-paragraph" dangerouslySetInnerHTML={{ __html: html }} />;
+  // Split by ```code blocks``` first
+  const parts = content.split(/(```[\s\S]*?```)/g);
+
+  return (
+    <div className="lv-paragraph-wrap">
+      {parts.map((part, i) => {
+        if (part.startsWith('```') && part.endsWith('```')) {
+          const code = part.slice(3, -3);
+          return <CodeBlock key={i} code={code} />;
+        }
+        // inline formatting: **bold**, *italic*, __underline__, `code`
+        const html = part
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.+?)\*/g, '<em>$1</em>')
+          .replace(/__(.+?)__/g, '<u>$1</u>')
+          .replace(/`(.+?)`/g, '<code class="lv-inline-code">$1</code>');
+        return <p key={i} className="lv-paragraph" dangerouslySetInnerHTML={{ __html: html }} />;
+      })}
+    </div>
+  );
 }
 
 function QuestionItem({ item, lessonId, solvedQuestions, onSolve }) {
