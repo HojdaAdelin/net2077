@@ -982,5 +982,261 @@
     "points": 5,
     "difficulty": "medium",
     "order": 118
+  },
+  {
+    "title": "Display current shell",
+    "description": "Show the current shell being used",
+    "acceptedCommands": ["echo $SHELL"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 119
+  },
+  {
+    "title": "Show PATH variable",
+    "description": "Display the PATH environment variable",
+    "acceptedCommands": ["echo $PATH"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 120
+  },
+  {
+    "title": "List hidden files only",
+    "description": "List only hidden files in current directory",
+    "acceptedCommands": ["ls -d .*"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 121
+  },
+  {
+    "title": "Create multiple files",
+    "description": "Create files a.txt, b.txt and c.txt",
+    "acceptedCommands": ["touch a.txt b.txt c.txt"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 122
+  },
+  {
+    "title": "Remove multiple files",
+    "description": "Delete files a.txt, b.txt and c.txt",
+    "acceptedCommands": ["rm a.txt b.txt c.txt"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 123
+  },
+  {
+    "title": "Show command type",
+    "description": "Determine how the 'cd' command is interpreted",
+    "acceptedCommands": ["type cd"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 124
+  },
+  {
+    "title": "Count files in directory",
+    "description": "Count number of files in current directory",
+    "acceptedCommands": ["ls | wc -l"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 125
+  },
+  {
+    "title": "Display last reboot",
+    "description": "Show last system reboot time",
+    "acceptedCommands": ["who -b"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 126
+  },
+  {
+    "title": "Show groups of current user",
+    "description": "Display groups for current user",
+    "acceptedCommands": ["groups"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 127
+  },
+  {
+    "title": "Print working directory basename",
+    "description": "Show only the current directory name",
+    "acceptedCommands": ["basename $(pwd)"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 128
+  },
+  {
+    "title": "Display file without last line",
+    "description": "Show file.txt without the last line",
+    "acceptedCommands": ["head -n -1 file.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 129
+  },
+  {
+    "title": "Reverse file contents",
+    "description": "Display file.txt in reverse line order",
+    "acceptedCommands": ["tac file.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 130
+  },
+  {
+    "title": "Display only directories",
+    "description": "List only directories in current path",
+    "acceptedCommands": ["ls -d */"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 131
+  },
+  {
+    "title": "Check file differences",
+    "description": "Compare file1.txt and file2.txt",
+    "acceptedCommands": ["diff file1.txt file2.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 132
+  },
+  {
+    "title": "Show command exit status",
+    "description": "Display exit status of last command",
+    "acceptedCommands": ["echo $?"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 133
+  },
+  {
+    "title": "Display username from env",
+    "description": "Show current username using environment variable",
+    "acceptedCommands": ["echo $USER"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 134
+  },
+  {
+    "title": "Print lines matching pattern ignoring case",
+    "description": "Search for 'error' ignoring case in log.txt",
+    "acceptedCommands": ["grep -i error log.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 135
+  },
+  {
+    "title": "Count occurrences of a word",
+    "description": "Count how many times 'error' appears in log.txt",
+    "acceptedCommands": ["grep -c error log.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 136
+  },
+  {
+    "title": "Show disk usage per folder",
+    "description": "Display disk usage for each directory in current path",
+    "acceptedCommands": ["du -h --max-depth=1", "du -h -d 1"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 137
+  },
+  {
+    "title": "Display processes for current user",
+    "description": "Show processes owned by current user",
+    "acceptedCommands": ["ps -u $USER"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 138
+  },
+  {
+    "title": "Kill process by name",
+    "description": "Terminate all processes named firefox",
+    "acceptedCommands": ["pkill firefox", "killall firefox"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 139
+  },
+  {
+    "title": "Display open ports only",
+    "description": "Show open ports on the system",
+    "acceptedCommands": ["ss -l", "netstat -l"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 140
+  },
+  {
+    "title": "Download a file using wget",
+    "description": "Download file from example.com/file.txt",
+    "acceptedCommands": ["wget http://example.com/file.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 141
+  },
+  {
+    "title": "Display HTTP headers",
+    "description": "Show HTTP headers from example.com",
+    "acceptedCommands": ["curl -I http://example.com"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 142
+  },
+  {
+    "title": "Extract tar archive",
+    "description": "Extract archive.tar.gz",
+    "acceptedCommands": ["tar -xzf archive.tar.gz", "tar -xzvf archive.tar.gz"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 143
+  },
+  {
+    "title": "Search command in history",
+    "description": "Search for 'ssh' in command history",
+    "acceptedCommands": ["history | grep ssh"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 144
+  },
+  {
+    "title": "Print file with line numbers",
+    "description": "Display file.txt with line numbers",
+    "acceptedCommands": ["nl file.txt", "cat -n file.txt"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 145
+  },
+  {
+    "title": "Check if file exists",
+    "description": "Check if file.txt exists",
+    "acceptedCommands": ["test -f file.txt", "[ -f file.txt ]"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 146
+  },
+  {
+    "title": "Pause execution",
+    "description": "Pause terminal for 5 seconds",
+    "acceptedCommands": ["sleep 5"],
+    "points": 5,
+    "difficulty": "easy",
+    "order": 147
+  },
+  {
+    "title": "Display aliases",
+    "description": "Show all defined aliases",
+    "acceptedCommands": ["alias"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 148
+  },
+  {
+    "title": "Create alias",
+    "description": "Create alias ll for ls -la",
+    "acceptedCommands": ["alias ll='ls -la'"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 149
+  },
+  {
+    "title": "Remove alias",
+    "description": "Remove alias ll",
+    "acceptedCommands": ["unalias ll"],
+    "points": 5,
+    "difficulty": "medium",
+    "order": 150
   }
 ]

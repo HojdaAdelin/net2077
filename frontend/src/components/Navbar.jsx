@@ -161,7 +161,7 @@ export default function Navbar() {
           <Link to="/forum" onClick={closeMobileMenu}>Forum</Link>
           <Link to="/arena" className="nav-link-new" onClick={closeMobileMenu}>
             Arena
-            <span className="new-badge">NEW</span>
+            {/*<span className="new-badge">NEW</span>*/}
           </Link>
           <Link to="/is" onClick={closeMobileMenu}>IS/Debug</Link>
           
