@@ -528,7 +528,7 @@ es for answers section */
 }
 
 .terminal-command-item {
-  background: var(--bg-secondary);
+  background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 0.5rem;

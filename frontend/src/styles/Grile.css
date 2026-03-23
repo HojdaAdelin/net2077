@@ -731,7 +731,6 @@
 
 .tag-option.selected {
   border-color: var(--tag-color);
-  background: var(--bg-tertiary);
   color: var(--tag-color);
 }
 
@@ -751,6 +750,33 @@
 .tag-helper.error {
   color: var(--error);
   font-weight: 600;
+}
+
+.acadnet-option {
+  margin-top: 14px;
+}
+
+.acadnet-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.acadnet-toggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--primary, #f59e0b);
+}
+
+.acadnet-note {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--text-muted);
 }
 
 .selected-tags-info {

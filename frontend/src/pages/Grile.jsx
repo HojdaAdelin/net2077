@@ -10,6 +10,7 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
   const [selectedMode, setSelectedMode] = useState('');
   const [selectedTag, setSelectedTag] = useState(preSelectedCategory || ((type === 'basic' || type === 'daily') ? 'LINUX' : ''));
   const [selectedChapters, setSelectedChapters] = useState([]);
+  const [includeAcadnet, setIncludeAcadnet] = useState(false);
   const navigate = useNavigate();
 
   const availableTags = [
@@ -54,7 +55,7 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
       if (!selectedTag) return;
       
       if (selectedTag === 'LINUX') {
-        navigate('/grile/daily/challenge');
+        navigate(includeAcadnet ? '/grile/daily/challenge?acadnet=1' : '/grile/daily/challenge');
       } else if (selectedTag === 'NETWORK') {
         navigate('/grile/daily/network');
       }
@@ -203,7 +204,10 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
                 <button
                   key={tag.id}
                   className={`tag-option ${selectedTag === tag.id ? 'selected' : ''}`}
-                  onClick={() => setSelectedTag(tag.id)}
+                  onClick={() => {
+                    setSelectedTag(tag.id);
+                    if (tag.id !== 'LINUX') setIncludeAcadnet(false);
+                  }}
                   style={{
                     '--tag-color': tag.color
                   }}
@@ -215,6 +219,19 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
             <p className="tag-helper">
               Choose Linux or Network for your daily challenge.
             </p>
+            {selectedTag === 'LINUX' && (
+              <div className="acadnet-option">
+                <label className="acadnet-toggle">
+                  <input
+                    type="checkbox"
+                    checked={includeAcadnet}
+                    onChange={(e) => setIncludeAcadnet(e.target.checked)}
+                  />
+                  <span>Acadnet</span>
+                </label>
+                <p className="acadnet-note">Acadnet problems are only in Romanian</p>
+              </div>
+            )}
           </div>
         )}
 

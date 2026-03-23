@@ -280,8 +280,24 @@ export default function Quiz({ isExam = false }) {
         setExamMeta(null);
 
         if (mode === 'challenge' && type === 'daily') {
+          const target = 20;
           const response = await fetch(`${API_BASE}/questions/dailyLinux`);
           data = await response.json();
+          if (urlParams.get('acadnet') !== '1') {
+            data = data.filter(q => q.type !== 'acadnet');
+            // If filtering removed some, fill up with more non-acadnet Linux questions
+            if (data.length < target) {
+              const needed = target - data.length;
+              const existingIds = new Set(data.map(q => q._id));
+              const extraRes = await fetch(`${API_BASE}/questions?tags=LINUX`);
+              const extraPool = await extraRes.json();
+              const extras = extraPool
+                .filter(q => q.type !== 'acadnet' && !existingIds.has(q._id))
+                .sort(() => Math.random() - 0.5)
+                .slice(0, needed);
+              data = [...data, ...extras];
+            }
+          }
         } else if (mode === 'network' && type === 'daily') {
           const response = await fetch(`${API_BASE}/questions/dailyNetwork`);
           data = await response.json();
