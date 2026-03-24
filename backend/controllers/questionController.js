@@ -337,10 +337,6 @@ export const resetLinuxStats = async (req, res) => {
       questionId => !linuxQuestionIds.has(questionId.toString())
     );
 
-    if (user.solvedByTag) {
-      user.solvedByTag.LINUX = 0;
-    }
-
     const xpToAdd = solvedLinuxQuestions.length;
     user.xp += xpToAdd;
     user.level = Math.floor(user.xp / 100) + 1;
