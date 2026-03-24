@@ -864,7 +864,7 @@
       "100mA"
     ],
     "correctAnswers": [
-      2
+      1
     ],
     "multipleCorrect": false,
     "difficulty": "medium",
@@ -1888,6 +1888,956 @@
       "Enables all interrupts",
       "Stops the program",
       "Delays execution"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which data type should be used to store a decimal number in Arduino C++?",
+    "type": "all",
+    "answers": [
+      "int",
+      "float",
+      "char",
+      "bool"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What does the '++' operator do in C++?",
+    "type": "all",
+    "answers": [
+      "Decreases a variable by 1",
+      "Increases a variable by 1",
+      "Multiplies a variable by 2",
+      "Divides a variable by 2"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which loop repeats a block of code while a condition is true?",
+    "type": "all",
+    "answers": [
+      "for",
+      "while",
+      "do-while",
+      "switch"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the correct way to declare a constant integer in Arduino C++?",
+    "type": "all",
+    "answers": [
+      "int const x = 5;",
+      "const int x = 5;",
+      "Both 1 and 2",
+      "int x = const 5;"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function is called once when Arduino starts?",
+    "type": "all",
+    "answers": [
+      "loop()",
+      "setup()",
+      "main()",
+      "init()"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the purpose of the 'loop()' function in Arduino?",
+    "type": "all",
+    "answers": [
+      "Runs once at start",
+      "Repeats code continuously",
+      "Declares variables",
+      "Includes libraries"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which operator is used for logical AND in C++?",
+    "type": "all",
+    "answers": [
+      "&",
+      "&&",
+      "||",
+      "!"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which operator is used for logical OR in C++?",
+    "type": "all",
+    "answers": [
+      "&",
+      "&&",
+      "||",
+      "!"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "How do you declare a pointer to an integer in C++?",
+    "type": "all",
+    "answers": [
+      "int p;",
+      "int &p;",
+      "int p;",
+      "pointer int p;"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which keyword is used to define a function that doesn’t return a value in C++?",
+    "type": "all",
+    "answers": [
+      "int",
+      "void",
+      "return",
+      "const"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which keyword is used to define a variable that cannot be changed?",
+    "type": "all",
+    "answers": [
+      "const",
+      "static",
+      "volatile",
+      "mutable"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function converts an integer to a string in Arduino C++?",
+    "type": "all",
+    "answers": [
+      "itoa()",
+      "atoi()",
+      "digitalWrite()",
+      "analogRead()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "How do you declare a multi-line comment in C++?",
+    "type": "all",
+    "answers": [
+      "// comment",
+      "/* comment */",
+      "<!-- comment -->",
+      "# comment"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which operator is used to access members of a struct or class through a pointer?",
+    "type": "all",
+    "answers": [
+      ".",
+      "->",
+      "&",
+      "*"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which loop executes at least once even if the condition is false?",
+    "type": "all",
+    "answers": [
+      "for",
+      "while",
+      "do-while",
+      "switch"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What does the 'break' statement do inside a loop?",
+    "type": "all",
+    "answers": [
+      "Skips to next iteration",
+      "Exits the loop immediately",
+      "Pauses the loop",
+      "Resets the loop"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which keyword declares a variable local to a function but retains its value between calls?",
+    "type": "all",
+    "answers": [
+      "static",
+      "const",
+      "volatile",
+      "auto"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function reads a single character from Serial input?",
+    "type": "all",
+    "answers": [
+      "Serial.read()",
+      "Serial.readString()",
+      "Serial.print()",
+      "Serial.available()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which keyword is used to define a class in C++?",
+    "type": "all",
+    "answers": [
+      "struct",
+      "object",
+      "class",
+      "instance"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function returns the number of milliseconds since Arduino started?",
+    "type": "all",
+    "answers": [
+      "millis()",
+      "micros()",
+      "delay()",
+      "time()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which operator is used to check equality in C++?",
+    "type": "all",
+    "answers": [
+      "=",
+      "==",
+      "!=",
+      ">="
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What does the 'continue' statement do inside a loop?",
+    "type": "all",
+    "answers": [
+      "Exits the loop",
+      "Skips to the next iteration",
+      "Pauses the loop",
+      "Ends program execution"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which data type uses only 1 byte of memory in Arduino C++?",
+    "type": "all",
+    "answers": [
+      "int",
+      "char",
+      "float",
+      "long"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which keyword declares a global variable accessible in all functions?",
+    "type": "all",
+    "answers": [
+      "extern",
+      "static",
+      "volatile",
+      "const"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function converts a string to an integer in Arduino C++?",
+    "type": "all",
+    "answers": [
+      "atoi()",
+      "itoa()",
+      "digitalWrite()",
+      "analogRead()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "How do you declare an array of 10 integers in C++?",
+    "type": "all",
+    "answers": [
+      "int arr[10];",
+      "int arr = 10;",
+      "int arr();",
+      "int arr{};"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function is used to read analog input in Arduino?",
+    "type": "all",
+    "answers": [
+      "analogRead()",
+      "digitalRead()",
+      "analogWrite()",
+      "digitalWrite()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which operator is used for bitwise AND in C++?",
+    "type": "all",
+    "answers": [
+      "&",
+      "&&",
+      "|",
+      "||"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which operator is used for bitwise OR in C++?",
+    "type": "all",
+    "answers": [
+      "|",
+      "||",
+      "&",
+      "&&"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function pauses Arduino code for a specified number of milliseconds?",
+    "type": "all",
+    "answers": [
+      "delay()",
+      "millis()",
+      "micros()",
+      "pause()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function in Arduino C++ converts an integer to a character array?",
+    "type": "all",
+    "answers": [
+      "itoa()",
+      "atoi()",
+      "sprintf()",
+      "String()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which operator is used to get the address of a variable in C++?",
+    "type": "all",
+    "answers": [
+      "*",
+      "&",
+      "->",
+      "."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which type of function can return a value in C++?",
+    "type": "all",
+    "answers": [
+      "void",
+      "int, float, char, etc.",
+      "static",
+      "const"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which loop is best when the number of iterations is known?",
+    "type": "all",
+    "answers": [
+      "while",
+      "do-while",
+      "for",
+      "switch"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What does the 'volatile' keyword indicate for a variable?",
+    "type": "all",
+    "answers": [
+      "Value can change unexpectedly, usually via interrupts",
+      "Value cannot change",
+      "Value is constant",
+      "Variable is global"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function checks if data is available to read from Serial?",
+    "type": "all",
+    "answers": [
+      "Serial.available()",
+      "Serial.read()",
+      "Serial.print()",
+      "Serial.begin()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which keyword declares a variable that can be modified only in the local block?",
+    "type": "all",
+    "answers": [
+      "auto",
+      "const",
+      "volatile",
+      "static"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function is used to write analog output using PWM?",
+    "type": "all",
+    "answers": [
+      "analogRead()",
+      "analogWrite()",
+      "digitalWrite()",
+      "pinMode()"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which operator is used to access array elements?",
+    "type": "all",
+    "answers": [
+      "[]",
+      "()",
+      ".",
+      "->"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "How do you declare a function prototype in C++?",
+    "type": "all",
+    "answers": [
+      "returnType functionName(parameters);",
+      "functionName returnType(parameters);",
+      "void functionName;",
+      "functionName();"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which keyword is used to inherit a class in C++?",
+    "type": "all",
+    "answers": [
+      "extend",
+      "inherits",
+      ": public",
+      "super"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which operator is used to dereference a pointer?",
+    "type": "all",
+    "answers": [
+      "&",
+      "*",
+      "->",
+      "."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which statement allows multiple choices for execution in C++?",
+    "type": "all",
+    "answers": [
+      "for",
+      "switch",
+      "while",
+      "if"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which keyword is used to include a library in Arduino C++?",
+    "type": "all",
+    "answers": [
+      "#define",
+      "#include",
+      "import",
+      "using"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which keyword declares a function that can be used across multiple files?",
+    "type": "all",
+    "answers": [
+      "static",
+      "extern",
+      "const",
+      "volatile"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function formats and prints a string to Serial?",
+    "type": "all",
+    "answers": [
+      "Serial.print()",
+      "Serial.println()",
+      "sprintf()",
+      "Serial.read()"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which operator is used for bitwise XOR in C++?",
+    "type": "all",
+    "answers": [
+      "^",
+      "&&",
+      "||",
+      "%"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which operator is used for not equal comparison in C++?",
+    "type": "all",
+    "answers": [
+      "!=",
+      "==",
+      "=",
+      ">="
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function stops execution for a specified number of microseconds?",
+    "type": "all",
+    "answers": [
+      "delay()",
+      "millis()",
+      "micros()",
+      "delayMicroseconds()"
+    ],
+    "correctAnswers": [
+      3
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which keyword defines a class constructor in Arduino C++?",
+    "type": "all",
+    "answers": [
+      "className()",
+      "void className()",
+      "constructor()",
+      "new className()"
     ],
     "correctAnswers": [
       0

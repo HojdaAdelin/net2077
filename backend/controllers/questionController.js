@@ -311,3 +311,54 @@ export const resetBasicStats = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+export const resetLinuxStats = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const linuxQuestions = await Question.find({ tags: 'LINUX', type: 'all' });
+    const linuxQuestionIds = new Set(linuxQuestions.map(q => q._id.toString()));
+
+    const solvedLinuxQuestions = user.solvedQuestions.filter(
+      questionId => linuxQuestionIds.has(questionId.toString())
+    );
+
+    if (solvedLinuxQuestions.length < 500) {
+      return res.status(400).json({
+        message: 'You need at least 500 solved Linux questions to reset stats',
+        currentSolved: solvedLinuxQuestions.length
+      });
+    }
+
+    user.solvedQuestions = user.solvedQuestions.filter(
+      questionId => !linuxQuestionIds.has(questionId.toString())
+    );
+
+    if (user.solvedByTag) {
+      user.solvedByTag.LINUX = 0;
+    }
+
+    const xpToAdd = solvedLinuxQuestions.length;
+    user.xp += xpToAdd;
+    user.level = Math.floor(user.xp / 100) + 1;
+    await trackCompetitiveXP(user._id, xpToAdd);
+
+    await user.save();
+
+    console.log(`[✔] Linux stats reset for user ${user.username}: ${solvedLinuxQuestions.length} questions reset, ${xpToAdd} XP added`);
+
+    res.json({
+      message: 'Linux stats reset successfully',
+      questionsReset: solvedLinuxQuestions.length,
+      xpAdded: xpToAdd,
+      newXp: user.xp,
+      newLevel: user.level
+    });
+  } catch (error) {
+    console.error('Error resetting Linux stats:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

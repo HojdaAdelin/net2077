@@ -281,6 +281,7 @@ export default function Grile() {
   const [dailyChallenge, setDailyChallenge] = useState(null);
   const [dailyChallengeLoading, setDailyChallengeLoading] = useState(true);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [showLinuxResetModal, setShowLinuxResetModal] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
   const [resultMessage, setResultMessage] = useState({ type: '', title: '', message: '' });
@@ -476,9 +477,47 @@ export default function Grile() {
     }
   };
 
+  const handleLinuxResetStats = async () => {
+    if (!user || solved.all.linux < 500) return;
+
+    setIsResetting(true);
+    try {
+      const response = await fetch(`${API_URL}/questions/resetLinuxStats`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        updateUser({ xp: data.newXp, level: data.newLevel });
+        await loadData();
+        setShowLinuxResetModal(false);
+        setResultMessage({
+          type: 'success',
+          title: 'Stats Reset Successfully!',
+          message: `${data.questionsReset} questions reset, ${data.xpAdded} XP added.`
+        });
+        setShowResultModal(true);
+      } else {
+        setResultMessage({
+          type: 'error',
+          title: 'Reset Failed',
+          message: data.message || 'Failed to reset stats'
+        });
+        setShowResultModal(true);
+      }
+    } catch (error) {
+      setResultMessage({ type: 'error', title: 'Error', message: 'Failed to reset stats. Please try again.' });
+      setShowResultModal(true);
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
   const allCards = [
-    { 
-      title: 'Linux Questions', 
+    {       title: 'Linux Questions', 
       desc: 'System administration, commands & concepts',
       type: 'all',
       category: 'Linux',
@@ -641,6 +680,20 @@ export default function Grile() {
                   Reset for XP ({solved.basic}/50)
                 </button>
               )}
+
+              {card.title === 'Linux Questions' && user && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowLinuxResetModal(true);
+                  }}
+                  className="compact-reset-btn"
+                  disabled={solved.all.linux < 500}
+                  title={solved.all.linux < 500 ? `Need ${500 - solved.all.linux} more solved questions` : 'Reset stats for XP'}
+                >
+                  Reset for XP ({solved.all.linux}/500)
+                </button>
+              )}
               
               {user && !card.isDaily && !card.isExam && (
                 <div className="compact-stats">
@@ -743,6 +796,57 @@ export default function Grile() {
                 onClick={handleResetStats}
                 className="btn btn-primary"
                 disabled={solved.basic < 50 || isResetting}
+              >
+                {isResetting ? 'Resetting...' : 'Confirm Reset'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showLinuxResetModal && (
+        <div className="modal-overlay" onClick={() => setShowLinuxResetModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Reset Linux Questions Stats</h3>
+              <button className="modal-close" onClick={() => setShowLinuxResetModal(false)}>
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="reset-modal-body">
+              <div className="reset-info">
+                <p><strong>Total user XP won't be reset</strong>, only Linux questions stats will be reset.</p>
+                <p>You will get <strong>1 point for every question solved</strong>.</p>
+                <p>You need at least <strong>500 solved Linux questions</strong>.</p>
+              </div>
+
+              <div className="reset-stats">
+                <div className="stat-item">
+                  <span className="stat-label">Currently solved:</span>
+                  <span className="stat-value">{solved.all.linux}</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">XP you'll gain:</span>
+                  <span className="stat-value">{solved.all.linux} XP</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">Status:</span>
+                  <span className={`stat-status ${solved.all.linux >= 500 ? 'eligible' : 'not-eligible'}`}>
+                    {solved.all.linux >= 500 ? 'Eligible' : `Need ${500 - solved.all.linux} more`}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button onClick={() => setShowLinuxResetModal(false)} className="btn btn-secondary">
+                Cancel
+              </button>
+              <button
+                onClick={handleLinuxResetStats}
+                className="btn btn-primary"
+                disabled={solved.all.linux < 500 || isResetting}
               >
                 {isResetting ? 'Resetting...' : 'Confirm Reset'}
               </button>
