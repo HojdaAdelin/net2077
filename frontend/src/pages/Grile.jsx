@@ -16,7 +16,7 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
   const availableTags = [
     { id: 'LINUX', label: 'Linux', color: '#f59e0b', icon: '🐧', desc: 'System administration & commands' },
     { id: 'NETWORK', label: 'Network', color: '#3b82f6', icon: '🌐', desc: 'Networking protocols & security' },
-    { id: 'TIC/ICT', label: 'TIC/ICT', color: '#8b5cf6', icon: '💻', desc: 'Academic examination topics' }
+    { id: 'ARDUINO', label: 'Arduino', color: '#8b5cf6', icon: '💻', desc: 'Arduino & embedded systems' }
   ];
 
   const chapterTags = [
@@ -266,12 +266,12 @@ export default function Grile() {
   const [searchParams] = useSearchParams();
   const [stats, setStats] = useState({ 
     basic: 0, 
-    all: { linux: 0, network: 0 }, 
+    all: { linux: 0, network: 0, arduino: 0 }, 
     acadnet: { linux: 0, network: 0 } 
   });
   const [solved, setSolved] = useState({ 
     basic: 0, 
-    all: { linux: 0, network: 0 }, 
+    all: { linux: 0, network: 0, arduino: 0 }, 
     acadnet: { linux: 0, network: 0 } 
   });
   const [isLoadingData, setIsLoadingData] = useState(true);
@@ -331,7 +331,7 @@ export default function Grile() {
 
       const allLinux = all.filter(q => q.tags && q.tags.includes('LINUX'));
       const allNetwork = all.filter(q => q.tags && q.tags.includes('NETWORK'));
-      const allTIC = all.filter(q => q.tags && q.tags.includes('TIC/ICT'));
+      const allArduino = all.filter(q => q.tags && q.tags.includes('ARDUINO'));
       
       const acadnetLinux = acadnet.filter(q => q.tags && q.tags.includes('LINUX'));
       const acadnetNetwork = acadnet.filter(q => q.tags && q.tags.includes('NETWORK'));
@@ -340,14 +340,14 @@ export default function Grile() {
         basic: basic.length,
         allLinux: allLinux.length,
         allNetwork: allNetwork.length,
-        allTIC: allTIC.length,
+        allArduino: allArduino.length,
         acadnetLinux: acadnetLinux.length,
         acadnetNetwork: acadnetNetwork.length
       });
 
       setStats({
         basic: basic.length,
-        all: { linux: allLinux.length, network: allNetwork.length, tic: allTIC.length },
+        all: { linux: allLinux.length, network: allNetwork.length, arduino: allArduino.length },
         acadnet: { linux: acadnetLinux.length, network: acadnetNetwork.length }
       });
 
@@ -362,7 +362,7 @@ export default function Grile() {
         const basicSolved = basic.filter(q => solvedSet.has(q._id)).length;
         const allLinuxSolved = allLinux.filter(q => solvedSet.has(q._id)).length;
         const allNetworkSolved = allNetwork.filter(q => solvedSet.has(q._id)).length;
-        const allTICSolved = allTIC.filter(q => solvedSet.has(q._id)).length;
+        const allArduinoSolved = allArduino.filter(q => solvedSet.has(q._id)).length;
         const acadnetLinuxSolved = acadnetLinux.filter(q => solvedSet.has(q._id)).length;
         const acadnetNetworkSolved = acadnetNetwork.filter(q => solvedSet.has(q._id)).length;
 
@@ -371,7 +371,7 @@ export default function Grile() {
           all: { 
             linux: allLinuxSolved, 
             network: allNetworkSolved,
-            tic: allTICSolved
+            arduino: allArduinoSolved
           },
           acadnet: { 
             linux: acadnetLinuxSolved, 
@@ -502,16 +502,16 @@ export default function Grile() {
       preSelectedTag: 'NETWORK'
     },
     { 
-      title: 'TIC/ICT Questions', 
-      desc: 'Academic examination topics',
+      title: 'Arduino Questions', 
+      desc: 'Arduino & embedded systems',
       type: 'all',
-      category: 'TIC/ICT',
-      total: stats.all.tic,
-      solved: solved.all.tic,
+      category: 'Arduino',
+      total: stats.all.arduino,
+      solved: solved.all.arduino,
       color: '#8b5cf6',
       icon: <Cpu size={24} />,
       filter: 'all',
-      preSelectedTag: 'TIC/ICT'
+      preSelectedTag: 'ARDUINO'
     },
     { 
       title: 'Basic Commands', 

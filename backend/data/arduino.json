@@ -1,0 +1,1902 @@
+[
+  {
+    "title": "What does digitalWrite(1, LOW) do?",
+    "type": "all",
+    "answers": [
+      "Sets pin 1 to 0V",
+      "Sets pin 1 to 5V",
+      "Reads the voltage of pin 1",
+      "Configures pin 1 as input"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "How many digital pins does an Arduino Uno have?",
+    "type": "all",
+    "answers": [
+      "8",
+      "14",
+      "16",
+      "20"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function sets a pin as input or output?",
+    "type": "all",
+    "answers": [
+      "digitalWrite()",
+      "analogRead()",
+      "pinMode()",
+      "delay()"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the typical operating voltage of an Arduino Uno?",
+    "type": "all",
+    "answers": [
+      "3.3V",
+      "5V",
+      "12V",
+      "9V"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the purpose of a resistor in series with an LED?",
+    "type": "all",
+    "answers": [
+      "Increase current",
+      "Limit current",
+      "Store charge",
+      "Reduce voltage below 1V"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which Arduino function reads analog values?",
+    "type": "all",
+    "answers": [
+      "analogWrite()",
+      "analogRead()",
+      "digitalRead()",
+      "pinMode()"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "If an LED is connected to 5V with a 220Ω resistor, what is the approximate current?",
+    "type": "all",
+    "answers": [
+      "10mA",
+      "22mA",
+      "50mA",
+      "5mA"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which pin type is used for PWM output?",
+    "type": "all",
+    "answers": [
+      "Digital pins marked with ~",
+      "Analog input pins",
+      "Ground pins",
+      "Power pins"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What does analogWrite(pin, 128) do?",
+    "type": "all",
+    "answers": [
+      "Writes a voltage around 2.5V using PWM",
+      "Writes a constant 128V",
+      "Reads the analog value 128",
+      "Configures pin as input"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component can sense temperature?",
+    "type": "all",
+    "answers": [
+      "LED",
+      "Thermistor",
+      "Resistor",
+      "Button"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "How many analog input pins does Arduino Uno have?",
+    "type": "all",
+    "answers": [
+      "6",
+      "8",
+      "4",
+      "10"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which Arduino function pauses code execution?",
+    "type": "all",
+    "answers": [
+      "delay()",
+      "pinMode()",
+      "analogRead()",
+      "digitalWrite()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which pin should be connected to GND?",
+    "type": "all",
+    "answers": [
+      "Digital pins 0-13",
+      "Any GND pin",
+      "Analog input pins",
+      "PWM pins only"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What type of signal does digitalRead() detect?",
+    "type": "all",
+    "answers": [
+      "Analog voltage",
+      "Digital HIGH or LOW",
+      "PWM",
+      "Frequency"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the recommended resistor value for an LED with 5V supply and 20mA current?",
+    "type": "all",
+    "answers": [
+      "100Ω",
+      "220Ω",
+      "1kΩ",
+      "10Ω"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component stores electrical energy temporarily?",
+    "type": "all",
+    "answers": [
+      "Resistor",
+      "Capacitor",
+      "LED",
+      "Button"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which communication protocol can Arduino use to communicate with other devices?",
+    "type": "all",
+    "answers": [
+      "I2C",
+      "SPI",
+      "UART",
+      "All of the above"
+    ],
+    "correctAnswers": [
+      3
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function is used to read digital input?",
+    "type": "all",
+    "answers": [
+      "analogRead()",
+      "digitalRead()",
+      "digitalWrite()",
+      "pinMode()"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What happens if you connect 5V directly to an LED without a resistor?",
+    "type": "all",
+    "answers": [
+      "LED glows normally",
+      "LED is damaged",
+      "Nothing happens",
+      "Voltage drops automatically"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What does the 'for' loop do in Arduino code?",
+    "type": "all",
+    "answers": [
+      "Repeats a block of code a set number of times",
+      "Delays execution",
+      "Reads sensor values",
+      "Writes to a pin once"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which pin type is used to read analog sensors?",
+    "type": "all",
+    "answers": [
+      "Digital pins",
+      "Analog pins",
+      "PWM pins",
+      "Ground pins"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What does the function map(value, fromLow, fromHigh, toLow, toHigh) do?",
+    "type": "all",
+    "answers": [
+      "Converts a value from one range to another",
+      "Reads analog voltage",
+      "Generates PWM signal",
+      "Delays execution"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What type of sensor is a potentiometer?",
+    "type": "all",
+    "answers": [
+      "Digital",
+      "Analog",
+      "PWM",
+      "Thermal"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function turns on or off a digital pin?",
+    "type": "all",
+    "answers": [
+      "digitalWrite()",
+      "digitalRead()",
+      "analogWrite()",
+      "pinMode()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "If an Arduino is powered with 9V, what is the typical voltage on the 5V pin?",
+    "type": "all",
+    "answers": [
+      "9V",
+      "5V",
+      "3.3V",
+      "12V"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which Arduino board has 54 digital pins and 16 analog pins?",
+    "type": "all",
+    "answers": [
+      "Arduino Uno",
+      "Arduino Mega",
+      "Arduino Nano",
+      "Arduino Leonardo"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What does the function pulseIn(pin, HIGH) measure?",
+    "type": "all",
+    "answers": [
+      "Voltage",
+      "Time duration of a HIGH pulse",
+      "Current",
+      "Resistance"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component converts AC to DC for Arduino power supply?",
+    "type": "all",
+    "answers": [
+      "Resistor",
+      "Capacitor",
+      "Diode/Rectifier",
+      "LED"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the resolution of analogRead() on Arduino Uno?",
+    "type": "all",
+    "answers": [
+      "8-bit",
+      "10-bit",
+      "12-bit",
+      "16-bit"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which pin configuration allows you to read a push button state?",
+    "type": "all",
+    "answers": [
+      "pinMode(INPUT)",
+      "pinMode(OUTPUT)",
+      "pinMode(PWM)",
+      "pinMode(ANALOG)"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component can act as a switch in a circuit controlled by Arduino?",
+    "type": "all",
+    "answers": [
+      "LED",
+      "Relay",
+      "Resistor",
+      "Capacitor"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What does analogWrite(pin, 255) do on a PWM pin?",
+    "type": "all",
+    "answers": [
+      "Outputs maximum voltage (5V) PWM",
+      "Outputs 0V",
+      "Configures the pin as input",
+      "Reads analog voltage"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the default state of a digital pin after reset?",
+    "type": "all",
+    "answers": [
+      "INPUT",
+      "OUTPUT",
+      "HIGH",
+      "LOW"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function converts a number into a string in Arduino?",
+    "type": "all",
+    "answers": [
+      "itoa()",
+      "analogRead()",
+      "digitalWrite()",
+      "map()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component is used to produce sound with Arduino?",
+    "type": "all",
+    "answers": [
+      "LED",
+      "Buzzer",
+      "Resistor",
+      "Button"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which library is commonly used for controlling I2C devices?",
+    "type": "all",
+    "answers": [
+      "Wire.h",
+      "SPI.h",
+      "Servo.h",
+      "EEPROM.h"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What voltage does an Arduino Nano operate at?",
+    "type": "all",
+    "answers": [
+      "3.3V",
+      "5V",
+      "12V",
+      "9V"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component is used to measure distance with Arduino?",
+    "type": "all",
+    "answers": [
+      "Ultrasonic sensor",
+      "LED",
+      "Potentiometer",
+      "Resistor"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What does the function digitalRead(pin) return?",
+    "type": "all",
+    "answers": [
+      "Analog voltage",
+      "HIGH or LOW",
+      "PWM signal",
+      "Current in mA"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which Arduino function initializes serial communication?",
+    "type": "all",
+    "answers": [
+      "Serial.begin(baudRate)",
+      "Serial.read()",
+      "Serial.print()",
+      "pinMode()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component is used to smooth voltage in a power supply?",
+    "type": "all",
+    "answers": [
+      "Capacitor",
+      "Resistor",
+      "Diode",
+      "LED"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the main purpose of PWM pins on Arduino?",
+    "type": "all",
+    "answers": [
+      "Read analog sensors",
+      "Generate variable voltage output",
+      "Provide GND",
+      "Act as input only"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which Arduino board is the smallest?",
+    "type": "all",
+    "answers": [
+      "Arduino Uno",
+      "Arduino Mega",
+      "Arduino Nano",
+      "Arduino Leonardo"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What does the function tone(pin, frequency) do?",
+    "type": "all",
+    "answers": [
+      "Generates a PWM signal",
+      "Generates a sound at specified frequency",
+      "Reads analog value",
+      "Delays execution"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component can limit current in a circuit?",
+    "type": "all",
+    "answers": [
+      "LED",
+      "Resistor",
+      "Capacitor",
+      "Buzzer"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the maximum recommended current per I/O pin on Arduino Uno?",
+    "type": "all",
+    "answers": [
+      "10mA",
+      "20mA",
+      "40mA",
+      "100mA"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function is used to measure analog voltage?",
+    "type": "all",
+    "answers": [
+      "digitalRead()",
+      "analogRead()",
+      "digitalWrite()",
+      "analogWrite()"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function writes PWM signal to a pin?",
+    "type": "all",
+    "answers": [
+      "analogWrite()",
+      "digitalWrite()",
+      "analogRead()",
+      "pinMode()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is a common use for a push button in Arduino projects?",
+    "type": "all",
+    "answers": [
+      "Provide input to the program",
+      "Provide output signal",
+      "Generate PWM",
+      "Measure voltage"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component can detect light intensity?",
+    "type": "all",
+    "answers": [
+      "Photoresistor (LDR)",
+      "LED",
+      "Buzzer",
+      "Resistor"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What type of signal does a servo motor accept?",
+    "type": "all",
+    "answers": [
+      "Digital only",
+      "PWM",
+      "Analog only",
+      "AC signal"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which library is used to control servo motors in Arduino?",
+    "type": "all",
+    "answers": [
+      "Wire.h",
+      "Servo.h",
+      "EEPROM.h",
+      "SPI.h"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the function of a transistor in Arduino circuits?",
+    "type": "all",
+    "answers": [
+      "Amplify current or act as switch",
+      "Provide voltage reference",
+      "Store energy",
+      "Generate sound"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component is used to measure rotational speed or position?",
+    "type": "all",
+    "answers": [
+      "Potentiometer",
+      "Encoder",
+      "LED",
+      "Button"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which Arduino function reads multiple bytes from the serial port?",
+    "type": "all",
+    "answers": [
+      "Serial.read()",
+      "Serial.readBytes()",
+      "Serial.print()",
+      "Serial.begin()"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component converts temperature into resistance change?",
+    "type": "all",
+    "answers": [
+      "Thermistor",
+      "Photoresistor",
+      "LED",
+      "Button"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function sets the baud rate for serial communication?",
+    "type": "all",
+    "answers": [
+      "Serial.begin(baudRate)",
+      "Serial.read()",
+      "Serial.write()",
+      "pinMode()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component can be used to detect motion?",
+    "type": "all",
+    "answers": [
+      "PIR sensor",
+      "LED",
+      "Resistor",
+      "Capacitor"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function is used to stop a running tone on a pin?",
+    "type": "all",
+    "answers": [
+      "noTone()",
+      "tone()",
+      "digitalWrite()",
+      "analogWrite()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which Arduino pin type is best for analog output via PWM?",
+    "type": "all",
+    "answers": [
+      "Digital PWM pins (~)",
+      "Analog input pins",
+      "GND pins",
+      "Power pins"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What does an H-bridge allow you to do with a motor?",
+    "type": "all",
+    "answers": [
+      "Control speed only",
+      "Control direction only",
+      "Control speed and direction",
+      "Read motor voltage"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which sensor can measure water level?",
+    "type": "all",
+    "answers": [
+      "Ultrasonic sensor",
+      "Potentiometer",
+      "Thermistor",
+      "Buzzer"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which Arduino function returns the time in milliseconds since the program started?",
+    "type": "all",
+    "answers": [
+      "delay()",
+      "millis()",
+      "micros()",
+      "time()"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the function of a diode in a circuit?",
+    "type": "all",
+    "answers": [
+      "Allow current in one direction only",
+      "Store energy",
+      "Measure resistance",
+      "Amplify current"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component provides visual feedback when current flows?",
+    "type": "all",
+    "answers": [
+      "LED",
+      "Buzzer",
+      "Resistor",
+      "Capacitor"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What does analogReference(DEFAULT) do?",
+    "type": "all",
+    "answers": [
+      "Sets reference voltage to 5V",
+      "Sets reference voltage to 3.3V",
+      "Sets reference voltage to 1.1V",
+      "Turns off analog input"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which pin should be used to supply 3.3V to a component?",
+    "type": "all",
+    "answers": [
+      "GND",
+      "5V",
+      "3.3V",
+      "Digital pin"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component changes resistance based on light intensity?",
+    "type": "all",
+    "answers": [
+      "Photoresistor (LDR)",
+      "Thermistor",
+      "LED",
+      "Button"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function sets the state of a digital pin HIGH or LOW?",
+    "type": "all",
+    "answers": [
+      "digitalRead()",
+      "digitalWrite()",
+      "analogWrite()",
+      "pinMode()"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component stores energy in a magnetic field when current flows?",
+    "type": "all",
+    "answers": [
+      "Capacitor",
+      "Inductor",
+      "Resistor",
+      "LED"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function reads the state of a digital pin?",
+    "type": "all",
+    "answers": [
+      "digitalRead()",
+      "digitalWrite()",
+      "analogRead()",
+      "analogWrite()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the typical voltage drop of a red LED?",
+    "type": "all",
+    "answers": [
+      "0.7V",
+      "1.8–2.2V",
+      "3.3V",
+      "5V"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which Arduino function outputs a value between 0-255 on a PWM pin?",
+    "type": "all",
+    "answers": [
+      "digitalWrite()",
+      "analogWrite()",
+      "analogRead()",
+      "pinMode()"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which sensor detects infrared light?",
+    "type": "all",
+    "answers": [
+      "IR sensor",
+      "Photoresistor",
+      "Thermistor",
+      "Ultrasonic sensor"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the main purpose of the Serial Monitor in Arduino IDE?",
+    "type": "all",
+    "answers": [
+      "Upload code to Arduino",
+      "Display data sent from Arduino",
+      "Generate PWM signals",
+      "Configure pins"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component can measure atmospheric pressure?",
+    "type": "all",
+    "answers": [
+      "BMP280 sensor",
+      "LED",
+      "Thermistor",
+      "Potentiometer"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which pin on Arduino Uno is used for external interrupts?",
+    "type": "all",
+    "answers": [
+      "Pins 2 and 3",
+      "Pins 4 and 5",
+      "Pins 6 and 7",
+      "Pins 8 and 9"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the maximum PWM frequency on Arduino Uno digital pins?",
+    "type": "all",
+    "answers": [
+      "490Hz on most pins",
+      "1kHz on all pins",
+      "50Hz",
+      "10kHz"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which Arduino function converts a string to an integer?",
+    "type": "all",
+    "answers": [
+      "atoi()",
+      "itoa()",
+      "analogRead()",
+      "map()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which sensor can measure gas concentration?",
+    "type": "all",
+    "answers": [
+      "MQ-2 gas sensor",
+      "Photoresistor",
+      "Thermistor",
+      "Ultrasonic sensor"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which Arduino board uses the ATmega32U4 microcontroller?",
+    "type": "all",
+    "answers": [
+      "Arduino Uno",
+      "Arduino Leonardo",
+      "Arduino Mega",
+      "Arduino Nano"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function sends data from Arduino to Serial Monitor?",
+    "type": "all",
+    "answers": [
+      "Serial.read()",
+      "Serial.print()",
+      "Serial.begin()",
+      "analogWrite()"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component stores data even when the power is off?",
+    "type": "all",
+    "answers": [
+      "EEPROM",
+      "RAM",
+      "LED",
+      "Resistor"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function measures time in microseconds since program start?",
+    "type": "all",
+    "answers": [
+      "millis()",
+      "micros()",
+      "delay()",
+      "time()"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the purpose of a pull-up resistor with a button?",
+    "type": "all",
+    "answers": [
+      "Ensure a defined HIGH state when not pressed",
+      "Limit current to LED",
+      "Amplify signal",
+      "Read analog value"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which sensor detects magnetic fields?",
+    "type": "all",
+    "answers": [
+      "Hall effect sensor",
+      "Photoresistor",
+      "Thermistor",
+      "Ultrasonic sensor"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function writes multiple bytes to the serial port?",
+    "type": "all",
+    "answers": [
+      "Serial.print()",
+      "Serial.write()",
+      "Serial.read()",
+      "Serial.begin()"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component protects Arduino from voltage spikes?",
+    "type": "all",
+    "answers": [
+      "Zener diode",
+      "LED",
+      "Resistor",
+      "Buzzer"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which Arduino pin can act as an analog input and a digital output?",
+    "type": "all",
+    "answers": [
+      "Digital pin 0",
+      "Analog pin A0",
+      "Digital pin 13",
+      "Analog pin A5"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What is the function of the EEPROM library?",
+    "type": "all",
+    "answers": [
+      "Control PWM",
+      "Store data permanently",
+      "Read analog sensors",
+      "Generate tones"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which sensor can measure humidity?",
+    "type": "all",
+    "answers": [
+      "DHT11",
+      "Photoresistor",
+      "Thermistor",
+      "Ultrasonic sensor"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component can protect against reverse polarity?",
+    "type": "all",
+    "answers": [
+      "Diode",
+      "Resistor",
+      "LED",
+      "Capacitor"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function is used to convert integer to string in Arduino?",
+    "type": "all",
+    "answers": [
+      "itoa()",
+      "atoi()",
+      "digitalWrite()",
+      "analogRead()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component can detect liquid level?",
+    "type": "all",
+    "answers": [
+      "Float sensor",
+      "LED",
+      "Button",
+      "Resistor"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which Arduino function stops PWM signal on a pin?",
+    "type": "all",
+    "answers": [
+      "digitalWrite()",
+      "analogWrite(pin, 0)",
+      "pinMode()",
+      "analogRead()"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which sensor detects touch or proximity?",
+    "type": "all",
+    "answers": [
+      "Capacitive touch sensor",
+      "Photoresistor",
+      "Thermistor",
+      "Ultrasonic sensor"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which Arduino board can be powered via micro USB and has 14 digital pins?",
+    "type": "all",
+    "answers": [
+      "Arduino Uno",
+      "Arduino Mega",
+      "Arduino Nano",
+      "Arduino Leonardo"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which function is used to read a byte from the serial buffer?",
+    "type": "all",
+    "answers": [
+      "Serial.read()",
+      "Serial.write()",
+      "Serial.print()",
+      "Serial.begin()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "Which component can be used to generate an analog voltage output from digital signals?",
+    "type": "all",
+    "answers": [
+      "DAC (Digital to Analog Converter)",
+      "LED",
+      "Resistor",
+      "Button"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  },
+  {
+    "title": "What does the function noInterrupts() do in Arduino?",
+    "type": "all",
+    "answers": [
+      "Disables all interrupts temporarily",
+      "Enables all interrupts",
+      "Stops the program",
+      "Delays execution"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "multipleCorrect": false,
+    "difficulty": "medium",
+    "points": 5,
+    "tags": [
+      "ARDUINO"
+    ]
+  }
+]

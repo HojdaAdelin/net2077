@@ -40,6 +40,7 @@ const showMenu = () => {
   console.log('6. Roadmaps');
   console.log('7. Shop Items');
   console.log('8. All Categories');
+  console.log('9. Arduino Questions');
   console.log('0. Exit');
   console.log('=====================');
 };
@@ -79,12 +80,15 @@ const seedDatabase = async () => {
     const shopData = JSON.parse(
       readFileSync(join(__dirname, '../data/shop.json'), 'utf-8')
     );
+    const arduinoData = JSON.parse(
+      readFileSync(join(__dirname, '../data/arduino.json'), 'utf-8')
+    );
 
     let continueMenu = true;
     
     while (continueMenu) {
       showMenu();
-      const choice = await askQuestion('Select an option (0-8): ');
+      const choice = await askQuestion('Select an option (0-9): ');
       
       switch (choice.trim()) {
         case '1':
@@ -121,9 +125,14 @@ const seedDatabase = async () => {
           console.log('\n🛍️  Syncing Shop Items...');
           await syncShopItems(shopData);
           break;
+
+        case '9':
+          console.log('\n🤖 Syncing Arduino Questions...');
+          await syncArduinoQuestions(arduinoData);
+          break;
           
         case '8':
-          console.log('\n🔄 Syncing All Categories...');
+          console.log('\n�  Syncing All Categories...');
           console.log('\n📊 Syncing Questions...');
           await syncQuestions(questionsData);
           console.log('\n📚 Syncing Resources...');
@@ -138,6 +147,8 @@ const seedDatabase = async () => {
           await syncRoadmaps(roadmapData);
           console.log('\n🛍️  Syncing Shop Items...');
           await syncShopItems(shopData);
+          console.log('\n🤖 Syncing Arduino Questions...');
+          await syncArduinoQuestions(arduinoData);
           console.log('\n🎉 All categories synced successfully!');
           break;
           
@@ -469,4 +480,45 @@ const syncShopItems = async (shopData) => {
 
   console.log(`   [✔] Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
   console.log(`   🛍️  Total shop items in DB: ${jsonShopItems.size}`);
+};
+
+const syncArduinoQuestions = async (arduinoData) => {
+  const jsonQuestions = new Map();
+  arduinoData.forEach(q => {
+    const uniqueKey = `${q.title}|||${(q.tags || []).sort().join(',')}`;
+    jsonQuestions.set(uniqueKey, q);
+  });
+
+  const existingQuestions = await Question.find({ tags: 'ARDUINO' });
+  const existingMap = new Map();
+  existingQuestions.forEach(q => {
+    const uniqueKey = `${q.title}|||${(q.tags || []).sort().join(',')}`;
+    existingMap.set(uniqueKey, q);
+  });
+
+  let added = 0;
+  let updated = 0;
+  let deleted = 0;
+
+  for (const [uniqueKey, questionData] of jsonQuestions) {
+    if (existingMap.has(uniqueKey)) {
+      const existing = existingMap.get(uniqueKey);
+      await Question.findByIdAndUpdate(existing._id, questionData);
+      updated++;
+    } else {
+      await Question.create(questionData);
+      added++;
+    }
+  }
+
+  for (const [uniqueKey, existingQuestion] of existingMap) {
+    if (!jsonQuestions.has(uniqueKey)) {
+      await Question.findByIdAndDelete(existingQuestion._id);
+      deleted++;
+      console.log(`   🗑️  Deleted: "${existingQuestion.title}" [${existingQuestion.tags?.join(', ')}]`);
+    }
+  }
+
+  console.log(`   [✔] Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
+  console.log(`   🤖 Total Arduino questions in DB: ${jsonQuestions.size}`);
 };
