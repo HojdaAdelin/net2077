@@ -108,7 +108,7 @@ export const markSolved = async (req, res) => {
       
       if (question.tags && question.tags.length > 0) {
         question.tags.forEach(tag => {
-          if (tag === 'LINUX' || tag === 'NETWORK') {
+          if (tag === 'LINUX' || tag === 'NETWORK' || tag === 'ARDUINO') {
             if (!user.solvedByTag) {
               user.solvedByTag = { LINUX: 0, NETWORK: 0 };
             }

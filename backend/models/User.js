@@ -18,7 +18,8 @@ const userSchema = new mongoose.Schema({
   solvedQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
   solvedByTag: {
     LINUX: { type: Number, default: 0 },
-    NETWORK: { type: Number, default: 0 }
+    NETWORK: { type: Number, default: 0 },
+    ARDUINO: {type: Number, default: 0}
   },
   solvedTerminalQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Terminal' }],
   terminalStats: {

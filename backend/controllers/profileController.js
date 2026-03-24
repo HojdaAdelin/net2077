@@ -10,12 +10,13 @@ export const getUserProfile = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const totalQuestionsSolved = user.solvedByTag.LINUX + user.solvedByTag.NETWORK + user.solvedTerminalQuestions.length + user.solvedIS.length;
+    const totalQuestionsSolved = user.solvedByTag.LINUX + user.solvedByTag.NETWORK + user.solvedByTag.ARDUINO + user.solvedTerminalQuestions.length + user.solvedIS.length;
     
     const categoryStats = {
       linux: user.solvedByTag.LINUX || 0,
       network: user.solvedByTag.NETWORK || 0,
       terminal: user.terminalStats.solved || 0,
+      arduino: user.solvedByTag.ARDUINO || 0,
       is: user.isStats?.solved || 0
     };
     
@@ -58,11 +59,12 @@ export const getCurrentUserProfile = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const totalQuestionsSolved = user.solvedByTag.LINUX + user.solvedByTag.NETWORK + user.solvedTerminalQuestions.length + user.solvedIS.length;
+    const totalQuestionsSolved = user.solvedByTag.LINUX + user.solvedByTag.NETWORK + user.solvedByTag.ARDUINO + user.solvedTerminalQuestions.length + user.solvedIS.length;
     
     const categoryStats = {
       linux: user.solvedByTag.LINUX || 0,
       network: user.solvedByTag.NETWORK || 0,
+      arduino: user.solvedByTag.ARDUINO || 0,
       terminal: user.terminalStats.solved || 0,
       is: user.isStats?.solved || 0
     };
