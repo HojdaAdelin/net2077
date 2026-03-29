@@ -1,428 +1,239 @@
 import { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { getStats } from '../services/api';
-import { useLanguage } from '../context/LanguageContext';
 import { AuthContext } from '../context/AuthContext';
-import { Check, X, Terminal, Network, Code, UserPlus, ArrowRight, Flame } from 'lucide-react';
-import { API_URL } from '../config';
+import {
+  ArrowRight, Flame, Terminal, Network, Code,
+  Check, X, UserPlus, BookOpen, Zap, Trophy
+} from 'lucide-react';
 import '../styles/Hero.css';
 
+const TRACKS = [
+  {
+    icon: Terminal,
+    number: '01',
+    title: 'Linux Administration',
+    description: 'Get comfortable with the terminal. Learn how files, permissions and processes actually work — not just the theory.',
+    tags: ['Commands', 'Terminal'],
+    primary: { to: '/grile?filter=linux', label: 'Start Learning' },
+    secondary: { to: '/terminal', label: 'Try Terminal' },
+  },
+  {
+    icon: Network,
+    number: '02',
+    title: 'Network Engineering',
+    description: 'From IP addressing to routing protocols. Understand how data moves across networks and how to secure it.',
+    tags: ['Protocols', 'Security'],
+    primary: { to: '/grile?filter=network', label: 'Start Learning' },
+    secondary: { to: '/grile', label: 'Practice Quiz' },
+  },
+  {
+    icon: Code,
+    number: '03',
+    title: 'Programming & Debug',
+    description: 'Write, test and fix code under pressure. Real problems, real feedback — the kind you get in competitions.',
+    tags: ['C++', 'Debugging'],
+    primary: { to: '/is', label: 'Start Coding' },
+    secondary: { to: '/grile', label: 'View Theory' },
+  },
+];
+
+const EXAMS = [
+  { to: '/exam/acadnet2026local_11_12', meta: 'LOCAL · XI-XII', title: 'AcadNet 2026', info: '50 Questions · Medium' },
+  { to: '/exam/misc_linux', meta: 'MISCELLANEOUS', title: 'Linux', info: '20 Questions · Easy' },
+  { to: '/exam/acadnet2023national_11_12', meta: 'NATIONAL · XI-XII', title: 'AcadNet 2023', info: '50 Questions · Hard' },
+  { to: '/exam/linux_permissions', meta: 'MISCELLANEOUS', title: 'Linux Permissions', info: '20 Questions · Medium' },
+];
+
+const FEATURES_GUEST = [
+  { label: 'Access to all questions', available: true },
+  { label: 'Access to all resources', available: true },
+  { label: 'Track your progress', available: false },
+  { label: 'Exam sessions', available: false },
+  { label: 'Daily challenges', available: false },
+  { label: 'Terminal practice', available: false },
+];
+
+const FEATURES_USER = [
+  { label: 'Access to all questions', available: true },
+  { label: 'Access to all resources', available: true },
+  { label: 'Track your progress', available: true },
+  { label: 'Exam sessions', available: true },
+  { label: 'Daily challenges', available: true },
+  { label: 'Terminal practice', available: true },
+];
+
 export default function Hero() {
-  const [stats, setStats] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
-  const [displayStats, setDisplayStats] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
   const { user } = useContext(AuthContext);
+  const [stats, setStats] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
+  const [display, setDisplay] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
 
   useEffect(() => {
     getStats().then(setStats).catch(() => {});
   }, []);
 
   useEffect(() => {
-    if (stats.totalQuestions === 0 && stats.totalUsers === 0 && stats.totalResources === 0) return;
-
-    const duration = 2000; 
+    if (!stats.totalQuestions && !stats.totalUsers && !stats.totalResources) return;
     const steps = 60;
-    const stepDuration = duration / steps;
-
-    let currentStep = 0;
-
-    const interval = setInterval(() => {
-      currentStep++;
-      const progress = currentStep / steps;
-
-      setDisplayStats({
-        totalQuestions: Math.floor(stats.totalQuestions * progress),
-        totalUsers: Math.floor(stats.totalUsers * progress),
-        totalResources: Math.floor(stats.totalResources * progress)
+    let step = 0;
+    const iv = setInterval(() => {
+      step++;
+      const p = step / steps;
+      setDisplay({
+        totalQuestions: Math.floor(stats.totalQuestions * p),
+        totalUsers: Math.floor(stats.totalUsers * p),
+        totalResources: Math.floor(stats.totalResources * p),
       });
-
-      if (currentStep >= steps) {
-        setDisplayStats(stats);
-        clearInterval(interval);
-      }
-    }, stepDuration);
-
-    return () => clearInterval(interval);
+      if (step >= steps) { setDisplay(stats); clearInterval(iv); }
+    }, 2000 / steps);
+    return () => clearInterval(iv);
   }, [stats]);
 
   return (
-    <div className="hero">
-      <section className="hero-section">
-        <div className="hero-container">
-          <div className="hero-grid">
-            <div className="hero-content">
-              <h1 className="hero-title">Master Applied Informatics</h1>
-              <p className="hero-subtitle">
-                Practice Linux, Networking and Programming through structured challenges, real-time battles and curated learning paths.
-              </p>
-              
-              <div className="hero-cta-group">
-                <Link to="/grile" className="hero-primary-cta">
-                  Start Learning
-                  <ArrowRight size={18} />
-                </Link>
-                <Link to="/learn" className="hero-secondary-cta">
-                  View Roadmaps
-                </Link>
-                  <Link to="/leaderboard/season" className="hero-season-cta">
-                    <Flame size={18} />
-                    Season
-                  </Link>
-              </div>
+    <div className="hero-root">
 
-              <div className="hero-stats-inline">
-                <span className="hero-stat-item">{displayStats.totalQuestions}+ Questions</span>
-                <span className="hero-stat-separator">•</span>
-                <span className="hero-stat-item">{displayStats.totalUsers} Active Learners</span>
-                <span className="hero-stat-separator">•</span>
-                <span className="hero-stat-item">{displayStats.totalResources} Learning Roadmaps</span>
-              </div>
+      {/* ── Hero ── */}
+      <section className="h-hero">
+        <div className="h-container">
+          <div className="h-badge">
+            <Zap size={13} />
+            <span>Applied Informatics Platform</span>
+          </div>
+          <h1 className="h-title">Master Applied<br />Informatics</h1>
+          <p className="h-sub">
+            Linux, networking and programming — practiced through real challenges,
+            timed exams and head-to-head battles.
+          </p>
+          <div className="h-cta">
+            <Link to="/grile" className="h-btn-primary">
+              Start Learning <ArrowRight size={16} />
+            </Link>
+            <Link to="/learn" className="h-btn-secondary">View Roadmaps</Link>
+            <Link to="/leaderboard/season" className="h-btn-season">
+              <Flame size={15} /> Season
+            </Link>
+          </div>
+          <div className="h-stats">
+            <div className="h-stat">
+              <span className="h-stat-num">{display.totalQuestions}+</span>
+              <span className="h-stat-label">Questions</span>
             </div>
-
-            <div className="hero-preview">
-              <div className="hero-preview-card">
-                <div className="preview-header">
-                  <div className="preview-tabs">
-                    <div className="preview-tab active">Quiz</div>
-                    <div className="preview-tab">Terminal</div>
-                  </div>
-                </div>
-                <div className="preview-body">
-                  <div className="preview-question">
-                    <div className="question-badge">Linux</div>
-                    <p className="question-text">Which command displays the current directory?</p>
-                  </div>
-                  <div className="preview-options">
-                    <div className="preview-option">
-                      <div className="option-radio"></div>
-                      <span>ls</span>
-                    </div>
-                    <div className="preview-option correct">
-                      <div className="option-radio checked"></div>
-                      <span>pwd</span>
-                    </div>
-                    <div className="preview-option">
-                      <div className="option-radio"></div>
-                      <span>cd</span>
-                    </div>
-                  </div>
-                  <div className="preview-footer">
-                    <div className="preview-progress">
-                      <div className="progress-dot filled"></div>
-                      <div className="progress-dot filled"></div>
-                      <div className="progress-dot current"></div>
-                      <div className="progress-dot"></div>
-                      <div className="progress-dot"></div>
-                    </div>
-                    <div className="preview-score">+10 XP</div>
-                  </div>
-                </div>
-              </div>
+            <div className="h-stat-divider" />
+            <div className="h-stat">
+              <span className="h-stat-num">{display.totalUsers}</span>
+              <span className="h-stat-label">Learners</span>
+            </div>
+            <div className="h-stat-divider" />
+            <div className="h-stat">
+              <span className="h-stat-num">{display.totalResources}</span>
+              <span className="h-stat-label">Roadmaps</span>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="container">
-        <section className="mls-section">
-          <div className="mls-container">
-            <div className="mls-header">
-              <h2 className="mls-title">Start Your Learning Path</h2>
-              <p className="mls-subtitle">
-                Structured tracks and hands-on environments to master applied informatics.
-              </p>
+      {/* ── Tracks ── */}
+      <section className="h-section">
+        <div className="h-container">
+          <div className="h-section-header">
+            <h2 className="h-section-title">Pick your track</h2>
+            <p className="h-section-sub">Three paths, each with its own depth. Start anywhere.</p>
+          </div>
+
+          <div className="h-tracks">
+            {TRACKS.map((track) => {
+              const Icon = track.icon;
+              return (
+                <div key={track.number} className="h-track-card">
+                  <div className="h-track-top">
+                    <div className="h-track-circle">
+                      <Icon size={22} />
+                    </div>
+                    <span className="h-track-num">{track.number}</span>
+                  </div>
+                  <h3 className="h-track-title">{track.title}</h3>
+                  <p className="h-track-desc">{track.description}</p>
+                  <div className="h-track-tags">
+                    {track.tags.map(t => <span key={t} className="h-tag">{t}</span>)}
+                  </div>
+                  <div className="h-track-actions">
+                    <Link to={track.primary.to} className="h-track-primary">{track.primary.label} <ArrowRight size={14} /></Link>
+                    <Link to={track.secondary.to} className="h-track-secondary">{track.secondary.label}</Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Exams ── */}
+      <section className="h-section h-section-alt">
+        <div className="h-container">
+          <div className="h-section-header h-section-header-row">
+            <div>
+              <h2 className="h-section-title">Competitive Exams</h2>
+              <p className="h-section-sub">Timed simulations based on real competition formats.</p>
+            </div>
+            <Link to="/exam-selection" className="h-view-all">
+              View all <ArrowRight size={14} />
+            </Link>
+          </div>
+
+          <div className="h-exams">
+            {EXAMS.map((exam) => (
+              <Link key={exam.to} to={exam.to} className="h-exam-card">
+                <span className="h-exam-meta">{exam.meta}</span>
+                <h3 className="h-exam-title">{exam.title}</h3>
+                <span className="h-exam-info">{exam.info}</span>
+                <span className="h-exam-arrow"><ArrowRight size={15} /></span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Benefits (guest only) ── */}
+      {!user && (
+        <section className="h-section">
+          <div className="h-container">
+            <div className="h-section-header">
+              <h2 className="h-section-title">Free to start, better with an account</h2>
+              <p className="h-section-sub">You can browse questions without signing up. But you'll want to track where you're going.</p>
             </div>
 
-            <div className="mls-grid">
-              <div className="mls-tracks-column">
-                <div className="mls-track-card">
-                  <div className="mls-track-icon">
-                    <Terminal size={28} />
-                  </div>
-                  <div className="mls-track-content">
-                    <h3 className="mls-track-title">Linux Administration</h3>
-                    <p className="mls-track-description">
-                      Master command line and system administration with hands-on practice
-                    </p>
-                    <div className="mls-track-meta">
-                      <span className="mls-meta-tag">50+ Commands</span>
-                      <span className="mls-meta-tag">Interactive Terminal</span>
-                    </div>
-                    <div className="mls-track-actions">
-                      <Link to="/grile?filter=linux" className="mls-track-primary">
-                        Start Learning
-                      </Link>
-                      <Link to="/terminal" className="mls-track-secondary">
-                        Try Terminal
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mls-track-card">
-                  <div className="mls-track-icon">
-                    <Network size={28} />
-                  </div>
-                  <div className="mls-track-content">
-                    <h3 className="mls-track-title">Network Engineering</h3>
-                    <p className="mls-track-description">
-                      Build and secure modern network infrastructures from basics to advanced
-                    </p>
-                    <div className="mls-track-meta">
-                      <span className="mls-meta-tag">Network Protocols</span>
-                      <span className="mls-meta-tag">Security Concepts</span>
-                    </div>
-                    <div className="mls-track-actions">
-                      <Link to="/grile?filter=network" className="mls-track-primary">
-                        Start Learning
-                      </Link>
-                      <Link to="/grile" className="mls-track-secondary">
-                        Practice Quiz
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mls-track-card">
-                  <div className="mls-track-icon">
-                    <Code size={28} />
-                  </div>
-                  <div className="mls-track-content">
-                    <h3 className="mls-track-title">Programming & Debug</h3>
-                    <p className="mls-track-description">
-                      Develop problem-solving skills and debug real-world coding challenges
-                    </p>
-                    <div className="mls-track-meta">
-                      <span className="mls-meta-tag">C++ Problems</span>
-                      <span className="mls-meta-tag">Real-time Testing</span>
-                    </div>
-                    <div className="mls-track-actions">
-                      <Link to="/is" className="mls-track-primary">
-                        Start Coding
-                      </Link>
-                      <Link to="/grile" className="mls-track-secondary">
-                        View Theory
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+            <div className="h-benefits">
+              <div className="h-benefits-col">
+                <div className="h-benefits-label">Without account</div>
+                <ul className="h-benefits-list">
+                  {FEATURES_GUEST.map(f => (
+                    <li key={f.label} className={`h-benefit-item ${f.available ? 'yes' : 'no'}`}>
+                      {f.available ? <Check size={15} /> : <X size={15} />}
+                      <span>{f.label}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              <div className="mls-tools-column">
-                <h3 className="mls-tools-title">Hands-On Environments</h3>
-                <p className="mls-tools-description">
-                  Real interactive systems for terminal training and debugging challenges.
-                </p>
-
-                <div className="mls-tool-item">
-                  <div className="mls-tool-icon">
-                    <Terminal size={24} />
-                  </div>
-                  <div className="mls-tool-content">
-                    <h4 className="mls-tool-name">Linux Terminal Practice</h4>
-                    <p className="mls-tool-desc">
-                      Practice real Linux commands in an interactive environment
-                    </p>
-                    {user ? (
-                      <Link to="/terminal" className="mls-tool-cta">
-                        Launch Terminal
-                        <ArrowRight size={16} />
-                      </Link>
-                    ) : (
-                      <Link to="/register" className="mls-tool-cta-secondary">
-                        Register to Access
-                      </Link>
-                    )}
-                  </div>
-                </div>
-
-                <div className="mls-tool-item">
-                  <div className="mls-tool-icon">
-                    <Code size={24} />
-                  </div>
-                  <div className="mls-tool-content">
-                    <h4 className="mls-tool-name">IS / Debug Environment</h4>
-                    <p className="mls-tool-desc">
-                      Solve programming challenges and debug code errors
-                    </p>
-                    {user ? (
-                      <Link to="/is" className="mls-tool-cta">
-                        Solve Challenges
-                        <ArrowRight size={16} />
-                      </Link>
-                    ) : (
-                      <Link to="/register" className="mls-tool-cta-secondary">
-                        Register to Access
-                      </Link>
-                    )}
-                  </div>
-                </div>
+              <div className="h-benefits-col h-benefits-col-featured">
+                <div className="h-benefits-label">With account</div>
+                <ul className="h-benefits-list">
+                  {FEATURES_USER.map(f => (
+                    <li key={f.label} className="h-benefit-item yes">
+                      <Check size={15} />
+                      <span>{f.label}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link to="/register" className="h-register-btn">
+                  <UserPlus size={16} /> Create free account
+                </Link>
               </div>
             </div>
           </div>
         </section>
+      )}
 
-        <section className="exams-section">
-          <div className="exams-container">
-            <div className="exams-header">
-              <div className="exams-header-content">
-                <h2 className="exams-title">Competitive Exams & Challenges</h2>
-                <p className="exams-subtitle">
-                  Practice with structured exam simulations and curated competition sets.
-                </p>
-              </div>
-              <Link to="/exam-selection" className="exams-view-all">
-                View All Exams
-                <ArrowRight size={16} />
-              </Link>
-            </div>
-
-            <div className="exams-grid">
-              <Link to="/exam/acadnet2026local_11_12" className="exam-card">
-                <div className="exam-meta">LOCAL PHASE XI-XII</div>
-                <h3 className="exam-title">AcadNet 2026</h3>
-                <div className="exam-info-row">
-                  <span>50 Questions</span>
-                  <span>•</span>
-                  <span>Timed</span>
-                  <span>•</span>
-                  <span>Medium</span>
-                </div>
-                <div className="exam-cta">
-                  Start Exam
-                  <ArrowRight size={16} />
-                </div>
-              </Link>
-
-              <Link to="/exam/misc_linux" className="exam-card">
-                <div className="exam-meta">MISCELLANEOUS</div>
-                <h3 className="exam-title">Linux</h3>
-                <div className="exam-info-row">
-                  <span>20 Questions</span>
-                  <span>•</span>
-                  <span>Timed</span>
-                  <span>•</span>
-                  <span>Easy</span>
-                </div>
-                <div className="exam-cta">
-                  Start Exam
-                  <ArrowRight size={16} />
-                </div>
-              </Link>
-
-              <Link to="/exam/acadnet2023national_11_12" className="exam-card">
-                <div className="exam-meta">NATIONAL PHASE XI-XII</div>
-                <h3 className="exam-title">AcadNet 2023</h3>
-                <div className="exam-info-row">
-                  <span>50 Questions</span>
-                  <span>•</span>
-                  <span>Timed</span>
-                  <span>•</span>
-                  <span>Hard</span>
-                </div>
-                <div className="exam-cta">
-                  Start Exam
-                  <ArrowRight size={16} />
-                </div>
-              </Link>
-
-              <Link to="/exam/linux_permissions" className="exam-card">
-                <div className="exam-meta">MISCELLANEOUS</div>
-                <h3 className="exam-title">Linux Permissions</h3>
-                <div className="exam-info-row">
-                  <span>20 Questions</span>
-                  <span>•</span>
-                  <span>Timed</span>
-                  <span>•</span>
-                  <span>Medium</span>
-                </div>
-                <div className="exam-cta">
-                  Start Exam
-                  <ArrowRight size={16} />
-                </div>
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {!user && (
-          <section className="account-benefits-section">
-            <div className="benefits-container">
-              <div className="benefits-header">
-                <h2 className="benefits-title">Unlock the Full Learning Experience</h2>
-                <p className="benefits-subtitle">
-                  Create an account to track progress, access advanced features and compete in challenges.
-                </p>
-              </div>
-
-              <div className="benefits-comparison">
-                <div className="benefits-column guest-column">
-                  <h3 className="column-title">Guest Access</h3>
-                  <ul className="benefits-feature-list">
-                    <li className="benefit-item available">
-                      <Check size={18} className="benefit-icon" />
-                      <span>Access to all questions</span>
-                    </li>
-                    <li className="benefit-item available">
-                      <Check size={18} className="benefit-icon" />
-                      <span>Access to all resources</span>
-                    </li>
-                    <li className="benefit-item unavailable">
-                      <X size={18} className="benefit-icon" />
-                      <span>Track progress</span>
-                    </li>
-                    <li className="benefit-item unavailable">
-                      <X size={18} className="benefit-icon" />
-                      <span>Exam sessions</span>
-                    </li>
-                    <li className="benefit-item unavailable">
-                      <X size={18} className="benefit-icon" />
-                      <span>Daily challenges</span>
-                    </li>
-                    <li className="benefit-item unavailable">
-                      <X size={18} className="benefit-icon" />
-                      <span>Terminal practice</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="benefits-column user-column">
-                  <h3 className="column-title">Full Access</h3>
-                  <ul className="benefits-feature-list">
-                    <li className="benefit-item available">
-                      <Check size={18} className="benefit-icon" />
-                      <span>Access to all questions</span>
-                    </li>
-                    <li className="benefit-item available">
-                      <Check size={18} className="benefit-icon" />
-                      <span>Access to all resources</span>
-                    </li>
-                    <li className="benefit-item available">
-                      <Check size={18} className="benefit-icon" />
-                      <span>Track progress</span>
-                    </li>
-                    <li className="benefit-item available">
-                      <Check size={18} className="benefit-icon" />
-                      <span>Exam sessions</span>
-                    </li>
-                    <li className="benefit-item available">
-                      <Check size={18} className="benefit-icon" />
-                      <span>Daily challenges</span>
-                    </li>
-                    <li className="benefit-item available">
-                      <Check size={18} className="benefit-icon" />
-                      <span>Terminal practice</span>
-                    </li>
-                  </ul>
-                  <Link to="/register" className="benefits-register-cta">
-                    <UserPlus size={18} />
-                    Create Free Account
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-      </div>
     </div>
   );
 }
