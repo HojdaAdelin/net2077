@@ -188,7 +188,7 @@ const syncQuestions = async (questionsData) => {
     jsonQuestions.set(uniqueKey, q);
   });
 
-  const existingQuestions = await Question.find({});
+  const existingQuestions = await Question.find({ tags: { $ne: 'ARDUINO' } });
   const existingMap = new Map();
   existingQuestions.forEach(q => {
     const uniqueKey = `${q.title}|||${(q.tags || []).sort().join(',')}`;

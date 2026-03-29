@@ -40,7 +40,7 @@ const TRACKS = [
 
 const EXAMS = [
   { to: '/exam/acadnet2026local_11_12', meta: 'LOCAL · XI-XII', title: 'AcadNet 2026', info: '50 Questions · Medium' },
-  { to: '/exam/misc_linux', meta: 'MISCELLANEOUS', title: 'Linux', info: '20 Questions · Easy' },
+  { to: '/exam/acadnet2026county_11_12', meta: 'COUNTY · XI-XII', title: 'AcadNet 2026', info: '50 Questions · Hard' },
   { to: '/exam/acadnet2023national_11_12', meta: 'NATIONAL · XI-XII', title: 'AcadNet 2023', info: '50 Questions · Hard' },
   { to: '/exam/linux_permissions', meta: 'MISCELLANEOUS', title: 'Linux Permissions', info: '20 Questions · Medium' },
 ];
@@ -92,7 +92,6 @@ export default function Hero() {
   return (
     <div className="hero-root">
 
-      {/* ── Hero ── */}
       <section className="h-hero">
         <div className="h-container">
           <div className="h-badge">
@@ -167,7 +166,6 @@ export default function Hero() {
         </div>
       </section>
 
-      {/* ── Exams ── */}
       <section className="h-section h-section-alt">
         <div className="h-container">
           <div className="h-section-header h-section-header-row">
@@ -193,7 +191,6 @@ export default function Hero() {
         </div>
       </section>
 
-      {/* ── Benefits (guest only) ── */}
       {!user && (
         <section className="h-section">
           <div className="h-container">

@@ -208,5 +208,15 @@
     "tag": "LINUX_MISC",
     "year": 2026,
     "phase": "county"
+  },
+  {
+    "id": "acadnet2026county_11_12",
+    "title": "Acadnet 2026 - County Phase XI-XII",
+    "description": "Official county phase examination for Acadnet 2026",
+    "duration": 60,
+    "totalPoints": 100,
+    "tag": "ACADNET_2026_COUNTY_XI_XII",
+    "year": 2026,
+    "phase": "county"
   }
 ]
