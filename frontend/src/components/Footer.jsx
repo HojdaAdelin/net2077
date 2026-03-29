@@ -4,39 +4,44 @@ import '../styles/Footer.css';
 
 export default function Footer() {
   const { t } = useLanguage();
-  
+
   return (
-    <footer className="footer">
-      <div className="container">
-        <div className="footer-content">
-          <div className="footer-brand">
-            <div className="footer-logo">NET2077</div>
-            <p className="footer-description">
-              {t('footer.description')}
-            </p>
+    <footer className="ft-root">
+      <div className="ft-container">
+        <div className="ft-top">
+
+          <div className="ft-brand">
+            <span className="ft-logo">NET2077</span>
+            <p className="ft-desc">{t('footer.description')}</p>
           </div>
 
-          <div className="footer-section">
-            <h3>{t('footer.learn')}</h3>
-            <div className="footer-links">
-              <Link to="/grile">{t('footer.questions')}</Link>
-              <Link to="/learn">{t('footer.resources')}</Link>
-              <Link to="/progress">{t('footer.progress')}</Link>
+          <div className="ft-cols">
+            <div className="ft-col">
+              <span className="ft-col-label">{t('footer.learn')}</span>
+              <Link to="/grile" className="ft-link">{t('footer.questions')}</Link>
+              <Link to="/learn" className="ft-link">{t('footer.resources')}</Link>
+              <Link to="/progress" className="ft-link">{t('footer.progress')}</Link>
+            </div>
+
+            <div className="ft-col">
+              <span className="ft-col-label">{t('footer.links')}</span>
+              <Link to="/updates" className="ft-link">{t('footer.updates')}</Link>
+              <a
+                href="https://github.com/HojdaAdelin/net2077"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ft-link"
+              >
+                GitHub
+              </a>
             </div>
           </div>
 
-          <div className="footer-section">
-            <h3>{t('footer.links')}</h3>
-            <div className="footer-links">
-              <Link to="/updates">{t('footer.updates')}</Link>
-              <a href="https://github.com/HojdaAdelin/net2077" target="_blank" rel="noopener noreferrer">GitHub</a>
-            </div>
-          </div>
         </div>
 
-        <div className="footer-bottom">
-          <p>© 2025-2026 NET2077. {t('footer.rights')}</p>
-          <p>{t('footer.version')} 1.2.0</p>
+        <div className="ft-bottom">
+          <span>© 2025-2026 NET2077. {t('footer.rights')}</span>
+          <span>{t('footer.version')} 1.2.0</span>
         </div>
       </div>
     </footer>
