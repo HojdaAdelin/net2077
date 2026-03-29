@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link, useParams } from 'react-router-dom';
+import LoginRequired from '../components/LoginRequired';  
 import { 
   Users, UserPlus, MessageCircle, ChevronLeft, ChevronRight, Menu, Send, Check, XCircle, 
   User as UserIcon, ArrowLeft, Settings, X as XIcon, Plus, Trash2, MessageSquare,
@@ -63,6 +64,16 @@ export default function Forum() {
   const [loadingItem, setLoadingItem] = useState(false);
   const [editingZone, setEditingZone] = useState(null);
   const [editingItem, setEditingItem] = useState(null);
+
+  if (!user) {
+    return (
+      <LoginRequired 
+        icon={Users}
+        title="Forum Required"
+        description="Please login to view forums and to collaborate with your friends."
+      />
+    );
+  }
 
   useEffect(() => {
     if (user) {
@@ -498,21 +509,6 @@ export default function Forum() {
       setSendingMessage(false);
     }
   };
-
-  if (!user) {
-    return (
-      <div className="forum-page">
-        <div className="forum-auth-notice">
-          <Users size={64} />
-          <h2>Login Required</h2>
-          <p>Please login to access the Forum and connect with friends.</p>
-          <Link to="/login" className="btn btn-primary">
-            Login
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="forum-page">
