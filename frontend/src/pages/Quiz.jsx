@@ -26,6 +26,7 @@ export default function Quiz({ isExam = false }) {
   const [timeSpent, setTimeSpent] = useState(0);
   const [lockedQuestions, setLockedQuestions] = useState({});
   const [showCopied, setShowCopied] = useState(false);
+  const [retryMode, setRetryMode] = useState(false);
 
   const handleShareQuestion = () => {
     const questionId = currentQuestion._id;
@@ -505,6 +506,21 @@ export default function Quiz({ isExam = false }) {
     }
   };
 
+  // Wrong questions = submitted and incorrect, only for non-exam quiz
+  const wrongQuestions = !isExam
+    ? questions.filter(q => submittedAnswers[q._id] === false)
+    : [];
+
+  const handleRetryWrong = () => {
+    if (wrongQuestions.length === 0) return;
+    setRetryMode(true);
+    setQuestions(wrongQuestions);
+    setCurrentIndex(0);
+    setSelectedAnswers({});
+    setSubmittedAnswers({});
+    setShowResults(false);
+  };
+
   const handleAnswerSelect = (questionId, answerIndex, isMultiple) => {
     if (isExam && !examStarted) return;
 
@@ -779,6 +795,21 @@ export default function Quiz({ isExam = false }) {
           >
             {isExam ? 'Submit Exam' : 'Finish Quiz'}
           </button>
+
+          {!isExam && type !== 'daily' && wrongQuestions.length > 0 && (
+            <div className="retry-wrong-section">
+              <div className="retry-wrong-label">
+                <span className="retry-wrong-count">{wrongQuestions.length}</span>
+                wrong {wrongQuestions.length === 1 ? 'answer' : 'answers'}
+              </div>
+              <button
+                className="retry-wrong-btn"
+                onClick={handleRetryWrong}
+              >
+                Retry wrong answers
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="quiz-content">
