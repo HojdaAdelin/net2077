@@ -961,21 +961,34 @@ export default function Quiz({ isExam = false }) {
                 </button>
               </div>
 
-              {submittedAnswers[currentQuestion._id] !== undefined && (
-                <div className={`answer-feedback ${submittedAnswers[currentQuestion._id] ? 'correct' : 'incorrect'}`}>
-                  {submittedAnswers[currentQuestion._id] ? (
-                    <>
-                      <span className="feedback-icon">✓</span>
-                      <span className="feedback-text">Correct! +{currentQuestion.points || 1} points</span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="feedback-icon">✗</span>
-                      <span className="feedback-text">Incorrect. Try the next question!</span>
-                    </>
-                  )}
-                </div>
-              )}
+              {submittedAnswers[currentQuestion._id] !== undefined && (() => {
+                const correctAnswers = currentQuestion.correctAnswers || [currentQuestion.correctIndex];
+                const correctTexts = correctAnswers.map(i => currentQuestion.answers[i]).filter(Boolean).join(', ');
+                const query = encodeURIComponent(`${currentQuestion.title} (${correctTexts})`);
+                const isCorrect = submittedAnswers[currentQuestion._id];
+                return (
+                  <div className="feedback-wrap">
+                    <div className={`answer-feedback ${isCorrect ? 'correct' : 'incorrect'}`}>
+                      {isCorrect ? (
+                        <><span className="feedback-icon">✓</span><span className="feedback-text">Correct! +{currentQuestion.points || 1} points</span></>
+                      ) : (
+                        <><span className="feedback-icon">✗</span><span className="feedback-text">Incorrect. Try the next question!</span></>
+                      )}
+                    </div>
+                    {!isExam && !(type === 'daily') && (
+                      <a
+                        href={`https://www.google.com/search?q=${query}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="explain-answer-btn"
+                      >
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        Explain answer
+                      </a>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           )}
         </div>
