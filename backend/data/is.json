@@ -7,7 +7,13 @@
     "output": "Hello World!",
     "samplecode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Hello world!\"\n    return 0;\n}",
     "officialcode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Hello world!\";\n    return 0;\n}",
-    "language": "cpp"
+    "language": "cpp",
+    "tests": {
+      "t": 1,
+      "cases": [
+        { "input": "", "output": "Hello World!" }
+      ]
+    }
   },
   {
     "title": "Sum of Two Numbers",
@@ -17,7 +23,15 @@
     "output": "8",
     "samplecode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    a, b;\n    cin << a << b;\n    cout << a+b;\n    return 0;\n}",
     "officialcode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    cout << a+b;\n    return 0;\n}",
-    "language": "cpp"
+    "language": "cpp",
+    "tests": {
+      "t": 3,
+      "cases": [
+        { "input": "5 3", "output": "8" },
+        { "input": "0 0", "output": "0" },
+        { "input": "-4 10", "output": "6" }
+      ]
+    }
   },
   {
     "title": "Maximum of Three Numbers",
@@ -27,7 +41,15 @@
     "output": "25",
     "samplecode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a, b, c;\n    cin >> a >> b >> c;\n    cout << max(a, max(b, c);\n    return 0;\n}",
     "officialcode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a, b, c;\n    cin >> a >> b >> c;\n    cout << max(a, max(b, c));\n    return 0;\n}",
-    "language": "cpp"
+    "language": "cpp",
+    "tests": {
+      "t": 3,
+      "cases": [
+        { "input": "10 25 15", "output": "25" },
+        { "input": "1 1 1", "output": "1" },
+        { "input": "-3 -1 -7", "output": "-1" }
+      ]
+    }
   },
   {
     "title": "Fenwick Tree Query",
@@ -37,7 +59,14 @@
     "output": "0 0 2 1 4 ",
     "samplecode": "#include <bits/stdc++.h>\nusing namespace std;\n#define int long long;\nint n;\nint a[100001];\nint fenwick[100001];\n\nint query(int node) {\n    int ans=0;\n    for(int i = node; i > 0; i -= (i & -i)) {\n        ans += fenwick[i];\n    }\n    return ans;\n}\n\nvoid update(int node, int val) {\n    for(int i = node; i <= n; i += (i&-i)) {\n        fenwick[i] += val;\n    }\n}\n\nsigned main() {\n    cin >> n ;\n    for(int i = 1; i <= n; i++) {\n        cin >> a[j];\n    }\n    for(int i = 1; i <= n; i++) {\n        cout << query(a[i]-1) << \" \";\n        update(a[i], 1);\n    }\n    return 0;\n}",
     "officialcode": "#include <bits/stdc++.h>\nusing namespace std;\n#define int long long\nint n;\nint a[100001];\nint fenwick[100001];\n\nint query(int node) {\n    int ans=0;\n    for(int i = node; i > 0; i -= (i & -i)) {\n        ans += fenwick[i];\n    }\n    return ans;\n}\n\nvoid update(int node, int val) {\n    for(int i = node; i <= n; i += (i&-i)) {\n        fenwick[i] += val;\n    }\n}\n\nsigned main() {\n    cin >> n ;\n    for(int i = 1; i <= n; i++) {\n        cin >> a[i];\n    }\n    for(int i = 1; i <= n; i++) {\n        cout << query(a[i]-1) << \" \";\n        update(a[i], 1);\n    }\n    return 0;\n}",
-    "language": "cpp"
+    "language": "cpp",
+    "tests": {
+      "t": 2,
+      "cases": [
+        { "input": "5\n3 1 4 2 5", "output": "0 0 2 1 4" },
+        { "input": "3\n2 1 3", "output": "0 0 2" }
+      ]
+    }
   },
   {
     "title": "Even Numbers Step by 2",
@@ -47,7 +76,13 @@
     "output": "0 2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48 50 52 54 56 58 60 62 64 66 68 70 72 74 76 78 80 82 84 86 88 90 92 94 96 98 100 ",
     "samplecode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int i;\n    for (i = 0; i <= 100; i++) {\n        cout << i << \" \";\n    }\n    return 0;\n}",
     "officialcode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int i;\n    for (i = 0; i <= 100; i++) {\n        cout << i << \" \";\n        i++;\n    }\n    return 0;\n}",
-    "language": "cpp"
+    "language": "cpp",
+    "tests": {
+      "t": 1,
+      "cases": [
+        { "input": "", "output": "0 2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48 50 52 54 56 58 60 62 64 66 68 70 72 74 76 78 80 82 84 86 88 90 92 94 96 98 100" }
+      ]
+    }
   },
   {
     "title": "Print Even Numbers from Array",
@@ -57,6 +92,14 @@
     "output": "2 4 6 ",
     "samplecode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int x[105], n, i;\n    cin >> n;\n    for (i = 1; i <= n; i++) {\n        cin >> x[i];\n    }\n    int j;\n    for (j = n; j <= 1; j++) {\n        if (x[j] % 2 == 0) {\n            cout << x[j] << \" \";\n        }\n    }\n    return 0;\n}",
     "officialcode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int x[105], n, i;\n    cin >> n;\n    for (i = 1; i <= n; i++) {\n        cin >> x[i];\n    }\n    int j;\n    for (j = 1; j <= n; j++) {\n        if (x[j] % 2 == 0) {\n            cout << x[j] << \" \";\n        }\n    }\n    return 0;\n}",
-    "language": "cpp"
+    "language": "cpp",
+    "tests": {
+      "t": 3,
+      "cases": [
+        { "input": "6\n1 2 3 4 5 6", "output": "2 4 6" },
+        { "input": "4\n1 3 5 7", "output": "" },
+        { "input": "3\n2 4 6", "output": "2 4 6" }
+      ]
+    }
   }
 ]

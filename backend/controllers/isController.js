@@ -4,7 +4,7 @@ import { calculateXPWithBoosts } from './shopController.js';
 
 export const getAllISProblems = async (req, res) => {
   try {
-    const problems = await IS.find().select('-officialcode');
+    const problems = await IS.find().select('-officialcode -tests');
     const user = await User.findById(req.userId);
     
     const problemsWithStatus = problems.map(problem => ({
@@ -21,7 +21,7 @@ export const getAllISProblems = async (req, res) => {
 export const getISProblem = async (req, res) => {
   try {
     const { id } = req.params;
-    const problem = await IS.findById(id).select('-officialcode');
+    const problem = await IS.findById(id).select('-officialcode -tests');
     const user = await User.findById(req.userId);
     
     if (!problem) {
@@ -39,10 +39,34 @@ export const getISProblem = async (req, res) => {
   }
 };
 
+export const getISTestInput = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const problem = await IS.findById(id).select('tests');
+    if (!problem) return res.status(404).json({ message: 'Problem not found' });
+
+    const cases = problem.tests?.cases || [];
+    const t = problem.tests?.t || cases.length;
+
+    // Build full input: t on first line, then each case input on its own line
+    const inputLines = cases
+      .filter(c => c.input && c.input.trim() !== '')
+      .map(c => c.input);
+
+    const fullInput = inputLines.length > 0
+      ? `${t}\n${inputLines.join('\n')}`
+      : `${t}`;
+
+    res.json({ input: fullInput, t });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 export const submitISCode = async (req, res) => {
   try {
     const { id } = req.params;
-    const { code } = req.body;
+    const { outputs } = req.body; // array of strings, one per test case
     const user = await User.findById(req.userId);
     const problem = await IS.findById(id);
     
@@ -50,51 +74,34 @@ export const submitISCode = async (req, res) => {
       return res.status(404).json({ message: 'Problem not found' });
     }
 
-    // Normalize code by removing all whitespace and converting to lowercase
-    const normalizeCode = (str) => {
-      return str.replace(/\s+/g, '').toLowerCase();
-    };
+    const cases = problem.tests?.cases || [];
 
-    const normalizedSubmitted = normalizeCode(code);
-    const normalizedOfficial = normalizeCode(problem.officialcode);
+    if (!outputs || outputs.length === 0) {
+      return res.status(400).json({ message: 'No output provided' });
+    }
 
-    const isCorrect = normalizedSubmitted === normalizedOfficial;
+    // Build expected: all outputs concatenated, strip all whitespace
+    const expectedCombined = cases.map(tc => tc.output).join('').replace(/\s+/g, '');
+    // User submits one string with all outputs - strip all whitespace
+    const submittedCombined = (outputs[0] || '').replace(/\s+/g, '');
 
-    if (isCorrect && !user.solvedIS.includes(problem._id)) {
-      // Add problem to solved list
+    const allPassed = submittedCombined === expectedCombined;
+
+    if (allPassed && !user.solvedIS.includes(problem._id)) {
       user.solvedIS.push(problem._id);
       user.isStats.solved += 1;
-      
-      // Calculate XP with active boosts
       const finalXP = await calculateXPWithBoosts(user._id, problem.xp);
-      
-      // Add XP
       user.xp += finalXP;
       user.level = Math.floor(user.xp / 100) + 1;
-      
       await user.save();
-      
-      return res.json({
-        success: true,
-        message: `Correct! +${finalXP} XP`,
-        xpGained: finalXP,
-        newXP: user.xp,
-        newLevel: user.level
-      });
-    } else if (isCorrect && user.solvedIS.includes(problem._id)) {
-      return res.json({
-        success: true,
-        message: 'Already solved!',
-        xpGained: 0
-      });
+      return res.json({ success: true, message: `All tests passed! +${finalXP} XP`, xpGained: finalXP, newXP: user.xp, newLevel: user.level });
+    } else if (allPassed && user.solvedIS.includes(problem._id)) {
+      return res.json({ success: true, message: 'Already solved!', xpGained: 0 });
     } else {
-      return res.json({
-        success: false,
-        message: 'Incorrect solution. Try again!'
-      });
+      return res.json({ success: false, message: 'Incorrect output. Try again!', xpGained: 0 });
     }
   } catch (error) {
-    console.error('Error submitting IS code:', error);
+    console.error('Error submitting IS output:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };

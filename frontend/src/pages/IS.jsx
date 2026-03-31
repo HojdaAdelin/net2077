@@ -1,8 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
 import { API_URL } from '../config';
-import { CheckCircle, Code, Trophy, Play } from 'lucide-react';
+import { CheckCircle, Code, Trophy, Copy, Check, Send, TriangleAlert } from 'lucide-react';
 import LoginRequired from '../components/LoginRequired';
 import '../styles/IS.css';
 
@@ -10,20 +9,20 @@ export default function IS() {
   const { user, updateUser } = useContext(AuthContext);
   const [problems, setProblems] = useState([]);
   const [currentProblem, setCurrentProblem] = useState(null);
-  const [code, setCode] = useState('');
+  const [testInput, setTestInput] = useState(''); // full test input from backend
+  const [outputs, setOutputs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      fetchProblems();
-    }
+    if (user) fetchProblems();
   }, [user]);
 
   if (!user) {
     return (
-      <LoginRequired 
+      <LoginRequired
         icon={Code}
         title="IS/Debug Access Required"
         description="Please login to access programming challenges and debug real-world code problems."
@@ -33,63 +32,76 @@ export default function IS() {
 
   const fetchProblems = async () => {
     try {
-      const response = await fetch(`${API_URL}/is`, {
-        credentials: 'include'
-      });
-      const data = await response.json();
+      const res = await fetch(`${API_URL}/is`, { credentials: 'include' });
+      const data = await res.json();
       setProblems(data);
-      if (data.length > 0) {
-        setCurrentProblem(data[0]);
-        setCode(data[0].samplecode);
-      }
+      if (data.length > 0) selectProblem(data[0]);
       setLoading(false);
-    } catch (error) {
-      console.error('Error fetching IS problems:', error);
+    } catch {
       setLoading(false);
     }
   };
 
-  const handleProblemSelect = (problem) => {
+  const selectProblem = async (problem) => {
     setCurrentProblem(problem);
-    setCode(problem.samplecode);
+    setOutputs(['']);
     setResult(null);
+    setCopied(false);
+    setTestInput('');
+    try {
+      const res = await fetch(`${API_URL}/is/${problem._id}/test-input`, { credentials: 'include' });
+      const data = await res.json();
+      setTestInput(data.input || '');
+    } catch {
+      setTestInput('');
+    }
+  };
+
+  const handleProblemSelect = (problem) => selectProblem(problem);
+
+  const handleCopyInput = () => {
+    const text = testInput;
+    const copy = (t) => {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(t).catch(() => fallback(t));
+      } else {
+        fallback(t);
+      }
+    };
+    const fallback = (t) => {
+      const ta = document.createElement('textarea');
+      ta.value = t;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    };
+    copy(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleSubmit = async () => {
-    if (!currentProblem || !code.trim()) return;
-    
+    if (!currentProblem) return;
     setSubmitting(true);
     setResult(null);
-
     try {
-      const response = await fetch(`${API_URL}/is/${currentProblem._id}/submit`, {
+      const res = await fetch(`${API_URL}/is/${currentProblem._id}/submit`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ code })
+        body: JSON.stringify({ outputs }),
       });
-
-      const data = await response.json();
+      const data = await res.json();
       setResult(data);
-
       if (data.success && data.xpGained > 0) {
-        // Update user context
-        updateUser({
-          xp: data.newXP,
-          level: data.newLevel
-        });
-        
-        // Refresh problems to update completion status
+        updateUser({ xp: data.newXP, level: data.newLevel });
         await fetchProblems();
       }
-    } catch (error) {
-      console.error('Error submitting code:', error);
-      setResult({
-        success: false,
-        message: 'Error submitting code. Please try again.'
-      });
+    } catch {
+      setResult({ success: false, message: 'Error submitting. Please try again.' });
     } finally {
       setSubmitting(false);
     }
@@ -108,11 +120,10 @@ export default function IS() {
   return (
     <div className="is-page">
       <div className="is-container">
-        <div className="is-header">
-          <h1>IS/Debug</h1>
-        </div>
+        <div className="is-header"><h1>IS/Debug</h1></div>
 
         <div className="is-content">
+          {/* Sidebar */}
           <div className="is-sidebar">
             <h3>Problems ({problems.length})</h3>
             <div className="is-problems-list">
@@ -128,20 +139,15 @@ export default function IS() {
                     {problem.isCompleted && <CheckCircle size={16} className="is-completed-icon" />}
                   </div>
                   <div className="is-problem-meta">
-                    <span className="is-problem-xp">
-                      <Trophy size={14} />
-                      {problem.xp} XP
-                    </span>
-                    <span className="is-problem-lang">
-                      <Code size={14} />
-                      {problem.language.toUpperCase()}
-                    </span>
+                    <span className="is-problem-xp"><Trophy size={14} />{problem.xp} XP</span>
+                    <span className="is-problem-lang"><Code size={14} />{problem.language.toUpperCase()}</span>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
+          {/* Main */}
           <div className="is-main">
             {currentProblem && (
               <>
@@ -154,7 +160,6 @@ export default function IS() {
                         <p>{currentProblem.description}</p>
                       </div>
                     </div>
-                    
                     <div className="is-problem-right">
                       <div className="is-problem-example">
                         <h3>Example</h3>
@@ -164,12 +169,11 @@ export default function IS() {
                             <code>{currentProblem.input}</code>
                           </div>
                           <div className="is-output-section">
-                            <strong>Output:</strong>
+                            <strong>#1 Test Output:</strong>
                             <code>{currentProblem.output}</code>
                           </div>
                         </div>
                       </div>
-
                       <div className="is-problem-reward">
                         <Trophy size={16} />
                         <span>{currentProblem.xp} XP</span>
@@ -179,43 +183,63 @@ export default function IS() {
                 </div>
 
                 <div className="is-code-section">
+                  {/* Code editor header */}
                   <div className="is-code-header">
                     <h3>Code Editor</h3>
                     <span className="is-language-badge">{currentProblem.language.toUpperCase()}</span>
                   </div>
-                  
+
+                  {/* Warning / instruction */}
                   <div className="is-warning">
-                    ⚠️ Modify only the error in the code and don't change anything else
+                    <TriangleAlert /> Paste the output for the given input
                   </div>
-                  
+
+                  {/* Locked code editor */}
                   <textarea
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
+                    value={currentProblem.samplecode}
+                    readOnly
                     className="is-code-editor"
-                    placeholder="Write your code here..."
-                    disabled={submitting}
                   />
 
-                  <div className="is-submit-section">
+                  {/* Input section with copy button */}
+                  <div className="is-input-copy-section">
+                    <div className="is-input-copy-header">
+                      <span className="is-input-copy-label">Test Cases Input</span>
+                      <button className="is-copy-btn" onClick={handleCopyInput}>
+                        {copied ? <><Check size={14} /> Copied!</> : <><Copy size={14} /> Copy test cases</>}
+                      </button>
+                    </div>
+                    <pre className="is-input-display">{testInput || '(loading...)'}</pre>
+                  </div>
+
+                  {/* Output input */}
+                  <div className="is-output-submit-row">
+                    <textarea
+                      className="is-output-input"
+                      placeholder="Paste the output result here..."
+                      value={outputs[0] || ''}
+                      onChange={e => setOutputs([e.target.value])}
+                      disabled={submitting}
+                      rows={3}
+                    />
                     <button
-                      onClick={handleSubmit}
-                      disabled={submitting || !code.trim()}
                       className="is-submit-btn"
+                      onClick={handleSubmit}
+                      disabled={submitting || !outputs[0]?.trim()}
                     >
-                      <Play size={16} />
-                      {submitting ? 'Submitting...' : 'Submit Solution'}
+                      <Send size={16} />
+                      {submitting ? 'Checking...' : 'Submit Result'}
                     </button>
                   </div>
 
+                  {/* Result */}
                   {result && (
                     <div className={`is-result ${result.success ? 'success' : 'error'}`}>
                       <div className="is-result-message">
                         {result.success ? '✅' : '❌'} {result.message}
                       </div>
                       {result.xpGained > 0 && (
-                        <div className="is-result-xp">
-                          +{result.xpGained} XP earned!
-                        </div>
+                        <div className="is-result-xp">+{result.xpGained} XP earned!</div>
                       )}
                     </div>
                   )}
