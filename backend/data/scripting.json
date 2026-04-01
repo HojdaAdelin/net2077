@@ -1,0 +1,92 @@
+[
+  {
+    "title": "Check if a number is even or odd",
+    "description": "Write a Bash script that reads a number from stdin and prints 'even' if the number is even, or 'odd' if it is odd.",
+    "xp": 20,
+    "script": "#!/bin/bash\nread n\nif (( n % 2 == 0 )); then\n  echo \"even\"\nelse\n  echo \"odd\"\nfi",
+    "answers": [
+      "if (( n % 2 == 0 )); then echo \"even\"; else echo \"odd\"; fi",
+      "if [ $((n % 2)) -eq 0 ]; then echo \"even\"; else echo \"odd\"; fi",
+      "echo $(( n % 2 == 0 ? \"even\" : \"odd\" ))",
+      "if (( n % 3 == 0 )); then echo \"even\"; else echo \"odd\"; fi",
+      "echo \"even\"",
+      "echo \"odd\"",
+      "if [ $n -eq 0 ]; then echo \"even\"; fi",
+      "while read n; do echo $n; done"
+    ],
+    "correctAnswers": [0, 1],
+    "hint": "Use the modulo operator % to check divisibility by 2."
+  },
+  {
+    "title": "What does this script output?",
+    "description": "Given the Bash script below, select ALL lines that will be printed to stdout when it is executed.",
+    "xp": 30,
+    "script": "#!/bin/bash\nfor i in 1 2 3 4 5; do\n  if (( i % 2 == 0 )); then\n    echo \"even: $i\"\n  fi\ndone",
+    "answers": [
+      "even: 1",
+      "even: 2",
+      "even: 3",
+      "even: 4",
+      "even: 5",
+      "odd: 2",
+      "odd: 4",
+      "even: 6"
+    ],
+    "correctAnswers": [1, 3],
+    "hint": "The script only prints numbers where i % 2 == 0. Which values of i satisfy that?"
+  },
+  {
+    "title": "Variable scope and arithmetic",
+    "description": "What is the final output of this script? Select the correct printed lines in order.",
+    "xp": 40,
+    "script": "#!/bin/bash\nx=10\ny=3\necho $(( x / y ))\necho $(( x % y ))\necho $(( x * y ))",
+    "answers": [
+      "3",
+      "3.33",
+      "1",
+      "2",
+      "30",
+      "13",
+      "0",
+      "33"
+    ],
+    "correctAnswers": [0, 2, 4],
+    "hint": "Bash integer division truncates. 10/3=3, 10%3=1, 10*3=30."
+  },
+  {
+    "title": "String operations in Bash",
+    "description": "Select all statements that are TRUE about the script below.",
+    "xp": 45,
+    "script": "#!/bin/bash\nstr=\"Hello, World!\"\necho ${#str}\necho ${str:0:5}\necho ${str,,}\necho ${str^^}",
+    "answers": [
+      "${#str} prints the length of the string",
+      "${str:0:5} prints 'Hello'",
+      "${str,,} converts the string to uppercase",
+      "${str^^} converts the string to uppercase",
+      "${str:0:5} prints 'World'",
+      "${#str} prints 5",
+      "${str,,} converts the string to lowercase",
+      "The script prints 4 lines total"
+    ],
+    "correctAnswers": [0, 1, 3, 6, 7],
+    "hint": "In Bash: ${#var} = length, ${var:offset:len} = substring, ${var,,} = lowercase, ${var^^} = uppercase."
+  },
+  {
+    "title": "What does this function script output?",
+    "description": "Analyze the script carefully and select the exact lines printed to stdout, in the correct order.",
+    "xp": 50,
+    "script": "#!/bin/bash\ngreet() {\n  local name=$1\n  echo \"Hello, $name!\"\n}\n\ngreet \"Alice\"\ngreet \"Bob\"\necho \"Done\"",
+    "answers": [
+      "Hello, Alice!",
+      "Hello, $name!",
+      "Hello, Bob!",
+      "greet Alice",
+      "Done",
+      "Hello, Alice! Hello, Bob!",
+      "Alice",
+      "Bob"
+    ],
+    "correctAnswers": [0, 2, 4],
+    "hint": "The function is called twice with different arguments, then 'Done' is echoed. local variables don't leak outside."
+  }
+]

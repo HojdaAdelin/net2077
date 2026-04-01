@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
   isStats: {
     solved: { type: Number, default: 0 }
   },
+  solvedScripting: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Scripting' }],
+  scriptingStats: {
+    solved: { type: Number, default: 0 }
+  },
   simulations: [{
     examId: String,
     examTitle: String,

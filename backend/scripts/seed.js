@@ -11,6 +11,7 @@ import Terminal from '../models/Terminal.js';
 import IS from '../models/IS.js';
 import Roadmap from '../models/Roadmap.js';
 import ShopItem from '../models/ShopItem.js';
+import Scripting from '../models/Scripting.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -41,6 +42,7 @@ const showMenu = () => {
   console.log('7. Shop Items');
   console.log('8. All Categories');
   console.log('9. Arduino Questions');
+  console.log('10. Scripting Problems');
   console.log('0. Exit');
   console.log('=====================');
 };
@@ -82,6 +84,10 @@ const seedDatabase = async () => {
     );
     const arduinoData = JSON.parse(
       readFileSync(join(__dirname, '../data/arduino.json'), 'utf-8')
+    );
+
+    const scriptingData = JSON.parse(
+      readFileSync(join(__dirname, '../data/scripting.json'), 'utf-8')
     );
 
     let continueMenu = true;
@@ -130,6 +136,11 @@ const seedDatabase = async () => {
           console.log('\n🤖 Syncing Arduino Questions...');
           await syncArduinoQuestions(arduinoData);
           break;
+
+        case '10':
+          console.log('\n📜 Syncing Scripting Problems...');
+          await syncScriptingProblems(scriptingData);
+          break;
           
         case '8':
           console.log('\n�  Syncing All Categories...');
@@ -149,6 +160,8 @@ const seedDatabase = async () => {
           await syncShopItems(shopData);
           console.log('\n🤖 Syncing Arduino Questions...');
           await syncArduinoQuestions(arduinoData);
+          console.log('\n📜 Syncing Scripting Problems...');
+          await syncScriptingProblems(scriptingData);
           console.log('\n🎉 All categories synced successfully!');
           break;
           
@@ -158,7 +171,7 @@ const seedDatabase = async () => {
           break;
           
         default:
-          console.log('\n❌ Invalid option. Please select 0-8.');
+          console.log('\n❌ Invalid option. Please select 0-10.');
           continue;
       }
       
@@ -521,4 +534,43 @@ const syncArduinoQuestions = async (arduinoData) => {
 
   console.log(`   [✔] Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
   console.log(`   🤖 Total Arduino questions in DB: ${jsonQuestions.size}`);
+};
+
+const syncScriptingProblems = async (scriptingData) => {
+  const jsonProblems = new Map();
+  scriptingData.forEach(p => {
+    jsonProblems.set(p.title, p);
+  });
+
+  const existingProblems = await Scripting.find({});
+  const existingMap = new Map();
+  existingProblems.forEach(p => {
+    existingMap.set(p.title, p);
+  });
+
+  let added = 0;
+  let updated = 0;
+  let deleted = 0;
+
+  for (const [title, problemData] of jsonProblems) {
+    if (existingMap.has(title)) {
+      const existing = existingMap.get(title);
+      await Scripting.findByIdAndUpdate(existing._id, problemData);
+      updated++;
+    } else {
+      await Scripting.create(problemData);
+      added++;
+    }
+  }
+
+  for (const [title, existingProblem] of existingMap) {
+    if (!jsonProblems.has(title)) {
+      await Scripting.findByIdAndDelete(existingProblem._id);
+      deleted++;
+      console.log(`   [-]  Deleted: "${title}"`);
+    }
+  }
+
+  console.log(`   [✔] Added: ${added} | Updated: ${updated} | Deleted: ${deleted}`);
+  console.log(`   📜 Total scripting problems in DB: ${jsonProblems.size}`);
 };

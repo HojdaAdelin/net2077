@@ -985,3 +985,26 @@ r Dialog */
 [data-theme="dark"] .navbar-dialog {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
 }
+/* Scripts NEW badge in practice dropdown */
+.practice-dropdown-item--scripts .practice-item-icon {
+  color: var(--text-secondary);
+}
+
+.practice-item-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.practice-new-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  background: var(--accent-primary);
+  border: 1px solid var(--accent-primary);
+  color: #fff;
+}

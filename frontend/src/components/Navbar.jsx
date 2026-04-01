@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
 import { useInbox } from '../context/InboxContext';
-import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap } from 'lucide-react';
+import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap, FileTerminal } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
 import SupportButton from './SupportButton';
@@ -245,6 +245,23 @@ export default function Navbar() {
                   <div className="practice-item-content">
                     <div className="practice-item-title">Terminal</div>
                     <div className="practice-item-desc">Practice terminal commands</div>
+                  </div>
+                </Link>
+                <Link 
+                  to="/scripts" 
+                  className="practice-dropdown-item practice-dropdown-item--scripts"
+                  onClick={() => {
+                    closeMobileMenu();
+                    setPracticeDropdownOpen(false);
+                  }}
+                >
+                  <FileTerminal size={18} className="practice-item-icon" />
+                  <div className="practice-item-content">
+                    <div className="practice-item-title">
+                      Scripts
+                      <span className="practice-new-badge">NEW</span>
+                    </div>
+                    <div className="practice-item-desc">Learn scripting</div>
                   </div>
                 </Link>
               </div>
