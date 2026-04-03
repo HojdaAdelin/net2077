@@ -84,10 +84,11 @@ function renderParagraph(content) {
   );
 }
 
-function QuestionItem({ item, lessonId, solvedQuestions, onSolve }) {
+function QuestionItem({ item, lessonId, solvedQuestions, onSolve, onXP }) {
   const [answer, setAnswer] = useState('');
   const [feedback, setFeedback] = useState(null); // null | 'correct' | 'wrong'
   const [loading, setLoading] = useState(false);
+  const [xpEarned, setXpEarned] = useState(0);
   const solved = solvedQuestions.includes(String(item._id));
 
   const handleSubmit = async () => {
@@ -96,7 +97,13 @@ function QuestionItem({ item, lessonId, solvedQuestions, onSolve }) {
     try {
       const res = await api.checkAnswer(lessonId, item._id, answer);
       setFeedback(res.correct ? 'correct' : 'wrong');
-      if (res.correct) onSolve(item._id);
+      if (res.correct) {
+        onSolve(item._id);
+        if (res.xpGained > 0) {
+          setXpEarned(res.xpGained);
+          onXP({ xp: res.newXP, level: res.newLevel });
+        }
+      }
     } finally {
       setLoading(false);
     }
@@ -104,10 +111,16 @@ function QuestionItem({ item, lessonId, solvedQuestions, onSolve }) {
 
   return (
     <div className={`lv-question ${solved ? 'lv-question-solved' : ''}`}>
-      <p className="lv-question-text">{item.question}</p>
+      <div className="lv-question-header">
+        <p className="lv-question-text">{item.question}</p>
+        {item.xp > 0 && (
+          <span className="lv-question-xp-badge">{item.xp} XP</span>
+        )}
+      </div>
       {solved ? (
         <div className="lv-feedback lv-feedback-correct">
           <CheckCircle size={16} /> Already solved
+          {xpEarned > 0 && <span className="lv-xp-earned">+{xpEarned} XP</span>}
         </div>
       ) : (
         <>
@@ -127,7 +140,7 @@ function QuestionItem({ item, lessonId, solvedQuestions, onSolve }) {
           {feedback && (
             <div className={`lv-feedback lv-feedback-${feedback}`}>
               {feedback === 'correct'
-                ? <><CheckCircle size={15} /> Correct!</>
+                ? <><CheckCircle size={15} /> Correct!{xpEarned > 0 && <span className="lv-xp-earned">+{xpEarned} XP</span>}</>
                 : <><XCircle size={15} /> Not quite, try again.</>}
             </div>
           )}
@@ -137,7 +150,7 @@ function QuestionItem({ item, lessonId, solvedQuestions, onSolve }) {
   );
 }
 
-function ViewItem({ item, lessonId, solvedQuestions, onSolve }) {
+function ViewItem({ item, lessonId, solvedQuestions, onSolve, onXP }) {
   switch (item.type) {
     case 'header1': return <h2 className="lv-h1">{item.content}</h2>;
     case 'header2': return <h3 className="lv-h2">{item.content}</h3>;
@@ -164,7 +177,7 @@ function ViewItem({ item, lessonId, solvedQuestions, onSolve }) {
         </div>
       );
     case 'question':
-      return <QuestionItem item={item} lessonId={lessonId} solvedQuestions={solvedQuestions} onSolve={onSolve} />;
+      return <QuestionItem item={item} lessonId={lessonId} solvedQuestions={solvedQuestions} onSolve={onSolve} onXP={onXP} />;
     case 'link':
       return (
         <a className="lv-link" href={item.url} target="_blank" rel="noopener noreferrer">
@@ -212,6 +225,14 @@ function EditorItem({ item, onChange, onDelete, onMoveUp, onMoveDown, isFirst, i
           <>
             <input className="le-input" placeholder="Question (visible to user)" value={item.question} onChange={e => onChange({ ...item, question: e.target.value })} />
             <input className="le-input le-input-answer" placeholder="Correct answer (hidden from users)" value={item.answer} onChange={e => onChange({ ...item, answer: e.target.value })} />
+            <input
+              className="le-input le-input-xp"
+              type="number"
+              min="0"
+              placeholder="XP reward (e.g. 10)"
+              value={item.xp || ''}
+              onChange={e => onChange({ ...item, xp: Number(e.target.value) || 0 })}
+            />
           </>
         )}
         {item.type === 'link' && (
@@ -231,7 +252,7 @@ function EditorItem({ item, onChange, onDelete, onMoveUp, onMoveDown, isFirst, i
 // ── Main component ────────────────────────────────────────────────────────────
 export default function LessonView() {
   const { lessonId } = useParams();
-  const { user } = useContext(AuthContext);
+  const { user, updateUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const isRoot = user?.role === 'root';
 
@@ -323,6 +344,10 @@ export default function LessonView() {
 
   const handleSolve = (itemId) => {
     setSolvedQuestions(prev => [...prev, String(itemId)]);
+  };
+
+  const handleXP = ({ xp, level }) => {
+    if (xp !== undefined) updateUser({ xp, level });
   };
 
   const totalQ = items.filter(i => i.type === 'question').length;
@@ -429,6 +454,7 @@ export default function LessonView() {
                 lessonId={lessonId}
                 solvedQuestions={solvedQuestions}
                 onSolve={handleSolve}
+                onXP={handleXP}
               />
             ))}
           </div>

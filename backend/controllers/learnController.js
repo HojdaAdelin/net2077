@@ -2,6 +2,9 @@ import Roadmap from '../models/Roadmap.js';
 import Chapter from '../models/Chapter.js';
 import Lesson from '../models/Lesson.js';
 import LessonProgress from '../models/LessonProgress.js';
+import User from '../models/User.js';
+import { calculateXPWithBoosts } from './shopController.js';
+import { trackCompetitiveXP } from './competitiveController.js';
 
 // ── Chapters ──────────────────────────────────────────────────────────────────
 
@@ -124,7 +127,12 @@ export const updateLesson = async (req, res) => {
     if (!lesson) return res.status(404).json({ message: 'Lesson not found' });
     if (title !== undefined) lesson.title = title;
     if (order !== undefined) lesson.order = order;
-    if (items !== undefined) lesson.items = items;
+    if (items !== undefined) {
+      lesson.items = items.map(item => ({
+        ...item,
+        xp: Number(item.xp) || 0,
+      }));
+    }
     await lesson.save();
     res.json(lesson);
   } catch (error) {
@@ -158,6 +166,9 @@ export const checkAnswer = async (req, res) => {
 
     const correct = item.answer.trim().toLowerCase() === answer.trim().toLowerCase();
 
+    let xpGained = 0;
+    let newXP, newLevel;
+
     if (correct) {
       let progress = await LessonProgress.findOne({ userId: req.userId, lessonId });
       if (!progress) {
@@ -169,13 +180,27 @@ export const checkAnswer = async (req, res) => {
           solvedQuestions: [],
         });
       }
-      if (!progress.solvedQuestions.map(String).includes(String(itemId))) {
+      const alreadySolved = progress.solvedQuestions.map(String).includes(String(itemId));
+      if (!alreadySolved) {
         progress.solvedQuestions.push(itemId);
         await progress.save();
+
+        // Award XP only on first solve
+        const itemXP = Number(item.xp) || 0;
+        if (itemXP > 0) {
+          const user = await User.findById(req.userId);
+          xpGained = await calculateXPWithBoosts(req.userId, itemXP);
+          user.xp += xpGained;
+          user.level = Math.floor(user.xp / 100) + 1;
+          await trackCompetitiveXP(req.userId, xpGained);
+          await user.save();
+          newXP = user.xp;
+          newLevel = user.level;
+        }
       }
     }
 
-    res.json({ correct });
+    res.json({ correct, xpGained, newXP, newLevel });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

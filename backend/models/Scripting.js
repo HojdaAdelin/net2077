@@ -4,9 +4,9 @@ const scriptingSchema = new mongoose.Schema({
   title: { type: String, required: true, unique: true },
   description: { type: String, required: true },
   xp: { type: Number, required: true },
-  script: { type: String, required: true },       // bash script shown as code
-  answers: [{ type: String, required: true }],    // array of answer options
-  correctAnswers: [{ type: Number, required: true }], // indices of correct answers
+  script: { type: String, required: true },       
+  answers: [{ type: String, required: true }],    
+  correctAnswers: [{ type: Number, required: true }], 
   hint: { type: String, default: '' }
 }, { timestamps: true });
 

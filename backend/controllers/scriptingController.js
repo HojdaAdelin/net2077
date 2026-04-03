@@ -42,7 +42,7 @@ export const getProblem = async (req, res) => {
 export const submitAnswer = async (req, res) => {
   try {
     const { id } = req.params;
-    const { selectedAnswers } = req.body; // array of indices
+    const { selectedAnswers } = req.body; 
 
     const problem = await Scripting.findById(id);
     if (!problem) return res.status(404).json({ message: 'Problem not found' });

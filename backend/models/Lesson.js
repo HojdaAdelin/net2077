@@ -7,13 +7,10 @@ const itemSchema = new mongoose.Schema({
     required: true,
   },
   order: { type: Number, required: true, default: 0 },
-  // header1, header2, paragraph, note, obs, tip
   content: { type: String, default: '' },
-  // paragraph formatting flags stored as markdown-like in content
-  // question
   question: { type: String, default: '' },
-  answer: { type: String, default: '' }, // correct answer (checked backend-side)
-  // link
+  answer: { type: String, default: '' }, 
+  xp: { type: Number, default: 0 },      
   label: { type: String, default: '' },
   url: { type: String, default: '' },
 }, { _id: true });
