@@ -12,17 +12,17 @@ const TRACKS = [
   {
     icon: Terminal,
     number: '01',
-    title: 'Linux Administration',
-    description: 'Get comfortable with the terminal. Learn how files, permissions and processes actually work — not just the theory.',
-    tags: ['Commands', 'Terminal'],
+    title: 'Linux & Terminal',
+    description: 'Learn to navigate the terminal with confidence. Files, permissions, processes, scripting, the stuff you actually use.',
+    tags: ['Commands', 'Scripting'],
     primary: { to: '/grile?filter=linux', label: 'Start Learning' },
     secondary: { to: '/terminal', label: 'Try Terminal' },
   },
   {
     icon: Network,
     number: '02',
-    title: 'Network Engineering',
-    description: 'From IP addressing to routing protocols. Understand how data moves across networks and how to secure it.',
+    title: 'Networking',
+    description: 'Understand how the internet works under the hood. IP, routing, protocols and why your packets end up where they do.',
     tags: ['Protocols', 'Security'],
     primary: { to: '/grile?filter=network', label: 'Start Learning' },
     secondary: { to: '/grile', label: 'Practice Quiz' },
@@ -31,7 +31,7 @@ const TRACKS = [
     icon: Code,
     number: '03',
     title: 'Programming & Debug',
-    description: 'Write, test and fix code under pressure. Real problems, real feedback — the kind you get in competitions.',
+    description: 'Write, test and fix code under pressure. Real problems, real feedback, the kind you get in competitions.',
     tags: ['C++', 'Debugging'],
     primary: { to: '/is', label: 'Start Coding' },
     secondary: { to: '/grile', label: 'View Theory' },
@@ -100,8 +100,8 @@ export default function Hero() {
           </div>
           <h1 className="h-title">Master Applied<br />Informatics</h1>
           <p className="h-sub">
-            Linux, networking and programming — practiced through real challenges,
-            timed exams and head-to-head battles.
+            Linux, networking and programming, practiced through real challenges,
+            real tests and head-to-head battles.
           </p>
           <div className="h-cta">
             <Link to="/grile" className="h-btn-primary">
