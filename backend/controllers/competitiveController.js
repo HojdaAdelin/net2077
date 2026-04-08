@@ -28,18 +28,36 @@ const getCurrentPeriodStart = () => {
 export const initializeCompetitiveSystem = async () => {
   try {
     const activePeriod = await CompetitivePeriod.findOne({ isActive: true });
-    
-    if (!activePeriod) {
+    if (activePeriod) return; // already running
+
+    // Check if any period exists at all (e.g. inactive leftover)
+    const anyPeriod = await CompetitivePeriod.findOne().sort({ periodNumber: -1 });
+
+    if (anyPeriod) {
+      // There's an inactive period — just reactivate / create next one
       const periodStart = getCurrentPeriodStart();
       const periodEnd = getNextResetTime();
-      
+      const nextNumber = anyPeriod.periodNumber + 1;
+
+      const newPeriod = new CompetitivePeriod({
+        periodNumber: nextNumber,
+        startDate: periodStart,
+        endDate: periodEnd,
+        isActive: true
+      });
+      await newPeriod.save();
+      console.log(`[Competitive] Resumed with period #${nextNumber}`);
+    } else {
+      // Truly first time — no periods at all
+      const periodStart = getCurrentPeriodStart();
+      const periodEnd = getNextResetTime();
+
       const newPeriod = new CompetitivePeriod({
         periodNumber: 1,
         startDate: periodStart,
         endDate: periodEnd,
         isActive: true
       });
-      
       await newPeriod.save();
       console.log('[Competitive] Initialized first period');
     }
