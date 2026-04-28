@@ -151,7 +151,13 @@ export default function Navbar() {
     <>
     <nav className="navbar">
       <div className="container nav-content">
-        <Link to="/" className="logo" onClick={closeMobileMenu}>NET2077</Link>
+        <Link to="/" className="logo" onClick={closeMobileMenu}>
+          <img
+            src={theme === 'dark' ? '/logo-main.png' : '/logo.png'}
+            alt="NET2077"
+            className="logo-img"
+          />
+        </Link>
         
         <button className="mobile-menu-btn" onClick={toggleMobileMenu}>
           <span className="menu-icon"></span>

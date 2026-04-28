@@ -22,6 +22,14 @@
   color: var(--text-primary);
   text-decoration: none;
   letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-img {
+  height: 32px;
+  width: auto;
+  display: block;
 }
 
 .nav-links {

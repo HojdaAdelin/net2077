@@ -2055,7 +2055,7 @@
     "title": "How do you declare a pointer to an integer in C++?",
     "type": "all",
     "answers": [
-      "int p;",
+      "int *p;",
       "int &p;",
       "int p;",
       "pointer int p;"
