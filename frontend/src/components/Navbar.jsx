@@ -9,6 +9,7 @@ import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
 import SupportButton from './SupportButton';
+import BuildNoteIndicator from './BuildNoteIndicator';
 import { API_URL } from '../config';
 import '../styles/Navbar.css';
 
@@ -419,6 +420,7 @@ export default function Navbar() {
                     onMessageClick={handleMessageClick}
                   />
                 </div>
+                <BuildNoteIndicator />
                 <StreakIndicator streak={user.streak} />
               </>
             ) : (

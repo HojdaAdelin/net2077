@@ -24,6 +24,7 @@ import competitiveRoutes from './routes/competitiveRoutes.js';
 import shopRoutes from './routes/shopRoutes.js';
 import learnRoutes from './routes/learnRoutes.js';
 import scriptingRoutes from './routes/scriptingRoutes.js';
+import buildNoteRoutes from './routes/buildNoteRoutes.js';
 import ArenaMatch from './models/ArenaMatch.js';
 import { initializeCompetitiveSystem, checkAndResetPeriod } from './controllers/competitiveController.js';
 
@@ -111,6 +112,7 @@ app.use('/api/competitive', competitiveRoutes);
 app.use('/api/shop', shopRoutes);
 app.use('/api/learn', learnRoutes);
 app.use('/api/scripting', scriptingRoutes);
+app.use('/api/buildnote', buildNoteRoutes);
 
 function startArenaCleanupJob() {
   setInterval(async () => {

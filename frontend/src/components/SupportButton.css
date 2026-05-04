@@ -628,3 +628,161 @@
 
 .support-reply-send:hover { opacity: 0.85; }
 .support-reply-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Update Note Panel ── */
+.update-note-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 24px 24px;
+}
+
+.update-note-active {
+  border: 1px solid #3b82f6;
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: rgba(59, 130, 246, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.update-note-active-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+.update-note-live-dot {
+  width: 7px;
+  height: 7px;
+  background: #3b82f6;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.update-note-active-time {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.update-note-active-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.update-note-active-list li {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding-left: 12px;
+  position: relative;
+}
+
+.update-note-active-list li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: #3b82f6;
+  font-size: 11px;
+}
+
+.update-note-stop-btn {
+  align-self: flex-start;
+  background: none;
+  border: 1px solid #ef4444;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: #ef4444;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-top: 4px;
+}
+.update-note-stop-btn:hover { background: #ef4444; color: #fff; }
+.update-note-stop-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.update-note-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.update-note-form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.update-note-feature-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.update-note-input {
+  flex: 1;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+.update-note-input:focus { outline: none; border-color: #3b82f6; }
+
+.update-note-remove-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.update-note-remove-btn:hover { border-color: #ef4444; color: #ef4444; }
+
+.update-note-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  width: fit-content;
+}
+.update-note-add-btn:hover { border-color: #3b82f6; color: #3b82f6; }
+
+.update-note-set-btn {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+.update-note-set-btn:hover { opacity: 0.85; }
+.update-note-set-btn:disabled { opacity: 0.4; cursor: not-allowed; }

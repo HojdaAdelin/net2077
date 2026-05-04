@@ -1,12 +1,105 @@
 import { useState, useContext, useEffect, useCallback } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { CircleAlert, Lock, X, Trash2, RefreshCw } from 'lucide-react';
+import { CircleAlert, Lock, X, Trash2, RefreshCw, Plus, Megaphone } from 'lucide-react';
 import './SupportButton.css';
 
 const STATUS_LABELS = { open: 'Open', 'in-progress': 'In Progress', closed: 'Closed' };
 const STATUS_COLORS = { open: '#f59e0b', 'in-progress': '#3b82f6', closed: '#10b981' };
 const TYPE_LABELS = { bug: '🐛 Bug', enhancement: '✨ Feature' };
+
+const UpdateNotePanel = () => {
+  const [note, setNote] = useState(null);
+  const [features, setFeatures] = useState([{ title: '' }]);
+  const [saving, setSaving] = useState(false);
+  const [msg, setMsg] = useState('');
+
+  useEffect(() => {
+    fetch(`${API_URL}/buildnote`)
+      .then(r => r.json())
+      .then(d => { setNote(d.note || null); });
+  }, []);
+
+  const addFeature = () => setFeatures(prev => [...prev, { title: '' }]);
+  const removeFeature = (i) => setFeatures(prev => prev.filter((_, idx) => idx !== i));
+  const updateFeature = (i, val) => setFeatures(prev => prev.map((f, idx) => idx === i ? { title: val } : f));
+
+  const handleSet = async () => {
+    const valid = features.filter(f => f.title.trim());
+    if (!valid.length) { setMsg('Add at least one feature.'); return; }
+    setSaving(true); setMsg('');
+    try {
+      const res = await fetch(`${API_URL}/buildnote`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ features: valid })
+      });
+      const data = await res.json();
+      if (res.ok) { setNote(data.note); setFeatures([{ title: '' }]); setMsg('Build note set!'); }
+      else setMsg(data.message || 'Error');
+    } finally { setSaving(false); }
+  };
+
+  const handleStop = async () => {
+    setSaving(true); setMsg('');
+    try {
+      await fetch(`${API_URL}/buildnote`, { method: 'DELETE', credentials: 'include' });
+      setNote(null); setMsg('Build note removed.');
+    } finally { setSaving(false); }
+  };
+
+  return (
+    <div className="update-note-panel">
+      {note && (
+        <div className="update-note-active">
+          <div className="update-note-active-header">
+            <span className="update-note-live-dot" />
+            <span>Active Build Note</span>
+          </div>
+          <div className="update-note-active-time">
+            {new Date(note.createdAt).toLocaleString()}
+          </div>
+          <ul className="update-note-active-list">
+            {note.features.map((f, i) => (
+              <li key={i}>{f.title}</li>
+            ))}
+          </ul>
+          <button className="update-note-stop-btn" onClick={handleStop} disabled={saving}>
+            Stop Note
+          </button>
+        </div>
+      )}
+
+      <div className="update-note-form">
+        <div className="update-note-form-label">New Build Note</div>
+        {features.map((f, i) => (
+          <div key={i} className="update-note-feature-row">
+            <input
+              className="update-note-input"
+              placeholder={`Feature ${i + 1}`}
+              value={f.title}
+              onChange={e => updateFeature(i, e.target.value)}
+              maxLength={80}
+            />
+            {features.length > 1 && (
+              <button className="update-note-remove-btn" onClick={() => removeFeature(i)}>
+                <X size={13} />
+              </button>
+            )}
+          </div>
+        ))}
+        <button className="update-note-add-btn" onClick={addFeature}>
+          <Plus size={13} /> Add feature
+        </button>
+        <button className="update-note-set-btn" onClick={handleSet} disabled={saving}>
+          {saving ? 'Saving...' : 'Set Note'}
+        </button>
+        {msg && <div className={`support-message ${msg.includes('set') || msg.includes('removed') ? 'success' : 'error'}`}>{msg}</div>}
+      </div>
+    </div>
+  );
+};
 
 const AdminPanel = ({ onClose }) => {
   const [requests, setRequests] = useState([]);
@@ -205,8 +298,7 @@ const SupportButton = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [activeTab, setActiveTab] = useState('submit');
-  const [formData, setFormData] = useState({ title: '', description: '', type: 'bug' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({ title: '', description: '', type: 'bug' });  const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState('');
 
   const isRoot = user?.role === 'root';
@@ -315,6 +407,11 @@ const SupportButton = () => {
                     ⚙ Admin
                   </button>
                 )}
+                {isRoot && (
+                  <button className={`support-tab support-tab-admin ${activeTab === 'updatenote' ? 'active' : ''}`} onClick={() => setActiveTab('updatenote')}>
+                    📢 Update Note
+                  </button>
+                )}
               </div>
               <button className="support-close" onClick={() => setIsOpen(false)}>×</button>
             </div>
@@ -355,6 +452,7 @@ const SupportButton = () => {
             )}
 
             {activeTab === 'admin' && isRoot && <AdminPanel onClose={() => setIsOpen(false)} />}
+            {activeTab === 'updatenote' && isRoot && <UpdateNotePanel />}
           </div>
         </div>
       )}
