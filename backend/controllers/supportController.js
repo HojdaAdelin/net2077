@@ -81,3 +81,100 @@ export const getUserSupportRequests = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+export const getAllSupportRequests = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('role');
+    if (!user || user.role !== 'root') {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    const requests = await Support.find({}).sort({ createdAt: -1 });
+    res.json({ requests });
+  } catch (error) {
+    console.error('Get all support requests error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const updateSupportStatus = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('role');
+    if (!user || user.role !== 'root') {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!['open', 'in-progress', 'closed'].includes(status)) {
+      return res.status(400).json({ message: 'Invalid status' });
+    }
+
+    const request = await Support.findByIdAndUpdate(id, { status }, { new: true });
+    if (!request) return res.status(404).json({ message: 'Request not found' });
+
+    res.json({ request });
+  } catch (error) {
+    console.error('Update support status error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const replyToSupportRequest = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('role');
+    if (!user || user.role !== 'root') {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    const { id } = req.params;
+    const { description } = req.body;
+
+    if (!description?.trim()) {
+      return res.status(400).json({ message: 'Description is required' });
+    }
+
+    const request = await Support.findById(id);
+    if (!request) return res.status(404).json({ message: 'Request not found' });
+
+    const InboxMessage = (await import('../models/InboxMessage.js')).default;
+
+    const title = request.type === 'bug'
+      ? `NET2077 Team — Bug Report Response`
+      : `NET2077 Team — Feature Request Response`;
+
+    const inboxMessage = new InboxMessage({
+      recipientId: request.userId,
+      recipientUsername: request.username,
+      sender: 'NET2077 Team',
+      title,
+      description: description.trim()
+    });
+
+    await inboxMessage.save();
+
+    res.json({ message: 'Reply sent successfully' });
+  } catch (error) {
+    console.error('Reply to support request error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const deleteSupportRequest = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('role');
+    if (!user || user.role !== 'root') {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    const { id } = req.params;
+    const request = await Support.findByIdAndDelete(id);
+    if (!request) return res.status(404).json({ message: 'Request not found' });
+
+    res.json({ message: 'Deleted successfully' });
+  } catch (error) {
+    console.error('Delete support request error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
