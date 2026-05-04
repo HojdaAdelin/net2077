@@ -94,10 +94,6 @@ export default function Hero() {
 
       <section className="h-hero">
         <div className="h-container">
-          <div className="h-badge">
-            <Zap size={13} />
-            <span>Applied Informatics Platform</span>
-          </div>
           <h1 className="h-title">Master Applied<br />Informatics</h1>
           <p className="h-sub">
             Linux, networking and programming, practiced through real challenges,
