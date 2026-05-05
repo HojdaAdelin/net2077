@@ -110,6 +110,7 @@ const AdminPanel = ({ onClose }) => {
   const [replyText, setReplyText] = useState('');
   const [replySending, setReplySending] = useState(false);
   const [replyMsg, setReplyMsg] = useState('');
+  const [goldAmount, setGoldAmount] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -173,6 +174,31 @@ const AdminPanel = ({ onClose }) => {
     }
   };
 
+  const handleApplyGold = async () => {
+    const amount = parseInt(goldAmount);
+    if (!amount || amount <= 0) return;
+    try {
+      const res = await fetch(`${API_URL}/support/${selected._id}/gold`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ amount })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        // Append gold note to reply textarea
+        const goldNote = `🪙 ${amount} gold recompensation`;
+        setReplyText(prev => prev ? `${prev}\n${goldNote}` : goldNote);
+        setGoldAmount('');
+        setReplyMsg(`+${amount} gold awarded!`);
+      } else {
+        setReplyMsg(data.message || 'Failed to award gold.');
+      }
+    } catch {
+      setReplyMsg('Network error.');
+    }
+  };
+
   const filtered = filter === 'all' ? requests : requests.filter(r => r.status === filter);
 
   if (selected) {
@@ -213,6 +239,24 @@ const AdminPanel = ({ onClose }) => {
         <div className="support-reply-section">
           <div className="support-reply-title-preview">
             📨 Reply title: <em>{selected.type === 'bug' ? 'NET2077 Team — Bug Report Response' : 'NET2077 Team — Feature Request Response'}</em>
+          </div>
+          <div className="support-gold-row">
+            <input
+              type="number"
+              className="support-gold-input"
+              placeholder="Gold amount"
+              value={goldAmount}
+              min={1}
+              max={10000}
+              onChange={e => setGoldAmount(e.target.value)}
+            />
+            <button
+              className="support-gold-apply-btn"
+              onClick={handleApplyGold}
+              disabled={!goldAmount || parseInt(goldAmount) <= 0}
+            >
+              🪙 Apply
+            </button>
           </div>
           <textarea
             className="support-reply-textarea"

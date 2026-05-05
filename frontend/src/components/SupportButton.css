@@ -786,3 +786,40 @@
 }
 .update-note-set-btn:hover { opacity: 0.85; }
 .update-note-set-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Gold award row ── */
+.support-gold-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.support-gold-input {
+  width: 110px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+.support-gold-input:focus { outline: none; border-color: #eab308; }
+.support-gold-input::-webkit-inner-spin-button,
+.support-gold-input::-webkit-outer-spin-button { opacity: 1; }
+
+.support-gold-apply-btn {
+  background: none;
+  border: 1px solid #eab308;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #eab308;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.support-gold-apply-btn:hover { background: #eab308; color: #000; }
+.support-gold-apply-btn:disabled { opacity: 0.4; cursor: not-allowed; }

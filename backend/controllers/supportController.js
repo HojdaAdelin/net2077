@@ -161,6 +161,37 @@ export const replyToSupportRequest = async (req, res) => {
   }
 };
 
+export const awardGoldToUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('role');
+    if (!user || user.role !== 'root') {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    const { id } = req.params;
+    const { amount } = req.body;
+
+    const parsed = parseInt(amount);
+    if (!parsed || parsed <= 0 || parsed > 10000 || !Number.isInteger(parsed)) {
+      return res.status(400).json({ message: 'Amount must be a positive integer (max 10000)' });
+    }
+
+    const request = await Support.findById(id);
+    if (!request) return res.status(404).json({ message: 'Request not found' });
+
+    const recipient = await User.findById(request.userId);
+    if (!recipient) return res.status(404).json({ message: 'User not found' });
+
+    recipient.gold = (recipient.gold || 0) + parsed;
+    await recipient.save();
+
+    res.json({ message: 'Gold awarded', goldAwarded: parsed, newTotal: recipient.gold });
+  } catch (error) {
+    console.error('Award gold error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 export const deleteSupportRequest = async (req, res) => {
   try {
     const user = await User.findById(req.userId).select('role');
