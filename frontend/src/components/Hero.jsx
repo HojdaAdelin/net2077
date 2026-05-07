@@ -1,12 +1,28 @@
 import { useEffect, useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getStats } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import {
   ArrowRight, Flame, Terminal, Network, Code,
-  Check, X, UserPlus, BookOpen, Zap, Trophy
+  Check, X, UserPlus,
+  ChevronDown, Package, Cpu, HardDrive, Shield, Server, Box
 } from 'lucide-react';
 import '../styles/Hero.css';
+
+const LINUX_CHAPTERS = [
+  { id: 'CHAPTER3',  name: 'Packages',        icon: Package },
+  { id: 'CHAPTER4',  name: 'Processes',        icon: Cpu },
+  { id: 'CHAPTER5',  name: 'Users',            icon: UserPlus },
+  { id: 'CHAPTER6',  name: 'Dev',              icon: Code },
+  { id: 'CHAPTER7',  name: 'CLI',              icon: Terminal },
+  { id: 'CHAPTER8',  name: 'Hardware',         icon: HardDrive },
+  { id: 'CHAPTER9',  name: 'System',           icon: Server },
+  { id: 'CHAPTER10', name: 'System Storage',   icon: HardDrive },
+  { id: 'CHAPTER11', name: 'Network',          icon: Network },
+  { id: 'CHAPTER12', name: 'Security',         icon: Shield },
+  { id: 'CHAPTER14', name: 'VM',               icon: Box },
+  { id: 'CHAPTER15', name: 'Embedded Systems', icon: Cpu },
+];
 
 const TRACKS = [
   {
@@ -15,8 +31,7 @@ const TRACKS = [
     title: 'Linux & Terminal',
     description: 'Learn to navigate the terminal with confidence. Files, permissions, processes, scripting, the stuff you actually use.',
     tags: ['Commands', 'Scripting'],
-    primary: { to: '/grile?filter=linux', label: 'Start Learning' },
-    secondary: { to: '/terminal', label: 'Try Terminal' },
+    hasOverview: true,
   },
   {
     icon: Network,
@@ -24,8 +39,7 @@ const TRACKS = [
     title: 'Networking',
     description: 'Understand how the internet works under the hood. IP, routing, protocols and why your packets end up where they do.',
     tags: ['Protocols', 'Security'],
-    primary: { to: '/grile?filter=network', label: 'Start Learning' },
-    secondary: { to: '/grile', label: 'Practice Quiz' },
+    primary: { to: '/grile?filter=network', label: 'Get Started' },
   },
   {
     icon: Code,
@@ -33,8 +47,7 @@ const TRACKS = [
     title: 'Programming & Debug',
     description: 'Write, test and fix code under pressure. Real problems, real feedback, the kind you get in competitions.',
     tags: ['C++', 'Debugging'],
-    primary: { to: '/is', label: 'Start Coding' },
-    secondary: { to: '/grile', label: 'View Theory' },
+    primary: { to: '/is', label: 'Get Started' },
   },
 ];
 
@@ -65,8 +78,18 @@ const FEATURES_USER = [
 
 export default function Hero() {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [stats, setStats] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
   const [display, setDisplay] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
+  const [linuxOverviewOpen, setLinuxOverviewOpen] = useState(false);
+
+  const handleStartTest = () => {
+    if (!user) {
+      navigate('/linux-start-test?requireAuth=1');
+    } else {
+      navigate('/linux-start-test');
+    }
+  };
 
   useEffect(() => {
     getStats().then(setStats).catch(() => {});
@@ -138,6 +161,7 @@ export default function Hero() {
           <div className="h-tracks">
             {TRACKS.map((track) => {
               const Icon = track.icon;
+              const isLinux = track.hasOverview;
               return (
                 <div key={track.number} className="h-track-card">
                   <div className="h-track-top">
@@ -152,12 +176,60 @@ export default function Hero() {
                     {track.tags.map(t => <span key={t} className="h-tag">{t}</span>)}
                   </div>
                   <div className="h-track-actions">
-                    <Link to={track.primary.to} className="h-track-primary">{track.primary.label} <ArrowRight size={14} /></Link>
-                    <Link to={track.secondary.to} className="h-track-secondary">{track.secondary.label}</Link>
+                    {isLinux ? (
+                      <button
+                        className="h-track-get-started"
+                        onClick={() => setLinuxOverviewOpen(v => !v)}
+                      >
+                        Get Started <ChevronDown size={14} className={`h-track-chevron ${linuxOverviewOpen ? 'open' : ''}`} />
+                      </button>
+                    ) : (
+                      <Link to={track.primary.to} className="h-track-get-started">
+                        Get Started <ArrowRight size={14} />
+                      </Link>
+                    )}
                   </div>
                 </div>
               );
             })}
+          </div>
+
+          <div className={`h-linux-overview ${linuxOverviewOpen ? 'open' : ''}`}>
+            <div className="h-linux-overview-inner">
+              <div className="h-linux-overview-header">
+                <h2 className="h-linux-overview-title">Linux Overview</h2>
+                <p className="h-linux-overview-sub">
+                  Put your Linux knowledge to the test. This assessment covers all core topics from the command line to system internals so you can see exactly where you stand.
+                </p>
+                <div className="h-linux-overview-meta">
+                  <span className="h-linux-meta-pill">12 chapters</span>
+                  <span className="h-linux-meta-pill">5 questions each</span>
+                  <span className="h-linux-meta-pill h-linux-meta-pill--accent">60 questions total</span>
+                </div>
+              </div>
+
+              <div className="h-linux-chapters">
+                {LINUX_CHAPTERS.map((ch, i) => {
+                  const ChIcon = ch.icon;
+                  return (
+                    <div key={ch.id} className="h-linux-chapter-item">
+                      <div className="h-linux-chapter-num">{String(i + 1).padStart(2, '0')}</div>
+                      <div className="h-linux-chapter-icon">
+                        <ChIcon size={15} />
+                      </div>
+                      <span className="h-linux-chapter-name">{ch.name}</span>
+                      <span className="h-linux-chapter-count">5 questions</span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="h-linux-overview-footer">
+                <button className="h-linux-start-btn" onClick={handleStartTest}>
+                  Start Test <ArrowRight size={15} />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

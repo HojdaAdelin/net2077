@@ -33,6 +33,17 @@ const userSchema = new mongoose.Schema({
   scriptingStats: {
     solved: { type: Number, default: 0 }
   },
+  linuxChapterStats: {
+    lastTaken: { type: Date, default: null },
+    chapters: {
+      type: Map,
+      of: new mongoose.Schema({
+        correct: { type: Number, default: 0 },
+        total: { type: Number, default: 0 }
+      }, { _id: false }),
+      default: {}
+    }
+  },
   simulations: [{
     examId: String,
     examTitle: String,

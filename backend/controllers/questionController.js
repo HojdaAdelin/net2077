@@ -311,6 +311,33 @@ export const resetBasicStats = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+export const getLinuxOverviewTest = async (req, res) => {
+  try {
+    const chapters = [
+      'CHAPTER3', 'CHAPTER4', 'CHAPTER5', 'CHAPTER6',
+      'CHAPTER7', 'CHAPTER8', 'CHAPTER9', 'CHAPTER10',
+      'CHAPTER11', 'CHAPTER12', 'CHAPTER14', 'CHAPTER15'
+    ];
+
+    const results = await Promise.all(
+      chapters.map(ch =>
+        Question.aggregate([
+          { $match: { tags: ch } },
+          { $sample: { size: 5 } }
+        ])
+      )
+    );
+
+    const questions = results.flatMap((chQuestions, i) =>
+      chQuestions.map(q => ({ ...q, _chapterTag: chapters[i] }))
+    );
+
+    res.json(questions);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 export const resetLinuxStats = async (req, res) => {
   try {
     const user = await User.findById(req.userId);

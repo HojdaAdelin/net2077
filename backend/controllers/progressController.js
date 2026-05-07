@@ -34,7 +34,13 @@ export const getUserProgress = async (req, res) => {
       simulations: user.simulations,
       xp: user.xp,
       level: user.level,
-      streak: streakInfo
+      streak: streakInfo,
+      linuxChapterStats: user.linuxChapterStats
+        ? {
+            lastTaken: user.linuxChapterStats.lastTaken,
+            chapters: Object.fromEntries(user.linuxChapterStats.chapters || new Map())
+          }
+        : null
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -135,6 +141,30 @@ export const claimLevelRewards = async (req, res) => {
       levelsRewarded: levelsToReward,
       newGoldTotal: user.gold
     });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const saveLinuxChapterStats = async (req, res) => {
+  try {
+    const { chapters } = req.body;
+    if (!chapters || typeof chapters !== 'object') {
+      return res.status(400).json({ message: 'Invalid chapters data' });
+    }
+
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    if (!user.linuxChapterStats) {
+      user.linuxChapterStats = { lastTaken: new Date(), chapters: new Map() };
+    }
+    user.linuxChapterStats.lastTaken = new Date();
+    user.linuxChapterStats.chapters = new Map(Object.entries(chapters));
+    user.markModified('linuxChapterStats');
+    await user.save();
+
+    res.json({ success: true });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

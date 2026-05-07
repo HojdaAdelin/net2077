@@ -33,6 +33,7 @@ import ArenaWaiting from './pages/ArenaWaiting';
 import Shop from './pages/Shop';
 import Scripts from './pages/Scripts';
 import ScriptingProblems from './pages/ScriptingProblems';
+import LinuxStartTest from './pages/LinuxStartTest';
 import './styles/global.css';
 
 export default function App() {
@@ -74,6 +75,7 @@ export default function App() {
                   <Route path="/shop" element={<Shop />} />
                   <Route path="/scripts" element={<Scripts />} />
                   <Route path="/scripting/problems" element={<ScriptingProblems />} />
+                  <Route path="/linux-start-test" element={<LinuxStartTest />} />
                   <Route path="/profile/:username" element={<Profile />} />
                 </Routes>
                 <Footer />

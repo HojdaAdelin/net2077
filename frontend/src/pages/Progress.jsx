@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { getUserProgress, checkPendingRewards, claimLevelRewards } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
-import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp, Gift, X, Coins } from 'lucide-react';
+import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp, Gift, X, Coins, CheckCircle, XCircle } from 'lucide-react';
 import LoginRequired from '../components/LoginRequired';
 import '../styles/Progress.css';
 
@@ -317,6 +317,52 @@ export default function Progress() {
           </div>
         </div>
       </div>
+
+      {progress.linuxChapterStats?.chapters && Object.keys(progress.linuxChapterStats.chapters).length > 0 && (
+        <div className="category-progress-section">
+          <h2>Linux Overview — Chapter Results</h2>
+          {progress.linuxChapterStats.lastTaken && (
+            <p className="linux-chapter-last-taken">
+              Last taken: {new Date(progress.linuxChapterStats.lastTaken).toLocaleDateString()}
+            </p>
+          )}
+          <div className="linux-chapter-list">
+            {Object.entries(progress.linuxChapterStats.chapters)
+              .map(([ch, s]) => ({ ch, ...s }))
+              .sort((a, b) => b.correct - a.correct)
+              .map((row, i) => {
+                const CHAPTER_NAMES = {
+                  CHAPTER3: 'Packages', CHAPTER4: 'Processes', CHAPTER5: 'Users',
+                  CHAPTER6: 'Dev', CHAPTER7: 'CLI', CHAPTER8: 'Hardware',
+                  CHAPTER9: 'System', CHAPTER10: 'System Storage', CHAPTER11: 'Network',
+                  CHAPTER12: 'Security', CHAPTER14: 'VM', CHAPTER15: 'Embedded Systems',
+                };
+                const name = CHAPTER_NAMES[row.ch] || row.ch;
+                const pct = row.total > 0 ? Math.round((row.correct / row.total) * 100) : 0;
+                const isBest = i === 0;
+                return (
+                  <div key={row.ch} className={`linux-chapter-row ${isBest ? 'linux-chapter-row--best' : ''}`}>
+                    <div className="linux-chapter-rank">#{i + 1}</div>
+                    <div className="linux-chapter-info">
+                      <span className="linux-chapter-name">{name}</span>
+                      <div className="linux-chapter-bar-wrap">
+                        <div className="linux-chapter-bar-fill" style={{ width: `${pct}%` }} />
+                      </div>
+                    </div>
+                    <div className="linux-chapter-score">
+                      {row.correct === row.total
+                        ? <CheckCircle size={14} style={{ color: 'var(--success)' }} />
+                        : row.correct === 0
+                          ? <XCircle size={14} style={{ color: 'var(--error)' }} />
+                          : null}
+                      <span>{row.correct}/{row.total}</span>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      )}
 
       {progress.simulations?.length > 0 && (
         <div className="simulations-section">
