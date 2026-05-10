@@ -3,8 +3,9 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import '../styles/Quiz.css';
 import { API_URL as API_BASE } from '../config';
 import { AuthContext } from '../context/AuthContext';
-import { Share2, Check } from 'lucide-react';
+import { Share2, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 const DEFAULT_EXAM_DURATION_MIN = 60;
+const SIDEBAR_PAGE_SIZE = 50;
 const getExamStorageKey = (examId) => `exam_state_${examId}`;
 
 export default function Quiz({ isExam = false }) {
@@ -27,6 +28,7 @@ export default function Quiz({ isExam = false }) {
   const [lockedQuestions, setLockedQuestions] = useState({});
   const [showCopied, setShowCopied] = useState(false);
   const [retryMode, setRetryMode] = useState(false);
+  const [sidebarPage, setSidebarPage] = useState(0);
 
   const handleShareQuestion = () => {
     const questionId = currentQuestion._id;
@@ -547,14 +549,18 @@ export default function Quiz({ isExam = false }) {
   const handleNext = () => {
     if (isExam && !examStarted) return;
     if (currentIndex < questions.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+      const next = currentIndex + 1;
+      setCurrentIndex(next);
+      setSidebarPage(Math.floor(next / SIDEBAR_PAGE_SIZE));
     }
   };
 
   const handlePrevious = () => {
     if (isExam && !examStarted) return;
     if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+      const prev = currentIndex - 1;
+      setCurrentIndex(prev);
+      setSidebarPage(Math.floor(prev / SIDEBAR_PAGE_SIZE));
     }
   };
 
@@ -760,32 +766,65 @@ export default function Quiz({ isExam = false }) {
           </div>
 
           <div className="question-list">
-            {questions.map((q, idx) => {
-              const isAnswered = selectedAnswers[q._id] !== undefined;
-              const isSubmitted = submittedAnswers[q._id] !== undefined;
-              const isCorrect = submittedAnswers[q._id] === true;
-              const isLocked = lockedQuestions[q._id];
-              const disabledNav = isExam && (!examStarted || (isLocked && idx !== currentIndex));
-              
-              let btnClass = 'question-nav-btn';
-              if (idx === currentIndex) btnClass += ' active';
-              if (isSubmitted && isCorrect) btnClass += ' correct';
-              if (isSubmitted && !isCorrect) btnClass += ' incorrect';
-              if (isAnswered && !isSubmitted) btnClass += ' answered';
-              if (disabledNav) btnClass += ' disabled';
-              
-              return (
-                <button
-                  key={q._id}
-                  className={btnClass}
-                  disabled={disabledNav}
-                  onClick={() => !disabledNav && setCurrentIndex(idx)}
-                >
-                  {idx + 1}
-                </button>
-              );
-            })}
+            {questions
+              .slice(sidebarPage * SIDEBAR_PAGE_SIZE, (sidebarPage + 1) * SIDEBAR_PAGE_SIZE)
+              .map((q, pageIdx) => {
+                const idx = sidebarPage * SIDEBAR_PAGE_SIZE + pageIdx;
+                const isAnswered = selectedAnswers[q._id] !== undefined;
+                const isSubmitted = submittedAnswers[q._id] !== undefined;
+                const isCorrect = submittedAnswers[q._id] === true;
+                const isLocked = lockedQuestions[q._id];
+                const disabledNav = isExam && (!examStarted || (isLocked && idx !== currentIndex));
+
+                let btnClass = 'question-nav-btn';
+                if (idx === currentIndex) btnClass += ' active';
+                if (isSubmitted && isCorrect) btnClass += ' correct';
+                if (isSubmitted && !isCorrect) btnClass += ' incorrect';
+                if (isAnswered && !isSubmitted) btnClass += ' answered';
+                if (disabledNav) btnClass += ' disabled';
+
+                return (
+                  <button
+                    key={q._id}
+                    className={btnClass}
+                    disabled={disabledNav}
+                    onClick={() => {
+                      if (!disabledNav) {
+                        setCurrentIndex(idx);
+                        setSidebarPage(Math.floor(idx / SIDEBAR_PAGE_SIZE));
+                      }
+                    }}
+                  >
+                    {idx + 1}
+                  </button>
+                );
+              })}
           </div>
+
+          {questions.length > SIDEBAR_PAGE_SIZE && (
+            <div className="sidebar-pagination">
+              <button
+                className="sidebar-page-btn"
+                onClick={() => setSidebarPage(p => Math.max(0, p - 1))}
+                disabled={sidebarPage === 0}
+                title="Previous page"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <span className="sidebar-page-info">
+                {sidebarPage * SIDEBAR_PAGE_SIZE + 1}–{Math.min((sidebarPage + 1) * SIDEBAR_PAGE_SIZE, questions.length)}
+                <span className="sidebar-page-total"> / {questions.length}</span>
+              </span>
+              <button
+                className="sidebar-page-btn"
+                onClick={() => setSidebarPage(p => Math.min(Math.ceil(questions.length / SIDEBAR_PAGE_SIZE) - 1, p + 1))}
+                disabled={(sidebarPage + 1) * SIDEBAR_PAGE_SIZE >= questions.length}
+                title="Next page"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          )}
 
           <button 
             onClick={handleSubmitAll} 
