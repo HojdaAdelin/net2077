@@ -1,9 +1,9 @@
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import { getUserProgress, getDailyChallengeStatus } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { X, Monitor, Wifi, Cpu, BookOpen, Trophy, FileCheck } from 'lucide-react';
+import { X, Monitor, Wifi, Cpu, BookOpen, Trophy, FileCheck, ArrowRight } from 'lucide-react';
 import '../styles/Grile.css';
 
 function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
@@ -622,7 +622,19 @@ export default function Grile() {
             </button>
           </div>
         </div>
-        
+
+        {activeFilter === 'linux' && (
+          <Link to="/linux-start-test" className="grile-linux-banner">
+            <div className="grile-linux-banner-text">
+              <span className="grile-linux-banner-title">Linux Overview Test</span>
+              <span className="grile-linux-banner-sub">60 questions across all 12 chapters</span>
+            </div>
+            <span className="grile-linux-banner-btn">
+              Take the test <ArrowRight size={14} />
+            </span>
+          </Link>
+        )}
+
         <div className="compact-cards-grid">
           {isLoadingData ? (
             <>

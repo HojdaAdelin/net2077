@@ -53,6 +53,69 @@
   color: var(--accent-primary);
 }
 
+/* ── Linux Overview Banner ── */
+.grile-linux-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 24px;
+  margin-bottom: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+
+.grile-linux-banner:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-secondary);
+  transform: translateY(-1px);
+}
+
+.grile-linux-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.grile-linux-banner-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.grile-linux-banner-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.grile-linux-banner-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (max-width: 540px) {
+  .grile-linux-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .grile-linux-banner-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .compact-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
