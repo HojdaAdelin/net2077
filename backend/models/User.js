@@ -33,6 +33,7 @@ const userSchema = new mongoose.Schema({
   scriptingStats: {
     solved: { type: Number, default: 0 }
   },
+  startedRoadmaps: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Roadmap' }],
   linuxChapterStats: {
     lastTaken: { type: Date, default: null },
     chapters: {

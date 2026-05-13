@@ -9,6 +9,7 @@ const roadmapSchema = new mongoose.Schema({
   lessons: { type: Number, required: true, default: 0 },
   type: { type: String, enum: ['free', 'premium'], default: 'free' },
   visible: { type: Boolean, default: true },
+  startedBy: { type: Number, default: 0 },
 }, { timestamps: true });
 
 export default mongoose.model('Roadmap', roadmapSchema);

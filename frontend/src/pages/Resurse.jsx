@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getRoadmaps, createRoadmap, updateRoadmap, deleteRoadmap } from '../services/api';
+import { getRoadmaps, createRoadmap, updateRoadmap, deleteRoadmap, startRoadmap } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import * as LucideIcons from 'lucide-react';
 import LoginRequired from '../components/LoginRequired';  
-import { Plus, X, Layers, BookOpen, Trash2, BookOpenText, EyeOff, Pencil, PencilLine } from 'lucide-react';
+import { Plus, X, Layers, BookOpen, Trash2, BookOpenText, EyeOff, Pencil, PencilLine, Users } from 'lucide-react';
 import '../styles/Resurse.css';
 
 function RoadmapIcon({ name, size = 32 }) {
@@ -189,10 +189,17 @@ export default function Resurse() {
                     <BookOpen size={14} />
                     {roadmap.lessons} lessons
                   </span>
+                  <span className="learn-meta-item">
+                    <Users size={14} />
+                    {roadmap.startedBy || 0} users
+                  </span>
                 </div>
               </div>
               <div className="learn-card-actions">
-                <button className="btn btn-primary learn-start-btn" onClick={() => navigate(`/learn/roadmap/${roadmap._id}`)}>Start Learning</button>
+                <button className="btn btn-primary learn-start-btn" onClick={async () => {
+                  await startRoadmap(roadmap._id);
+                  navigate(`/learn/roadmap/${roadmap._id}`);
+                }}>Start Learning</button>
                 {isRoot && (
                   <>
                     <button className="learn-edit-btn" title="Edit content (chapters & lessons)" onClick={() => navigate(`/learn/roadmap/${roadmap._id}`)}>

@@ -2,7 +2,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { isRoot } from '../middleware/checkRole.js';
-import { getAllResources, getPredefined, getRoadmaps, createRoadmap, updateRoadmap, deleteRoadmap } from '../controllers/resourceController.js';
+import { getAllResources, getPredefined, getRoadmaps, createRoadmap, updateRoadmap, deleteRoadmap, startRoadmap } from '../controllers/resourceController.js';
 
 // Middleware optional - ataseaza userId daca exista token valid, altfel continua
 const optionalAuth = (req, res, next) => {
@@ -31,5 +31,6 @@ router.get('/roadmaps', optionalAuth, getRoadmaps);
 router.post('/roadmaps', authMiddleware, isRoot, createRoadmap);
 router.put('/roadmaps/:roadmapId', authMiddleware, isRoot, updateRoadmap);
 router.delete('/roadmaps/:roadmapId', authMiddleware, isRoot, deleteRoadmap);
+router.post('/roadmaps/:roadmapId/start', authMiddleware, startRoadmap);
 
 export default router;

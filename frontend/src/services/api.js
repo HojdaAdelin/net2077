@@ -196,6 +196,14 @@ export const checkAnswer = async (lessonId, itemId, answer) => {
   return res.json();
 };
 
+export const startRoadmap = async (roadmapId) => {
+  const res = await fetch(`${API_URL}/resources/roadmaps/${roadmapId}/start`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+  return res.json();
+};
+
 export const getRoadmapProgress = async (roadmapId) => {
   const res = await fetch(`${API_URL}/learn/roadmaps/${roadmapId}/progress`, { credentials: 'include' });
   return res.json();

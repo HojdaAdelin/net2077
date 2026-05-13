@@ -95,6 +95,35 @@ export const updateRoadmap = async (req, res) => {
   }
 };
 
+export const startRoadmap = async (req, res) => {
+  try {
+    const { roadmapId } = req.params;
+    const User = (await import('../models/User.js')).default;
+    const user = await User.findById(req.userId).select('startedRoadmaps');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const alreadyStarted = user.startedRoadmaps?.some(id => id.toString() === roadmapId);
+    if (alreadyStarted) return res.json({ success: true, alreadyStarted: true });
+
+    // Increment counter on roadmap
+    const roadmap = await Roadmap.findByIdAndUpdate(
+      roadmapId,
+      { $inc: { startedBy: 1 } },
+      { new: true }
+    );
+    if (!roadmap) return res.status(404).json({ message: 'Roadmap not found' });
+
+    // Mark on user
+    user.startedRoadmaps = user.startedRoadmaps || [];
+    user.startedRoadmaps.push(roadmapId);
+    await user.save();
+
+    res.json({ success: true, alreadyStarted: false, startedBy: roadmap.startedBy });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 export const deleteRoadmap = async (req, res) => {
   try {
     const { roadmapId } = req.params;
