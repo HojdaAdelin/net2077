@@ -28,8 +28,15 @@ export const getResources = async () => {
   return res.json();
 };
 
-export const getRoadmaps = async (isRoot = false) => {
-  const endpoint = isRoot ? `${API_URL}/resources/roadmaps/root` : `${API_URL}/resources/roadmaps/public`;
+export const getRoadmaps = async (isRoot = false, isLoggedIn = false) => {
+  let endpoint;
+  if (isRoot) {
+    endpoint = `${API_URL}/resources/roadmaps/root`;
+  } else if (isLoggedIn) {
+    endpoint = `${API_URL}/resources/roadmaps/me`;
+  } else {
+    endpoint = `${API_URL}/resources/roadmaps/public`;
+  }
   const res = await fetch(endpoint, { credentials: 'include' });
   return res.json();
 };
@@ -199,6 +206,31 @@ export const checkAnswer = async (lessonId, itemId, answer) => {
 export const startRoadmap = async (roadmapId) => {
   const res = await fetch(`${API_URL}/resources/roadmaps/${roadmapId}/start`, {
     method: 'POST',
+    credentials: 'include',
+  });
+  return res.json();
+};
+
+export const searchUsersForEditor = async (q) => {
+  const res = await fetch(`${API_URL}/resources/roadmaps/search-users?q=${encodeURIComponent(q)}`, {
+    credentials: 'include',
+  });
+  return res.json();
+};
+
+export const addRoadmapEditor = async (roadmapId, userId) => {
+  const res = await fetch(`${API_URL}/resources/roadmaps/${roadmapId}/editors`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ userId }),
+  });
+  return res.json();
+};
+
+export const removeRoadmapEditor = async (roadmapId, userId) => {
+  const res = await fetch(`${API_URL}/resources/roadmaps/${roadmapId}/editors/${userId}`, {
+    method: 'DELETE',
     credentials: 'include',
   });
   return res.json();

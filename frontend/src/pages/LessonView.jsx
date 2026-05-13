@@ -268,6 +268,7 @@ export default function LessonView() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [showAddMenu, setShowAddMenu] = useState(false);
+  const [canEdit, setCanEdit] = useState(false);
   const addMenuRef = useRef(null);
 
   useEffect(() => {
@@ -290,6 +291,17 @@ export default function LessonView() {
       setLesson(ls);
       setItems(ls.items || []);
       setSolvedQuestions(prog.solvedQuestions || []);
+
+      // Determine canEdit: root always yes, otherwise check roadmap editors
+      if (isRoot) {
+        setCanEdit(true);
+      } else if (ls.roadmapId) {
+        const roadmaps = await api.getRoadmaps(false, true);
+        const rm = roadmaps.find(r => r._id === ls.roadmapId);
+        const userId = user?.id || user?._id;
+        const isEditor = rm?.editors?.some(e => (e._id || e).toString() === userId?.toString());
+        setCanEdit(!!isEditor);
+      }
     } finally {
       setLoading(false);
     }
@@ -390,7 +402,7 @@ export default function LessonView() {
               </div>
             )}
           </div>
-          {isRoot && (
+          {canEdit && (
             <div className="lv-header-actions">
               {editMode ? (
                 <>
@@ -444,7 +456,7 @@ export default function LessonView() {
           <div className="lv-content">
             {items.length === 0 && (
               <div className="lv-empty">
-                {isRoot ? 'No content yet. Click "Edit Content" to add items.' : 'No content available yet.'}
+                {canEdit ? 'No content yet. Click "Edit Content" to add items.' : 'No content available yet.'}
               </div>
             )}
             {items.map((item, idx) => (

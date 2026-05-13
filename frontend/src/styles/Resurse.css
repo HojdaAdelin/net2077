@@ -492,3 +492,129 @@
 .learn-toggle-off .learn-toggle-knob {
   left: 3px;
 }
+
+/* ── Editor management ── */
+.learn-editor-search-wrap {
+  position: relative;
+  margin-top: 8px;
+}
+
+.learn-editor-search-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.learn-editor-search-icon {
+  position: absolute;
+  left: 10px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.learn-editor-search-input-wrap input {
+  padding-left: 32px;
+  width: 100%;
+}
+
+.learn-editor-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px var(--shadow);
+  z-index: 50;
+  overflow: hidden;
+}
+
+.learn-editor-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.learn-editor-dropdown-item:hover {
+  background: var(--bg-secondary);
+}
+
+.learn-editor-username {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.learn-editor-role {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 2px 7px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.learn-editor-add-icon {
+  color: var(--accent-primary);
+  flex-shrink: 0;
+}
+
+.learn-editor-searching {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 6px 0 0 0;
+}
+
+.learn-editors-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.learn-editor-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px 5px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.learn-editor-chip-remove {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 0;
+  transition: color 0.15s;
+}
+
+.learn-editor-chip-remove:hover {
+  color: var(--error);
+}
+
+.learn-editor-empty {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 8px 0 0 0;
+}

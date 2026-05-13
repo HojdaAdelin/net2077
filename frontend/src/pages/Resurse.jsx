@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getRoadmaps, createRoadmap, updateRoadmap, deleteRoadmap, startRoadmap } from '../services/api';
+import { getRoadmaps, createRoadmap, updateRoadmap, deleteRoadmap, startRoadmap, searchUsersForEditor, addRoadmapEditor, removeRoadmapEditor } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import * as LucideIcons from 'lucide-react';
 import LoginRequired from '../components/LoginRequired';  
-import { Plus, X, Layers, BookOpen, Trash2, BookOpenText, EyeOff, Pencil, PencilLine, Users } from 'lucide-react';
+import { Plus, X, Layers, BookOpen, Trash2, BookOpenText, EyeOff, Pencil, PencilLine, Users, Search, UserMinus } from 'lucide-react';
 import '../styles/Resurse.css';
 
 function RoadmapIcon({ name, size = 32 }) {
@@ -34,11 +34,17 @@ export default function Resurse() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  // Editor management state
+  const [editorSearch, setEditorSearch] = useState('');
+  const [editorSearchResults, setEditorSearchResults] = useState([]);
+  const [editorSearching, setEditorSearching] = useState(false);
+  const [editors, setEditors] = useState([]); // editors for the roadmap being edited
+
   const isRoot = user?.role === 'root';
   const navigate = useNavigate();
 
   useEffect(() => {
-    getRoadmaps(isRoot)
+    getRoadmaps(isRoot, !!user)
       .then(setRoadmaps)
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -73,6 +79,9 @@ export default function Resurse() {
       type: roadmap.type,
       visible: roadmap.visible,
     });
+    setEditors(roadmap.editors || []);
+    setEditorSearch('');
+    setEditorSearchResults([]);
     setError('');
     setShowModal(true);
   };
@@ -80,6 +89,9 @@ export default function Resurse() {
   const handleClose = () => {
     setShowModal(false);
     setEditingRoadmap(null);
+    setEditors([]);
+    setEditorSearch('');
+    setEditorSearchResults([]);
     setError('');
   };
 
@@ -119,6 +131,39 @@ export default function Resurse() {
       setError('Server error.');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleEditorSearch = async (val) => {
+    setEditorSearch(val);
+    if (val.trim().length < 2) { setEditorSearchResults([]); return; }
+    setEditorSearching(true);
+    try {
+      const data = await searchUsersForEditor(val.trim());
+      // Filter out already-added editors
+      const editorIds = new Set(editors.map(e => e._id));
+      setEditorSearchResults((data.users || []).filter(u => !editorIds.has(u._id)));
+    } catch { setEditorSearchResults([]); }
+    finally { setEditorSearching(false); }
+  };
+
+  const handleAddEditor = async (targetUser) => {
+    if (!editingRoadmap) return;
+    const data = await addRoadmapEditor(editingRoadmap._id, targetUser._id);
+    if (data.success) {
+      setEditors(data.editors);
+      setRoadmaps(prev => prev.map(r => r._id === editingRoadmap._id ? { ...r, editors: data.editors } : r));
+      setEditorSearch('');
+      setEditorSearchResults([]);
+    }
+  };
+
+  const handleRemoveEditor = async (targetUserId) => {
+    if (!editingRoadmap) return;
+    const data = await removeRoadmapEditor(editingRoadmap._id, targetUserId);
+    if (data.success) {
+      setEditors(data.editors);
+      setRoadmaps(prev => prev.map(r => r._id === editingRoadmap._id ? { ...r, editors: data.editors } : r));
     }
   };
 
@@ -276,6 +321,60 @@ export default function Resurse() {
                   <span className="learn-toggle-knob" />
                 </button>
               </div>
+              {editingRoadmap && (
+                <div className="learn-form-row">
+                  <label>Editors <span className="learn-form-hint">(can edit content of this roadmap)</span></label>
+                  <div className="learn-editor-search-wrap">
+                    <div className="learn-editor-search-input-wrap">
+                      <Search size={14} className="learn-editor-search-icon" />
+                      <input
+                        type="text"
+                        placeholder="Search by username..."
+                        value={editorSearch}
+                        onChange={e => handleEditorSearch(e.target.value)}
+                        autoComplete="off"
+                      />
+                    </div>
+                    {editorSearchResults.length > 0 && (
+                      <div className="learn-editor-dropdown">
+                        {editorSearchResults.map(u => (
+                          <button
+                            key={u._id}
+                            type="button"
+                            className="learn-editor-dropdown-item"
+                            onClick={() => handleAddEditor(u)}
+                          >
+                            <span className="learn-editor-username">{u.username}</span>
+                            <span className="learn-editor-role">{u.role}</span>
+                            <Plus size={14} className="learn-editor-add-icon" />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {editorSearching && <p className="learn-editor-searching">Searching…</p>}
+                  </div>
+                  {editors.length > 0 && (
+                    <div className="learn-editors-list">
+                      {editors.map(e => (
+                        <div key={e._id} className="learn-editor-chip">
+                          <span>{e.username}</span>
+                          <button
+                            type="button"
+                            className="learn-editor-chip-remove"
+                            onClick={() => handleRemoveEditor(e._id)}
+                            title="Remove editor"
+                          >
+                            <UserMinus size={13} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {editors.length === 0 && (
+                    <p className="learn-editor-empty">No editors added yet.</p>
+                  )}
+                </div>
+              )}
               {error && <p className="learn-form-error">{error}</p>}
               <div className="learn-modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={handleClose}>Cancel</button>

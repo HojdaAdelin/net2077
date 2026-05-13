@@ -21,20 +21,31 @@ export const getPredefined = async (req, res) => {
 
 export const getRoadmaps = async (req, res) => {
   try {
-    // req.user is set by isRoot middleware (root route)
-    // req.userId is set by optionalAuth (legacy route)
-    let isRoot = false;
+    const User = (await import('../models/User.js')).default;
+
+    let isRootUser = false;
+    let userId = null;
 
     if (req.user?.role === 'root') {
-      isRoot = true;
+      isRootUser = true;
     } else if (req.userId) {
-      const User = (await import('../models/User.js')).default;
+      userId = req.userId;
       const user = await User.findById(req.userId).select('role');
-      isRoot = user?.role === 'root';
+      isRootUser = user?.role === 'root';
     }
 
-    const filter = isRoot ? {} : { visible: true };
-    const roadmaps = await Roadmap.find(filter).sort({ createdAt: -1 });
+    let roadmaps;
+    if (isRootUser) {
+      roadmaps = await Roadmap.find({}).sort({ createdAt: -1 }).populate('editors', 'username');
+    } else if (userId) {
+      // visible OR user is in editors list
+      roadmaps = await Roadmap.find({
+        $or: [{ visible: true }, { editors: userId }]
+      }).sort({ createdAt: -1 }).populate('editors', 'username');
+    } else {
+      roadmaps = await Roadmap.find({ visible: true }).sort({ createdAt: -1 });
+    }
+
     res.json(roadmaps);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -132,6 +143,82 @@ export const deleteRoadmap = async (req, res) => {
       return res.status(404).json({ message: 'Roadmap not found' });
     }
     res.json({ message: 'Roadmap deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const getRoadmapEditors = async (req, res) => {
+  try {
+    const { roadmapId } = req.params;
+    const roadmap = await Roadmap.findById(roadmapId).populate('editors', 'username role');
+    if (!roadmap) return res.status(404).json({ message: 'Roadmap not found' });
+    res.json({ editors: roadmap.editors });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const searchUsersForEditor = async (req, res) => {
+  try {
+    const { q } = req.query;
+    if (!q || q.trim().length < 2) {
+      return res.json({ users: [] });
+    }
+    const User = (await import('../models/User.js')).default;
+    const users = await User.find({
+      username: { $regex: q.trim(), $options: 'i' },
+      role: { $ne: 'root' } // don't show root users — they already have full access
+    })
+      .select('username role')
+      .limit(8);
+    res.json({ users });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const addEditor = async (req, res) => {
+  try {
+    const { roadmapId } = req.params;
+    const { userId } = req.body;
+    if (!userId) return res.status(400).json({ message: 'userId is required' });
+
+    const User = (await import('../models/User.js')).default;
+    const targetUser = await User.findById(userId).select('username role');
+    if (!targetUser) return res.status(404).json({ message: 'User not found' });
+    if (targetUser.role === 'root') {
+      return res.status(400).json({ message: 'Root users already have full access' });
+    }
+
+    const roadmap = await Roadmap.findById(roadmapId);
+    if (!roadmap) return res.status(404).json({ message: 'Roadmap not found' });
+
+    const alreadyEditor = roadmap.editors.some(id => id.toString() === userId);
+    if (alreadyEditor) return res.status(400).json({ message: 'User is already an editor' });
+
+    roadmap.editors.push(userId);
+    await roadmap.save();
+
+    const updated = await Roadmap.findById(roadmapId).populate('editors', 'username role');
+    res.json({ success: true, editors: updated.editors });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const removeEditor = async (req, res) => {
+  try {
+    const { roadmapId, userId } = req.params;
+
+    const roadmap = await Roadmap.findById(roadmapId);
+    if (!roadmap) return res.status(404).json({ message: 'Roadmap not found' });
+
+    roadmap.editors = roadmap.editors.filter(id => id.toString() !== userId);
+    await roadmap.save();
+
+    const updated = await Roadmap.findById(roadmapId).populate('editors', 'username role');
+    res.json({ success: true, editors: updated.editors });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

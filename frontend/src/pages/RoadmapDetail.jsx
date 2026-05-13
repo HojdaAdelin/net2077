@@ -35,10 +35,16 @@ export default function RoadmapDetail() {
 
   const [roadmap, setRoadmap] = useState(null);
   const [chapters, setChapters] = useState([]);
-  const [lessons, setLessons] = useState({}); // chapterId -> []
+  const [lessons, setLessons] = useState({});
   const [expanded, setExpanded] = useState({});
   const [progress, setProgress] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // canEdit = root OR user is in roadmap editors
+  const canEdit = isRoot || (roadmap?.editors?.some(e =>
+    (e._id || e).toString() === user?._id?.toString() ||
+    (e._id || e).toString() === user?.id?.toString()
+  ));
 
   // edit states
   const [newChapterTitle, setNewChapterTitle] = useState('');
@@ -54,7 +60,7 @@ export default function RoadmapDetail() {
   const loadAll = async () => {
     try {
       const [roadmaps, chs, prog] = await Promise.all([
-        api.getRoadmaps(isRoot),
+        api.getRoadmaps(isRoot, true),
         api.getChapters(roadmapId),
         api.getRoadmapProgress(roadmapId),
       ]);
@@ -202,7 +208,7 @@ export default function RoadmapDetail() {
                       <span className="rd-chapter-pct">{chProg.percent}%</span>
                     </div>
                   )}
-                  {isRoot && (
+                  {canEdit && (
                     <div className="rd-chapter-actions" onClick={e => e.stopPropagation()}>
                       <button className="rd-icon-btn" title="Rename" onClick={() => setEditChapter({ _id: ch._id, title: ch.title })}>
                         <Pencil size={14} />
@@ -229,7 +235,7 @@ export default function RoadmapDetail() {
                           <span className="rd-lesson-title">{ls.title}</span>
                           <ChevronRight size={16} className="rd-lesson-arrow" />
                         </button>
-                        {isRoot && (
+                        {canEdit && (
                           <div className="rd-lesson-actions">
                             <button className="rd-icon-btn rd-icon-btn-danger" title="Delete lesson" onClick={() => handleDeleteLesson(ch._id, ls._id)}>
                               <Trash2 size={13} />
@@ -240,7 +246,7 @@ export default function RoadmapDetail() {
                     );
                   })}
 
-                  {isRoot && (
+                  {canEdit && (
                     addingLessonFor === ch._id ? (
                       <div className="rd-add-row">
                         <input
@@ -266,7 +272,7 @@ export default function RoadmapDetail() {
           );
         })}
 
-        {isRoot && (
+        {canEdit && (
           addingChapter ? (
             <div className="rd-add-chapter-row">
               <input
