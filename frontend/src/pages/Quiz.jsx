@@ -12,7 +12,7 @@ export default function Quiz({ isExam = false }) {
   const { type, mode, examId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { updateUser } = useContext(AuthContext);
+  const { user, updateUser } = useContext(AuthContext);
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({}); 
@@ -179,10 +179,43 @@ export default function Quiz({ isExam = false }) {
         }
       })
       .catch(error => console.error('Error saving daily challenge:', error));
+    } else if (mode === 'random' && user) {
+      let score = 0;
+      let totalPoints = 0;
+      
+      questions.forEach((q) => {
+        totalPoints += q.points || 1;
+        const qUserAnswers = selectedAnswers[q._id] || [];
+        const qCorrectAnswers = q.correctAnswers || [q.correctIndex];
+        
+        if (
+          qUserAnswers.length === qCorrectAnswers.length &&
+          qUserAnswers.every(ans => qCorrectAnswers.includes(ans))
+        ) {
+          score += q.points || 1;
+        }
+      });
+
+      fetch(`${API_BASE}/questions/submitRandom50`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ score, totalPoints })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          updateUser({ gold: data.newGold });
+          console.log(data.message);
+        }
+      })
+      .catch(error => console.error('Error saving random50 score:', error));
     }
 
     setShowResults(true);
-  }, [examDurationSeconds, isExam, showResults, timeLeft, mode, type, questions, selectedAnswers]);
+  }, [examDurationSeconds, isExam, showResults, timeLeft, mode, type, questions, selectedAnswers, user, updateUser]);
 
   useEffect(() => {
     if (!isExam || !examStarted || showResults) return;

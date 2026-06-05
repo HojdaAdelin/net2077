@@ -385,3 +385,31 @@ export const resetLinuxStats = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+export const submitRandom50 = async (req, res) => {
+  try {
+    const { score, totalPoints } = req.body;
+    
+    if (typeof score !== 'number' || typeof totalPoints !== 'number') {
+      return res.status(400).json({ message: 'Invalid score data' });
+    }
+    
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    user.xp += score;
+    user.level = Math.floor(user.xp / 100) + 1;
+    await trackCompetitiveXP(user._id, score);
+    
+    await user.save();
+    
+    res.json({ 
+      success: true, 
+      scoreAdded: score,
+      message: `Added ${score} points to your account!`
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

@@ -1,8 +1,5 @@
 import User from '../models/User.js';
 
-/**
- * Update user role (Admin only)
- */
 export const updateUserRole = async (req, res) => {
   try {
     const { userId, newRole } = req.body;
