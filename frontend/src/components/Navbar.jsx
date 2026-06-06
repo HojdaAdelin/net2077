@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
 import { useInbox } from '../context/InboxContext';
-import { Languages, ChevronDown, LogIn, UserPlus, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap, FileTerminal } from 'lucide-react';
+import { Languages, ChevronDown, LogIn,Swords, UserPlus,Star, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap, FileTerminal, Users } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
 import SupportButton from './SupportButton';
@@ -35,6 +35,7 @@ export default function Navbar() {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [inventoryDropdownOpen, setInventoryDropdownOpen] = useState(false);
   const [inboxDropdownOpen, setInboxDropdownOpen] = useState(false);
+  const [communityDropdownOpen, setCommunityDropdownOpen] = useState(false);
   const [practiceDropdownOpen, setPracticeDropdownOpen] = useState(false);
   const [usingItem, setUsingItem] = useState(false);
   const [dialog, setDialog] = useState({ show: false, type: '', title: '', message: '' });
@@ -43,6 +44,7 @@ export default function Navbar() {
   const inventoryRef = useRef(null);
   const inboxRef = useRef(null);
   const practiceRef = useRef(null);
+  const communityRef = useRef(null);
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const closeMobileMenu = () => setMobileMenuOpen(false);
@@ -51,6 +53,7 @@ export default function Navbar() {
   const toggleInventoryDropdown = () => setInventoryDropdownOpen(!inventoryDropdownOpen);
   const toggleInboxDropdown = () => setInboxDropdownOpen(!inboxDropdownOpen);
   const togglePracticeDropdown = () => setPracticeDropdownOpen(!practiceDropdownOpen);
+  const toggleCommunityDropdown = () => setCommunityDropdownOpen(!communityDropdownOpen);
 
   const handleLanguageChange = (lang) => {
     changeLanguage(lang);
@@ -140,6 +143,9 @@ export default function Navbar() {
       if (practiceRef.current && !practiceRef.current.contains(event.target)) {
         setPracticeDropdownOpen(false);
       }
+      if (communityRef.current && !communityRef.current.contains(event.target)) {
+        setCommunityDropdownOpen(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -165,13 +171,6 @@ export default function Navbar() {
         </button>
 
         <div className={`nav-links ${mobileMenuOpen ? 'active' : ''}`}>
-          <Link to="/forum" onClick={closeMobileMenu}>Forum</Link>
-          <Link to="/arena" className="nav-link-new" onClick={closeMobileMenu}>
-            Arena
-            {/*<span className="new-badge">NEW</span>*/}
-          </Link>
-          <Link to="/is" onClick={closeMobileMenu}>IS/Debug</Link>
-          
           <div 
             className="practice-dropdown-container" 
             ref={practiceRef}
@@ -193,7 +192,7 @@ export default function Navbar() {
                 }
               }}
             >
-              {t('navbar.questions')}
+              Practice
               <ChevronDown size={16} className="dropdown-icon" />
             </Link>
             {practiceDropdownOpen && (
@@ -255,6 +254,20 @@ export default function Navbar() {
                   </div>
                 </Link>
                 <Link 
+                  to="/is" 
+                  className="practice-dropdown-item"
+                  onClick={() => {
+                    closeMobileMenu();
+                    setPracticeDropdownOpen(false);
+                  }}
+                >
+                  <CircleAlert size={18} className="practice-item-icon" />
+                  <div className="practice-item-content">
+                    <div className="practice-item-title">IS/Debug</div>
+                    <div className="practice-item-desc">Information Systems & Debugging</div>
+                  </div>
+                </Link>
+                <Link 
                   to="/scripts" 
                   className="practice-dropdown-item practice-dropdown-item--scripts"
                   onClick={() => {
@@ -274,10 +287,81 @@ export default function Navbar() {
               </div>
             )}
           </div>
+
+          <div 
+            className="practice-dropdown-container" 
+            ref={communityRef}
+            onMouseEnter={() => setCommunityDropdownOpen(true)}
+            onMouseLeave={() => setCommunityDropdownOpen(false)}
+          >
+            <Link 
+              to="/forum" 
+              className="nav-link-with-dropdown practice-link-desktop"
+              onClick={(e) => {
+                
+                if (window.innerWidth <= 768) {
+                  e.preventDefault();
+                  setCommunityDropdownOpen(!communityDropdownOpen);
+                } else {
+                 
+                  closeMobileMenu();
+                  setCommunityDropdownOpen(false);
+                }
+              }}
+            >
+              Community
+              <ChevronDown size={16} className="dropdown-icon" />
+            </Link>
+            {communityDropdownOpen && (
+              <div className="practice-dropdown">
+                <Link 
+                  to="/forum" 
+                  className="practice-dropdown-item"
+                  onClick={() => {
+                    closeMobileMenu();
+                    setCommunityDropdownOpen(false);
+                  }}
+                >
+                  <Users size={18} className="practice-item-icon" />
+                  <div className="practice-item-content">
+                    <div className="practice-item-title">Forum</div>
+                    <div className="practice-item-desc">Community discussions</div>
+                  </div>
+                </Link>
+                <Link 
+                  to="/arena" 
+                  className="practice-dropdown-item"
+                  onClick={() => {
+                    closeMobileMenu();
+                    setCommunityDropdownOpen(false);
+                  }}
+                >
+                  <Swords size={18} className="practice-item-icon" />
+                  <div className="practice-item-content">
+                    <div className="practice-item-title">Arena</div>
+                    <div className="practice-item-desc">Compete with others</div>
+                  </div>
+                </Link>
+                <Link 
+                  to="/leaderboard" 
+                  className="practice-dropdown-item"
+                  onClick={() => {
+                    closeMobileMenu();
+                    setCommunityDropdownOpen(false);
+                  }}
+                >
+                  <Star size={18} className="practice-item-icon" />
+                  <div className="practice-item-content">
+                    <div className="practice-item-title">Leaderboard</div>
+                    <div className="practice-item-desc">Top performers</div>
+                  </div>
+                </Link>
+              </div>
+            )}
+          </div>
           
-          <Link to="/learn" onClick={closeMobileMenu}>{t('navbar.resources')}</Link>
-          <Link to="/leaderboard" onClick={closeMobileMenu}>{t('navbar.leaderboard')}</Link>
-          {user && <Link to="/progress" onClick={closeMobileMenu}>{t('navbar.progress')}</Link>}
+          <Link to="/learn" onClick={closeMobileMenu}>Learn</Link>
+          {user && <Link to="/progress" onClick={closeMobileMenu}>Progress</Link>}
           
           <div className="nav-auth">
             <div className="language-selector" ref={dropdownRef}>
@@ -324,7 +408,7 @@ export default function Navbar() {
                       </Link>
                       <button onClick={handleLogout}>
                         <LogOut size={16} />
-                        {t('navbar.logout')}
+                        Logout
                       </button>
                       <Link to="/shop" className="profile-dropdown-gold-item" onClick={() => setProfileDropdownOpen(false)}>
                         <Coins size={16} className="gold-icon" />
@@ -427,11 +511,11 @@ export default function Navbar() {
               <>
                 <Link to="/login" className="btn btn-secondary" onClick={closeMobileMenu}>
                   <LogIn size={16} />
-                  {t('navbar.login')}
+                  Login
                 </Link>
                 <Link to="/register" className="btn btn-secondary" onClick={closeMobileMenu}>
                   <UserPlus size={16} />
-                  {t('navbar.register')}
+                  Register
                 </Link>
               </>
             )}
