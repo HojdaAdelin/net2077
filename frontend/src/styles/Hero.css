@@ -35,14 +35,65 @@
   line-height: 1.1;
   letter-spacing: -1.5px;
   margin: 0 0 20px 0;
+  white-space: nowrap;
+}
+
+/* Progressive word animation - smooth flow */
+.h-title-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateX(-20px);
+  margin-right: 0.3em;
+}
+
+.h-title-word-1 {
+  animation: h-word-slide-in 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s forwards;
+}
+
+.h-title-word-2 {
+  animation: h-word-slide-in 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s forwards;
+}
+
+.h-title-word-3 {
+  animation: h-word-slide-in 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.7s forwards;
+}
+
+@keyframes h-word-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .h-sub {
   font-size: clamp(15px, 2vw, 18px);
   color: var(--text-secondary);
-  max-width: 520px;
+  max-width: 580px;
   margin: 0 auto 36px;
   line-height: 1.65;
+  min-height: 1.65em;
+}
+
+/* Typing cursor */
+.h-cursor {
+  display: inline-block;
+  color: var(--accent-primary);
+  font-weight: 300;
+  margin-left: 1px;
+  opacity: 1;
+}
+
+.h-cursor-blink {
+  animation: h-blink 1s step-end infinite;
+}
+
+@keyframes h-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
 }
 
 .h-cta {
@@ -69,6 +120,42 @@
 }
 
 .h-btn-primary:hover { opacity: 0.85; }
+
+.h-btn-start-learning {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  box-shadow: none;
+  transition: all 0.3s ease;
+}
+
+.h-btn-start-learning:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  border-color: var(--border-light);
+  background: var(--bg-secondary);
+}
+
+.h-btn-acadnet {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  color: white;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+.h-btn-acadnet:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+}
 
 .h-btn-secondary {
   display: inline-flex;
@@ -678,4 +765,642 @@
   .h-linux-chapters {
     grid-template-columns: 1fr;
   }
+}
+/* ── AcadNet Section ── */
+.h-acadnet-section {
+  background: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.h-acadnet-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent-primary) 30%, #7c3aed  50%, var(--accent-primary) 70%, transparent 100%);
+  opacity: 0.6;
+}
+
+.h-acadnet-subtitle {
+  font-size: 17px !important;
+  line-height: 1.6;
+  max-width: 680px;
+}
+
+.h-acadnet-subtitle-highlight {
+  background: linear-gradient(135deg, var(--accent-primary), #7c3aed, #ec4899);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+}
+
+/* Magic Bento Grid Effect */
+.h-magic-grid {
+  position: relative;
+  z-index: 1;
+}
+
+.h-magic-card {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.h-magic-border {
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  background: linear-gradient(135deg, transparent, var(--accent-primary), transparent);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.h-magic-border::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  background: var(--bg-card);
+  border-radius: inherit;
+}
+
+.h-magic-card:hover .h-magic-border {
+  opacity: 1;
+  background: linear-gradient(135deg, transparent, var(--accent-primary), #7c3aed, transparent);
+  animation: magic-border-rotate 3s linear infinite;
+}
+
+@keyframes magic-border-rotate {
+  0% { background: linear-gradient(135deg, transparent, var(--accent-primary), transparent); }
+  25% { background: linear-gradient(225deg, transparent, #7c3aed, transparent); }
+  50% { background: linear-gradient(315deg, transparent, #ec4899, transparent); }
+  75% { background: linear-gradient(45deg, transparent, var(--accent-primary), transparent); }
+  100% { background: linear-gradient(135deg, transparent, var(--accent-primary), transparent); }
+}
+
+/* AcadNet Exam Cards */
+.h-acadnet-exams {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 64px;
+}
+
+.h-acadnet-exam-card {
+  height: 200px;
+  transform-style: preserve-3d;
+}
+
+.h-acadnet-exam-card:hover {
+  transform: translateY(-8px) rotateX(2deg);
+}
+
+.h-acadnet-exam-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.h-acadnet-exam-meta {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--accent-primary), #7c3aed);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.h-acadnet-exam-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 12px 0;
+  letter-spacing: -0.5px;
+}
+
+.h-acadnet-exam-info {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+.h-acadnet-exam-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-primary);
+  text-decoration: none;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.h-acadnet-exam-button:hover {
+  gap: 12px;
+  color: #7c3aed;
+}
+
+/* Domain Cards - Expandable */
+.h-acadnet-domains {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 32px;
+  align-items: start;
+}
+
+.h-acadnet-domain-card {
+  min-height: 140px;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.h-acadnet-domain-card.expanded {
+  transform: scale(1.02);
+  z-index: 10;
+}
+
+.h-acadnet-domain-content {
+  position: relative;
+  z-index: 2;
+  padding: 32px 28px;
+}
+
+.h-acadnet-domain-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 0;
+  transition: margin-bottom 0.5s ease;
+}
+
+.h-acadnet-domain-card.expanded .h-acadnet-domain-header {
+  margin-bottom: 32px;
+}
+
+.h-acadnet-domain-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.4s ease;
+  flex-shrink: 0;
+}
+
+.h-acadnet-domain-icon--linux {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+  color: white;
+}
+
+.h-acadnet-domain-icon--network {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+  color: white;
+}
+
+.h-acadnet-domain-icon--debug {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  box-shadow: 0 8px 32px rgba(245, 158, 11, 0.3);
+  color: white;
+}
+
+.h-acadnet-domain-card:hover .h-acadnet-domain-icon {
+  transform: scale(1.05) rotateY(10deg);
+}
+
+.h-acadnet-domain-info {
+  flex: 1;
+}
+
+.h-acadnet-domain-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+  letter-spacing: -0.4px;
+}
+
+.h-acadnet-domain-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.h-acadnet-expand-icon {
+  color: var(--text-muted);
+  transition: all 0.4s ease;
+}
+
+.h-acadnet-domain-card.expanded .h-acadnet-expand-icon {
+  transform: rotate(180deg);
+  color: var(--accent-primary);
+}
+
+/* Domain Details - Expandable Content */
+.h-acadnet-domain-details {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.5s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.h-acadnet-domain-card.expanded .h-acadnet-domain-details {
+  max-height: 400px;
+  opacity: 1;
+}
+
+.h-acadnet-domain-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.h-acadnet-step {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 24px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.h-acadnet-step-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.h-acadnet-step:hover .h-acadnet-step-glow {
+  opacity: 1;
+}
+
+.h-acadnet-step:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+  transform: translateY(-2px);
+}
+
+.h-acadnet-step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent-primary) 0%, #7c3aed 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+}
+
+.h-acadnet-step-content {
+  flex: 1;
+}
+
+.h-acadnet-step-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+  letter-spacing: -0.2px;
+}
+
+.h-acadnet-step-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+}
+
+.h-acadnet-step-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-primary);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.h-acadnet-step-link:hover {
+  gap: 10px;
+  color: #7c3aed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .h-acadnet-exams {
+    grid-template-columns: 1fr;
+  }
+  
+  .h-acadnet-exam-card:nth-child(4) {
+    grid-column: 1;
+  }
+  
+  .h-acadnet-domains {
+    grid-template-columns: 1fr;
+  }
+  
+  .h-acadnet-domain-card {
+    min-height: 120px;
+  }
+  
+  .h-acadnet-domain-content {
+    padding: 24px 20px;
+  }
+  
+  .h-acadnet-domain-header {
+    gap: 16px;
+  }
+  
+  .h-acadnet-domain-icon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .h-acadnet-subtitle {
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .h-cta {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .h-btn-primary,
+  .h-btn-acadnet {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .h-acadnet-domains {
+    gap: 20px;
+  }
+}
+/* ── 
+AcadNet Section ── */
+.h-acadnet-section {
+  background: var(--bg-primary);
+  position: relative;
+}
+
+.h-acadnet-subtitle {
+  font-size: 16px !important;
+  line-height: 1.65;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Exam Cards */
+.h-acadnet-exams {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 48px;
+}
+
+.h-acadnet-exam-card:nth-child(4) {
+  grid-column: 2 / 3;
+}
+
+.h-acadnet-exam-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  min-height: 180px;
+}
+
+.h-acadnet-exam-card:hover {
+  transform: translateY(-2px);
+}
+
+.h-acadnet-exam-meta {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+}
+
+.h-acadnet-exam-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.h-acadnet-exam-info {
+  font-size: 14px;
+  color: var(--text-muted);
+  flex: 1;
+}
+
+.h-acadnet-exam-arrow {
+  color: var(--text-muted);
+  display: flex;
+  align-self: flex-end;
+  transition: all 0.3s ease;
+}
+
+.h-acadnet-exam-card:hover .h-acadnet-exam-arrow {
+  color: var(--accent-primary);
+  transform: translateX(4px);
+}
+
+/* Domain Cards */
+.h-acadnet-domains {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.h-acadnet-domain-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 24px;
+  transition: all 0.4s ease;
+  cursor: pointer;
+}
+
+.h-acadnet-domain-card:hover {
+  transform: translateY(-2px);
+}
+
+.h-acadnet-domain-card.expanded {
+  padding-bottom: 32px;
+}
+
+.h-acadnet-domain-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.h-acadnet-domain-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.h-acadnet-domain-card:hover .h-acadnet-domain-icon {
+  transform: scale(1.05);
+}
+
+.h-acadnet-domain-icon--linux {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.h-acadnet-domain-icon--network {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+}
+
+.h-acadnet-domain-icon--debug {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+}
+
+.h-acadnet-domain-info {
+  flex: 1;
+}
+
+.h-acadnet-domain-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 6px 0;
+}
+
+.h-acadnet-domain-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.h-acadnet-expand-icon {
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.h-acadnet-domain-card.expanded .h-acadnet-expand-icon {
+  transform: rotate(180deg);
+  color: var(--accent-primary);
+}
+
+/* Domain Details - Expandable */
+.h-acadnet-domain-details {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
+}
+
+.h-acadnet-domain-card.expanded .h-acadnet-domain-details {
+  max-height: 400px;
+  opacity: 1;
+  margin-top: 24px;
+}
+
+.h-acadnet-step {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.h-acadnet-step:last-child {
+  margin-bottom: 0;
+}
+
+.h-acadnet-step:hover {
+  border-color: var(--border-light);
+  background: var(--bg-tertiary);
+}
+
+.h-acadnet-step-content {
+  flex: 1;
+}
+
+.h-acadnet-step-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+}
+
+.h-acadnet-step-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.h-acadnet-step-link {
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.h-acadnet-step:hover .h-acadnet-step-link {
+  color: var(--accent-primary);
+  transform: translateX(2px);
 }

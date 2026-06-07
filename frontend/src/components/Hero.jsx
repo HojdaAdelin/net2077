@@ -3,10 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getStats } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import {
-  ArrowRight, Flame, Terminal, Network, Code,
+  ArrowRight, Terminal, Network, Code,
   Check, X, UserPlus,
   ChevronDown, Package, Cpu, HardDrive, Shield, Server, Box
 } from 'lucide-react';
+import MagicBento from './MagicBento';
 import '../styles/Hero.css';
 
 const LINUX_CHAPTERS = [
@@ -82,14 +83,29 @@ export default function Hero() {
   const [stats, setStats] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
   const [display, setDisplay] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
   const [linuxOverviewOpen, setLinuxOverviewOpen] = useState(false);
+  const [expandedDomain, setExpandedDomain] = useState(null);
 
-  const handleStartTest = () => {
-    if (!user) {
-      navigate('/linux-start-test?requireAuth=1');
-    } else {
-      navigate('/linux-start-test');
-    }
-  };
+  // Typing effect for subtitle
+  const SUBTITLE = 'A place for people who enjoy systems, networks, code and everything in between.';
+  const [typedText, setTypedText] = useState('');
+  const [typingDone, setTypingDone] = useState(false);
+
+  useEffect(() => {
+    let i = 0;
+    // small delay before typing starts so title fade is visible first
+    const delay = setTimeout(() => {
+      const interval = setInterval(() => {
+        i++;
+        setTypedText(SUBTITLE.slice(0, i));
+        if (i >= SUBTITLE.length) {
+          clearInterval(interval);
+          setTypingDone(true);
+        }
+      }, 22);
+      return () => clearInterval(interval);
+    }, 600);
+    return () => clearTimeout(delay);
+  }, []);
 
   useEffect(() => {
     getStats().then(setStats).catch(() => {});
@@ -112,23 +128,39 @@ export default function Hero() {
     return () => clearInterval(iv);
   }, [stats]);
 
+  const handleStartTest = () => {
+    if (!user) {
+      navigate('/linux-start-test?requireAuth=1');
+    } else {
+      navigate('/linux-start-test');
+    }
+  };
+
   return (
     <div className="hero-root">
 
       <section className="h-hero">
         <div className="h-container">
-          <h1 className="h-title">Master Applied<br />Informatics</h1>
+          <h1 className="h-title">
+            <span className="h-title-word h-title-word-1">Build.</span>
+            <span className="h-title-word h-title-word-2">Break.</span>
+            <span className="h-title-word h-title-word-3">Understand.</span>
+          </h1>
           <p className="h-sub">
-            Linux, networking and programming, practiced through real challenges,
-            real tests and head-to-head battles.
+            {typedText}<span className={`h-cursor ${typingDone ? 'h-cursor-blink' : ''}`}>|</span>
           </p>
           <div className="h-cta">
-            <Link to="/grile" className="h-btn-primary">
+            <Link to="#tracks" className="h-btn-primary h-btn-start-learning" onClick={(e) => {
+              e.preventDefault();
+              document.getElementById('tracks')?.scrollIntoView({ behavior: 'smooth' });
+            }}>
               Start Learning <ArrowRight size={16} />
             </Link>
-            <Link to="/learn" className="h-btn-secondary">View Roadmaps</Link>
-            <Link to="/leaderboard/season" className="h-btn-season">
-              <Flame size={15} /> Season
+            <Link to="#prepare-acadnet" className="h-btn-acadnet" onClick={(e) => {
+              e.preventDefault();
+              document.getElementById('prepare-acadnet')?.scrollIntoView({ behavior: 'smooth' });
+            }}>
+              Prepare for AcadNet <ArrowRight size={16} />
             </Link>
           </div>
           <div className="h-stats">
@@ -150,8 +182,7 @@ export default function Hero() {
         </div>
       </section>
 
-      {/* ── Tracks ── */}
-      <section className="h-section">
+      <section className="h-section" id="tracks">
         <div className="h-container">
           <div className="h-section-header">
             <h2 className="h-section-title">Pick your track</h2>
@@ -234,28 +265,126 @@ export default function Hero() {
         </div>
       </section>
 
-      <section className="h-section h-section-alt">
+    
+      <section className="h-section h-acadnet-section" id="prepare-acadnet">
         <div className="h-container">
-          <div className="h-section-header h-section-header-row">
-            <div>
-              <h2 className="h-section-title">Competitive Exams</h2>
-              <p className="h-section-sub">Timed simulations based on real competition formats.</p>
-            </div>
-            <Link to="/exam-selection" className="h-view-all">
-              View all <ArrowRight size={14} />
-            </Link>
+          <div className="h-section-header">
+            <h2 className="h-section-title">Prepare for AcadNet</h2>
+            <p className="h-section-sub h-acadnet-subtitle">
+              Net2077 offers a variety of questions from all possible chapters in Linux (AcadNet - Calculatoare), Network (AcadNet - Rețelistică) and Debugging (AcadNet - IS)
+            </p>
           </div>
 
-          <div className="h-exams">
-            {EXAMS.map((exam) => (
-              <Link key={exam.to} to={exam.to} className="h-exam-card">
-                <span className="h-exam-meta">{exam.meta}</span>
-                <h3 className="h-exam-title">{exam.title}</h3>
-                <span className="h-exam-info">{exam.info}</span>
-                <span className="h-exam-arrow"><ArrowRight size={15} /></span>
-              </Link>
-            ))}
-          </div>
+          <MagicBento spotlightRadius={400} glowColor="99, 102, 241">
+           
+            <div className="h-acadnet-exams">
+              {EXAMS.map((exam) => (
+                <Link key={exam.to} to={exam.to} className="h-acadnet-exam-card magic-card">
+                  <div className="h-acadnet-exam-meta">{exam.meta}</div>
+                  <h3 className="h-acadnet-exam-title">{exam.title}</h3>
+                  <div className="h-acadnet-exam-info">{exam.info}</div>
+                  <div className="h-acadnet-exam-arrow"><ArrowRight size={16} /></div>
+                </Link>
+              ))}
+            </div>
+
+            
+            <div className="h-acadnet-domains">
+             
+              <div className={`h-acadnet-domain-card magic-card ${expandedDomain === 'linux' ? 'expanded' : ''}`}
+                   onClick={() => setExpandedDomain(expandedDomain === 'linux' ? null : 'linux')}>
+                <div className="h-acadnet-domain-header">
+                  <div className="h-acadnet-domain-icon h-acadnet-domain-icon--linux">
+                    <Terminal size={24} />
+                  </div>
+                  <div className="h-acadnet-domain-info">
+                    <h3 className="h-acadnet-domain-title">Linux (Calculatoare)</h3>
+                    <p className="h-acadnet-domain-subtitle">CLI & GUI</p>
+                  </div>
+                  <div className="h-acadnet-expand-icon">
+                    <ChevronDown size={20} />
+                  </div>
+                </div>
+
+                <div className="h-acadnet-domain-details">
+                  <Link to="/learn/roadmap/69bff0909aa18fbfacf3a844" className="h-acadnet-step" onClick={(e) => e.stopPropagation()}>
+                    <div className="h-acadnet-step-content">
+                      <h4 className="h-acadnet-step-title">Learn Linux Basics</h4>
+                      <p className="h-acadnet-step-desc">Master file systems, permissions, and core commands</p>
+                    </div>
+                    <div className="h-acadnet-step-link">
+                      <ArrowRight size={14} />
+                    </div>
+                  </Link>
+                  <Link to="/grile?filter=linux" className="h-acadnet-step" onClick={(e) => e.stopPropagation()}>
+                    <div className="h-acadnet-step-content">
+                      <h4 className="h-acadnet-step-title">Practice Linux Questions</h4>
+                      <p className="h-acadnet-step-desc">Test your knowledge with curated questions</p>
+                    </div>
+                    <div className="h-acadnet-step-link">
+                      <ArrowRight size={14} />
+                    </div>
+                  </Link>
+                </div>
+              </div>
+
+              <div className={`h-acadnet-domain-card magic-card ${expandedDomain === 'network' ? 'expanded' : ''}`}
+                   onClick={() => setExpandedDomain(expandedDomain === 'network' ? null : 'network')}>
+                <div className="h-acadnet-domain-header">
+                  <div className="h-acadnet-domain-icon h-acadnet-domain-icon--network">
+                    <Network size={24} />
+                  </div>
+                  <div className="h-acadnet-domain-info">
+                    <h3 className="h-acadnet-domain-title">Networking (Retelistica)</h3>
+                    <p className="h-acadnet-domain-subtitle">Protocol understanding</p>
+                  </div>
+                  <div className="h-acadnet-expand-icon">
+                    <ChevronDown size={20} />
+                  </div>
+                </div>
+
+                <div className="h-acadnet-domain-details">
+                  <Link to="/grile?filter=network" className="h-acadnet-step" onClick={(e) => e.stopPropagation()}>
+                    <div className="h-acadnet-step-content">
+                      <h4 className="h-acadnet-step-title">Practice Network Questions</h4>
+                      <p className="h-acadnet-step-desc">Deep dive into protocols, routing, and infrastructure</p>
+                    </div>
+                    <div className="h-acadnet-step-link">
+                      <ArrowRight size={14} />
+                    </div>
+                  </Link>
+                </div>
+              </div>
+
+              <div className={`h-acadnet-domain-card magic-card ${expandedDomain === 'debug' ? 'expanded' : ''}`}
+                   onClick={() => setExpandedDomain(expandedDomain === 'debug' ? null : 'debug')}>
+                <div className="h-acadnet-domain-header">
+                  <div className="h-acadnet-domain-icon h-acadnet-domain-icon--debug">
+                    <Code size={24} />
+                  </div>
+                  <div className="h-acadnet-domain-info">
+                    <h3 className="h-acadnet-domain-title">Debugging (IS)</h3>
+                    <p className="h-acadnet-domain-subtitle">Problem solving skills</p>
+                  </div>
+                  <div className="h-acadnet-expand-icon">
+                    <ChevronDown size={20} />
+                  </div>
+                </div>
+
+                <div className="h-acadnet-domain-details">
+                  <Link to="/is" className="h-acadnet-step" onClick={(e) => e.stopPropagation()}>
+                    <div className="h-acadnet-step-content">
+                      <h4 className="h-acadnet-step-title">Debug Challenges</h4>
+                      <p className="h-acadnet-step-desc">Solve complex programming and system issues</p>
+                    </div>
+                    <div className="h-acadnet-step-link">
+                      <ArrowRight size={14} />
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </MagicBento>
         </div>
       </section>
 
