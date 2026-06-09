@@ -85,6 +85,15 @@ export default function Hero() {
   const [display, setDisplay] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
   const [linuxOverviewOpen, setLinuxOverviewOpen] = useState(false);
   const [expandedDomain, setExpandedDomain] = useState(null);
+  const [isDark, setIsDark] = useState(() => document.documentElement.getAttribute('data-theme') !== 'light');
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.getAttribute('data-theme') !== 'light');
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    return () => observer.disconnect();
+  }, []);
 
   // Typing effect for subtitle
   const SUBTITLE = 'A place for people who enjoy systems, networks, code and everything in between.';
@@ -140,16 +149,18 @@ export default function Hero() {
   return (
     <div className="hero-root">
 
-      <div className="h-darkveil-bg">
-        <DarkVeil
-          hueShift={0}
-          noiseIntensity={0}
-          scanlineIntensity={0}
-          speed={0.5}
-          scanlineFrequency={0}
-          warpAmount={0}
-        />
-      </div>
+      {isDark && (
+        <div className="h-darkveil-bg">
+          <DarkVeil
+            hueShift={0}
+            noiseIntensity={0}
+            scanlineIntensity={0}
+            speed={0.5}
+            scanlineFrequency={0}
+            warpAmount={0}
+          />
+        </div>
+      )}
 
       <section className="h-hero">
         <div className="h-container">

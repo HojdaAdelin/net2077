@@ -8,10 +8,11 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: calc(100px + 80px + 80px + 500px); /* hero + tracks approx */
+  height: calc(100px + 80px + 80px + 500px);
   z-index: 0;
   opacity: 0.45;
   pointer-events: none;
+  mix-blend-mode: normal;
 }
 
 .h-container {
