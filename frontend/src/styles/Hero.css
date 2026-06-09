@@ -1,5 +1,17 @@
 .hero-root {
   background: var(--bg-primary);
+  position: relative;
+}
+
+.h-darkveil-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100px + 80px + 80px + 500px); /* hero + tracks approx */
+  z-index: 0;
+  opacity: 0.45;
+  pointer-events: none;
 }
 
 .h-container {
@@ -13,6 +25,8 @@
   padding: 100px 0 80px;
   text-align: center;
   border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
 }
 
 .h-badge {
@@ -249,6 +263,8 @@
 .h-section {
   padding: 80px 0;
   border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
 }
 
 .h-section-alt {

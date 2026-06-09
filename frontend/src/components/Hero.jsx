@@ -8,6 +8,7 @@ import {
   ChevronDown, Package, Cpu, HardDrive, Shield, Server, Box
 } from 'lucide-react';
 import MagicBento from './MagicBento';
+import DarkVeil from './DarkVeil';
 import '../styles/Hero.css';
 
 const LINUX_CHAPTERS = [
@@ -26,7 +27,7 @@ const LINUX_CHAPTERS = [
 ];
 
 const TRACKS = [
-  {
+{
     icon: Terminal,
     number: '01',
     title: 'Linux & Terminal',
@@ -138,6 +139,17 @@ export default function Hero() {
 
   return (
     <div className="hero-root">
+
+      <div className="h-darkveil-bg">
+        <DarkVeil
+          hueShift={0}
+          noiseIntensity={0}
+          scanlineIntensity={0}
+          speed={0.5}
+          scanlineFrequency={0}
+          warpAmount={0}
+        />
+      </div>
 
       <section className="h-hero">
         <div className="h-container">
