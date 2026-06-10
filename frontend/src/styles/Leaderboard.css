@@ -652,3 +652,62 @@
     justify-content: center;
   }
 }
+
+/* ── Staff Badge ── */
+.lb-staff-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  color: var(--staff-color);
+  cursor: default;
+  flex-shrink: 0;
+}
+
+.lb-staff-badge svg {
+  filter: drop-shadow(0 0 4px var(--staff-color));
+}
+
+.lb-staff-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  border: 1px solid var(--staff-color);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 50;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.lb-staff-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--staff-color);
+}
+
+.lb-staff-tooltip-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--staff-color);
+}
+
+.lb-staff-tooltip-role {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}

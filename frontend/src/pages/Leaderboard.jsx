@@ -1,10 +1,41 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { Trophy, Medal, Award, Crown, User, Coins, Clock, Zap, ShoppingBag } from 'lucide-react';
+import { Trophy, Medal, Award, Crown, User, Coins, Clock, Zap, ShoppingBag, Shield } from 'lucide-react';
 import { getLeaderboard } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
 import { API_URL } from '../config';
 import '../styles/Leaderboard.css';
+
+const ROLE_CONFIG = {
+  'helper':     { color: '#22c55e', label: 'Helper' },
+  'mod':        { color: '#3b82f6', label: 'Moderator' },
+  'head-mod':   { color: '#8b5cf6', label: 'Head Moderator' },
+  'admin':      { color: '#f59e0b', label: 'Administrator' },
+  'head-admin': { color: '#ef4444', label: 'Head Administrator' },
+  'root':       { color: '#ec4899', label: 'Root' },
+};
+
+function StaffBadge({ role }) {
+  const [visible, setVisible] = useState(false);
+  const config = ROLE_CONFIG[role];
+  if (!config) return null;
+  return (
+    <div
+      className="lb-staff-badge"
+      style={{ '--staff-color': config.color }}
+      onMouseEnter={() => setVisible(true)}
+      onMouseLeave={() => setVisible(false)}
+    >
+      <Shield size={13} />
+      {visible && (
+        <div className="lb-staff-tooltip">
+          <span className="lb-staff-tooltip-title">Staff</span>
+          <span className="lb-staff-tooltip-role">{config.label}</span>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Leaderboard() {
   const { t } = useLanguage();
@@ -104,14 +135,10 @@ export default function Leaderboard() {
 
   const getRankClass = (rank) => {
     switch (rank) {
-      case 1:
-        return 'rank-1';
-      case 2:
-        return 'rank-2';
-      case 3:
-        return 'rank-3';
-      default:
-        return 'rank-default';
+      case 1: return 'rank-1';
+      case 2: return 'rank-2';
+      case 3: return 'rank-3';
+      default: return 'rank-default';
     }
   };
 
@@ -262,6 +289,7 @@ export default function Leaderboard() {
                       >
                         <User size={14} />
                       </Link>
+                      {user.role && user.role !== 'user' && <StaffBadge role={user.role} />}
                     </div>
                     <div className="level">{t('leaderboard.level')} {user.level}</div>
                   </div>

@@ -3,7 +3,7 @@ import User from '../models/User.js';
 export const getLeaderboard = async (req, res) => {
   try {
     const topUsers = await User.find({})
-      .select('username xp level')
+      .select('username xp level role')
       .sort({ xp: -1 })
       .limit(10)
       .lean();
@@ -12,7 +12,8 @@ export const getLeaderboard = async (req, res) => {
       rank: index + 1,
       username: user.username,
       xp: user.xp || 0,
-      level: user.level || 1
+      level: user.level || 1,
+      role: user.role || 'user'
     }));
 
     res.json({
