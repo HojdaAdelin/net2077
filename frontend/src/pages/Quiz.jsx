@@ -4,6 +4,8 @@ import '../styles/Quiz.css';
 import { API_URL as API_BASE } from '../config';
 import { AuthContext } from '../context/AuthContext';
 import { Share2, Check, ChevronLeft, ChevronRight } from 'lucide-react';
+import SaveButton from '../components/SaveButton';
+import { getSaved } from '../services/api';
 const DEFAULT_EXAM_DURATION_MIN = 60;
 const SIDEBAR_PAGE_SIZE = 50;
 const getExamStorageKey = (examId) => `exam_state_${examId}`;
@@ -30,12 +32,19 @@ export default function Quiz({ isExam = false }) {
   const [retryMode, setRetryMode] = useState(false);
   const [showTips, setShowTips] = useState(false);
   const tipsCardRef = useRef(null);
+  const [savedItems, setSavedItems] = useState([]);
 
   useEffect(() => {
     if (showTips && tipsCardRef.current) {
       tipsCardRef.current.focus();
     }
   }, [showTips]);
+
+  useEffect(() => {
+    if (user) {
+      getSaved().then(data => setSavedItems(data.saved || [])).catch(() => {});
+    }
+  }, [user]);
   const [sidebarPage, setSidebarPage] = useState(0);
 
   const handleShareQuestion = () => {
@@ -1017,6 +1026,13 @@ export default function Quiz({ isExam = false }) {
                     {showCopied ? <Check size={18} /> : <Share2 size={18} />}
                     {showCopied && <span className="copied-text">Copied!</span>}
                   </button>
+                  <SaveButton
+                    itemId={currentQuestion._id}
+                    type="question"
+                    title={currentQuestion.title}
+                    savedItems={savedItems}
+                    onToggle={setSavedItems}
+                  />
                   <button
                     className="share-question-btn tips-btn"
                     onClick={() => setShowTips(v => !v)}

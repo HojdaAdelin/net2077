@@ -106,7 +106,13 @@ const userSchema = new mongoose.Schema({
     currentPeriodXP: { type: Number, default: 0 },
     lastPeriodRank: { type: Number, default: null },
     totalGoldEarned: { type: Number, default: 0 }
-  }
+  },
+  saved: [{
+    itemId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    type: { type: String, enum: ['question', 'lesson'], required: true },
+    title: { type: String, default: '' },
+    savedAt: { type: Date, default: Date.now }
+  }]
 }, { timestamps: true });
 
 export default mongoose.model('User', userSchema);

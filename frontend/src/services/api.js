@@ -245,3 +245,20 @@ export const getLessonProgress = async (lessonId) => {
   const res = await fetch(`${API_URL}/learn/lessons/${lessonId}/progress`, { credentials: 'include' });
   return res.json();
 };
+
+// ── Saved Content ─────────────────────────────────────────────────────────────
+
+export const getSaved = async () => {
+  const res = await fetch(`${API_URL}/saved`, { credentials: 'include' });
+  return res.json();
+};
+
+export const toggleSave = async (itemId, type, title) => {
+  const res = await fetch(`${API_URL}/saved/toggle`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ itemId, type, title })
+  });
+  return res.json();
+};

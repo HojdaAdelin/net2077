@@ -9,6 +9,7 @@ import {
   Copy, Check as CheckIcon
 } from 'lucide-react';
 import '../styles/LessonView.css';
+import SaveButton from '../components/SaveButton';
 
 // ── Item type config ──────────────────────────────────────────────────────────
 const ITEM_TYPES = [
@@ -269,10 +270,15 @@ export default function LessonView() {
   const [saved, setSaved] = useState(false);
   const [showAddMenu, setShowAddMenu] = useState(false);
   const [canEdit, setCanEdit] = useState(false);
+  const [savedItems, setSavedItems] = useState([]);
   const addMenuRef = useRef(null);
 
   useEffect(() => {
     loadLesson();
+  }, [lessonId]);
+
+  useEffect(() => {
+    api.getSaved().then(data => setSavedItems(data.saved || [])).catch(() => {});
   }, [lessonId]);
 
   useEffect(() => {
@@ -391,7 +397,10 @@ export default function LessonView() {
         {/* Lesson header */}
         <div className="lv-header">
           <div className="lv-header-left">
-            <h1 className="lv-title">{lesson.title}</h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <h1 className="lv-title" style={{ margin: 0 }}>{lesson.title}</h1>
+              <SaveButton itemId={lesson._id} type="lesson" title={lesson.title} savedItems={savedItems} onToggle={setSavedItems} />
+            </div>
             {lessonPct !== null && (
               <div className="lv-lesson-progress">
                 <div className="rd-progress-bar" style={{ width: 200 }}>

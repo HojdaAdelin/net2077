@@ -5,11 +5,12 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
 import { useInbox } from '../context/InboxContext';
-import { Languages, ChevronDown, LogIn,Swords, UserPlus,Star, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap, FileTerminal, Users } from 'lucide-react';
+import { Languages, ChevronDown, LogIn,Swords, UserPlus,Star, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap, FileTerminal, Users, Bookmark } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
 import SupportButton from './SupportButton';
 import BuildNoteIndicator from './BuildNoteIndicator';
+import SavedContent from './SavedContent';
 import { API_URL } from '../config';
 import '../styles/Navbar.css';
 
@@ -37,6 +38,7 @@ export default function Navbar() {
   const [inboxDropdownOpen, setInboxDropdownOpen] = useState(false);
   const [communityDropdownOpen, setCommunityDropdownOpen] = useState(false);
   const [practiceDropdownOpen, setPracticeDropdownOpen] = useState(false);
+  const [showSaved, setShowSaved] = useState(false);
   const [usingItem, setUsingItem] = useState(false);
   const [dialog, setDialog] = useState({ show: false, type: '', title: '', message: '' });
   const dropdownRef = useRef(null);
@@ -406,6 +408,10 @@ export default function Navbar() {
                         <UserCircle size={16} />
                         Profile
                       </Link>
+                      <button onClick={() => { setShowSaved(true); setProfileDropdownOpen(false); }}>
+                        <Bookmark size={16} />
+                        Saved Content
+                      </button>
                       <button onClick={handleLogout}>
                         <LogOut size={16} />
                         Logout
@@ -523,6 +529,8 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
+
+    {showSaved && <SavedContent onClose={() => setShowSaved(false)} />}
 
     {/* Custom Dialog */}
     {dialog.show && (
