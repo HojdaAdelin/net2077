@@ -656,6 +656,41 @@ export default function Quiz({ isExam = false }) {
     }
   };
 
+  // Keyboard navigation for non-exam quiz
+  useEffect(() => {
+    if (isExam || showResults) return;
+
+    const handleKeyDown = (e) => {
+      // Ignore if user is typing in an input/textarea
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        if (currentIndex < questions.length - 1) {
+          const next = currentIndex + 1;
+          setCurrentIndex(next);
+          setSidebarPage(Math.floor(next / SIDEBAR_PAGE_SIZE));
+        }
+      } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        if (currentIndex > 0) {
+          const prev = currentIndex - 1;
+          setCurrentIndex(prev);
+          setSidebarPage(Math.floor(prev / SIDEBAR_PAGE_SIZE));
+        }
+      } else if (e.key === 'Enter') {
+        const currentQuestion = questions[currentIndex];
+        if (!currentQuestion) return;
+        const userAnswers = selectedAnswers[currentQuestion._id] || [];
+        const alreadySubmitted = submittedAnswers[currentQuestion._id] !== undefined;
+        if (userAnswers.length > 0 && !alreadySubmitted) {
+          handleSubmitQuestion();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isExam, showResults, currentIndex, questions, selectedAnswers, submittedAnswers, handleSubmitQuestion]);
+
   const handleSubmitAll = () => {
     handleFinishExam('manual');
   };
