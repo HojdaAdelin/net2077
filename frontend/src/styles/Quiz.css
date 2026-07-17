@@ -234,6 +234,7 @@
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 40px;
+  position: relative;
 }
 
 .exam-prep {
@@ -264,6 +265,7 @@
   align-items: center;
   margin-bottom: 28px;
   gap: 16px;
+  flex-wrap: wrap;
 }
 
 .question-number {
@@ -272,12 +274,14 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 .question-meta {
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .question-type {
@@ -863,4 +867,128 @@
 .sidebar-page-total {
   color: var(--text-secondary);
   font-weight: 400;
+}
+
+/* ── Tips Button ── */
+.tips-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tips-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--text-secondary);
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.tips-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.tips-btn:hover .tips-label {
+  color: var(--text-primary);
+}
+
+.tips-btn:hover .tips-icon {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
+/* ── Tips Overlay & Card ── */
+.tips-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 56px 16px 0 0;
+}
+
+.tips-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  min-width: 280px;
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+.tips-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.tips-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+
+.tips-close:hover { color: var(--text-primary); }
+
+.tips-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.tips-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tips-keys {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+kbd {
+  display: inline-block;
+  padding: 3px 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-bottom: 2px solid var(--border-light);
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: monospace;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.tips-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.tips-note {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext } from 'react';
+import { useState, useEffect, useCallback, useContext, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import '../styles/Quiz.css';
 import { API_URL as API_BASE } from '../config';
@@ -28,6 +28,14 @@ export default function Quiz({ isExam = false }) {
   const [lockedQuestions, setLockedQuestions] = useState({});
   const [showCopied, setShowCopied] = useState(false);
   const [retryMode, setRetryMode] = useState(false);
+  const [showTips, setShowTips] = useState(false);
+  const tipsCardRef = useRef(null);
+
+  useEffect(() => {
+    if (showTips && tipsCardRef.current) {
+      tipsCardRef.current.focus();
+    }
+  }, [showTips]);
   const [sidebarPage, setSidebarPage] = useState(0);
 
   const handleShareQuestion = () => {
@@ -967,6 +975,37 @@ export default function Quiz({ isExam = false }) {
             </div>
           ) : (
             <div className="question-card">
+              {showTips && (
+                <div className="tips-overlay" onClick={() => setShowTips(false)}>
+                  <div className="tips-card" onClick={e => e.stopPropagation()} ref={tipsCardRef} tabIndex={-1} onKeyDown={e => e.key === 'Escape' && setShowTips(false)} style={{ outline: 'none' }}>
+                    <div className="tips-card-header">
+                      <span>Keyboard Shortcuts</span>
+                      <button className="tips-close" onClick={() => setShowTips(false)}>✕</button>
+                    </div>
+                    <div className="tips-card-body">
+                      <div className="tips-row">
+                        <div className="tips-keys">
+                          <kbd>→</kbd><span>or</span><kbd>D</kbd>
+                        </div>
+                        <span className="tips-desc">Next question</span>
+                      </div>
+                      <div className="tips-row">
+                        <div className="tips-keys">
+                          <kbd>←</kbd><span>or</span><kbd>A</kbd>
+                        </div>
+                        <span className="tips-desc">Previous question</span>
+                      </div>
+                      <div className="tips-row">
+                        <div className="tips-keys">
+                          <kbd>Enter</kbd>
+                        </div>
+                        <span className="tips-desc">Submit answer</span>
+                      </div>
+                    </div>
+                    <p className="tips-note">Navigation keys are disabled while typing in a text field.</p>
+                  </div>
+                </div>
+              )}
               <div className="question-header">
                 <span className="question-number">Question {currentIndex + 1}</span>
                 <div className="question-meta">
@@ -978,11 +1017,20 @@ export default function Quiz({ isExam = false }) {
                     {showCopied ? <Check size={18} /> : <Share2 size={18} />}
                     {showCopied && <span className="copied-text">Copied!</span>}
                   </button>
+                  <button
+                    className="share-question-btn tips-btn"
+                    onClick={() => setShowTips(v => !v)}
+                    title="Tips"
+                  >
+                    <span className="tips-icon">?</span>
+                    <span className="tips-label">Tips</span>
+                  </button>
                   <span className="question-type">{currentQuestion.type}</span>
                   <span className="question-points">{currentQuestion.points || 1} {currentQuestion.points === 1 ? 'point' : 'points'}</span>
                 </div>
               </div>
 
+              
               {currentQuestion.tags && currentQuestion.tags.length > 0 && (
                 <div className="question-tags">
                   {currentQuestion.tags.map((tag, idx) => (
@@ -990,7 +1038,7 @@ export default function Quiz({ isExam = false }) {
                   ))}
                 </div>
               )}
-              
+
               <h2 className="question-title">{currentQuestion.title}</h2>
 
               {currentQuestion.multipleCorrect && (
