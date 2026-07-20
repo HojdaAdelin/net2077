@@ -46,6 +46,27 @@
 
 .saved-close:hover { color: var(--text-primary); }
 
+.saved-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.saved-counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 3px 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.saved-counter-full {
+  color: #ef4444;
+  font-weight: 700;
+}
+
 .saved-modal-body {
   overflow-y: auto;
   padding: 16px 24px;

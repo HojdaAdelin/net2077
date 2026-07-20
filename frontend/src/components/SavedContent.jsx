@@ -45,7 +45,15 @@ export default function SavedContent({ onClose }) {
       <div className="saved-modal">
         <div className="saved-modal-header">
           <span>Saved Content</span>
-          <button className="saved-close" onClick={onClose}><X size={18} /></button>
+          <div className="saved-header-right">
+            {!loading && (
+              <span className="saved-counter">
+                <span className={items.length >= 10 ? 'saved-counter-full' : ''}>{items.length}</span>
+                /10
+              </span>
+            )}
+            <button className="saved-close" onClick={onClose}><X size={18} /></button>
+          </div>
         </div>
 
         <div className="saved-modal-body">

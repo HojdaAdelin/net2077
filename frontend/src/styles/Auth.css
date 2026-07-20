@@ -137,6 +137,22 @@
   padding: 14px;
   font-size: 15px;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.auth-spinner {
+  animation: auth-spin 0.7s linear infinite;
+}
+
+@keyframes auth-spin {
+  to { transform: rotate(360deg); }
 }
 
 .auth-divider {

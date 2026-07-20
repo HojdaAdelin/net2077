@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { login as apiLogin } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -10,6 +10,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useContext(AuthContext);
   const { t } = useLanguage();
@@ -18,7 +19,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+    setLoading(true);
     try {
       const data = await apiLogin(email, password);
       if (data.success) {
@@ -26,9 +27,11 @@ export default function Login() {
         navigate('/');
       } else {
         setError(data.message || 'Login failed');
+        setLoading(false);
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
+      setLoading(false);
     }
   };
 
@@ -82,8 +85,8 @@ export default function Login() {
                 </div>
               </div>
 
-              <button type="submit" className="btn btn-primary auth-submit">
-                {t('login.signIn')}
+              <button type="submit" className="btn btn-primary auth-submit" disabled={loading}>
+                {loading ? <Loader2 size={18} className="auth-spinner" /> : t('login.signIn')}
               </button>
             </form>
 
