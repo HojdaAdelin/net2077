@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect, useCallback } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { CircleAlert, Lock, X, Trash2, RefreshCw, Plus, Megaphone } from 'lucide-react';
+import { CircleAlert, Lock, X, Trash2, RefreshCw, Plus, Megaphone, Sparkles, Zap, Bug, Send } from 'lucide-react';
 import './SupportButton.css';
 
 const STATUS_LABELS = { open: 'Open', 'in-progress': 'In Progress', closed: 'Closed' };
@@ -96,6 +96,177 @@ const UpdateNotePanel = () => {
           {saving ? 'Saving...' : 'Set Note'}
         </button>
         {msg && <div className={`support-message ${msg.includes('set') || msg.includes('removed') ? 'success' : 'error'}`}>{msg}</div>}
+      </div>
+    </div>
+  );
+};
+
+const PublishUpdatePanel = () => {
+  const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  const [version, setVersion] = useState('');
+  const [features, setFeatures] = useState(['']);
+  const [improvements, setImprovements] = useState(['']);
+  const [bugFixes, setBugFixes] = useState(['']);
+  const [publishing, setPublishing] = useState(false);
+  const [msg, setMsg] = useState('');
+  const [existingUpdates, setExistingUpdates] = useState([]);
+  const [loadingUpdates, setLoadingUpdates] = useState(true);
+
+  const loadUpdates = useCallback(async () => {
+    setLoadingUpdates(true);
+    try {
+      const res = await fetch(`${API_URL}/updates`);
+      const data = await res.json();
+      setExistingUpdates(data.updates || []);
+    } catch { setExistingUpdates([]); }
+    finally { setLoadingUpdates(false); }
+  }, []);
+
+  useEffect(() => { loadUpdates(); }, [loadUpdates]);
+
+  const handleDelete = async (id) => {
+    if (!confirm('Delete this update?')) return;
+    try {
+      await fetch(`${API_URL}/updates/${id}`, { method: 'DELETE', credentials: 'include' });
+      setExistingUpdates(prev => prev.filter(u => u._id !== id));
+    } catch { /* ignore */ }
+  };
+
+  const handlePublish = async () => {
+    if (!version.trim()) { setMsg('Version name is required.'); return; }
+    const hasContent = features.some(f => f.trim()) || improvements.some(i => i.trim()) || bugFixes.some(b => b.trim());
+    if (!hasContent) { setMsg('Add at least one item.'); return; }
+    setPublishing(true); setMsg('');
+    try {
+      const res = await fetch(`${API_URL}/updates`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ version: version.trim(), date: today, sections: { features, improvements, bugFixes } })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setMsg('Update published!');
+        setVersion(''); setFeatures(['']); setImprovements(['']); setBugFixes(['']);
+        loadUpdates();
+      } else { setMsg(data.message || 'Error publishing'); }
+    } catch { setMsg('Network error.'); }
+    finally { setPublishing(false); }
+  };
+
+  return (
+    <div className="pub-panel">
+      <div className="pub-meta-row">
+        <div className="pub-field">
+          <label>Version name</label>
+          <input
+            className="pub-version-input"
+            placeholder="e.g. 1.3.0"
+            value={version}
+            onChange={e => setVersion(e.target.value)}
+            maxLength={20}
+          />
+        </div>
+        <div className="pub-field">
+          <label>Date</label>
+          <div className="pub-date-display">{today}</div>
+        </div>
+      </div>
+
+      {/* Features */}
+      <div className="pub-section">
+        <div className="pub-section-label"><Sparkles size={14} />Features</div>
+        {features.map((val, i) => (
+          <div key={i} className="pub-item-row">
+            <input
+              className="pub-item-input"
+              placeholder="Feature item..."
+              value={val}
+              onChange={e => {
+                const v = e.target.value;
+                setFeatures(prev => prev.map((x, idx) => idx === i ? v : x));
+              }}
+              maxLength={200}
+            />
+            {features.length > 1 && (
+              <button className="pub-remove-btn" onClick={() => setFeatures(prev => prev.filter((_, idx) => idx !== i))}><X size={12} /></button>
+            )}
+          </div>
+        ))}
+        <button className="pub-add-btn" onClick={() => setFeatures(prev => [...prev, ''])}><Plus size={12} /> Add</button>
+      </div>
+
+      {/* Improvements */}
+      <div className="pub-section">
+        <div className="pub-section-label"><Zap size={14} />Improvements</div>
+        {improvements.map((val, i) => (
+          <div key={i} className="pub-item-row">
+            <input
+              className="pub-item-input"
+              placeholder="Improvement item..."
+              value={val}
+              onChange={e => {
+                const v = e.target.value;
+                setImprovements(prev => prev.map((x, idx) => idx === i ? v : x));
+              }}
+              maxLength={200}
+            />
+            {improvements.length > 1 && (
+              <button className="pub-remove-btn" onClick={() => setImprovements(prev => prev.filter((_, idx) => idx !== i))}><X size={12} /></button>
+            )}
+          </div>
+        ))}
+        <button className="pub-add-btn" onClick={() => setImprovements(prev => [...prev, ''])}><Plus size={12} /> Add</button>
+      </div>
+
+      {/* Bug Fixes */}
+      <div className="pub-section">
+        <div className="pub-section-label"><Bug size={14} />Bug Fixes</div>
+        {bugFixes.map((val, i) => (
+          <div key={i} className="pub-item-row">
+            <input
+              className="pub-item-input"
+              placeholder="Bug fix item..."
+              value={val}
+              onChange={e => {
+                const v = e.target.value;
+                setBugFixes(prev => prev.map((x, idx) => idx === i ? v : x));
+              }}
+              maxLength={200}
+            />
+            {bugFixes.length > 1 && (
+              <button className="pub-remove-btn" onClick={() => setBugFixes(prev => prev.filter((_, idx) => idx !== i))}><X size={12} /></button>
+            )}
+          </div>
+        ))}
+        <button className="pub-add-btn" onClick={() => setBugFixes(prev => [...prev, ''])}><Plus size={12} /> Add</button>
+      </div>
+
+      {msg && <div className={`support-message ${msg.includes('published') ? 'success' : 'error'}`}>{msg}</div>}
+      <button className="pub-publish-btn" onClick={handlePublish} disabled={publishing}>
+        <Send size={15} /> {publishing ? 'Publishing...' : 'Publish Update'}
+      </button>
+
+      {/* Existing versions */}
+      <div className="pub-existing">
+        <div className="pub-existing-label">Published versions</div>
+        {loadingUpdates ? (
+          <div className="pub-existing-empty">Loading...</div>
+        ) : existingUpdates.length === 0 ? (
+          <div className="pub-existing-empty">No versions published yet.</div>
+        ) : (
+          existingUpdates.map(u => (
+            <div key={u._id} className="pub-existing-item">
+              <div className="pub-existing-info">
+                <span className="pub-existing-version">v{u.version}</span>
+                <span className="pub-existing-date">{u.date}</span>
+              </div>
+              <button className="pub-existing-delete" onClick={() => handleDelete(u._id)} title="Delete">
+                <Trash2 size={14} />
+              </button>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
@@ -456,6 +627,11 @@ const SupportButton = () => {
                     📢 Update Note
                   </button>
                 )}
+                {isRoot && (
+                  <button className={`support-tab support-tab-admin ${activeTab === 'updates' ? 'active' : ''}`} onClick={() => setActiveTab('updates')}>
+                    🚀 Updates
+                  </button>
+                )}
               </div>
               <button className="support-close" onClick={() => setIsOpen(false)}>×</button>
             </div>
@@ -497,6 +673,7 @@ const SupportButton = () => {
 
             {activeTab === 'admin' && isRoot && <AdminPanel onClose={() => setIsOpen(false)} />}
             {activeTab === 'updatenote' && isRoot && <UpdateNotePanel />}
+            {activeTab === 'updates' && isRoot && <PublishUpdatePanel />}
           </div>
         </div>
       )}

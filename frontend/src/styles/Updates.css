@@ -41,6 +41,29 @@
   margin-bottom: 32px;
   padding-bottom: 24px;
   border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.update-author {
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+  margin-top: 6px;
+}
+
+.update-author:hover { opacity: 1; text-decoration: underline; }
+
+.updates-loading,
+.updates-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
 }
 
 .update-version h2 {
