@@ -673,23 +673,27 @@ export default function Quiz({ isExam = false }) {
     }
   };
 
-  // Keyboard navigation for non-exam quiz
+  // Keyboard navigation
   useEffect(() => {
-    if (isExam || showResults) return;
+    if (showResults) return;
+    if (isExam && !examStarted) return;
 
     const handleKeyDown = (e) => {
-      // Ignore if user is typing in an input/textarea
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
       if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
         if (currentIndex < questions.length - 1) {
           const next = currentIndex + 1;
+          // exam: skip locked questions
+          if (isExam && lockedQuestions[questions[next]?._id]) return;
           setCurrentIndex(next);
           setSidebarPage(Math.floor(next / SIDEBAR_PAGE_SIZE));
         }
       } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
         if (currentIndex > 0) {
           const prev = currentIndex - 1;
+          // exam: skip locked questions
+          if (isExam && lockedQuestions[questions[prev]?._id]) return;
           setCurrentIndex(prev);
           setSidebarPage(Math.floor(prev / SIDEBAR_PAGE_SIZE));
         }
@@ -706,7 +710,7 @@ export default function Quiz({ isExam = false }) {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isExam, showResults, currentIndex, questions, selectedAnswers, submittedAnswers, handleSubmitQuestion]);
+  }, [isExam, examStarted, showResults, currentIndex, questions, selectedAnswers, submittedAnswers, lockedQuestions, handleSubmitQuestion]);
 
   const handleSubmitAll = () => {
     handleFinishExam('manual');
