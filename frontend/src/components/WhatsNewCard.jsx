@@ -13,21 +13,29 @@ const SECTIONS = [
 
 export default function WhatsNewCard() {
   const { user } = useContext(AuthContext);
-  const [data, setData] = useState(null);   // { latestVersion, sections }
+  const [data, setData] = useState(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!user) return;
-    fetch(`${API_URL}/updates/whats-new`, { credentials: 'include' })
-      .then(r => r.json())
-      .then(d => {
-        if (d.hasNew) {
-          setData(d);
-          setVisible(true);
-        }
-      })
-      .catch(() => {});
-  }, [user]);
+    if (!user?.id) {
+      setData(null);
+      setVisible(false);
+      return;
+    }
+    // Small delay to ensure the auth cookie is fully set after login
+    const timer = setTimeout(() => {
+      fetch(`${API_URL}/updates/whats-new`, { credentials: 'include' })
+        .then(r => r.json())
+        .then(d => {
+          if (d.hasNew) {
+            setData(d);
+            setVisible(true);
+          }
+        })
+        .catch(() => {});
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [user?.id]);
 
   const dismiss = () => {
     setVisible(false);
