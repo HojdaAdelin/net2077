@@ -504,6 +504,100 @@ const AdminPanel = ({ onClose }) => {
   );
 };
 
+const BulkQuestionsPanel = () => {
+  const [questionsRaw, setQuestionsRaw] = useState('');
+  const [importing, setImporting] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [result, setResult] = useState(null);
+
+  const handleImport = async () => {
+    setResult(null);
+    let questions;
+    try {
+      questions = JSON.parse(questionsRaw.trim());
+      if (!Array.isArray(questions)) throw new Error('Must be a JSON array [ ]');
+    } catch (e) {
+      setResult({ parseError: e.message });
+      return;
+    }
+
+    setImporting(true);
+    setProgress(0);
+    const iv = setInterval(() => setProgress(p => Math.min(p + 3, 90)), 200);
+
+    try {
+      const res = await fetch(`${API_URL}/exams/bulk-questions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ questions }),
+      });
+      const data = await res.json();
+      clearInterval(iv);
+      setProgress(100);
+      setResult(data);
+    } catch {
+      clearInterval(iv);
+      setResult({ parseError: 'Server error during import.' });
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  const handleReset = () => {
+    setQuestionsRaw('');
+    setResult(null);
+    setProgress(0);
+  };
+
+  return (
+    <div className="bqp-panel">
+      <div className="bqp-label">Paste JSON array of questions</div>
+      <textarea
+        className="bqp-textarea"
+        rows={12}
+        placeholder={'[\n  {\n    "title": "...",\n    "type": "basic",\n    "answers": [...],\n    "correctAnswers": [0],\n    "multipleCorrect": false,\n    "difficulty": "easy",\n    "points": 1,\n    "tags": ["LINUX"]\n  }\n]'}
+        value={questionsRaw}
+        onChange={e => { setQuestionsRaw(e.target.value); setResult(null); setProgress(0); }}
+        disabled={importing || result?.inserted !== undefined}
+      />
+
+      {importing && (
+        <div className="bqp-progress-wrap">
+          <div className="bqp-progress-bar">
+            <div className="bqp-progress-fill" style={{ width: `${progress}%` }} />
+          </div>
+          <span className="bqp-progress-label">Importing... {progress}%</span>
+        </div>
+      )}
+
+      {result && (
+        <div className={`bqp-result ${result.parseError ? 'error' : 'success'}`}>
+          {result.parseError
+            ? `❌ ${result.parseError}`
+            : <>✅ Inserted: <strong>{result.inserted}</strong>{result.skipped > 0 && <> · Skipped: <strong>{result.skipped}</strong></>}{result.errors?.length > 0 && <> · Errors: <strong>{result.errors.length}</strong></>}</>
+          }
+        </div>
+      )}
+
+      <div className="bqp-footer">
+        {result?.inserted !== undefined
+          ? <button className="pub-add-btn" onClick={handleReset}>Import more</button>
+          : (
+            <button
+              className="pub-publish-btn"
+              onClick={handleImport}
+              disabled={importing || !questionsRaw.trim()}
+            >
+              {importing ? 'Importing...' : 'Import Questions'}
+            </button>
+          )
+        }
+      </div>
+    </div>
+  );
+};
+
 const SupportButton = () => {
   const { user } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
@@ -632,6 +726,11 @@ const SupportButton = () => {
                     🚀 Updates
                   </button>
                 )}
+                {isRoot && (
+                  <button className={`support-tab support-tab-admin ${activeTab === 'questions' ? 'active' : ''}`} onClick={() => setActiveTab('questions')}>
+                    📝 Questions
+                  </button>
+                )}
               </div>
               <button className="support-close" onClick={() => setIsOpen(false)}>×</button>
             </div>
@@ -674,6 +773,7 @@ const SupportButton = () => {
             {activeTab === 'admin' && isRoot && <AdminPanel onClose={() => setIsOpen(false)} />}
             {activeTab === 'updatenote' && isRoot && <UpdateNotePanel />}
             {activeTab === 'updates' && isRoot && <PublishUpdatePanel />}
+            {activeTab === 'questions' && isRoot && <BulkQuestionsPanel />}
           </div>
         </div>
       )}

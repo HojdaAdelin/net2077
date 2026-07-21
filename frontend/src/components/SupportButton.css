@@ -1054,3 +1054,87 @@
   color: #ef4444;
   background: rgba(239, 68, 68, 0.1);
 }
+
+/* ── Bulk Questions Panel ── */
+.bqp-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}
+
+.bqp-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.bqp-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--text-primary);
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.bqp-textarea:focus { border-color: var(--border-light); }
+.bqp-textarea:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.bqp-progress-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.bqp-progress-bar {
+  height: 5px;
+  background: var(--bg-secondary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bqp-progress-fill {
+  height: 100%;
+  background: var(--accent-primary);
+  transition: width 0.2s ease;
+  border-radius: 3px;
+}
+
+.bqp-progress-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.bqp-result {
+  padding: 9px 12px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid;
+}
+
+.bqp-result.success {
+  background: rgba(34, 197, 94, 0.07);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.bqp-result.error {
+  background: rgba(239, 68, 68, 0.07);
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.bqp-footer {
+  display: flex;
+  justify-content: flex-end;
+}
