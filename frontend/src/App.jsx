@@ -8,6 +8,7 @@ import { InboxProvider } from './context/InboxContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SupportButton from './components/SupportButton';
+import WhatsNewCard from './components/WhatsNewCard';
 import Home from './pages/Home';
 import Grile from './pages/Grile';
 import Quiz from './pages/Quiz';
@@ -80,6 +81,7 @@ export default function App() {
                 </Routes>
                 <Footer />
                 <SupportButton />
+                <WhatsNewCard />
               </BrowserRouter>
             </ConfirmProvider>
           </MessageProvider>

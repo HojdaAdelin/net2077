@@ -107,6 +107,7 @@ const userSchema = new mongoose.Schema({
     lastPeriodRank: { type: Number, default: null },
     totalGoldEarned: { type: Number, default: 0 }
   },
+  lastSeenVersion: { type: String, default: null },
   saved: [{
     itemId: { type: mongoose.Schema.Types.ObjectId, required: true },
     type: { type: String, enum: ['question', 'lesson'], required: true },
