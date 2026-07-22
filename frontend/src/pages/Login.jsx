@@ -49,12 +49,12 @@ export default function Login() {
 
             <form onSubmit={handleSubmit} className="auth-form" autoComplete="on">
               <div className="form-group">
-                <label className="form-label">{t('login.email')}</label>
+                <label className="form-label">Email or Username</label>
                 <input 
-                  type="email" 
+                  type="text" 
                   name="email"
-                  autoComplete="email"
-                  placeholder={t('login.emailPlaceholder')} 
+                  autoComplete="username"
+                  placeholder="Enter your email or username" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="form-input"
