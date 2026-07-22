@@ -1,7 +1,7 @@
 [
   {
     "id": "acadnet2025local",
-    "title": "Acadnet 2025 - Local Phase XI-XII",
+    "title": "Acadnet 2025 Calculatoare - Local Phase XI-XII",
     "description": "Official local phase examination for Acadnet 2025",
     "duration": 60,
     "totalPoints": 100,
@@ -11,7 +11,7 @@
   },
   {
     "id": "acadnet2025local_9_10",
-    "title": "Acadnet 2025 - Local Phase IX-X",
+    "title": "Acadnet 2025 Calculatoare - Local Phase IX-X",
     "description": "Official local phase examination for Acadnet 2025",
     "duration": 60,
     "totalPoints": 100,
@@ -21,7 +21,7 @@
   },
   {
     "id": "acadnet2025county_9_10",
-    "title": "Acadnet 2025 - County Phase IX-X",
+    "title": "Acadnet 2025 Calculatoare - County Phase IX-X",
     "description": "Official county phase examination for Acadnet 2025",
     "duration": 60,
     "totalPoints": 100,
@@ -31,7 +31,7 @@
   },
   {
     "id": "acadnet2025county_11_12",
-    "title": "Acadnet 2025 - County Phase XI-XII",
+    "title": "Acadnet 2025 Calculatoare - County Phase XI-XII",
     "description": "Official county phase examination for Acadnet 2025",
     "duration": 60,
     "totalPoints": 100,
@@ -141,7 +141,7 @@
   },
   {
     "id": "acadnet2024county_11_12",
-    "title": "Acadnet 2024 - County Phase XI-XII",
+    "title": "Acadnet 2024 Calculatoare - County Phase XI-XII",
     "description": "Official county phase examination for Acadnet 2024",
     "duration": 60,
     "totalPoints": 100,
@@ -151,7 +151,7 @@
   },
   {
     "id": "acadnet2024county_9_10",
-    "title": "Acadnet 2024 - County Phase IX-X",
+    "title": "Acadnet 2024 Calculatoare - County Phase IX-X",
     "description": "Official county phase examination for Acadnet 2024",
     "duration": 60,
     "totalPoints": 100,
@@ -161,7 +161,7 @@
   },
   {
     "id": "acadnet2023national_11_12",
-    "title": "Acadnet 2023 - National Phase XI-XII",
+    "title": "Acadnet 2023 Calculatoare - National Phase XI-XII",
     "description": "Official national phase examination for Acadnet 2023",
     "duration": 60,
     "totalPoints": 100,
@@ -171,7 +171,7 @@
   },
   {
     "id": "acadnet2026local_11_12",
-    "title": "Acadnet 2026 - Local Phase XI-XII",
+    "title": "Acadnet 2026 Calculatoare - Local Phase XI-XII",
     "description": "Official local phase examination for Acadnet 2026",
     "duration": 60,
     "totalPoints": 100,
@@ -211,12 +211,32 @@
   },
   {
     "id": "acadnet2026county_11_12",
-    "title": "Acadnet 2026 - County Phase XI-XII",
+    "title": "Acadnet 2026 Calculatoare - County Phase XI-XII",
     "description": "Official county phase examination for Acadnet 2026",
     "duration": 60,
     "totalPoints": 100,
     "tag": "ACADNET_2026_COUNTY_XI_XII",
     "year": 2026,
     "phase": "county"
+  },
+  {
+  "id": "acadnet2026county_9_10",
+  "title": "Acadnet 2026 Calculatoare - County Phase IX-X",
+  "description": "Official county phase examination for Acadnet 2026",
+  "duration": 60,
+  "totalPoints": 100,
+  "tag": "ACADNET_2026_COUNTY_IX_X",
+  "year": 2026,
+  "phase": "county"
+  },
+  {
+  "id": "acadnet2026national_11_12",
+  "title": "Acadnet 2026 Calculatoare - National Phase XI-XII",
+  "description": "Official national phase examination for Acadnet 2026",
+  "duration": 60,
+  "totalPoints": 60,
+  "tag": "ACADNET_2026_NATIONAL_XI_XII",
+  "year": 2026,
+  "phase": "national"
   }
 ]
