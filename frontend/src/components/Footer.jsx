@@ -41,7 +41,6 @@ export default function Footer() {
 
         <div className="ft-bottom">
           <span>© 2025-2026 NET2077. {t('footer.rights')}</span>
-          <span>{t('footer.version')} 1.2.0</span>
         </div>
       </div>
     </footer>
