@@ -411,6 +411,27 @@ export default function Hero() {
         </div>
       </section>
 
+      {/* ── Partners ── */}
+      <section className="h-section">
+        <div className="h-container">
+          <div className="h-section-header">
+            <h2 className="h-section-title">Partners</h2>
+            <p className="h-section-sub">Platforms we trust and work alongside.</p>
+          </div>
+          <div className="h-partners">
+            <a href="https://atomoschola.vercel.app/" target="_blank" rel="noopener noreferrer" className="h-partner-card">
+              <img src="/as.jpeg" alt="AtomoSchola logo" className="h-partner-logo" />
+              <div className="h-partner-info">
+                <span className="h-partner-name">AtomoSchola</span>
+                <p className="h-partner-desc">
+                  An educational platform covering both STEM and humanities. Good content, clean experience, worth checking out if you want to learn beyond informatics.
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {!user && (
         <section className="h-section">
           <div className="h-container">

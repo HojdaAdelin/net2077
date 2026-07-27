@@ -1349,3 +1349,74 @@ AcadNet Section ── */
   color: var(--accent-primary);
   transform: translateX(2px);
 }
+
+/* ── Partners ── */
+.h-partners {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.h-partner-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-decoration: none;
+  max-width: 480px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+  animation: partner-border-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes partner-border-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); border-color: var(--border); }
+  50%       { box-shadow: 0 0 8px 2px rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.5); }
+}
+
+[data-theme="light"] .h-partner-card {
+  animation: partner-border-pulse-light 2.5s ease-in-out infinite;
+}
+
+@keyframes partner-border-pulse-light {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); border-color: var(--border); }
+  50%       { box-shadow: 0 0 8px 2px rgba(0,0,0,0.12); border-color: rgba(0,0,0,0.3); }
+}
+
+.h-partner-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.h-partner-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+.h-partner-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.h-partner-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.h-partner-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0;
+}
