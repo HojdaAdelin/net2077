@@ -479,3 +479,250 @@
 [data-theme="dark"] .shop-dialog {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
 }
+/* 
+── Gold Transfer ── */
+.gold-transfer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: 12px;
+}
+
+.gold-transfer-btn:hover {
+  border-color: #eab308;
+  color: #eab308;
+}
+
+/* Overlay */
+.transfer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+/* Modal */
+.transfer-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.transfer-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.transfer-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.transfer-modal-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.transfer-modal-close:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.transfer-modal-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.transfer-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.transfer-field label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.transfer-input {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text-primary);
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.transfer-input:focus {
+  border-color: #eab308;
+}
+
+.transfer-amount-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.transfer-amount-icon {
+  position: absolute;
+  left: 12px;
+  color: #eab308;
+  pointer-events: none;
+}
+
+.transfer-input-amount {
+  padding-left: 34px;
+  padding-right: 90px;
+}
+
+.transfer-balance {
+  position: absolute;
+  right: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Preview */
+.transfer-preview {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.transfer-preview-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.transfer-preview-row.commission {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.transfer-preview-row.total {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.transfer-preview-value { color: var(--text-primary); font-weight: 500; }
+.transfer-preview-commission { color: #ef4444; }
+.transfer-preview-total { color: #eab308; font-weight: 700; }
+
+.transfer-preview-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 2px 0;
+}
+
+.transfer-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+  font-style: italic;
+}
+
+.transfer-msg {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.transfer-msg.success { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+.transfer-msg.error   { background: rgba(239,68,68,0.1);  color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+
+.transfer-modal-footer {
+  display: flex;
+  gap: 10px;
+  padding: 16px 24px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.transfer-cancel-btn {
+  flex: 1;
+  padding: 10px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.transfer-cancel-btn:hover {
+  border-color: var(--border-light);
+  color: var(--text-primary);
+}
+
+.transfer-send-btn {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px;
+  background: #eab308;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.transfer-send-btn:hover { opacity: 0.88; }
+.transfer-send-btn:disabled { opacity: 0.45; cursor: not-allowed; }

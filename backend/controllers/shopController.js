@@ -218,3 +218,71 @@ export const calculateXPWithBoosts = async (userId, baseXP) => {
     return baseXP;
   }
 };
+
+export const transferGold = async (req, res) => {
+  try {
+    const senderId = req.userId;
+    const { recipientUsername, amount } = req.body;
+
+    // Validate input types
+    const parsedAmount = parseInt(amount, 10);
+    if (!recipientUsername || typeof recipientUsername !== 'string') {
+      return res.status(400).json({ message: 'Invalid recipient username.' });
+    }
+    if (!Number.isInteger(parsedAmount) || parsedAmount <= 0) {
+      return res.status(400).json({ message: 'Amount must be a positive integer.' });
+    }
+    if (parsedAmount > 1_000_000) {
+      return res.status(400).json({ message: 'Amount exceeds maximum transfer limit.' });
+    }
+
+    const sender = await User.findById(senderId);
+    if (!sender) return res.status(404).json({ message: 'Sender not found.' });
+
+    // Can't send to yourself
+    if (sender.username.toLowerCase() === recipientUsername.trim().toLowerCase()) {
+      return res.status(400).json({ message: 'You cannot send gold to yourself.' });
+    }
+
+    // Check sender has enough gold (strict server-side check)
+    if (!sender.gold || sender.gold < parsedAmount) {
+      return res.status(400).json({
+        message: `Insufficient gold. You have ${sender.gold || 0} gold.`
+      });
+    }
+
+    const recipient = await User.findOne({
+      username: { $regex: new RegExp(`^${recipientUsername.trim()}$`, 'i') }
+    });
+    if (!recipient) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    // Apply 10% commission (floor)
+    const commission = Math.floor(parsedAmount * 0.1);
+    const received = parsedAmount - commission;
+
+    // Atomic update to prevent race conditions
+    const updatedSender = await User.findOneAndUpdate(
+      { _id: senderId, gold: { $gte: parsedAmount } },
+      { $inc: { gold: -parsedAmount } },
+      { new: true }
+    );
+
+    if (!updatedSender) {
+      return res.status(400).json({ message: 'Insufficient gold or concurrent transaction error.' });
+    }
+
+    await User.findByIdAndUpdate(recipient._id, { $inc: { gold: received } });
+
+    res.json({
+      success: true,
+      sent: parsedAmount,
+      received,
+      commission,
+      remainingGold: updatedSender.gold
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
