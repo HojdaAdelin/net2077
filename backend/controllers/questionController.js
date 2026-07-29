@@ -413,3 +413,15 @@ export const submitRandom50 = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+export 
+const exportAllQuestions = async (req, res) => {
+  try {
+    const questions = await Question.find({}).lean();
+    const clean = questions.map(({ _id, __v, createdAt, updatedAt, ...q }) => q);
+    res.setHeader('Content-Disposition', 'attachment; filename="questions.json"');
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(clean, null, 2));
+  } catch (error) {
+    res.status(500).json({ message: 'Export failed', error: error.message });
+  }
+};

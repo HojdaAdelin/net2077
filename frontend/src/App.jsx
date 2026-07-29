@@ -21,6 +21,7 @@ import Progress from './pages/Progress';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Updates from './pages/Updates';
+import RootDashboard from './pages/RootDashboard';
 import Leaderboard from './pages/Leaderboard';
 import Lab from './pages/Lab';
 import Terminal from './pages/Terminal';
@@ -61,6 +62,7 @@ export default function App() {
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/updates" element={<Updates />} />
+                  <Route path="/usage" element={<RootDashboard />} />
                   <Route path="/leaderboard" element={<Leaderboard />} />
                   <Route path="/leaderboard/:tab" element={<Leaderboard />} />
                   <Route path="/lab" element={<Lab />} />

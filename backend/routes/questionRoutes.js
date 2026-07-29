@@ -1,6 +1,7 @@
 import express from 'express';
-import { getQuestions, getQuestionById, getUnsolvedQuestions, getRandom50, markSolved, dailyLinux, getDailyChallengeStatus, completeDailyChallenge, resetBasicStats, dailyNetwork, resetLinuxStats, getLinuxOverviewTest, submitRandom50 } from '../controllers/questionController.js';
+import { getQuestions, getQuestionById, getUnsolvedQuestions, getRandom50, markSolved, dailyLinux, getDailyChallengeStatus, completeDailyChallenge, resetBasicStats, dailyNetwork, resetLinuxStats, getLinuxOverviewTest, submitRandom50, exportAllQuestions } from '../controllers/questionController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
+import { checkRole } from '../middleware/checkRole.js';
 
 const router = express.Router();
 
@@ -15,6 +16,7 @@ router.post('/examPoints', authMiddleware, markSolved);
 router.post('/completeDailyChallenge', authMiddleware, completeDailyChallenge);
 router.post('/resetBasicStats', authMiddleware, resetBasicStats);
 router.post('/resetLinuxStats', authMiddleware, resetLinuxStats);
+router.get('/export', authMiddleware, checkRole('root'), exportAllQuestions);
 router.get('/', getQuestions);
 router.get('/:id', getQuestionById);
 router.post('/submitRandom50', authMiddleware, submitRandom50);

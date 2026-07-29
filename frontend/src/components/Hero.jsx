@@ -54,10 +54,10 @@ const TRACKS = [
 ];
 
 const EXAMS = [
-  { to: '/exam/acadnet2026local_11_12', meta: 'LOCAL · XI-XII', title: 'AcadNet 2026', info: '50 Questions · Medium' },
-  { to: '/exam/acadnet2026county_11_12', meta: 'COUNTY · XI-XII', title: 'AcadNet 2026', info: '50 Questions · Hard' },
-  { to: '/exam/acadnet2023national_11_12', meta: 'NATIONAL · XI-XII', title: 'AcadNet 2023', info: '50 Questions · Hard' },
-  { to: '/exam/linux_permissions', meta: 'MISCELLANEOUS', title: 'Linux Permissions', info: '20 Questions · Medium' },
+  { to: '/exam/acadnet2026local_11_12', meta: 'LOCAL · XI-XII', title: 'AcadNet Calculatoare 2026', info: '50 Questions · Medium' },
+  { to: '/exam/acadnet2026county_11_12', meta: 'COUNTY · XI-XII', title: 'AcadNet Calculatoare 2026', info: '50 Questions · Medium' },
+  { to: '/exam/acadnet2023national_11_12', meta: 'NATIONAL · XI-XII', title: 'AcadNet Calculatoare 2023', info: '50 Questions · Hard' },
+  { to: '/exam/acadnet2026national_11_12', meta: 'NATIONAL · XI-XII', title: 'AcadNet Calculatoare 2026', info: '30 Questions · Hard' },
 ];
 
 const FEATURES_GUEST = [

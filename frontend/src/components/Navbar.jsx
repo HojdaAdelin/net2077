@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
 import { useInbox } from '../context/InboxContext';
-import { Languages, ChevronDown, LogIn,Swords, UserPlus,Star, LogOut, User, Sun, Moon, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap, FileTerminal, Users, Bookmark } from 'lucide-react';
+import { Languages, ChevronDown, LogIn,Swords, UserPlus,Star, LogOut, User, Sun, Moon,Settings, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap, FileTerminal, Users, Bookmark } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
 import SupportButton from './SupportButton';
@@ -412,6 +412,12 @@ export default function Navbar() {
                         <Bookmark size={16} />
                         Saved Content
                       </button>
+                      {user.role === 'root' && (
+                        <Link to="/usage" onClick={() => setProfileDropdownOpen(false)}>
+                          <Settings size={16} />
+                          Dashboard
+                        </Link>
+                      )}
                       <button onClick={handleLogout}>
                         <LogOut size={16} />
                         Logout
