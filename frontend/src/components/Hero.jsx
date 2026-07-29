@@ -233,7 +233,15 @@ export default function Hero() {
                     {isLinux ? (
                       <button
                         className="h-track-get-started"
-                        onClick={() => setLinuxOverviewOpen(v => !v)}
+                        onClick={() => {
+                          const isOpening = !linuxOverviewOpen;
+                          setLinuxOverviewOpen(v => !v);
+                          if (isOpening) {
+                            setTimeout(() => {
+                              document.querySelector('.h-linux-overview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }, 50);
+                          }
+                        }}
                       >
                         Get Started <ChevronDown size={14} className={`h-track-chevron ${linuxOverviewOpen ? 'open' : ''}`} />
                       </button>

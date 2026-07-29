@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
 import { useInbox } from '../context/InboxContext';
-import { Languages, ChevronDown, LogIn,Swords, UserPlus,Star, LogOut, User, Sun, Moon,Settings, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap, FileTerminal, Users, Bookmark } from 'lucide-react';
+import { Languages, ChevronDown, LogIn, Swords, UserPlus, Star, LogOut, User, Sun, Moon, Settings, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap, FileTerminal, Users, Bookmark, Menu, X } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
 import SupportButton from './SupportButton';
@@ -169,7 +169,7 @@ export default function Navbar() {
         </Link>
         
         <button className="mobile-menu-btn" onClick={toggleMobileMenu}>
-          <span className="menu-icon"></span>
+          {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
 
         <div className={`nav-links ${mobileMenuOpen ? 'active' : ''}`}>

@@ -76,6 +76,9 @@
   border: none;
   padding: 8px;
   cursor: pointer;
+  color: var(--text-primary);
+  align-items: center;
+  justify-content: center;
 }
 
 .menu-icon {
@@ -107,7 +110,7 @@
 
 @media (max-width: 768px) {
   .mobile-menu-btn {
-    display: block;
+    display: flex;
   }
 
   .nav-links {
