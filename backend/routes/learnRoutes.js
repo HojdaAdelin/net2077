@@ -39,6 +39,11 @@ const canEditLearn = async (req, res, next) => {
 
     if (!roadmapId) return res.status(400).json({ message: 'Cannot resolve roadmap' });
 
+    // Prevent cross-roadmap tampering: body.roadmapId must match the resolved roadmap
+    if (req.body?.roadmapId && req.body.roadmapId.toString() !== roadmapId) {
+      return res.status(403).json({ message: 'Roadmap ID mismatch' });
+    }
+
     const roadmap = await Roadmap.findById(roadmapId).select('editors');
     if (!roadmap) return res.status(404).json({ message: 'Roadmap not found' });
 
