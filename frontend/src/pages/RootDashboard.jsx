@@ -270,21 +270,6 @@ function UpdatesPanel() {
     setExisting(prev => prev.filter(u => u._id !== id));
   };
 
-  const SectionInput = ({ label, icon: Icon, items, setItems }) => (
-    <div className="rd-update-section">
-      <div className="rd-section-label"><Icon size={13} />{label}</div>
-      {items.map((val, i) => (
-        <div key={i} className="rd-feature-row">
-          <input className="rd-input" placeholder={`${label} item...`} value={val}
-            onChange={e => { const v = e.target.value; setItems(prev => prev.map((x, idx) => idx === i ? v : x)); }}
-            maxLength={200} />
-          {items.length > 1 && <button className="rd-icon-btn" onClick={() => setItems(prev => prev.filter((_, idx) => idx !== i))}><X size={13} /></button>}
-        </div>
-      ))}
-      <button className="rd-add-btn" onClick={() => setItems(prev => [...prev, ''])}><Plus size={12} /> Add</button>
-    </div>
-  );
-
   return (
     <div className="rd-updates">
       <div className="rd-meta-row">
@@ -297,9 +282,49 @@ function UpdatesPanel() {
           <div className="rd-date-display">{today}</div>
         </div>
       </div>
-      <SectionInput label="Features" icon={Sparkles} items={features} setItems={setFeatures} />
-      <SectionInput label="Improvements" icon={Zap} items={improvements} setItems={setImprovements} />
-      <SectionInput label="Bug Fixes" icon={Bug} items={bugFixes} setItems={setBugFixes} />
+
+      {/* Features */}
+      <div className="rd-update-section">
+        <div className="rd-section-label"><Sparkles size={13} />Features</div>
+        {features.map((val, i) => (
+          <div key={i} className="rd-feature-row">
+            <input className="rd-input" placeholder="Feature item..." value={val}
+              onChange={e => { const v = e.target.value; setFeatures(prev => prev.map((x, idx) => idx === i ? v : x)); }}
+              maxLength={200} />
+            {features.length > 1 && <button className="rd-icon-btn" onClick={() => setFeatures(prev => prev.filter((_, idx) => idx !== i))}><X size={13} /></button>}
+          </div>
+        ))}
+        <button className="rd-add-btn" onClick={() => setFeatures(prev => [...prev, ''])}><Plus size={12} /> Add</button>
+      </div>
+
+      {/* Improvements */}
+      <div className="rd-update-section">
+        <div className="rd-section-label"><Zap size={13} />Improvements</div>
+        {improvements.map((val, i) => (
+          <div key={i} className="rd-feature-row">
+            <input className="rd-input" placeholder="Improvement item..." value={val}
+              onChange={e => { const v = e.target.value; setImprovements(prev => prev.map((x, idx) => idx === i ? v : x)); }}
+              maxLength={200} />
+            {improvements.length > 1 && <button className="rd-icon-btn" onClick={() => setImprovements(prev => prev.filter((_, idx) => idx !== i))}><X size={13} /></button>}
+          </div>
+        ))}
+        <button className="rd-add-btn" onClick={() => setImprovements(prev => [...prev, ''])}><Plus size={12} /> Add</button>
+      </div>
+
+      {/* Bug Fixes */}
+      <div className="rd-update-section">
+        <div className="rd-section-label"><Bug size={13} />Bug Fixes</div>
+        {bugFixes.map((val, i) => (
+          <div key={i} className="rd-feature-row">
+            <input className="rd-input" placeholder="Bug fix item..." value={val}
+              onChange={e => { const v = e.target.value; setBugFixes(prev => prev.map((x, idx) => idx === i ? v : x)); }}
+              maxLength={200} />
+            {bugFixes.length > 1 && <button className="rd-icon-btn" onClick={() => setBugFixes(prev => prev.filter((_, idx) => idx !== i))}><X size={13} /></button>}
+          </div>
+        ))}
+        <button className="rd-add-btn" onClick={() => setBugFixes(prev => [...prev, ''])}><Plus size={12} /> Add</button>
+      </div>
+
       {msg && <div className={`rd-msg ${msg.includes('Published') ? 'success' : 'error'}`}>{msg}</div>}
       <button className="rd-primary-btn" onClick={handlePublish} disabled={publishing}>
         <Send size={14} /> {publishing ? 'Publishing...' : 'Publish Update'}
