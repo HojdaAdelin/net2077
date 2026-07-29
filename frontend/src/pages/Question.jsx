@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
 import '../styles/SharedQuestion.css';
+import '../styles/Quiz.css';
+import QuestionTitle from '../components/QuestionTitle';
 
 export default function Question() {
   const { questionId } = useParams();
@@ -103,12 +105,10 @@ export default function Question() {
             </div>
           )}
           
-          <h2 className="sq-title">{question.title}</h2>
+          <h2 className="sq-title"><QuestionTitle title={question.title} /></h2>
 
           {question.multipleCorrect && (
-            <div className="sq-hint">
-              Select all correct answers
-            </div>
+            <div className="sq-hint">Select all correct answers</div>
           )}
 
           <div className="sq-answers">

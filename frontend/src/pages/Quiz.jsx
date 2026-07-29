@@ -5,6 +5,7 @@ import { API_URL as API_BASE } from '../config';
 import { AuthContext } from '../context/AuthContext';
 import { Share2, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import SaveButton from '../components/SaveButton';
+import QuestionTitle from '../components/QuestionTitle';
 import { getSaved } from '../services/api';
 const DEFAULT_EXAM_DURATION_MIN = 60;
 const SIDEBAR_PAGE_SIZE = 50;
@@ -1059,7 +1060,7 @@ export default function Quiz({ isExam = false }) {
                 </div>
               )}
 
-              <h2 className="question-title">{currentQuestion.title}</h2>
+              <h2 className="question-title"><QuestionTitle title={currentQuestion.title} /></h2>
 
               {currentQuestion.multipleCorrect && (
                 <div className="question-hint">

@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import {
   Settings, Users, FileText, Megaphone, Upload,
   Trash2, Plus, X, RefreshCw, Send, Sparkles, Zap, Bug,
-  ChevronDown, CheckCircle, XCircle, Clock, Download
+  ChevronDown, CheckCircle, XCircle, Clock, Download,
+  Search, Copy, Database, ListFilter
 } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
@@ -348,6 +349,170 @@ function UpdatesPanel() {
   );
 }
 
+/* ─── Question Manager Panel ─── */
+function QuestionManagerPanel() {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(null);
+  const [deleted, setDeleted] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(null);
+  const [hasSearched, setHasSearched] = useState(false);
+
+  const search = async (all = false) => {
+    setLoading(true);
+    setHasSearched(true);
+    try {
+      const url = all
+        ? `${API_URL}/questions/search?all=1`
+        : `${API_URL}/questions/search?q=${encodeURIComponent(query.trim())}`;
+      const res = await fetch(url, { credentials: 'include' });
+      const data = await res.json();
+      setResults(data);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && query.trim().length >= 2) search(false);
+  };
+
+  const handleCopy = (q) => {
+    const { _id, __v, createdAt, updatedAt, ...clean } = q;
+    const text = JSON.stringify(clean, null, 2);
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+    } else {
+      fallbackCopy(text);
+    }
+    setCopied(q._id);
+    setTimeout(() => setCopied(null), 1800);
+  };
+
+  const fallbackCopy = (text) => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  };
+
+  const handleDelete = async (id) => {
+    const res = await fetch(`${API_URL}/questions/${id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    if (res.ok) {
+      setResults(prev => prev.filter(q => q._id !== id));
+      setDeleted(id);
+      setTimeout(() => setDeleted(null), 2000);
+    }
+    setConfirmDelete(null);
+  };
+
+  return (
+    <div className="rd-qmgr">
+      <div className="rd-qmgr-header">
+        <div className="rd-section-label" style={{ margin: 0 }}>
+          <Database size={13} /> Question Manager
+        </div>
+      </div>
+
+      <div className="rd-qmgr-search-row">
+        <div className="rd-qmgr-input-wrap">
+          <Search size={15} className="rd-qmgr-search-icon" />
+          <input
+            className="rd-input rd-qmgr-input"
+            placeholder="Search by title... (min 2 chars)"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+            maxLength={200}
+          />
+        </div>
+        <button
+          className="rd-primary-btn"
+          style={{ marginTop: 0 }}
+          onClick={() => search(false)}
+          disabled={loading || query.trim().length < 2}
+        >
+          <Search size={14} /> Search
+        </button>
+        <button
+          className="rd-export-btn"
+          onClick={() => search(true)}
+          disabled={loading}
+        >
+          <ListFilter size={14} /> All Questions
+        </button>
+      </div>
+
+      {loading && <div className="rd-loading">Searching...</div>}
+
+      {!loading && hasSearched && results.length === 0 && (
+        <div className="rd-empty">No questions found.</div>
+      )}
+
+      {!loading && results.length > 0 && (
+        <div className="rd-qmgr-results">
+          <div className="rd-qmgr-count">
+            {results.length} question{results.length !== 1 ? 's' : ''} found
+          </div>
+          {results.map(q => (
+            <div key={q._id} className="rd-qmgr-item">
+              <div className="rd-qmgr-item-top">
+                <div className="rd-qmgr-badges">
+                  <span className="rd-qmgr-badge type">{q.type}</span>
+                  <span className="rd-qmgr-badge diff" data-diff={q.difficulty}>{q.difficulty}</span>
+                  {q.tags?.map(tag => (
+                    <span key={tag} className="rd-qmgr-badge tag">{tag}</span>
+                  ))}
+                </div>
+                <div className="rd-qmgr-actions">
+                  <button
+                    className={`rd-icon-btn ${copied === q._id ? 'copied' : ''}`}
+                    title="Copy JSON"
+                    onClick={() => handleCopy(q)}
+                  >
+                    {copied === q._id ? <CheckCircle size={15} /> : <Copy size={15} />}
+                  </button>
+                  {confirmDelete === q._id ? (
+                    <div className="rd-qmgr-confirm">
+                      <span>Sure?</span>
+                      <button className="rd-qmgr-confirm-yes" onClick={() => handleDelete(q._id)}>Yes</button>
+                      <button className="rd-qmgr-confirm-no" onClick={() => setConfirmDelete(null)}>No</button>
+                    </div>
+                  ) : (
+                    <button
+                      className="rd-icon-btn danger"
+                      title="Delete question"
+                      onClick={() => setConfirmDelete(q._id)}
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className="rd-qmgr-title">{q.title}</div>
+              <div className="rd-qmgr-answers">
+                {q.answers?.map((ans, i) => (
+                  <span key={i} className={`rd-qmgr-ans ${q.correctAnswers?.includes(i) ? 'correct' : ''}`}>
+                    {ans}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ─── Questions Panel ─── */
 function QuestionsPanel() {
   const [questionsRaw, setQuestionsRaw] = useState('');
@@ -432,6 +597,7 @@ const TABS = [
   { id: 'buildnote', label: 'Build Note', icon: Megaphone },
   { id: 'updates',   label: 'Updates',    icon: FileText },
   { id: 'questions', label: 'Questions',  icon: Settings },
+  { id: 'qmanager',  label: 'Q Manager',  icon: Database },
 ];
 
 export default function RootDashboard() {
@@ -471,6 +637,7 @@ export default function RootDashboard() {
             {activeTab === 'buildnote' && <BuildNotePanel />}
             {activeTab === 'updates'   && <UpdatesPanel />}
             {activeTab === 'questions' && <QuestionsPanel />}
+            {activeTab === 'qmanager'  && <QuestionManagerPanel />}
           </main>
         </div>
       </div>

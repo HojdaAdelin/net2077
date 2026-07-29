@@ -993,3 +993,40 @@ kbd {
   line-height: 1.5;
 }
 
+
+/* ── QuestionTitle code block ── */
+.qt-code-block {
+  display: block;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-primary);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  overflow-x: auto;
+  white-space: pre;
+  max-width: 100%;
+  box-sizing: border-box;
+  word-break: break-all;
+}
+
+.qt-code-block code {
+  font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+@media (max-width: 600px) {
+  .qt-code-block {
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+  }
+
+  .qt-code-block code {
+    font-size: 0.78rem;
+  }
+}

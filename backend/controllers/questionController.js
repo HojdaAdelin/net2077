@@ -413,6 +413,35 @@ export const submitRandom50 = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+export const searchQuestions = async (req, res) => {
+  try {
+    const { q, all } = req.query;
+    let questions;
+    if (all === '1') {
+      questions = await Question.find({}).sort({ createdAt: -1 }).limit(200).lean();
+    } else {
+      if (!q || q.trim().length < 2) return res.json([]);
+      questions = await Question.find({
+        title: { $regex: q.trim(), $options: 'i' }
+      }).limit(30).lean();
+    }
+    res.json(questions);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const deleteQuestion = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const q = await Question.findByIdAndDelete(id);
+    if (!q) return res.status(404).json({ message: 'Question not found' });
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 export 
 const exportAllQuestions = async (req, res) => {
   try {
