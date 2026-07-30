@@ -667,63 +667,118 @@
 
 .h-exam-card:hover .h-exam-arrow { transform: translateX(3px); }
 
-/* ── Benefits ── */
-.h-benefits {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  max-width: 700px;
+/* ── Compare table ── */
+.h-compare-wrap {
+  max-width: 660px;
   margin: 0 auto;
 }
 
-.h-benefits-col {
+.h-compare-table {
+  width: 100%;
+  border-collapse: collapse;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 28px 24px;
+  border-radius: 14px;
+  overflow: hidden;
 }
 
-.h-benefits-col-featured {
-  border-color: var(--border-light);
-}
-
-.h-benefits-label {
+.h-compare-th {
+  padding: 14px 20px;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.8px;
   color: var(--text-muted);
-  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
 }
 
-.h-benefits-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+.h-compare-th-feature { text-align: left; width: 60%; }
+.h-compare-th-guest   { text-align: center; width: 20%; }
+.h-compare-th-account { text-align: center; width: 20%; }
 
-.h-benefit-item {
-  display: flex;
+.h-compare-account-label {
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
+  color: var(--accent-primary);
+}
+
+.h-compare-row-even td {
+  background: var(--bg-secondary);
+}
+
+.h-compare-td {
+  padding: 13px 20px;
   font-size: 14px;
   color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
 }
 
-.h-benefit-item.yes svg { color: var(--success); }
-.h-benefit-item.no { opacity: 0.45; }
-.h-benefit-item.no svg { color: var(--error); }
+.h-compare-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.h-compare-td-feature { text-align: left; }
+
+.h-compare-td-center {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.h-compare-td-account {
+  position: relative;
+}
+
+.h-compare-td-account::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  background: rgba(99, 102, 241, 0.04);
+  pointer-events: none;
+}
+
+.h-compare-th-account {
+  background: rgba(99, 102, 241, 0.08);
+  color: var(--accent-primary);
+  border-left: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.h-compare-td-account {
+  border-left: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.h-compare-check { color: var(--success); }
+.h-compare-x     { color: var(--error); opacity: 0.45; }
+
+.h-compare-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.h-compare-login-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.h-compare-login-link {
+  color: var(--accent-primary);
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.h-compare-login-link:hover { opacity: 0.75; }
 
 .h-register-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 24px;
-  padding: 11px 20px;
+  padding: 11px 28px;
   background: var(--accent-primary);
   color: var(--bg-primary);
   border-radius: 8px;
@@ -734,6 +789,11 @@
 }
 
 .h-register-btn:hover { opacity: 0.85; }
+
+@media (max-width: 520px) {
+  .h-compare-td,
+  .h-compare-th { padding: 11px 14px; font-size: 13px; }
+}
 
 /* ── Responsive ── */
 @media (max-width: 900px) {

@@ -60,22 +60,17 @@ const EXAMS = [
   { to: '/exam/acadnet2026national_11_12', meta: 'NATIONAL · XI-XII', title: 'AcadNet Calculatoare 2026', info: '30 Questions · Hard' },
 ];
 
-const FEATURES_GUEST = [
-  { label: 'Access to all questions', available: true },
-  { label: 'Access to all resources', available: true },
-  { label: 'Track your progress', available: false },
-  { label: 'Exam sessions', available: false },
-  { label: 'Daily challenges', available: false },
-  { label: 'Terminal practice', available: false },
-];
-
-const FEATURES_USER = [
-  { label: 'Access to all questions', available: true },
-  { label: 'Access to all resources', available: true },
-  { label: 'Track your progress', available: true },
-  { label: 'Exam sessions', available: true },
-  { label: 'Daily challenges', available: true },
-  { label: 'Terminal practice', available: true },
+const FEATURES_COMPARISON = [
+  { label: 'Access to all questions',  guest: true,  account: true },
+  { label: 'Access to all resources',  guest: true,  account: true },
+  { label: 'Track your progress',      guest: false, account: true },
+  { label: 'Exam sessions',            guest: false, account: true },
+  { label: 'Daily challenges',         guest: false, account: true },
+  { label: 'Terminal practice',        guest: false, account: true },
+  { label: 'Debug Challenges',         guest: false, account: true },
+  { label: 'Roadmaps',                 guest: false, account: true },
+  { label: 'Scripts Interface',        guest: false, account: true },
+  { label: 'Forums',                   guest: false, account: true },
 ];
 
 export default function Hero() {
@@ -448,32 +443,39 @@ export default function Hero() {
               <p className="h-section-sub">You can browse questions without signing up. But you'll want to track where you're going.</p>
             </div>
 
-            <div className="h-benefits">
-              <div className="h-benefits-col">
-                <div className="h-benefits-label">Without account</div>
-                <ul className="h-benefits-list">
-                  {FEATURES_GUEST.map(f => (
-                    <li key={f.label} className={`h-benefit-item ${f.available ? 'yes' : 'no'}`}>
-                      {f.available ? <Check size={15} /> : <X size={15} />}
-                      <span>{f.label}</span>
-                    </li>
+            <div className="h-compare-wrap">
+              <table className="h-compare-table">
+                <thead>
+                  <tr>
+                    <th className="h-compare-th h-compare-th-feature">Feature</th>
+                    <th className="h-compare-th h-compare-th-guest">Without account</th>
+                    <th className="h-compare-th h-compare-th-account">
+                      <span className="h-compare-account-label">With account</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {FEATURES_COMPARISON.map((f, i) => (
+                    <tr key={f.label} className={`h-compare-row ${i % 2 === 0 ? 'h-compare-row-even' : ''}`}>
+                      <td className="h-compare-td h-compare-td-feature">{f.label}</td>
+                      <td className="h-compare-td h-compare-td-center">
+                        {f.guest
+                          ? <Check size={16} className="h-compare-check" />
+                          : <X size={16} className="h-compare-x" />}
+                      </td>
+                      <td className="h-compare-td h-compare-td-center h-compare-td-account">
+                        <Check size={16} className="h-compare-check" />
+                      </td>
+                    </tr>
                   ))}
-                </ul>
-              </div>
+                </tbody>
+              </table>
 
-              <div className="h-benefits-col h-benefits-col-featured">
-                <div className="h-benefits-label">With account</div>
-                <ul className="h-benefits-list">
-                  {FEATURES_USER.map(f => (
-                    <li key={f.label} className="h-benefit-item yes">
-                      <Check size={15} />
-                      <span>{f.label}</span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="h-compare-cta">
                 <Link to="/register" className="h-register-btn">
                   <UserPlus size={16} /> Create free account
                 </Link>
+                <span className="h-compare-login-hint">Already have one? <Link to="/login" className="h-compare-login-link">Sign in</Link></span>
               </div>
             </div>
           </div>
