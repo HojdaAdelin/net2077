@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { User, Trophy, Zap, Target, Calendar, Activity, Award, Monitor, Globe, Terminal, Wrench, Crown, Medal } from 'lucide-react';
+import { User, Trophy, Zap, Target, Calendar, Activity, Award, Monitor, Globe, Terminal, Wrench, Crown, Medal, BadgeQuestionMark } from 'lucide-react';
 import '../styles/Profile.css';
 
 
@@ -58,6 +58,13 @@ function Badge({ type, unlocked, rank, count, level }) {
       description: 'Rank #3 on Leaderboard',
       color: '#cd7f32',
       isLegendary: false
+    },
+    questions: {
+      icon: <BadgeQuestionMark size={20} />,
+      name: count >= 2500 ? 'Question Master' : 'Question Solver',
+      description: count >= 2500 ? '2500+ questions solved in total' : '1000+ questions solved in total',
+      color: count >= 2500 ? '#60a5fa' : '#f43f5e',
+      isLegendary: count >= 2500
     }
   };
 
@@ -186,7 +193,8 @@ export default function Profile() {
     level: profileData.level >= 50,
     top1: profileData.leaderboardRank === 1,
     top2: profileData.leaderboardRank === 2,
-    top3: profileData.leaderboardRank === 3
+    top3: profileData.leaderboardRank === 3,
+    questions: profileData.totalQuestionsSolved >= 1000
   };
 
   return (
@@ -214,6 +222,7 @@ export default function Profile() {
             <Badge type="network" unlocked={badges.network} count={profileData.categoryStats.network} />
             <Badge type="terminal" unlocked={badges.terminal} count={profileData.categoryStats.terminal} />
             <Badge type="level" unlocked={badges.level} level={profileData.level} />
+            <Badge type="questions" unlocked={badges.questions} count={profileData.totalQuestionsSolved} />
             {profileData.leaderboardRank <= 3 && (
               <Badge 
                 type={`top${profileData.leaderboardRank}`} 
