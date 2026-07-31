@@ -116,6 +116,22 @@ export const markSolved = async (req, res) => {
           }
         });
       }
+
+      // Track daily activity
+      const today = new Date().toISOString().split('T')[0];
+      if (!user.dailyActivity) user.dailyActivity = [];
+      const dayEntry = user.dailyActivity.find(d => d.date === today);
+      if (dayEntry) {
+        dayEntry.count += 1;
+      } else {
+        user.dailyActivity.push({ date: today, count: 1 });
+        // Keep only last 30 days
+        if (user.dailyActivity.length > 30) {
+          user.dailyActivity.sort((a, b) => a.date.localeCompare(b.date));
+          user.dailyActivity = user.dailyActivity.slice(-30);
+        }
+      }
+      user.markModified('dailyActivity');
       
       await user.save();
       console.log(`[✔] Question ${questionId} marked as solved for user ${user.username}`);

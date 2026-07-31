@@ -35,6 +35,7 @@ export const getUserProgress = async (req, res) => {
       xp: user.xp,
       level: user.level,
       streak: streakInfo,
+      dailyActivity: user.dailyActivity || [],
       linuxChapterStats: user.linuxChapterStats
         ? {
             lastTaken: user.linuxChapterStats.lastTaken,

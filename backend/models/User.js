@@ -108,6 +108,10 @@ const userSchema = new mongoose.Schema({
     totalGoldEarned: { type: Number, default: 0 }
   },
   lastSeenVersion: { type: String, default: null },
+  dailyActivity: [{
+    date: { type: String, required: true },   // 'YYYY-MM-DD'
+    count: { type: Number, default: 0 }
+  }],
   saved: [{
     itemId: { type: mongoose.Schema.Types.ObjectId, required: true },
     type: { type: String, enum: ['question', 'lesson'], required: true },

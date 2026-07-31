@@ -1195,3 +1195,54 @@
     font-size: 36px;
   }
 }
+
+/* ── Daily Activity Chart ── */
+.dac-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: -20px 0 20px 0;
+}
+
+.dac-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 16px 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dac-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.dac-tooltip {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  pointer-events: none;
+  font-size: 12px;
+}
+
+.dac-tooltip-date {
+  color: var(--text-muted);
+}
+
+.dac-tooltip-count {
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+@media (max-width: 480px) {
+  .dac-wrap { padding: 14px 8px 8px; }
+}
