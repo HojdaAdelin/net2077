@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { User, Trophy, Zap, Target, Calendar, Activity, Award, Monitor, Globe, Terminal, Wrench, Crown, Medal, BadgeQuestionMark } from 'lucide-react';
+import { User, Trophy, Zap, Target, Calendar, Activity, Award, Monitor, Globe, Terminal, Wrench, Crown, Medal, BadgeQuestionMark, Cpu } from 'lucide-react';
 import '../styles/Profile.css';
 
 
@@ -65,6 +65,13 @@ function Badge({ type, unlocked, rank, count, level }) {
       description: count >= 2500 ? '2500+ questions solved in total' : '1000+ questions solved in total',
       color: count >= 2500 ? '#60a5fa' : '#f43f5e',
       isLegendary: count >= 2500
+    },
+    arduino: {
+      icon: <Cpu size={20} />,
+      name: count >= 150 ? 'Arduino Master' : 'Arduino Builder',
+      description: count >= 150 ? '150+ Arduino questions solved' : '100+ Arduino questions solved',
+      color: count >= 150 ? '#60a5fa' : '#8b5cf6',
+      isLegendary: count >= 150
     }
   };
 
@@ -194,7 +201,8 @@ export default function Profile() {
     top1: profileData.leaderboardRank === 1,
     top2: profileData.leaderboardRank === 2,
     top3: profileData.leaderboardRank === 3,
-    questions: profileData.totalQuestionsSolved >= 1000
+    questions: profileData.totalQuestionsSolved >= 1000,
+    arduino: (profileData.categoryStats.arduino || 0) >= 100
   };
 
   return (
@@ -223,6 +231,7 @@ export default function Profile() {
             <Badge type="terminal" unlocked={badges.terminal} count={profileData.categoryStats.terminal} />
             <Badge type="level" unlocked={badges.level} level={profileData.level} />
             <Badge type="questions" unlocked={badges.questions} count={profileData.totalQuestionsSolved} />
+            <Badge type="arduino" unlocked={badges.arduino} count={profileData.categoryStats.arduino || 0} />
             {profileData.leaderboardRank <= 3 && (
               <Badge 
                 type={`top${profileData.leaderboardRank}`} 

@@ -22,7 +22,7 @@ function GoldGamble({ userGold, onGoldChange }) {
   const [selectedOpt, setSelectedOpt] = useState(GAMBLE_OPTIONS[0]);
   const [amountInput, setAmountInput] = useState('');
   const [spinning, setSpinning] = useState(false);
-  const [result, setResult] = useState(null); // { won, payout, goldAfter }
+  const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [spinAngle, setSpinAngle] = useState(0);
 
@@ -31,7 +31,7 @@ function GoldGamble({ userGold, onGoldChange }) {
   const potential = validAmount ? parsedAmount * selectedOpt.multiplier : 0;
 
   const handleAmountInput = (val) => {
-    // strip non-digits
+
     const clean = val.replace(/\D/g, '');
     setAmountInput(clean);
     setError('');
@@ -71,7 +71,6 @@ function GoldGamble({ userGold, onGoldChange }) {
       });
       const data = await res.json();
 
-      // wait for spin to finish (~2s)
       await new Promise(r => setTimeout(r, 2000));
 
       if (!res.ok) {
@@ -107,7 +106,6 @@ function GoldGamble({ userGold, onGoldChange }) {
       </div>
 
       <div className="gg-body">
-        {/* Multiplier picker */}
         <div className="gg-section-label">Choose multiplier</div>
         <div className="gg-options">
           {GAMBLE_OPTIONS.map(opt => (
@@ -123,7 +121,6 @@ function GoldGamble({ userGold, onGoldChange }) {
           ))}
         </div>
 
-        {/* Amount input */}
         <div className="gg-section-label" style={{ marginTop: 20 }}>Amount to invest</div>
         <div className="gg-amount-row">
           <div className="gg-amount-wrap">
@@ -148,7 +145,6 @@ function GoldGamble({ userGold, onGoldChange }) {
         </div>
         {error && <div className="gg-error"><AlertTriangle size={13} />{error}</div>}
 
-        {/* Coin animation */}
         <div className="gg-coin-area">
           <div
             className={`gg-coin ${spinning ? 'spinning' : ''} ${result ? (result.won ? 'win' : 'lose') : ''}`}
