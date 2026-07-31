@@ -286,3 +286,72 @@ export const transferGold = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+// Win chance: 2x→49%, 3x→32%, 5x→19%, 10x→9.5%, 25x→3.8%, 50x→1.9%, 100x→0.95%, 200x→0.5%, 500x→0.2%, 1000x→0.1%
+const GAMBLE_TABLE = {
+  2: 49.0, 3: 32.0, 5: 19.0, 10: 9.5, 25: 3.8,
+  50: 1.9, 100: 0.95, 200: 0.5, 500: 0.2, 1000: 0.1,
+};
+const MAX_GAMBLE = 100_000;
+const lastGambleTime = new Map();
+
+export const gambleGold = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { amount, multiplier } = req.body;
+
+    const parsedAmount = Math.floor(Number(amount));
+    const parsedMultiplier = Number(multiplier);
+
+    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0 || !Number.isInteger(parsedAmount)) {
+      return res.status(400).json({ message: 'Amount must be a positive integer.' });
+    }
+    if (parsedAmount > MAX_GAMBLE) {
+      return res.status(400).json({ message: `Maximum gamble is ${MAX_GAMBLE.toLocaleString()} gold.` });
+    }
+    if (!GAMBLE_TABLE[parsedMultiplier]) {
+      return res.status(400).json({ message: 'Invalid multiplier.' });
+    }
+
+    const now = Date.now();
+    if (now - (lastGambleTime.get(userId) || 0) < 3000) {
+      return res.status(429).json({ message: 'Please wait before gambling again.' });
+    }
+    lastGambleTime.set(userId, now);
+
+    const user = await User.findOneAndUpdate(
+      { _id: userId, gold: { $gte: parsedAmount } },
+      { $inc: { gold: -parsedAmount } },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(400).json({ message: 'Insufficient gold.' });
+    }
+
+    const chance = GAMBLE_TABLE[parsedMultiplier];
+    const roll = Math.random() * 100;
+    const won = roll < chance;
+
+    let goldAfter = user.gold;
+    if (won) {
+      const updated = await User.findByIdAndUpdate(
+        userId,
+        { $inc: { gold: parsedAmount * parsedMultiplier } },
+        { new: true }
+      );
+      goldAfter = updated.gold;
+    }
+
+    res.json({
+      success: true,
+      won,
+      chance,
+      multiplier: parsedMultiplier,
+      amount: parsedAmount,
+      payout: won ? parsedAmount * parsedMultiplier : 0,
+      goldAfter,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

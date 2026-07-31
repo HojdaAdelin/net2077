@@ -1,9 +1,186 @@
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { Zap, Sparkles, RotateCcw, ShoppingBag, Coins, ChevronLeft, ChevronRight, Send, X } from 'lucide-react';
+import { Zap, Sparkles, RotateCcw, ShoppingBag, Coins, ChevronLeft, ChevronRight, Send, X, Dices, TrendingUp, AlertTriangle } from 'lucide-react';
 import LoginRequired from '../components/LoginRequired';
 import '../styles/Shop.css';
+
+const GAMBLE_OPTIONS = [
+  { multiplier: 2,    chance: 49.0,  label: '2×',    risk: 'low' },
+  { multiplier: 3,    chance: 32.0,  label: '3×',    risk: 'low' },
+  { multiplier: 5,    chance: 19.0,  label: '5×',    risk: 'medium' },
+  { multiplier: 10,   chance: 9.5,   label: '10×',   risk: 'medium' },
+  { multiplier: 25,   chance: 3.8,   label: '25×',   risk: 'high' },
+  { multiplier: 50,   chance: 1.9,   label: '50×',   risk: 'high' },
+  { multiplier: 100,  chance: 0.95,  label: '100×',  risk: 'extreme' },
+  { multiplier: 200,  chance: 0.5,   label: '200×',  risk: 'extreme' },
+  { multiplier: 500,  chance: 0.2,   label: '500×',  risk: 'extreme' },
+  { multiplier: 1000, chance: 0.1,   label: '1000×', risk: 'extreme' },
+];
+
+function GoldGamble({ userGold, onGoldChange }) {
+  const [selectedOpt, setSelectedOpt] = useState(GAMBLE_OPTIONS[0]);
+  const [amountInput, setAmountInput] = useState('');
+  const [spinning, setSpinning] = useState(false);
+  const [result, setResult] = useState(null); // { won, payout, goldAfter }
+  const [error, setError] = useState('');
+  const [spinAngle, setSpinAngle] = useState(0);
+
+  const parsedAmount = parseInt(amountInput, 10);
+  const validAmount = Number.isInteger(parsedAmount) && parsedAmount > 0 && parsedAmount <= (userGold || 0) && parsedAmount <= 100_000;
+  const potential = validAmount ? parsedAmount * selectedOpt.multiplier : 0;
+
+  const handleAmountInput = (val) => {
+    // strip non-digits
+    const clean = val.replace(/\D/g, '');
+    setAmountInput(clean);
+    setError('');
+    setResult(null);
+  };
+
+  const handleMax = () => {
+    const max = Math.min(userGold || 0, 100_000);
+    setAmountInput(String(max));
+    setError('');
+    setResult(null);
+  };
+
+  const handleGamble = async () => {
+    if (spinning) return;
+    if (!validAmount) {
+      if (!amountInput) { setError('Enter an amount.'); return; }
+      if (parsedAmount > (userGold || 0)) { setError('Insufficient gold.'); return; }
+      if (parsedAmount > 100_000) { setError('Max 100,000 gold per gamble.'); return; }
+      setError('Invalid amount.');
+      return;
+    }
+    setError('');
+    setResult(null);
+    setSpinning(true);
+
+    // spin animation
+    const target = spinAngle + 1440 + Math.random() * 360;
+    setSpinAngle(target);
+
+    try {
+      const res = await fetch(`${API_URL}/shop/gamble`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ amount: parsedAmount, multiplier: selectedOpt.multiplier }),
+      });
+      const data = await res.json();
+
+      // wait for spin to finish (~2s)
+      await new Promise(r => setTimeout(r, 2000));
+
+      if (!res.ok) {
+        setError(data.message || 'Server error.');
+        setSpinning(false);
+        return;
+      }
+
+      setResult(data);
+      onGoldChange(data.goldAfter);
+    } catch {
+      await new Promise(r => setTimeout(r, 2000));
+      setError('Network error.');
+    } finally {
+      setSpinning(false);
+    }
+  };
+
+  return (
+    <div className="gg-wrap">
+      <div className="gg-header">
+        <div className="gg-header-left">
+          <div className="gg-header-icon"><Dices size={20} /></div>
+          <div>
+            <div className="gg-title">Gold Farming</div>
+            <div className="gg-subtitle">Test your luck and multiply your gold.</div>
+          </div>
+        </div>
+        <div className="gg-balance">
+          <Coins size={15} />
+          <span>{(userGold || 0).toLocaleString()}</span>
+        </div>
+      </div>
+
+      <div className="gg-body">
+        {/* Multiplier picker */}
+        <div className="gg-section-label">Choose multiplier</div>
+        <div className="gg-options">
+          {GAMBLE_OPTIONS.map(opt => (
+            <button
+              key={opt.multiplier}
+              className={`gg-opt ${opt.risk} ${selectedOpt.multiplier === opt.multiplier ? 'active' : ''}`}
+              onClick={() => { setSelectedOpt(opt); setResult(null); setError(''); }}
+              disabled={spinning}
+            >
+              <span className="gg-opt-label">{opt.label}</span>
+              <span className="gg-opt-chance">{opt.chance}%</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Amount input */}
+        <div className="gg-section-label" style={{ marginTop: 20 }}>Amount to invest</div>
+        <div className="gg-amount-row">
+          <div className="gg-amount-wrap">
+            <Coins size={15} className="gg-amount-icon" />
+            <input
+              className={`gg-input ${error ? 'gg-input-error' : ''}`}
+              placeholder="0"
+              value={amountInput}
+              onChange={e => handleAmountInput(e.target.value)}
+              inputMode="numeric"
+              disabled={spinning}
+              maxLength={7}
+            />
+            <button className="gg-max-btn" onClick={handleMax} disabled={spinning}>MAX</button>
+          </div>
+          {validAmount && (
+            <div className="gg-potential">
+              <TrendingUp size={13} />
+              <span>Win: <strong>{potential.toLocaleString()}</strong> gold</span>
+            </div>
+          )}
+        </div>
+        {error && <div className="gg-error"><AlertTriangle size={13} />{error}</div>}
+
+        {/* Coin animation */}
+        <div className="gg-coin-area">
+          <div
+            className={`gg-coin ${spinning ? 'spinning' : ''} ${result ? (result.won ? 'win' : 'lose') : ''}`}
+            style={{ '--spin-angle': `${spinAngle}deg` }}
+          >
+            <div className="gg-coin-face front"><Coins size={28} /></div>
+            <div className="gg-coin-face back"><X size={28} /></div>
+          </div>
+          {result && !spinning && (
+            <div className={`gg-result-badge ${result.won ? 'win' : 'lose'}`}>
+              {result.won
+                ? `+${(result.payout - parsedAmount).toLocaleString()} gold`
+                : `-${parsedAmount.toLocaleString()} gold`}
+            </div>
+          )}
+        </div>
+
+        <button
+          className={`gg-btn ${!validAmount || spinning ? 'disabled' : ''}`}
+          onClick={handleGamble}
+          disabled={!validAmount || spinning}
+        >
+          {spinning ? (
+            <><span className="gg-spinner" /> Processing...</>
+          ) : (
+            <><Dices size={16} /> Farm {validAmount ? `${parsedAmount.toLocaleString()} gold` : ''}</>
+          )}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 const iconMap = {
   Zap: Zap,
@@ -389,6 +566,14 @@ export default function Shop() {
               );
             })}
           </div>
+        </div>
+
+        <div className="shop-section gg-section-centered">
+          <h2>Gold Farming</h2>
+          <GoldGamble
+            userGold={user.gold || 0}
+            onGoldChange={(newGold) => updateUser({ gold: newGold })}
+          />
         </div>
       </div>
 
