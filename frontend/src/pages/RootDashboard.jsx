@@ -4,7 +4,7 @@ import {
   Settings, Users, FileText, Megaphone, Upload,
   Trash2, Plus, X, RefreshCw, Send, Sparkles, Zap, Bug,
   ChevronDown, CheckCircle, XCircle, Clock, Download,
-  Search, Copy, Database, ListFilter
+  Search, Copy, Database, ListFilter, ClipboardList
 } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
@@ -591,6 +591,129 @@ function QuestionsPanel() {
   );
 }
 
+/* ─── Planner Panel ─── */
+function PlannerPanel() {
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [newText, setNewText] = useState('');
+  const [adding, setAdding] = useState(false);
+  const [stateFilter, setStateFilter] = useState('unfinished');
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/planner`, { credentials: 'include' });
+      const data = await res.json();
+      setTasks(data.tasks || []);
+    } finally { setLoading(false); }
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  const handleAdd = async () => {
+    if (!newText.trim()) return;
+    setAdding(true);
+    const res = await fetch(`${API_URL}/planner`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ text: newText.trim() })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      setTasks(prev => [data.task, ...prev]);
+      setNewText('');
+    }
+    setAdding(false);
+  };
+
+  const handleToggle = async (id) => {
+    const res = await fetch(`${API_URL}/planner/${id}/toggle`, {
+      method: 'PATCH', credentials: 'include'
+    });
+    const data = await res.json();
+    if (res.ok) setTasks(prev => prev.map(t => t._id === id ? data.task : t));
+  };
+
+  const handleDelete = async (id) => {
+    await fetch(`${API_URL}/planner/${id}`, { method: 'DELETE', credentials: 'include' });
+    setTasks(prev => prev.filter(t => t._id !== id));
+  };
+
+  const unfinished = tasks.filter(t => !t.completed);
+  const finished = tasks.filter(t => t.completed);
+  const displayed = stateFilter === 'unfinished' ? unfinished : finished;
+
+  return (
+    <div className="rd-planner">
+      <div className="rd-planner-add">
+        <input
+          className="rd-input"
+          placeholder="New task..."
+          value={newText}
+          maxLength={300}
+          onChange={e => setNewText(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && !adding && newText.trim() && handleAdd()}
+        />
+        <button className="rd-primary-btn rd-planner-add-btn" onClick={handleAdd} disabled={adding || !newText.trim()}>
+          <Plus size={15} /> Add
+        </button>
+      </div>
+
+      <div className="rd-planner-tabs">
+        <button
+          className={`rd-planner-tab ${stateFilter === 'unfinished' ? 'active' : ''}`}
+          onClick={() => setStateFilter('unfinished')}
+        >
+          Unfinished
+          <span className="rd-filter-count">{unfinished.length}</span>
+        </button>
+        <button
+          className={`rd-planner-tab ${stateFilter === 'finished' ? 'active' : ''}`}
+          onClick={() => setStateFilter('finished')}
+        >
+          Finished
+          <span className="rd-filter-count">{finished.length}</span>
+        </button>
+      </div>
+
+      {loading ? (
+        <div className="rd-loading">Loading...</div>
+      ) : displayed.length === 0 ? (
+        <div className="rd-empty">
+          {stateFilter === 'unfinished' ? 'No pending tasks' : 'No completed tasks'}
+        </div>
+      ) : (
+        <div className="rd-planner-list">
+          {displayed.map(task => (
+            <div key={task._id} className={`rd-planner-item ${task.completed ? 'completed' : ''}`}>
+              <button
+                className={`rd-planner-check ${task.completed ? 'checked' : ''}`}
+                onClick={() => handleToggle(task._id)}
+                title={task.completed ? 'Mark as unfinished' : 'Mark as finished'}
+              >
+                {task.completed && <CheckCircle size={16} />}
+              </button>
+              <span className="rd-planner-text">{task.text}</span>
+              <div className="rd-planner-meta">
+                {task.completed && task.completedAt && (
+                  <span className="rd-planner-date">
+                    <Clock size={11} />
+                    {new Date(task.completedAt).toLocaleDateString()}
+                  </span>
+                )}
+                <button className="rd-icon-btn danger" onClick={() => handleDelete(task._id)} title="Delete">
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ─── Main Dashboard ─── */
 const TABS = [
   { id: 'support',   label: 'Support',    icon: Users },
@@ -598,6 +721,7 @@ const TABS = [
   { id: 'updates',   label: 'Updates',    icon: FileText },
   { id: 'questions', label: 'Questions',  icon: Settings },
   { id: 'qmanager',  label: 'Q Manager',  icon: Database },
+  { id: 'planner',   label: 'Planner',    icon: ClipboardList },
 ];
 
 export default function RootDashboard() {
@@ -638,6 +762,7 @@ export default function RootDashboard() {
             {activeTab === 'updates'   && <UpdatesPanel />}
             {activeTab === 'questions' && <QuestionsPanel />}
             {activeTab === 'qmanager'  && <QuestionManagerPanel />}
+            {activeTab === 'planner'   && <PlannerPanel />}
           </main>
         </div>
       </div>
