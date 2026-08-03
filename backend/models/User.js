@@ -104,7 +104,7 @@ const userSchema = new mongoose.Schema({
   }],
   competitiveStats: {
     currentPeriodXP: { type: Number, default: 0 },
-    lastPeriodRank: { type: Number, default: null },
+    lastPeriodRank: { type: Number, default: null },  
     totalGoldEarned: { type: Number, default: 0 }
   },
   lastSeenVersion: { type: String, default: null },
@@ -117,7 +117,14 @@ const userSchema = new mongoose.Schema({
     type: { type: String, enum: ['question', 'lesson'], required: true },
     title: { type: String, default: '' },
     savedAt: { type: Date, default: Date.now }
-  }]
+  }],
+  onboarding: {
+    goal:       { type: String, enum: ['acadnet', 'linux', 'networking', 'all', null], default: null },
+    level:      { type: String, enum: ['beginner', 'intermediate', 'expert', null], default: null },
+    streakGoal: { type: Number, default: null },
+    completed:  { type: Boolean, default: false },
+    streakRewardClaimed: { type: Boolean, default: false }
+  }
 }, { timestamps: true });
 
 export default mongoose.model('User', userSchema);

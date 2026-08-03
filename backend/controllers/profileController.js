@@ -95,3 +95,24 @@ export const getCurrentUserProfile = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+export const saveOnboarding = async (req, res) => {
+  try {
+    const { goal, level, streakGoal } = req.body;
+
+    const validGoals   = ['acadnet', 'linux', 'networking', 'all'];
+    const validLevels  = ['beginner', 'intermediate', 'expert'];
+    const validStreaks = [7, 14, 30];
+
+    if (!validGoals.includes(goal))         return res.status(400).json({ message: 'Invalid goal' });
+    if (!validLevels.includes(level))       return res.status(400).json({ message: 'Invalid level' });
+    if (!validStreaks.includes(streakGoal)) return res.status(400).json({ message: 'Invalid streak goal' });
+
+    await User.findByIdAndUpdate(req.userId, {
+      onboarding: { goal, level, streakGoal, completed: true }
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};

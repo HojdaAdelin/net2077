@@ -1,8 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { getUserProgress, checkPendingRewards, claimLevelRewards } from '../services/api';
+import { API_URL } from '../config';
 import { useLanguage } from '../context/LanguageContext';
-import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp, Gift, X, Coins, CheckCircle, XCircle, Activity } from 'lucide-react';
+import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp, Gift, X, Coins, CheckCircle, XCircle, Activity, Sparkles, Flame, Target, Pencil, Clock } from 'lucide-react';
 import LoginRequired from '../components/LoginRequired';
 import '../styles/Progress.css';
 
@@ -125,10 +127,14 @@ function DailyActivityChart({ data }) {
 
 export default function Progress() {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [progress, setProgress] = useState(null);
   const [pendingRewards, setPendingRewards] = useState(null);
   const [claiming, setClaiming] = useState(false);
   const [rewardDialog, setRewardDialog] = useState(null);
+  const [claimingStreak, setClaimingStreak] = useState(false);
+  const [streakRewardDone, setStreakRewardDone] = useState(false);
+  const [editGoal, setEditGoal] = useState(false);
   const { t } = useLanguage();
 
   useEffect(() => {
@@ -231,7 +237,33 @@ export default function Progress() {
     }
   };
 
-  // Badge requirements
+  const handleClaimStreakReward = async () => {
+    setClaimingStreak(true);
+    try {
+      const res = await fetch(`${API_URL}/progress/claim-streak-reward`, {
+        method: 'POST', credentials: 'include'
+      });
+      const data = await res.json();
+      if (data.success) {
+        setStreakRewardDone(true);
+        const newProgress = await getUserProgress();
+        setProgress(newProgress);
+      }
+    } finally {
+      setClaimingStreak(false);
+    }
+  };
+
+  const GOAL_LABELS = { acadnet: 'Acadnet Prep', linux: 'Linux', networking: 'Networking', all: 'All Categories' };
+  const GOAL_COLORS = { acadnet: '#8b5cf6', linux: '#f59e0b', networking: '#3b82f6', all: '#06b6d4' };
+  const LEVEL_LABELS = { beginner: 'Beginner', intermediate: 'Intermediate', expert: 'Expert' };
+  const STREAK_GOLD = { 7: 40, 14: 100, 30: 225 };
+
+  const onboarding = progress.onboarding;
+  const currentStreak = progress.streak?.current || 0;
+  const streakGoal = onboarding?.streakGoal;
+  const streakReached = streakGoal && currentStreak >= streakGoal;
+  const streakClaimed = onboarding?.streakRewardClaimed || streakRewardDone;
   const linuxBadgeRequired = 500;
   const linuxLegendaryRequired = 1000;
   const networkBadgeRequired = 50;
@@ -265,6 +297,19 @@ export default function Progress() {
       <div className="progress-header">
         <h1>{t('progress.title')}</h1>
       </div>
+
+      {!user.onboardingCompleted && (
+        <div className="progress-onboarding-banner">
+          <div className="progress-onboarding-icon"><Sparkles size={20} /></div>
+          <div className="progress-onboarding-text">
+            <strong>Personalize your experience</strong>
+            <span>Set your learning goal, level and streak target to get the most out of the platform.</span>
+          </div>
+          <button className="progress-onboarding-btn" onClick={() => navigate('/onboarding')}>
+            Complete Profile
+          </button>
+        </div>
+      )}
 
       <div className="progress-grid">
         <div className="level-card">
@@ -435,9 +480,96 @@ export default function Progress() {
         </div>
       </div>
 
+      {/* ── Onboarding cards ── */}
+      {onboarding?.completed && (
+        <div className="category-progress-section">
+          <h2>Your Learning Profile</h2>
+          <div className="ob-cards-grid">
+
+            {/* Streak Goal card */}
+            <div className="ob-card">
+              <div className="ob-card-header">
+                <div className="ob-card-icon" style={{ background: 'rgba(245,158,11,0.1)', color: '#f59e0b' }}>
+                  <Flame size={18} />
+                </div>
+                <span className="ob-card-title">Streak Goal</span>
+              </div>
+              {streakGoal ? (
+                <>
+                  <div className="ob-streak-display">
+                    <span className="ob-streak-days">{streakGoal}</span>
+                    <span className="ob-streak-label">days</span>
+                  </div>
+                  <div className="ob-streak-progress">
+                    <div className="ob-streak-bar">
+                      <div className="ob-streak-fill" style={{ width: `${Math.min(100, (currentStreak / streakGoal) * 100)}%` }} />
+                    </div>
+                    <span className="ob-streak-count">{currentStreak} / {streakGoal}</span>
+                  </div>
+                  {!streakClaimed ? (
+                    streakReached ? (
+                      <button className="ob-claim-btn" onClick={handleClaimStreakReward} disabled={claimingStreak}>
+                        <Gift size={14} /> {claimingStreak ? 'Claiming...' : `Claim 🪙 ${STREAK_GOLD[streakGoal]} gold`}
+                      </button>
+                    ) : (
+                      <div className="ob-streak-hint">{streakGoal - currentStreak} days to go · 🪙 {STREAK_GOLD[streakGoal]} gold reward</div>
+                    )
+                  ) : (
+                    <div className="ob-claimed-badge"><CheckCircle size={13} /> Reward claimed</div>
+                  )}
+                </>
+              ) : (
+                <div className="ob-card-empty">No streak goal set. <button onClick={() => navigate('/onboarding')}>Set one</button></div>
+              )}
+            </div>
+
+            {/* Goal card */}
+            <div className="ob-card">
+              <div className="ob-card-header">
+                <div className="ob-card-icon" style={{ background: 'rgba(99,102,241,0.1)', color: '#6366f1' }}>
+                  <Target size={18} />
+                </div>
+                <span className="ob-card-title">Goal</span>
+                <button className="ob-edit-btn" onClick={() => navigate('/onboarding')} title="Change goal & level">
+                  <Pencil size={13} />
+                </button>
+              </div>
+              {onboarding?.goal ? (
+                <>
+                  <div className="ob-goal-name" style={{ color: GOAL_COLORS[onboarding.goal] }}>
+                    {GOAL_LABELS[onboarding.goal]}
+                  </div>
+                  <div className="ob-goal-level">
+                    <span className={`ob-level-badge ob-level-${onboarding.level}`}>
+                      {LEVEL_LABELS[onboarding.level]}
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <div className="ob-card-empty">No goal set. <button onClick={() => navigate('/onboarding')}>Set one</button></div>
+              )}
+            </div>
+
+            {/* Personalized Plan card */}
+            <div className="ob-card ob-card-coming-soon">
+              <div className="ob-card-header">
+                <div className="ob-card-icon" style={{ background: 'rgba(148,163,184,0.1)', color: 'var(--text-muted)' }}>
+                  <Clock size={18} />
+                </div>
+                <span className="ob-card-title">Personalized Plan</span>
+              </div>
+              <div className="ob-coming-soon">
+                <span>Coming soon</span>
+                <p>A custom study plan based on your goal and level is in the works.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
       <div className="category-progress-section">
-        <h2><Activity size={20} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 8 }} />Daily Activity</h2>
-        <p className="dac-subtitle">Questions solved per day over the last 30 days</p>
+        <h2><Activity size={20} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 8 }} />Daily Activity</h2>        <p className="dac-subtitle">Questions solved per day over the last 30 days</p>
         <DailyActivityChart data={progress.dailyActivity} />
       </div>
 

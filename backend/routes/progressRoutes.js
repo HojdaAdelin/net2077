@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserProgress, getLevel, addSimulation, claimLevelRewards, checkPendingRewards, saveLinuxChapterStats } from '../controllers/progressController.js';
+import { getUserProgress, getLevel, addSimulation, claimLevelRewards, checkPendingRewards, saveLinuxChapterStats, claimStreakReward } from '../controllers/progressController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -10,5 +10,6 @@ router.post('/addSimulation', authMiddleware, addSimulation);
 router.post('/claim-rewards', authMiddleware, claimLevelRewards);
 router.get('/pending-rewards', authMiddleware, checkPendingRewards);
 router.post('/linux-chapter-stats', authMiddleware, saveLinuxChapterStats);
+router.post('/claim-streak-reward', authMiddleware, claimStreakReward);
 
 export default router;

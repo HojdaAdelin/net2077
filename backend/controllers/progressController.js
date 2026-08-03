@@ -41,7 +41,8 @@ export const getUserProgress = async (req, res) => {
             lastTaken: user.linuxChapterStats.lastTaken,
             chapters: Object.fromEntries(user.linuxChapterStats.chapters || new Map())
           }
-        : null
+        : null,
+      onboarding: user.onboarding || null
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -199,5 +200,34 @@ export const checkPendingRewards = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const claimStreakReward = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const streakGoal = user.onboarding?.streakGoal;
+    const currentStreak = user.streak?.current || 0;
+
+    if (!streakGoal) return res.status(400).json({ message: 'No streak goal set' });
+    if (currentStreak < streakGoal) {
+      return res.status(400).json({ message: 'Streak goal not reached yet' });
+    }
+    if (user.onboarding?.streakRewardClaimed) {
+      return res.status(400).json({ message: 'Reward already claimed' });
+    }
+
+    const GOLD_MAP = { 7: 40, 14: 100, 30: 225 };
+    const gold = GOLD_MAP[streakGoal] || 0;
+
+    user.gold += gold;
+    user.onboarding.streakRewardClaimed = true;
+    await user.save();
+
+    res.json({ success: true, goldEarned: gold, newGoldTotal: user.gold });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
   }
 };

@@ -20,6 +20,7 @@ import LessonView from './pages/LessonView';
 import Progress from './pages/Progress';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Onboarding from './pages/Onboarding';
 import Updates from './pages/Updates';
 import RootDashboard from './pages/RootDashboard';
 import Leaderboard from './pages/Leaderboard';
@@ -61,6 +62,7 @@ export default function App() {
                   <Route path="/progress" element={<Progress />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
+                  <Route path="/onboarding" element={<Onboarding />} />
                   <Route path="/updates" element={<Updates />} />
                   <Route path="/usage" element={<RootDashboard />} />
                   <Route path="/leaderboard" element={<Leaderboard />} />

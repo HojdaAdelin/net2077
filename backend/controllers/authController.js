@@ -127,7 +127,8 @@ export const getMe = async (req, res) => {
         streak: streakInfo,
         gold: user.gold || 0,
         inventory: user.inventory || [],
-        activeBoosts
+        activeBoosts,
+        onboardingCompleted: user.onboarding?.completed || false
       } 
     });
   } catch (error) {

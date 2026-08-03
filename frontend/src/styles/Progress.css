@@ -1246,3 +1246,294 @@
 @media (max-width: 480px) {
   .dac-wrap { padding: 14px 8px 8px; }
 }
+
+/* Onboarding banner */
+.progress-onboarding-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid #8b5cf6;
+  border-radius: 10px;
+  margin-bottom: 32px;
+}
+
+.progress-onboarding-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(139,92,246,0.1);
+  border: 1px solid rgba(139,92,246,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8b5cf6;
+  flex-shrink: 0;
+}
+
+.progress-onboarding-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.progress-onboarding-text strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.progress-onboarding-text span {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.progress-onboarding-btn {
+  padding: 8px 18px;
+  background: #8b5cf6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.progress-onboarding-btn:hover { opacity: 0.85; }
+
+@media (max-width: 600px) {
+  .progress-onboarding-banner {
+    flex-wrap: wrap;
+  }
+  .progress-onboarding-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ── Onboarding / Learning Profile cards ── */
+.ob-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.ob-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ob-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ob-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ob-card-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  flex: 1;
+}
+
+.ob-edit-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s;
+}
+.ob-edit-btn:hover { background: var(--bg-secondary); color: var(--text-primary); }
+
+/* Streak */
+.ob-streak-display {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.ob-streak-days {
+  font-size: 48px;
+  font-weight: 700;
+  color: #f59e0b;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.ob-streak-label {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.ob-streak-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ob-streak-bar {
+  height: 6px;
+  background: var(--bg-secondary);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.ob-streak-fill {
+  height: 100%;
+  background: #f59e0b;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+.ob-streak-count {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.ob-streak-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border-radius: 7px;
+  border: 1px solid var(--border);
+}
+
+.ob-claim-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  border: none;
+  border-radius: 8px;
+  color: #000;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  box-shadow: 0 4px 12px rgba(245,158,11,0.3);
+}
+.ob-claim-btn:hover { opacity: 0.88; }
+.ob-claim-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.ob-claimed-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--success);
+  padding: 8px 12px;
+  background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.2);
+  border-radius: 7px;
+}
+
+/* Goal */
+.ob-goal-name {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+
+.ob-goal-level {
+  margin-top: 4px;
+}
+
+.ob-level-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.ob-level-beginner     { background: rgba(34,197,94,0.1);   color: var(--success); }
+.ob-level-intermediate { background: rgba(245,158,11,0.1);  color: #f59e0b; }
+.ob-level-expert       { background: rgba(239,68,68,0.1);   color: var(--error); }
+
+/* Coming soon */
+.ob-card-coming-soon {
+  opacity: 0.7;
+}
+
+.ob-coming-soon {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+}
+
+.ob-coming-soon span {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ob-coming-soon p {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Empty state */
+.ob-card-empty {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.ob-card-empty button {
+  background: none;
+  border: none;
+  color: var(--accent-primary);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 0;
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .ob-cards-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 560px) {
+  .ob-cards-grid { grid-template-columns: 1fr; }
+}
