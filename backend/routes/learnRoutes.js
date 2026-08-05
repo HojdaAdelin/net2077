@@ -32,12 +32,16 @@ const canEditLearn = async (req, res, next) => {
       const ls = await Lesson.findById(req.params.lessonId).select('roadmapId');
       roadmapId = ls?.roadmapId?.toString();
     }
-    // createLesson passes roadmapId in body
+  
     if (!roadmapId && req.body?.roadmapId) {
       roadmapId = req.body.roadmapId;
     }
 
     if (!roadmapId) return res.status(400).json({ message: 'Cannot resolve roadmap' });
+
+    if (req.body?.roadmapId && req.body.roadmapId.toString() !== roadmapId.toString()) {
+      return res.status(403).json({ message: 'Roadmap ID mismatch' });
+    }
 
     const roadmap = await Roadmap.findById(roadmapId).select('editors');
     if (!roadmap) return res.status(404).json({ message: 'Roadmap not found' });
