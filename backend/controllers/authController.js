@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import Update from '../models/Update.js';
 import { getStreakInfo } from '../utils/streakUtils.js';
 
 export const register = async (req, res) => {
@@ -14,6 +15,11 @@ export const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({ username, email, password: hashedPassword });
+
+    // Set lastSeenVersion to latest so new users don't see What's New
+    const latestUpdate = await Update.findOne().sort({ createdAt: -1 }).select('version');
+    if (latestUpdate) user.lastSeenVersion = latestUpdate.version;
+
     await user.save();
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
