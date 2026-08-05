@@ -298,7 +298,7 @@ export default function Progress() {
         <h1>{t('progress.title')}</h1>
       </div>
 
-      {!user.onboardingCompleted && (
+      {progress && !progress.onboarding?.completed && (
         <div className="progress-onboarding-banner">
           <div className="progress-onboarding-icon"><Sparkles size={20} /></div>
           <div className="progress-onboarding-text">

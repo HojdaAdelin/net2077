@@ -1255,7 +1255,6 @@
   padding: 16px 20px;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-left: 3px solid #8b5cf6;
   border-radius: 10px;
   margin-bottom: 32px;
 }
