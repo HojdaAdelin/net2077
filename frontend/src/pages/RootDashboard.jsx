@@ -4,7 +4,7 @@ import {
   Settings, Users, FileText, Megaphone, Upload,
   Trash2, Plus, X, RefreshCw, Send, Sparkles, Zap, Bug,
   ChevronDown, CheckCircle, XCircle, Clock, Download,
-  Search, Copy, Database, ListFilter, ClipboardList
+  Search, Copy, Database, ListFilter, ClipboardList, BarChart2
 } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
@@ -714,6 +714,59 @@ function PlannerPanel() {
   );
 }
 
+/* ─── Stats Panel ─── */
+function StatsPanel() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/admin/recent-users`, { credentials: 'include' });
+      const data = await res.json();
+      setUsers(data.users || []);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  return (
+    <div className="rd-stats">
+      <div className="rd-toolbar">
+        <div className="rd-section-label" style={{ margin: 0 }}>
+          <Users size={13} /> Last 10 registered users
+        </div>
+        <button className="rd-refresh-btn" onClick={load}><RefreshCw size={15} /></button>
+      </div>
+
+      {loading ? (
+        <div className="rd-loading">Loading...</div>
+      ) : (
+        <div className="rd-stats-table">
+          <div className="rd-stats-head">
+            <span>#</span>
+            <span>Username</span>
+            <span>Email</span>
+            <span>Role</span>
+            <span>Joined</span>
+          </div>
+          {users.map((u, i) => (
+            <div key={u._id} className="rd-stats-row">
+              <span className="rd-stats-idx">{i + 1}</span>
+              <span className="rd-stats-username">{u.username}</span>
+              <span className="rd-stats-email">{u.email}</span>
+              <span className={`rd-stats-role rd-stats-role--${u.role}`}>{u.role}</span>
+              <span className="rd-stats-date">{new Date(u.createdAt).toLocaleDateString()}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ─── Main Dashboard ─── */
 const TABS = [
   { id: 'support',   label: 'Support',    icon: Users },
@@ -722,6 +775,7 @@ const TABS = [
   { id: 'questions', label: 'Questions',  icon: Settings },
   { id: 'qmanager',  label: 'Q Manager',  icon: Database },
   { id: 'planner',   label: 'Planner',    icon: ClipboardList },
+  { id: 'stats',     label: 'Stats',      icon: BarChart2 },
 ];
 
 export default function RootDashboard() {
@@ -763,6 +817,7 @@ export default function RootDashboard() {
             {activeTab === 'questions' && <QuestionsPanel />}
             {activeTab === 'qmanager'  && <QuestionManagerPanel />}
             {activeTab === 'planner'   && <PlannerPanel />}
+            {activeTab === 'stats'     && <StatsPanel />}
           </main>
         </div>
       </div>

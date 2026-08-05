@@ -997,3 +997,72 @@
     justify-content: center;
   }
 }
+
+/* Stats */
+.rd-stats { display: flex; flex-direction: column; gap: 16px; }
+
+.rd-stats-table {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rd-stats-head {
+  display: grid;
+  grid-template-columns: 32px 1fr 1.6fr 100px 100px;
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.rd-stats-row {
+  display: grid;
+  grid-template-columns: 32px 1fr 1.6fr 100px 100px;
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  align-items: center;
+  font-size: 13px;
+  transition: border-color 0.2s;
+}
+
+.rd-stats-row:hover { border-color: var(--accent-primary); }
+
+.rd-stats-idx { color: var(--text-muted); font-size: 12px; font-weight: 600; }
+.rd-stats-username { font-weight: 600; color: var(--text-primary); }
+.rd-stats-email { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rd-stats-date { font-size: 12px; color: var(--text-muted); }
+
+.rd-stats-role {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  display: inline-block;
+}
+
+.rd-stats-role--user       { background: var(--bg-tertiary); color: var(--text-muted); }
+.rd-stats-role--helper     { background: rgba(34,197,94,0.1); color: #22c55e; }
+.rd-stats-role--mod        { background: rgba(59,130,246,0.1); color: #3b82f6; }
+.rd-stats-role--head-mod   { background: rgba(99,102,241,0.1); color: #6366f1; }
+.rd-stats-role--admin      { background: rgba(245,158,11,0.1); color: #f59e0b; }
+.rd-stats-role--head-admin { background: rgba(239,68,68,0.1); color: #ef4444; }
+.rd-stats-role--root       { background: rgba(168,85,247,0.1); color: #a855f7; }
+
+@media (max-width: 768px) {
+  .rd-stats-head { display: none; }
+  .rd-stats-row {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 4px;
+  }
+  .rd-stats-idx { display: none; }
+  .rd-stats-email { grid-column: 1 / -1; }
+}

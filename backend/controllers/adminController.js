@@ -157,3 +157,15 @@ export const getRoleStats = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+export const getRecentUsers = async (req, res) => {
+  try {
+    const users = await User.find()
+      .select('username email role createdAt')
+      .sort({ createdAt: -1 })
+      .limit(10);
+    res.json({ users });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
