@@ -647,3 +647,39 @@
     flex-direction: column;
   }
 }
+
+/* ── Terms checkbox ── */
+.register-terms-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.register-terms-check {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.register-terms-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+  line-height: 1.4;
+}
+
+.register-terms-link {
+  color: var(--accent-primary);
+  font-weight: 500;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.register-terms-link:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+}
