@@ -17,6 +17,10 @@ export default function Footer() {
 
           <div className="ft-cols">
             <div className="ft-col">
+              <div className="ft-col-label">Platform</div>
+              <Link to="/terms" className="ft-link">Terms & Conditions</Link>
+            </div>
+            <div className="ft-col">
               <span className="ft-col-label">{t('footer.learn')}</span>
               <Link to="/grile" className="ft-link">{t('footer.questions')}</Link>
               <Link to="/learn" className="ft-link">{t('footer.resources')}</Link>

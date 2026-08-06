@@ -62,7 +62,6 @@ const EXAMS = [
 
 const FEATURES_COMPARISON = [
   { label: 'Access to all questions',  guest: true,  account: true },
-  { label: 'Access to all resources',  guest: true,  account: true },
   { label: 'Track your progress',      guest: false, account: true },
   { label: 'Exam sessions',            guest: false, account: true },
   { label: 'Daily challenges',         guest: false, account: true },

@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback, useContext } from 'react';
+import { useState, useEffect, useCallback, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Settings, Users, FileText, Megaphone, Upload,
   Trash2, Plus, X, RefreshCw, Send, Sparkles, Zap, Bug,
   ChevronDown, CheckCircle, XCircle, Clock, Download,
-  Search, Copy, Database, ListFilter, ClipboardList, BarChart2
+  Search, Copy, Database, ListFilter, ClipboardList, BarChart2, ScrollText
 } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
@@ -767,6 +767,125 @@ function StatsPanel() {
   );
 }
 
+/* ─── Terms Panel ─── */
+function TermsPanel() {
+  const [terms, setTerms] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [msg, setMsg] = useState('');
+  const fileInputRef = useRef(null);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/terms`, { credentials: 'include' });
+      const data = await res.json();
+      setTerms(data.terms || null);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      try {
+        const content = JSON.parse(ev.target.result);
+        setUploading(true);
+        setMsg('');
+        const res = await fetch(`${API_URL}/terms`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ content }),
+        });
+        if (res.ok) {
+          setMsg('Terms uploaded successfully!');
+          load();
+        } else {
+          setMsg('Upload failed.');
+        }
+      } catch {
+        setMsg('Invalid JSON file.');
+      } finally {
+        setUploading(false);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleDownload = () => {
+    window.location.href = `${API_URL}/terms/download`;
+  };
+
+  return (
+    <div className="rd-terms">
+      <div className="rd-toolbar">
+        <div className="rd-section-label" style={{ margin: 0 }}>
+          <ScrollText size={13} /> Terms & Conditions Management
+        </div>
+        <button className="rd-refresh-btn" onClick={load}><RefreshCw size={15} /></button>
+      </div>
+
+      {loading ? (
+        <div className="rd-loading">Loading...</div>
+      ) : (
+        <>
+          {terms ? (
+            <div className="rd-terms-current">
+              <div className="rd-terms-info">
+                <div className="rd-terms-title">
+                  {terms.content?.document?.title || 'Terms & Conditions'}
+                </div>
+                <div className="rd-terms-meta">
+                  <span>Version: {terms.content?.document?.version || 'N/A'}</span>
+                  <span>•</span>
+                  <span>Last updated: {terms.content?.document?.last_updated || 'N/A'}</span>
+                  <span>•</span>
+                  <span>Uploaded: {new Date(terms.uploadedAt).toLocaleDateString()}</span>
+                </div>
+              </div>
+              <button className="rd-export-btn" onClick={handleDownload}>
+                <Download size={14} /> Download JSON
+              </button>
+            </div>
+          ) : (
+            <div className="rd-empty">No terms uploaded yet.</div>
+          )}
+
+          <div className="rd-terms-upload">
+            <div className="rd-section-label">Upload new terms.json</div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              onChange={handleFileSelect}
+              style={{ display: 'none' }}
+            />
+            <button
+              className="rd-primary-btn"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+            >
+              <Upload size={14} /> {uploading ? 'Uploading...' : 'Choose JSON file'}
+            </button>
+            {msg && (
+              <div className={`rd-msg ${msg.includes('success') ? 'success' : 'error'}`}>
+                {msg}
+              </div>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 /* ─── Main Dashboard ─── */
 const TABS = [
   { id: 'support',   label: 'Support',    icon: Users },
@@ -776,6 +895,7 @@ const TABS = [
   { id: 'qmanager',  label: 'Q Manager',  icon: Database },
   { id: 'planner',   label: 'Planner',    icon: ClipboardList },
   { id: 'stats',     label: 'Stats',      icon: BarChart2 },
+  { id: 'terms',     label: 'Terms',      icon: ScrollText },
 ];
 
 export default function RootDashboard() {
@@ -818,6 +938,7 @@ export default function RootDashboard() {
             {activeTab === 'qmanager'  && <QuestionManagerPanel />}
             {activeTab === 'planner'   && <PlannerPanel />}
             {activeTab === 'stats'     && <StatsPanel />}
+            {activeTab === 'terms'     && <TermsPanel />}
           </main>
         </div>
       </div>

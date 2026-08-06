@@ -20,6 +20,7 @@ import LessonView from './pages/LessonView';
 import Progress from './pages/Progress';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Terms from './pages/Terms';
 import Onboarding from './pages/Onboarding';
 import Updates from './pages/Updates';
 import RootDashboard from './pages/RootDashboard';
@@ -82,6 +83,7 @@ export default function App() {
                   <Route path="/scripting/problems" element={<ScriptingProblems />} />
                   <Route path="/linux-start-test" element={<LinuxStartTest />} />
                   <Route path="/profile/:username" element={<Profile />} />
+                  <Route path="/terms" element={<Terms />} />
                 </Routes>
                 <Footer />
                 <SupportButton />
