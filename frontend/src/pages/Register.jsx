@@ -60,8 +60,8 @@ export default function Register() {
   const [showPassword, setShowPassword]       = useState(false);
   const [showConfirm, setShowConfirm]         = useState(false);
   const [loading, setLoading]                 = useState(false);
+  const [agreedToTerms, setAgreedToTerms]     = useState(false);
 
-  // onboarding state
   const [goal, setGoal]           = useState(null);
   const [level, setLevel]         = useState(null);
   const [streakGoal, setStreakGoal] = useState(null);
@@ -154,7 +154,6 @@ export default function Register() {
             </div>
           </div>
 
-          {/* ── Step 1: form ── */}
           {step === 1 && (
             <>
               <div className="register-right-header">
@@ -251,9 +250,25 @@ export default function Register() {
                   {pwMismatch && <div className="register-match no">✗ Passwords don't match</div>}
                 </div>
 
-                <button type="submit" className="register-submit" disabled={loading}>
+                <button type="submit" className="register-submit" disabled={loading || !agreedToTerms}>
                   {loading ? 'Creating account...' : t('register.createAccount')}
                 </button>
+
+                <div className="register-terms-row">
+                  <input
+                    type="checkbox"
+                    id="terms-check"
+                    className="register-terms-check"
+                    checked={agreedToTerms}
+                    onChange={e => setAgreedToTerms(e.target.checked)}
+                  />
+                  <label htmlFor="terms-check" className="register-terms-label">
+                    I agree to the{' '}
+                    <Link to="/terms" target="_blank" rel="noopener noreferrer" className="register-terms-link">
+                      Terms &amp; Conditions
+                    </Link>
+                  </label>
+                </div>
               </form>
 
               <div className="register-divider">{t('register.or')}</div>
