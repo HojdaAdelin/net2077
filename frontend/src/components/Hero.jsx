@@ -80,6 +80,7 @@ export default function Hero() {
   const [linuxOverviewOpen, setLinuxOverviewOpen] = useState(false);
   const [expandedDomain, setExpandedDomain] = useState(null);
   const [isDark, setIsDark] = useState(() => document.documentElement.getAttribute('data-theme') !== 'light');
+  const [darkVeilFailed, setDarkVeilFailed] = useState(false);
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -145,14 +146,19 @@ export default function Hero() {
 
       {isDark && (
         <div className="h-darkveil-bg">
-          <DarkVeil
-            hueShift={0}
-            noiseIntensity={0}
-            scanlineIntensity={0}
-            speed={0.5}
-            scanlineFrequency={0}
-            warpAmount={0}
-          />
+          {!darkVeilFailed ? (
+            <DarkVeil
+              hueShift={0}
+              noiseIntensity={0}
+              scanlineIntensity={0}
+              speed={0.5}
+              scanlineFrequency={0}
+              warpAmount={0}
+              onError={() => setDarkVeilFailed(true)}
+            />
+          ) : (
+            <div className="h-darkveil-fallback" />
+          )}
         </div>
       )}
 
