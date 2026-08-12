@@ -4,11 +4,11 @@
 }
 
 .h-darkveil-bg {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: calc(100px + 80px + 80px + 500px);
+  width: 100vw;
+  height: 100vh;
   z-index: 0;
   opacity: 0.45;
   pointer-events: none;
@@ -237,10 +237,10 @@
 
 .h-stat {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   padding: 12px 28px;
-  gap: 2px;
+  gap: 10px;
 }
 
 .h-stat-num {
@@ -252,11 +252,9 @@
 }
 
 .h-stat-label {
-  font-size: 11px;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
 }
 
 .h-stat-divider {

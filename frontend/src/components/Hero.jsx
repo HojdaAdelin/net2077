@@ -1,11 +1,13 @@
 import { useEffect, useState, useContext } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import { getStats } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import {
   ArrowRight, Terminal, Network, Code,
   Check, X, UserPlus,
-  ChevronDown, Package, Cpu, HardDrive, Shield, Server, Box
+  ChevronDown, Package, Cpu, HardDrive, Shield, Server, Box,
+  HelpCircle, Users, Map
 } from 'lucide-react';
 import MagicBento from './MagicBento';
 import DarkVeil from './DarkVeil';
@@ -144,7 +146,7 @@ export default function Hero() {
   return (
     <div className="hero-root">
 
-      {isDark && (
+      {isDark && createPortal(
         <div className="h-darkveil-bg">
           {!darkVeilFailed ? (
             <DarkVeil
@@ -159,7 +161,8 @@ export default function Hero() {
           ) : (
             <div className="h-darkveil-fallback" />
           )}
-        </div>
+        </div>,
+        document.body
       )}
 
       <section className="h-hero">
@@ -188,18 +191,18 @@ export default function Hero() {
           </div>
           <div className="h-stats">
             <div className="h-stat">
+              <span className="h-stat-label"><HelpCircle size={16} /></span>
               <span className="h-stat-num">{display.totalQuestions}+</span>
-              <span className="h-stat-label">Questions</span>
             </div>
             <div className="h-stat-divider" />
             <div className="h-stat">
+              <span className="h-stat-label"><Users size={16} /></span>
               <span className="h-stat-num">{display.totalUsers}</span>
-              <span className="h-stat-label">Learners</span>
             </div>
             <div className="h-stat-divider" />
             <div className="h-stat">
+              <span className="h-stat-label"><Map size={16} /></span>
               <span className="h-stat-num">{display.totalResources}</span>
-              <span className="h-stat-label">Roadmaps</span>
             </div>
           </div>
         </div>
