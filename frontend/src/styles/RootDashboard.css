@@ -1001,6 +1001,40 @@
 /* Stats */
 .rd-stats { display: flex; flex-direction: column; gap: 16px; }
 
+.rd-stats-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.rd-stats-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 20px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.rd-stats-card-num {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.rd-stats-card-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .rd-stats-cards { grid-template-columns: 1fr; }
+}
+
 .rd-stats-table {
   display: flex;
   flex-direction: column;

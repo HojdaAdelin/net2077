@@ -225,43 +225,64 @@
 
 .h-btn-season:hover { background: rgba(239, 68, 68, 0.14); }
 
-.h-stats {
-  display: inline-flex;
-  align-items: center;
-  gap: 0;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-  background: var(--bg-card);
+.h-stats-stripe {
+  width: 100%;
+  background: #0a0a0a;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+  z-index: 1;
 }
 
-.h-stat {
+[data-theme="light"] .h-stats-stripe {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.h-stats-stripe-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
   display: flex;
-  flex-direction: row;
   align-items: center;
-  padding: 12px 28px;
-  gap: 10px;
+  justify-content: center;
 }
 
-.h-stat-num {
-  font-size: 20px;
+.h-stripe-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 28px 48px;
+  flex: 1;
+  text-align: center;
+}
+
+.h-stripe-num {
+  font-size: 32px;
   font-weight: 700;
   color: var(--text-primary);
-  letter-spacing: -0.5px;
+  letter-spacing: -1px;
   line-height: 1;
 }
 
-.h-stat-label {
-  display: flex;
-  align-items: center;
+.h-stripe-label {
+  font-size: 15px;
   color: var(--text-muted);
+  font-weight: 400;
 }
 
-.h-stat-divider {
+.h-stripe-divider {
   width: 1px;
-  height: 36px;
-  background: var(--border);
+  height: 40px;
+  background: rgba(255, 255, 255, 0.08);
   flex-shrink: 0;
+}
+
+[data-theme="light"] .h-stripe-divider {
+  background: var(--border);
 }
 
 /* ── Sections ── */
@@ -852,8 +873,9 @@
     justify-content: center;
   }
   .h-title { letter-spacing: -1px; }
-  .h-stat { padding: 10px 18px; }
-  .h-stat-num { font-size: 17px; }
+  .h-stripe-stat { padding: 20px 16px; gap: 6px; }
+  .h-stripe-num { font-size: 20px; }
+  .h-stripe-label { font-size: 11px; }
 
   .h-linux-chapters {
     grid-template-columns: 1fr;

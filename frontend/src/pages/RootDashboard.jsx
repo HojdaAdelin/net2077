@@ -718,6 +718,19 @@ function PlannerPanel() {
 function StatsPanel() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [globalStats, setGlobalStats] = useState(null);
+  const [statsLoading, setStatsLoading] = useState(true);
+
+  const loadStats = useCallback(async () => {
+    setStatsLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/stats`, { credentials: 'include' });
+      const data = await res.json();
+      setGlobalStats(data);
+    } finally {
+      setStatsLoading(false);
+    }
+  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -730,11 +743,33 @@ function StatsPanel() {
     }
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => { load(); loadStats(); }, [load, loadStats]);
 
   return (
     <div className="rd-stats">
-      <div className="rd-toolbar">
+      {/* Global stats cards */}
+      <div className="rd-stats-cards">
+        {statsLoading ? (
+          <div className="rd-loading">Loading stats...</div>
+        ) : globalStats ? (
+          <>
+            <div className="rd-stats-card">
+              <span className="rd-stats-card-num">{globalStats.totalQuestions ?? '—'}</span>
+              <span className="rd-stats-card-label">Total Questions</span>
+            </div>
+            <div className="rd-stats-card">
+              <span className="rd-stats-card-num">{globalStats.totalUsers ?? '—'}</span>
+              <span className="rd-stats-card-label">Total Users</span>
+            </div>
+            <div className="rd-stats-card">
+              <span className="rd-stats-card-num">{globalStats.totalResources ?? '—'}</span>
+              <span className="rd-stats-card-label">Total Roadmaps</span>
+            </div>
+          </>
+        ) : null}
+      </div>
+
+      <div className="rd-toolbar" style={{ marginTop: 24 }}>
         <div className="rd-section-label" style={{ margin: 0 }}>
           <Users size={13} /> Last 10 registered users
         </div>

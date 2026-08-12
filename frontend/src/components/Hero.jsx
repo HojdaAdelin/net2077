@@ -1,7 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
-import { getStats } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import {
   ArrowRight, Terminal, Network, Code,
@@ -77,8 +76,6 @@ const FEATURES_COMPARISON = [
 export default function Hero() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [stats, setStats] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
-  const [display, setDisplay] = useState({ totalQuestions: 0, totalUsers: 0, totalResources: 0 });
   const [linuxOverviewOpen, setLinuxOverviewOpen] = useState(false);
   const [expandedDomain, setExpandedDomain] = useState(null);
   const [isDark, setIsDark] = useState(() => document.documentElement.getAttribute('data-theme') !== 'light');
@@ -113,27 +110,6 @@ export default function Hero() {
     }, 600);
     return () => clearTimeout(delay);
   }, []);
-
-  useEffect(() => {
-    getStats().then(setStats).catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    if (!stats.totalQuestions && !stats.totalUsers && !stats.totalResources) return;
-    const steps = 60;
-    let step = 0;
-    const iv = setInterval(() => {
-      step++;
-      const p = step / steps;
-      setDisplay({
-        totalQuestions: Math.floor(stats.totalQuestions * p),
-        totalUsers: Math.floor(stats.totalUsers * p),
-        totalResources: Math.floor(stats.totalResources * p),
-      });
-      if (step >= steps) { setDisplay(stats); clearInterval(iv); }
-    }, 2000 / steps);
-    return () => clearInterval(iv);
-  }, [stats]);
 
   const handleStartTest = () => {
     if (!user) {
@@ -189,24 +165,27 @@ export default function Hero() {
               Prepare for AcadNet <ArrowRight size={16} />
             </Link>
           </div>
-          <div className="h-stats">
-            <div className="h-stat">
-              <span className="h-stat-label"><HelpCircle size={16} /></span>
-              <span className="h-stat-num">{display.totalQuestions}+</span>
-            </div>
-            <div className="h-stat-divider" />
-            <div className="h-stat">
-              <span className="h-stat-label"><Users size={16} /></span>
-              <span className="h-stat-num">{display.totalUsers}</span>
-            </div>
-            <div className="h-stat-divider" />
-            <div className="h-stat">
-              <span className="h-stat-label"><Map size={16} /></span>
-              <span className="h-stat-num">{display.totalResources}</span>
-            </div>
-          </div>
         </div>
       </section>
+
+      <div className="h-stats-stripe">
+        <div className="h-stats-stripe-inner">
+          <div className="h-stripe-stat">
+            <span className="h-stripe-num">2000+</span>
+            <span className="h-stripe-label">Questions</span>
+          </div>
+          <div className="h-stripe-divider" />
+          <div className="h-stripe-stat">
+            <span className="h-stripe-num">100+</span>
+            <span className="h-stripe-label">Active Users</span>
+          </div>
+          <div className="h-stripe-divider" />
+          <div className="h-stripe-stat">
+            <span className="h-stripe-num">1</span>
+            <span className="h-stripe-label">Roadmap Available</span>
+          </div>
+        </div>
+      </div>
 
       <section className="h-section" id="tracks">
         <div className="h-container">
