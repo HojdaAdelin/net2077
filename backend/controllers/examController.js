@@ -11,6 +11,35 @@ export const getExams = async (req, res) => {
   }
 };
 
+export const examStats = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const exam = await Exam.findOneAndUpdate(
+            { id: id },
+            { $inc: { usage_ctn: 1 } },
+            { new: true }
+        );
+
+        if (!exam) {
+            return res.status(404).json({
+                message: 'Exam not found'
+            });
+        }
+
+        return res.status(200).json({
+            usage_ctn: exam.usage_ctn
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            message: 'Server error'
+        });
+    }
+};
+
 export const getExamById = async (req, res) => {
   try {
     const exam = await Exam.findOne({ id: req.params.id });
@@ -31,7 +60,7 @@ export const getExamById = async (req, res) => {
 
 export const createExam = async (req, res) => {
   try {
-    const { id, title, description, duration, totalPoints, tag, year, phase } = req.body;
+    const { id, title, description, duration, totalPoints, tag, year, phase, new_test_badge } = req.body;
     if (!id || !title || !description || !duration || !totalPoints || !tag || !year || !phase) {
       return res.status(400).json({ message: 'All fields are required' });
     }
@@ -39,7 +68,7 @@ export const createExam = async (req, res) => {
     if (existing) {
       return res.status(400).json({ message: `Exam with id "${id}" already exists` });
     }
-    const exam = await Exam.create({ id, title, description, duration: Number(duration), totalPoints: Number(totalPoints), tag, year: Number(year), phase });
+    const exam = await Exam.create({ id, title, description, duration: Number(duration), totalPoints: Number(totalPoints), tag, year: Number(year), phase, new_test_badge: !!new_test_badge });
     res.status(201).json({ success: true, exam });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });

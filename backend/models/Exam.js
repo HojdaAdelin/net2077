@@ -8,7 +8,9 @@ const examSchema = new mongoose.Schema({
   totalPoints: { type: Number, required: true },
   tag: { type: String, required: true },
   year: { type: Number, required: true },
-  phase: { type: String, required: true }
+  phase: { type: String, required: true },
+  usage_ctn: { type: Number, required: true, default: 0},
+  new_test_badge: { type: Boolean, required: true, default: false}
 }, { timestamps: true });
 
 export default mongoose.model('Exam', examSchema);

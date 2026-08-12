@@ -510,7 +510,83 @@
   color: var(--error);
 }
 
-/* Delete confirm */
+/* ── New badge ribbon ── */
+.exam-card--new {
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.exam-new-ribbon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 72px 72px 0 0;
+  border-color: var(--text-primary) transparent transparent transparent;
+  border-radius: 8px 0 0 0;
+  pointer-events: none;
+}
+
+.exam-new-ribbon::after {
+  content: 'NEW';
+  position: absolute;
+  top: -66px;
+  left: 4px;
+  color: var(--bg-primary);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  white-space: nowrap;
+}
+
+/* ── Usage count ── */
+.exam-usage {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+/* ── Checkbox row in modal ── */
+.exam-form-row--checkbox {
+  flex-direction: row;
+  align-items: center;
+}
+
+.exam-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
+.exam-checkbox-label input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--accent-primary);
+  cursor: pointer;
+}
+
+.exam-new-badge-preview {
+  display: inline-block;
+  padding: 1px 7px;
+  background: var(--accent-primary);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-radius: 4px;
+}
 .exam-delete-input {
   width: 100%;
   padding: 8px 10px;

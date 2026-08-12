@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
 import { AuthContext } from '../context/AuthContext';
 import '../styles/ExamSelection.css';
-import { Clock3, Tally5, Plus, X, ChevronRight, ChevronLeft, Trash2 } from 'lucide-react';
+import { Clock3, Tally5, Plus, X, ChevronRight, ChevronLeft, Trash2, Users } from 'lucide-react';
 
 const EMPTY_META = {
   id: '', title: '', description: '',
-  duration: '', totalPoints: '', tag: '', year: '', phase: ''
+  duration: '', totalPoints: '', tag: '', year: '', phase: '',
+  new_test_badge: false
 };
 
 export default function ExamSelection() {
@@ -74,7 +75,7 @@ export default function ExamSelection() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ id, title, description, duration: Number(duration), totalPoints: Number(totalPoints), tag, year: Number(year), phase }),
+        body: JSON.stringify({ id, title, description, duration: Number(duration), totalPoints: Number(totalPoints), tag, year: Number(year), phase, new_test_badge: meta.new_test_badge }),
       });
       const data = await res.json();
       if (!data.success) { setMetaError(data.message || 'Failed to create exam.'); return; }
@@ -152,12 +153,14 @@ export default function ExamSelection() {
     setSearchQuery('');
   };
 
-  const filteredExams = exams.filter(exam => {
-    const q = searchQuery.toLowerCase();
-    const matchSearch = !q || exam.title.toLowerCase().includes(q) || exam.description.toLowerCase().includes(q) || exam.tag?.toLowerCase().includes(q);
-    const matchFilter = !activeFilter || exam.title.toLowerCase().includes(activeFilter.toLowerCase()) || exam.description.toLowerCase().includes(activeFilter.toLowerCase()) || exam.tag?.toLowerCase().includes(activeFilter.toLowerCase());
-    return matchSearch && matchFilter;
-  });
+  const filteredExams = exams
+    .filter(exam => {
+      const q = searchQuery.toLowerCase();
+      const matchSearch = !q || exam.title.toLowerCase().includes(q) || exam.description.toLowerCase().includes(q) || exam.tag?.toLowerCase().includes(q);
+      const matchFilter = !activeFilter || exam.title.toLowerCase().includes(activeFilter.toLowerCase()) || exam.description.toLowerCase().includes(activeFilter.toLowerCase()) || exam.tag?.toLowerCase().includes(activeFilter.toLowerCase());
+      return matchSearch && matchFilter;
+    })
+    .sort((a, b) => (b.new_test_badge ? 1 : 0) - (a.new_test_badge ? 1 : 0));
 
   if (loading) return (
     <div className="container exam-selection-page">
@@ -200,7 +203,8 @@ export default function ExamSelection() {
       ) : (
         <div className="exams-grid">
           {filteredExams.map(exam => (
-            <div key={exam.id} className="exam-card">
+            <div key={exam.id} className={`exam-card${exam.new_test_badge ? ' exam-card--new' : ''}`}>
+              {exam.new_test_badge && <div className="exam-new-ribbon">NEW</div>}
               <div className="exam-badge">{exam.year}</div>
               {isRoot && (
                 <button className="exam-delete-btn" title="Delete exam" onClick={() => { setDeleteConfirm(exam); setDeleteInput(''); }}>
@@ -209,6 +213,10 @@ export default function ExamSelection() {
               )}
               <h2>{exam.title}</h2>
               <p>{exam.description}</p>
+              <div className="exam-usage">
+                <Users size={13} />
+                <span>{exam.usage_ctn ?? 0} attempts</span>
+              </div>
               <div className="exam-details">
                 <div className="exam-detail">
                   <span className="detail-icon"><Clock3 size={18} /></span>
@@ -282,6 +290,17 @@ export default function ExamSelection() {
                 <div className="exam-form-row">
                   <label>Preview JSON</label>
                   <pre className="exam-json-preview">{metaPreview}</pre>
+                </div>
+
+                <div className="exam-form-row exam-form-row--checkbox">
+                  <label className="exam-checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={meta.new_test_badge}
+                      onChange={e => setMeta(p => ({ ...p, new_test_badge: e.target.checked }))}
+                    />
+                    <span>Mark as new test <span className="exam-new-badge-preview">NEW</span></span>
+                  </label>
                 </div>
 
                 {metaError && <p className="exam-form-error">{metaError}</p>}

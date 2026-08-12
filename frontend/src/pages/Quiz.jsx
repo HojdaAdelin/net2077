@@ -109,7 +109,7 @@ export default function Quiz({ isExam = false }) {
     setTimeLeft(examDurationSeconds);
   }, [isExam, examMeta, examDurationSeconds, timeLeft, examStarted]);
 
-  const handleFinishExam = useCallback((reason = 'manual') => {
+  const handleFinishExam = useCallback(async (reason = 'manual') => {
     if (showResults) return;
 
     if (isExam) {
@@ -158,7 +158,13 @@ export default function Quiz({ isExam = false }) {
         })
         .catch(error => console.error('Error saving simulation:', error));
 
-
+      const response = await fetch(`${API_BASE}/exams/${examId}/stats`, {
+          method: 'POST',
+          credentials: 'include',
+      });
+      if (!response.ok) {
+          console.error('Failed to update exam stats');
+      }
       setFinishReason(reason);
       setExamStarted(false);
       const duration = examDurationSeconds ?? 0;
