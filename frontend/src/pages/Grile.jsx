@@ -282,6 +282,8 @@ export default function Grile() {
   const [dailyChallengeLoading, setDailyChallengeLoading] = useState(true);
   const [showResetModal, setShowResetModal] = useState(false);
   const [showLinuxResetModal, setShowLinuxResetModal] = useState(false);
+  const [showArduinoResetModal, setShowArduinoResetModal] = useState(false);
+  const [showNetworkResetModal, setShowNetworkResetModal] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
   const [resultMessage, setResultMessage] = useState({ type: '', title: '', message: '' });
@@ -516,7 +518,65 @@ export default function Grile() {
     }
   };
 
-  const allCards = [
+  const handleArduinoResetStats = async () => {
+    if (!user || solved.all.arduino < 50) return;
+    setIsResetting(true);
+    try {
+      const response = await fetch(`${API_URL}/questions/resetArduinoStats`, {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await response.json();
+      if (response.ok) {
+        updateUser({ xp: data.newXp, level: data.newLevel });
+        await loadData();
+        setShowArduinoResetModal(false);
+        setResultMessage({ type: 'success', title: 'Stats Reset Successfully!', message: `${data.questionsReset} questions reset, ${data.xpAdded} XP added.` });
+        setShowResultModal(true);
+      } else {
+        if (response.status === 429 && data.hoursRemaining) {
+          setResultMessage({ type: 'error', title: 'Reset Limit Reached', message: `You can reset again in ${data.hoursRemaining} hour${data.hoursRemaining > 1 ? 's' : ''}. You can only reset once every 24 hours.` });
+        } else {
+          setResultMessage({ type: 'error', title: 'Reset Failed', message: data.message || 'Failed to reset stats' });
+        }
+        setShowResultModal(true);
+      }
+    } catch {
+      setResultMessage({ type: 'error', title: 'Error', message: 'Failed to reset stats. Please try again.' });
+      setShowResultModal(true);
+    } finally { setIsResetting(false); }
+  };
+
+  const handleNetworkResetStats = async () => {
+    if (!user || solved.all.network < 50) return;
+    setIsResetting(true);
+    try {
+      const response = await fetch(`${API_URL}/questions/resetNetworkStats`, {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await response.json();
+      if (response.ok) {
+        updateUser({ xp: data.newXp, level: data.newLevel });
+        await loadData();
+        setShowNetworkResetModal(false);
+        setResultMessage({ type: 'success', title: 'Stats Reset Successfully!', message: `${data.questionsReset} questions reset, ${data.xpAdded} XP added.` });
+        setShowResultModal(true);
+      } else {
+        if (response.status === 429 && data.hoursRemaining) {
+          setResultMessage({ type: 'error', title: 'Reset Limit Reached', message: `You can reset again in ${data.hoursRemaining} hour${data.hoursRemaining > 1 ? 's' : ''}. You can only reset once every 24 hours.` });
+        } else {
+          setResultMessage({ type: 'error', title: 'Reset Failed', message: data.message || 'Failed to reset stats' });
+        }
+        setShowResultModal(true);
+      }
+    } catch {
+      setResultMessage({ type: 'error', title: 'Error', message: 'Failed to reset stats. Please try again.' });
+      setShowResultModal(true);
+    } finally { setIsResetting(false); }
+  };
+
+  const cards = [
     {       title: 'Linux Questions', 
       desc: 'System administration, commands & concepts',
       type: 'all',
@@ -588,7 +648,7 @@ export default function Grile() {
   ];
 
   // Filter cards based on active filter
-  const filteredCards = allCards.filter(card => {
+  const filteredCards = cards.filter(card => {
     if (activeFilter === 'all') return true;
     return card.filter === activeFilter || card.filter === 'all';
   });
@@ -704,6 +764,34 @@ export default function Grile() {
                   title={solved.all.linux < 500 ? `Need ${500 - solved.all.linux} more solved questions` : 'Reset stats for XP'}
                 >
                   Reset for XP ({solved.all.linux}/500)
+                </button>
+              )}
+
+              {card.title === 'Arduino Questions' && user && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowArduinoResetModal(true);
+                  }}
+                  className="compact-reset-btn"
+                  disabled={solved.all.arduino < 50}
+                  title={solved.all.arduino < 50 ? `Need ${50 - solved.all.arduino} more solved questions` : 'Reset stats for XP'}
+                >
+                  Reset for XP ({solved.all.arduino}/50)
+                </button>
+              )}
+
+              {card.title === 'Network Questions' && user && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowNetworkResetModal(true);
+                  }}
+                  className="compact-reset-btn"
+                  disabled={solved.all.network < 50}
+                  title={solved.all.network < 50 ? `Need ${50 - solved.all.network} more solved questions` : 'Reset stats for XP'}
+                >
+                  Reset for XP ({solved.all.network}/50)
                 </button>
               )}
               
@@ -860,6 +948,90 @@ export default function Grile() {
                 className="btn btn-primary"
                 disabled={solved.all.linux < 500 || isResetting}
               >
+                {isResetting ? 'Resetting...' : 'Confirm Reset'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showArduinoResetModal && (
+        <div className="modal-overlay" onClick={() => setShowArduinoResetModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Reset Arduino Questions Stats</h3>
+              <button className="modal-close" onClick={() => setShowArduinoResetModal(false)}>
+                <X size={20} />
+              </button>
+            </div>
+            <div className="reset-modal-body">
+              <div className="reset-info">
+                <p><strong>Total user XP won't be reset</strong>, only Arduino questions stats will be reset.</p>
+                <p>You will get <strong>1 point for every question solved</strong>.</p>
+                <p>You need at least <strong>50 solved Arduino questions</strong>.</p>
+              </div>
+              <div className="reset-stats">
+                <div className="stat-item">
+                  <span className="stat-label">Currently solved:</span>
+                  <span className="stat-value">{solved.all.arduino}</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">XP you'll gain:</span>
+                  <span className="stat-value">{solved.all.arduino} XP</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">Status:</span>
+                  <span className={`stat-status ${solved.all.arduino >= 50 ? 'eligible' : 'not-eligible'}`}>
+                    {solved.all.arduino >= 50 ? 'Eligible' : `Need ${50 - solved.all.arduino} more`}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button onClick={() => setShowArduinoResetModal(false)} className="btn btn-secondary">Cancel</button>
+              <button onClick={handleArduinoResetStats} className="btn btn-primary" disabled={solved.all.arduino < 50 || isResetting}>
+                {isResetting ? 'Resetting...' : 'Confirm Reset'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showNetworkResetModal && (
+        <div className="modal-overlay" onClick={() => setShowNetworkResetModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Reset Network Questions Stats</h3>
+              <button className="modal-close" onClick={() => setShowNetworkResetModal(false)}>
+                <X size={20} />
+              </button>
+            </div>
+            <div className="reset-modal-body">
+              <div className="reset-info">
+                <p><strong>Total user XP won't be reset</strong>, only Network questions stats will be reset.</p>
+                <p>You will get <strong>1 point for every question solved</strong>.</p>
+                <p>You need at least <strong>50 solved Network questions</strong>.</p>
+              </div>
+              <div className="reset-stats">
+                <div className="stat-item">
+                  <span className="stat-label">Currently solved:</span>
+                  <span className="stat-value">{solved.all.network}</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">XP you'll gain:</span>
+                  <span className="stat-value">{solved.all.network} XP</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">Status:</span>
+                  <span className={`stat-status ${solved.all.network >= 50 ? 'eligible' : 'not-eligible'}`}>
+                    {solved.all.network >= 50 ? 'Eligible' : `Need ${50 - solved.all.network} more`}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button onClick={() => setShowNetworkResetModal(false)} className="btn btn-secondary">Cancel</button>
+              <button onClick={handleNetworkResetStats} className="btn btn-primary" disabled={solved.all.network < 50 || isResetting}>
                 {isResetting ? 'Resetting...' : 'Confirm Reset'}
               </button>
             </div>

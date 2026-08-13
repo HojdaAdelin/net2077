@@ -401,6 +401,132 @@ export const resetLinuxStats = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+export const resetArduinoStats = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.lastArduinoReset) {
+      const now = new Date();
+      const lastReset = new Date(user.lastArduinoReset);
+      const hoursSinceReset = (now - lastReset) / (1000 * 60 * 60);
+      if (hoursSinceReset < 24) {
+        const hoursRemaining = Math.ceil(24 - hoursSinceReset);
+        return res.status(429).json({
+          message: 'Reset limit reached. You can only reset once every 24 hours.',
+          hoursRemaining,
+          nextResetTime: new Date(lastReset.getTime() + 24 * 60 * 60 * 1000)
+        });
+      }
+    }
+
+    const arduinoQuestions = await Question.find({ tags: 'ARDUINO', type: 'all' });
+    const arduinoQuestionIds = new Set(arduinoQuestions.map(q => q._id.toString()));
+
+    const solvedArduinoQuestions = user.solvedQuestions.filter(
+      questionId => arduinoQuestionIds.has(questionId.toString())
+    );
+
+    if (solvedArduinoQuestions.length < 50) {
+      return res.status(400).json({
+        message: 'You need at least 50 solved Arduino questions to reset stats',
+        currentSolved: solvedArduinoQuestions.length
+      });
+    }
+
+    user.solvedQuestions = user.solvedQuestions.filter(
+      questionId => !arduinoQuestionIds.has(questionId.toString())
+    );
+
+    const xpToAdd = solvedArduinoQuestions.length;
+    user.xp += xpToAdd;
+    user.level = Math.floor(user.xp / 100) + 1;
+    await trackCompetitiveXP(user._id, xpToAdd);
+
+    user.lastArduinoReset = new Date();
+    await user.save();
+
+    console.log(`[✔] Arduino stats reset for user ${user.username}: ${solvedArduinoQuestions.length} questions reset, ${xpToAdd} XP added`);
+
+    res.json({
+      message: 'Arduino stats reset successfully',
+      questionsReset: solvedArduinoQuestions.length,
+      xpAdded: xpToAdd,
+      newXp: user.xp,
+      newLevel: user.level
+    });
+  } catch (error) {
+    console.error('Error resetting Arduino stats:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const resetNetworkStats = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.lastNetworkReset) {
+      const now = new Date();
+      const lastReset = new Date(user.lastNetworkReset);
+      const hoursSinceReset = (now - lastReset) / (1000 * 60 * 60);
+      if (hoursSinceReset < 24) {
+        const hoursRemaining = Math.ceil(24 - hoursSinceReset);
+        return res.status(429).json({
+          message: 'Reset limit reached. You can only reset once every 24 hours.',
+          hoursRemaining,
+          nextResetTime: new Date(lastReset.getTime() + 24 * 60 * 60 * 1000)
+        });
+      }
+    }
+
+    const networkQuestions = await Question.find({ tags: 'NETWORK', type: 'all' });
+    const networkQuestionIds = new Set(networkQuestions.map(q => q._id.toString()));
+
+    const solvedNetworkQuestions = user.solvedQuestions.filter(
+      questionId => networkQuestionIds.has(questionId.toString())
+    );
+
+    if (solvedNetworkQuestions.length < 50) {
+      return res.status(400).json({
+        message: 'You need at least 50 solved Network questions to reset stats',
+        currentSolved: solvedNetworkQuestions.length
+      });
+    }
+
+    user.solvedQuestions = user.solvedQuestions.filter(
+      questionId => !networkQuestionIds.has(questionId.toString())
+    );
+
+    const xpToAdd = solvedNetworkQuestions.length;
+    user.xp += xpToAdd;
+    user.level = Math.floor(user.xp / 100) + 1;
+    await trackCompetitiveXP(user._id, xpToAdd);
+
+    user.lastNetworkReset = new Date();
+    await user.save();
+
+    console.log(`[✔] Network stats reset for user ${user.username}: ${solvedNetworkQuestions.length} questions reset, ${xpToAdd} XP added`);
+
+    res.json({
+      message: 'Network stats reset successfully',
+      questionsReset: solvedNetworkQuestions.length,
+      xpAdded: xpToAdd,
+      newXp: user.xp,
+      newLevel: user.level
+    });
+  } catch (error) {
+    console.error('Error resetting Network stats:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 export const submitRandom50 = async (req, res) => {
   try {
     const { score, totalPoints } = req.body;
