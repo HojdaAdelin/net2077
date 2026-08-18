@@ -1,4 +1,5 @@
 import Roadmap from '../models/Roadmap.js';
+import { levelFromXp } from '../utils/xpUtils.js';
 import Chapter from '../models/Chapter.js';
 import Lesson from '../models/Lesson.js';
 import LessonProgress from '../models/LessonProgress.js';
@@ -191,7 +192,7 @@ export const checkAnswer = async (req, res) => {
           const user = await User.findById(req.userId);
           xpGained = await calculateXPWithBoosts(req.userId, itemXP);
           user.xp += xpGained;
-          user.level = Math.floor(user.xp / 100) + 1;
+          user.level = levelFromXp(user.xp);
           await trackCompetitiveXP(req.userId, xpGained);
           await user.save();
           newXP = user.xp;
@@ -264,3 +265,5 @@ export const getLessonProgress = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+

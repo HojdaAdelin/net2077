@@ -76,6 +76,7 @@
 .progress-bar-label {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 12px;
   font-size: 13px;
 }
@@ -85,8 +86,105 @@
   font-weight: 500;
 }
 
-.progress-bar-label span:last-child {
+.xp-label-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   color: var(--text-muted);
+}
+
+.xp-info-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.xp-info-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.xp-info-btn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.xp-info-popover {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  width: 240px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  z-index: 100;
+}
+
+.xp-info-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+.xp-info-close:hover { color: var(--text-primary); }
+
+.xp-info-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px 0;
+}
+
+.xp-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.xp-info-table th {
+  text-align: left;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.xp-info-table td {
+  padding: 4px 0;
+  color: var(--text-secondary);
+}
+
+.xp-info-table tr:first-child td { padding-top: 6px; }
+
+.xp-info-current {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 0;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
 }
 
 .progress-bar {

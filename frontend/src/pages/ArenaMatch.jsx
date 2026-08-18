@@ -58,7 +58,7 @@ export default function ArenaMatch() {
         if (xpToAdd > 0) {
           updateUser({ 
             xp: user.xp + xpToAdd,
-            level: Math.floor((user.xp + xpToAdd) / 100) + 1
+            level: user.level // backend will recalculate correctly
           });
         }
       }

@@ -1,4 +1,5 @@
 import Scripting from '../models/Scripting.js';
+import { levelFromXp } from '../utils/xpUtils.js';
 import User from '../models/User.js';
 import { calculateXPWithBoosts } from './shopController.js';
 import { trackCompetitiveXP } from './competitiveController.js';
@@ -70,7 +71,7 @@ export const submitAnswer = async (req, res) => {
 
       const finalXP = await calculateXPWithBoosts(user._id, problem.xp);
       user.xp += finalXP;
-      user.level = Math.floor(user.xp / 100) + 1;
+      user.level = levelFromXp(user.xp);
       await trackCompetitiveXP(user._id, finalXP);
       await user.save();
 
@@ -89,3 +90,5 @@ export const submitAnswer = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+

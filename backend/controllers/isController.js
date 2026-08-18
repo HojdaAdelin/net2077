@@ -1,4 +1,5 @@
 import IS from '../models/IS.js';
+import { levelFromXp } from '../utils/xpUtils.js';
 import User from '../models/User.js';
 import { calculateXPWithBoosts } from './shopController.js';
 
@@ -92,7 +93,7 @@ export const submitISCode = async (req, res) => {
       user.isStats.solved += 1;
       const finalXP = await calculateXPWithBoosts(user._id, problem.xp);
       user.xp += finalXP;
-      user.level = Math.floor(user.xp / 100) + 1;
+      user.level = levelFromXp(user.xp);
       await user.save();
       return res.json({ success: true, message: `All tests passed! +${finalXP} XP`, xpGained: finalXP, newXP: user.xp, newLevel: user.level });
     } else if (allPassed && user.solvedIS.includes(problem._id)) {
@@ -105,3 +106,4 @@ export const submitISCode = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+

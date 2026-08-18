@@ -1,4 +1,5 @@
 import Terminal from '../models/Terminal.js';
+import { levelFromXp } from '../utils/xpUtils.js';
 import User from '../models/User.js';
 import { updateUserStreak } from '../utils/streakUtils.js';
 import { trackCompetitiveXP } from './competitiveController.js';
@@ -70,7 +71,7 @@ export const submitTerminalCommand = async (req, res) => {
       const finalXP = await calculateXPWithBoosts(user._id, question.points);
       
       user.xp += finalXP;
-      user.level = Math.floor(user.xp / 100) + 1;
+      user.level = levelFromXp(user.xp);
       
       
       await updateUserStreak(user);
@@ -103,3 +104,4 @@ export const submitTerminalCommand = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+

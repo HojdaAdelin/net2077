@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import { levelFromXp } from '../utils/xpUtils.js';
 import { updateUserStreak, getStreakInfo } from '../utils/streakUtils.js';
 import { calculateXPWithBoosts } from './shopController.js';
 import { trackCompetitiveXP } from './competitiveController.js';
@@ -79,7 +80,7 @@ export const addSimulation = async (req, res) => {
     const finalXP = await calculateXPWithBoosts(req.userId, score);
     
     user.xp += finalXP; 
-    user.level = Math.floor(user.xp / 100) + 1;
+    user.level = levelFromXp(user.xp);
     
     await trackCompetitiveXP(req.userId, finalXP);
     
@@ -231,3 +232,5 @@ export const claimStreakReward = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+

@@ -3,6 +3,7 @@ import User from '../models/User.js';
 import { updateUserStreak } from '../utils/streakUtils.js';
 import { trackCompetitiveXP } from './competitiveController.js';
 import { calculateXPWithBoosts } from './shopController.js';
+import { levelFromXp } from '../utils/xpUtils.js';
 
 export const getQuestions = async (req, res) => {
   try {
@@ -100,7 +101,7 @@ export const markSolved = async (req, res) => {
       const finalXP = await calculateXPWithBoosts(user._id, xpGained);
       user.solvedQuestions.push(questionId);
       user.xp += finalXP;
-      user.level = Math.floor(user.xp / 100) + 1;
+      user.level = levelFromXp(user.xp);
       
       await trackCompetitiveXP(user._id, finalXP);
       
@@ -237,7 +238,7 @@ export const completeDailyChallenge = async (req, res) => {
 
     const doubleXP = score * 2;
     user.xp += doubleXP;
-    user.level = Math.floor(user.xp / 100) + 1;
+    user.level = levelFromXp(user.xp);
 
     await trackCompetitiveXP(user._id, doubleXP);
     
@@ -306,7 +307,7 @@ export const resetBasicStats = async (req, res) => {
 
     const xpToAdd = solvedBasicQuestions.length;
     user.xp += xpToAdd;
-    user.level = Math.floor(user.xp / 100) + 1;
+    user.level = levelFromXp(user.xp);
     await trackCompetitiveXP(user._id, xpToAdd);
   
     user.lastBasicReset = new Date();
@@ -382,7 +383,7 @@ export const resetLinuxStats = async (req, res) => {
 
     const xpToAdd = solvedLinuxQuestions.length;
     user.xp += xpToAdd;
-    user.level = Math.floor(user.xp / 100) + 1;
+    user.level = levelFromXp(user.xp);
     await trackCompetitiveXP(user._id, xpToAdd);
 
     await user.save();
@@ -443,7 +444,7 @@ export const resetArduinoStats = async (req, res) => {
 
     const xpToAdd = solvedArduinoQuestions.length;
     user.xp += xpToAdd;
-    user.level = Math.floor(user.xp / 100) + 1;
+    user.level = levelFromXp(user.xp);
     await trackCompetitiveXP(user._id, xpToAdd);
 
     user.lastArduinoReset = new Date();
@@ -506,7 +507,7 @@ export const resetNetworkStats = async (req, res) => {
 
     const xpToAdd = solvedNetworkQuestions.length;
     user.xp += xpToAdd;
-    user.level = Math.floor(user.xp / 100) + 1;
+    user.level = levelFromXp(user.xp);
     await trackCompetitiveXP(user._id, xpToAdd);
 
     user.lastNetworkReset = new Date();
@@ -541,7 +542,7 @@ export const submitRandom50 = async (req, res) => {
     }
     
     user.xp += score;
-    user.level = Math.floor(user.xp / 100) + 1;
+    user.level = levelFromXp(user.xp);
     await trackCompetitiveXP(user._id, score);
     
     await user.save();

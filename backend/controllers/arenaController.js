@@ -1,4 +1,5 @@
 import ArenaMatch from '../models/ArenaMatch.js';
+import { levelFromXp } from '../utils/xpUtils.js';
 import Question from '../models/Question.js';
 import User from '../models/User.js';
 import { updateUserStreak } from '../utils/streakUtils.js';
@@ -248,11 +249,11 @@ export const finishMatch = async (req, res) => {
       opponentXPGained = opponentScore;
       
       creator.xp += creatorScore;
-      creator.level = Math.floor(creator.xp / 100) + 1;
+      creator.level = levelFromXp(creator.xp);
       
       if (opponent) {
         opponent.xp += opponentScore;
-        opponent.level = Math.floor(opponent.xp / 100) + 1;
+        opponent.level = levelFromXp(opponent.xp);
       }
 
       if (creatorScore > 0) await updateUserStreak(creator);
@@ -263,11 +264,11 @@ export const finishMatch = async (req, res) => {
         opponentXPGained = opponentScore;
         
         creator.xp += creatorScore;
-        creator.level = Math.floor(creator.xp / 100) + 1;
+        creator.level = levelFromXp(creator.xp);
         
         if (opponent) {
           opponent.xp += opponentScore;
-          opponent.level = Math.floor(opponent.xp / 100) + 1;
+          opponent.level = levelFromXp(opponent.xp);
         }
 
         if (creatorScore > 0) await updateUserStreak(creator);
@@ -280,13 +281,13 @@ export const finishMatch = async (req, res) => {
           creatorXPGained = totalXP;
           opponentXPGained = 0;
           creator.xp += totalXP;
-          creator.level = Math.floor(creator.xp / 100) + 1;
+          creator.level = levelFromXp(creator.xp);
           await updateUserStreak(creator);
         } else if (winnerId === opponent._id.toString()) {
           creatorXPGained = 0;
           opponentXPGained = totalXP;
           opponent.xp += totalXP;
-          opponent.level = Math.floor(opponent.xp / 100) + 1;
+          opponent.level = levelFromXp(opponent.xp);
           await updateUserStreak(opponent);
         }
       }
@@ -515,3 +516,5 @@ export const getMyArenaStats = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+

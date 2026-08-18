@@ -5,7 +5,7 @@ import { getUserProgress, checkPendingRewards, claimLevelRewards } from '../serv
 import { API_URL } from '../config';
 import { useLanguage } from '../context/LanguageContext';
 import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp, Gift, X, Coins, CheckCircle, XCircle, Activity, Sparkles, Flame, Target, Pencil, Clock } from 'lucide-react';
-import LoginRequired from '../components/LoginRequired';
+import { xpProgressInLevel } from '../utils/xpUtils.js';
 import '../styles/Progress.css';
 
 // ── Daily Activity Chart ──
@@ -135,6 +135,7 @@ export default function Progress() {
   const [claimingStreak, setClaimingStreak] = useState(false);
   const [streakRewardDone, setStreakRewardDone] = useState(false);
   const [editGoal, setEditGoal] = useState(false);
+  const [showXpInfo, setShowXpInfo] = useState(false);
   const { t } = useLanguage();
 
   useEffect(() => {
@@ -207,8 +208,8 @@ export default function Progress() {
     );
   }
 
-  const xpToNextLevel = 100 - (progress.xp % 100);
-  const progressPercent = (progress.xp % 100);
+  const { currentLevelXp, xpForNextLevel, progressPercent } = xpProgressInLevel(progress.xp);
+  const xpToNextLevel = xpForNextLevel - currentLevelXp;
 
   const handleClaimRewards = async () => {
     if (claiming || !pendingRewards?.hasPendingRewards) return;
@@ -336,7 +337,39 @@ export default function Progress() {
           <div className="progress-bar-container">
             <div className="progress-bar-label">
               <span>{t('progress.progressToLevel')} {progress.level + 1}</span>
-              <span>{xpToNextLevel} XP {t('progress.xpRemaining')}</span>
+              <div className="xp-label-right">
+                <span>{xpToNextLevel} XP {t('progress.xpRemaining')}</span>
+                <div className="xp-info-wrap">
+                  <button
+                    className="xp-info-btn"
+                    onClick={() => setShowXpInfo(v => !v)}
+                    title="How levels work"
+                  >
+                    <Info size={13} />
+                  </button>
+                  {showXpInfo && (
+                    <div className="xp-info-popover">
+                      <button className="xp-info-close" onClick={() => setShowXpInfo(false)}>×</button>
+                      <p className="xp-info-title">Level XP Requirements</p>
+                      <table className="xp-info-table">
+                        <thead>
+                          <tr><th>Levels</th><th>XP / level</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr><td>1 – 50</td><td>100 XP</td></tr>
+                          <tr><td>51 – 80</td><td>150 XP</td></tr>
+                          <tr><td>81 – 100</td><td>200 XP</td></tr>
+                          <tr><td>101 – 150</td><td>300 XP</td></tr>
+                          <tr><td>151+</td><td>500 XP</td></tr>
+                        </tbody>
+                      </table>
+                      <p className="xp-info-current">
+                        You are level <strong>{progress.level}</strong> — next level needs <strong>{xpForNextLevel} XP</strong>
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
             <div className="progress-bar">
               <div className="progress-fill" style={{ width: `${progressPercent}%` }}></div>
