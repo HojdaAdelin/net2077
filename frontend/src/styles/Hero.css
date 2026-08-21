@@ -1506,3 +1506,219 @@ AcadNet Section ── */
   line-height: 1.55;
   margin: 0;
 }
+
+/* ── Terminal 2.0 promo section ──────────────────────────────────────────── */
+
+.h-t2-section {
+  overflow: hidden;
+}
+
+.h-t2-inner {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+
+/* Text side */
+.h-t2-text {
+  flex: 0 0 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.h-t2-badge {
+  display: inline-block;
+  width: fit-content;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.h-t2-title {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.h-t2-desc {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.h-t2-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: fit-content;
+  padding: 0.6rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: #ef4444;
+  color: #fff;
+  border: 1px solid #ef4444;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+}
+
+.h-t2-btn:hover {
+  background: #dc2626;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.45);
+}
+
+/* Screens side */
+.h-t2-screens {
+  flex: 1;
+  position: relative;
+  height: 260px;
+  min-width: 0;
+}
+
+.h-t2-screen {
+  position: absolute;
+  width: 320px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  box-shadow: 0 8px 32px var(--shadow);
+  font-family: 'Courier New', monospace;
+  font-size: 0.78rem;
+}
+
+.h-t2-screen-legacy {
+  top: 30px;
+  left: 0;
+  transform: rotate(-3deg);
+  z-index: 1;
+  opacity: 0.85;
+}
+
+.h-t2-screen-v2 {
+  top: 0;
+  left: 140px;
+  transform: rotate(2deg);
+  z-index: 2;
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 0 8px 32px var(--shadow), 0 0 18px rgba(239, 68, 68, 0.15);
+}
+
+.h-t2-screen-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border);
+}
+
+.h-t2-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.h-t2-dot-r { background: #ff5f57; }
+.h-t2-dot-y { background: #ffbd2e; }
+.h-t2-dot-g { background: #28ca42; }
+
+.h-t2-screen-label {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: 'Courier New', monospace;
+}
+
+.h-t2-screen-label-v2 {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.h-t2-screen-body {
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.h-t2-mock-line {
+  color: var(--text-primary);
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.h-t2-mock-prompt { display: flex; align-items: center; gap: 0.35rem; }
+.h-t2-mock-ps     { color: #3b82f6; font-weight: 600; }
+.h-t2-mock-typed  { color: var(--text-primary); }
+.h-t2-mock-dim    { color: var(--text-muted); }
+.h-t2-mock-solved { color: #22c55e; }
+.h-t2-mock-sys    { color: var(--text-muted); font-size: 0.74rem; }
+.h-t2-mock-white  { color: var(--text-secondary); }
+.h-t2-mock-red    { color: #ef4444; font-weight: 600; }
+
+.h-t2-mock-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 13px;
+  background: var(--text-primary);
+  opacity: 0.8;
+  animation: t2-blink 1.1s step-end infinite;
+  vertical-align: middle;
+}
+
+@keyframes t2-blink {
+  0%, 100% { opacity: 0.8; }
+  50%       { opacity: 0; }
+}
+
+@media (max-width: 900px) {
+  .h-t2-inner {
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .h-t2-text {
+    flex: none;
+    width: 100%;
+  }
+
+  .h-t2-screens {
+    width: 100%;
+    height: 240px;
+  }
+
+  .h-t2-screen {
+    width: 260px;
+  }
+
+  .h-t2-screen-v2 {
+    left: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .h-t2-screens {
+    height: 200px;
+  }
+
+  .h-t2-screen {
+    width: 220px;
+  }
+
+  .h-t2-screen-v2 {
+    left: 70px;
+  }
+}

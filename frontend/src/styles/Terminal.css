@@ -892,3 +892,509 @@ Questions Message */
   max-width: 400px;
   margin: 0;
 }
+
+/* ── Version Selector ─────────────────────────────────────────────────────── */
+
+.terminal-version-selector {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.tv-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.4rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+}
+
+.tv-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+/* Legacy — blue tint */
+.tv-btn-legacy {
+  border-color: var(--tv-legacy-border, #3b82f6);
+  color: var(--tv-legacy-color, #3b82f6);
+  background: var(--tv-legacy-bg, rgba(59, 130, 246, 0.06));
+}
+
+.tv-btn-legacy:hover,
+.tv-btn-legacy.tv-active {
+  background: var(--tv-legacy-bg-active, rgba(59, 130, 246, 0.14));
+  border-color: var(--tv-legacy-border, #3b82f6);
+  color: var(--tv-legacy-color, #3b82f6);
+}
+
+/* Terminal 2.0 — red tint with glow */
+.tv-btn-v2 {
+  border-color: var(--tv-v2-border, #ef4444);
+  color: var(--tv-v2-color, #ef4444);
+  background: var(--tv-v2-bg, rgba(239, 68, 68, 0.06));
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.25), 0 0 20px rgba(239, 68, 68, 0.1);
+}
+
+.tv-btn-v2:hover,
+.tv-btn-v2.tv-active {
+  background: var(--tv-v2-bg-active, rgba(239, 68, 68, 0.14));
+  border-color: var(--tv-v2-border, #ef4444);
+  color: var(--tv-v2-color, #ef4444);
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.4), 0 0 32px rgba(239, 68, 68, 0.15);
+}
+
+/* ── Terminal 2.0 Styles ──────────────────────────────────────────────────── */
+
+.t2-wrapper {
+  margin-top: 1.5rem;
+}
+
+.t2-terminal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 720px;
+  max-height: calc(72vh + 200px);
+}
+
+.t2-topbar {
+  background: var(--bg-tertiary);
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.t2-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.t2-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.t2-dot-red    { background: #ff5f57; }
+.t2-dot-yellow { background: #ffbd2e; }
+.t2-dot-green  { background: #28ca42; }
+
+.t2-topbar-title {
+  flex: 1;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.t2-topbar-progress {
+  font-family: 'Courier New', monospace;
+  font-size: 0.78rem;
+  color: var(--text-primary);
+}
+
+.t2-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.25rem 0.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.t2-body::-webkit-scrollbar { width: 6px; }
+.t2-body::-webkit-scrollbar-track { background: transparent; }
+.t2-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.t2-line {
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  padding: 0;
+  line-height: 1.55;
+}
+
+.t2-separator {
+  height: 0.6rem;
+}
+
+/* Welcome block */
+.t2-welcome-block {
+  margin-bottom: 0.5rem;
+}
+
+.t2-welcome-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.t2-welcome-at {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.t2-welcome-version {
+  color: var(--tv-v2-color, #ef4444);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.1rem 0.35rem;
+  border: 1px solid var(--tv-v2-border, #ef4444);
+  border-radius: 4px;
+}
+
+.t2-welcome-text {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* System / server lines */
+.t2-sys-prefix {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.t2-server-text {
+  color: var(--text-secondary);
+}
+
+.t2-green-word {
+  color: var(--success);
+  font-weight: 600;
+}
+
+/* User input echo */
+.t2-user-prefix {
+  color: var(--tv-legacy-color, #3b82f6);
+  font-weight: 600;
+  margin-right: 0.5rem;
+  white-space: nowrap;
+}
+
+[data-theme="light"] .t2-user-prefix {
+  color: #2563eb;
+}
+
+.t2-user-cmd {
+  color: var(--text-primary);
+}
+
+/* Output types */
+.t2-success {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.t2-error {
+  color: var(--error);
+}
+
+.t2-cmd-hint {
+  color: var(--tv-v2-color, #ef4444);
+  font-weight: 500;
+}
+
+.t2-hint {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+.t2-question {
+  color: var(--text-primary);
+}
+
+.t2-question-solved {
+  color: var(--success);
+}
+
+.t2-description {
+  color: var(--text-secondary);
+}
+
+.t2-meta {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.t2-cmd-inline {
+  color: var(--tv-v2-color, #ef4444);
+  font-weight: 600;
+}
+
+/* Input row */
+.t2-input-row {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0 0.75rem;
+  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  margin-top: 0.5rem;
+}
+
+.t2-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  border-radius: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  padding: 0;
+  caret-color: var(--text-primary);
+}
+
+.t2-input::placeholder {
+  color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  .terminal-version-selector {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .t2-terminal {
+    max-height: 80vh;
+    min-height: 400px;
+  }
+
+  .t2-topbar-progress {
+    display: none;
+  }
+}
+
+/* ── Terminal 2.0 — additions ─────────────────────────────────────────────── */
+
+/* Topbar right side (checkbox + progress) */
+.t2-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.t2-unsolved-check {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.t2-unsolved-check input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  accent-color: var(--tv-v2-border, #ef4444);
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.t2-unsolved-check:hover {
+  color: var(--text-primary);
+}
+
+/* Question detail lines */
+.t2-q-label {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.t2-q-meta-colored {
+  color: var(--text-primary);
+}
+
+.t2-diff-easy   { color: var(--success); font-weight: 600; }
+.t2-diff-medium { color: var(--warning); font-weight: 600; }
+.t2-diff-hard   { color: var(--error);   font-weight: 600; }
+
+.t2-q-instruction {
+  color: var(--text-secondary);
+}
+
+.t2-exit-cmd {
+  color: var(--error);
+  font-weight: 600;
+}
+
+/* Navigation hints — normal text color */
+.t2-nav-hint {
+  color: var(--text-primary);
+}
+
+@media (max-width: 600px) {
+  .t2-unsolved-check span {
+    display: none;
+  }
+}
+
+/* ── Terminal 2.0 — question box ─────────────────────────────────────────── */
+
+.t2-q-box {
+  margin: 0 -1.25rem;
+  padding: 0.85rem 1.25rem;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.t2-q-box-easy {
+  border-left-color: var(--success);
+  border-right-color: var(--success);
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.t2-q-box-medium {
+  border-left-color: var(--warning);
+  border-right-color: var(--warning);
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.t2-q-box-hard {
+  border-left-color: var(--error);
+  border-right-color: var(--error);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.t2-q-box-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.t2-q-box-label {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  min-width: 5.5rem;
+  flex-shrink: 0;
+}
+
+.t2-q-box-value {
+  color: var(--text-primary);
+}
+
+.t2-q-box-sep {
+  color: var(--text-muted);
+  margin: 0 0.15rem;
+}
+
+/* Make t2-body a bit more click-friendly */
+.t2-body {
+  cursor: text;
+}
+
+/* ── Terminal 2.0 — nav-hint bold + shortcuts ────────────────────────────── */
+
+.t2-nav-hint {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.t2-nav-label {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.t2-nav-cmd {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.t2-nav-short {
+  font-weight: 700;
+  color: var(--tv-v2-color, #ef4444);
+  margin-left: 0.2rem;
+}
+
+.t2-nav-sep {
+  color: var(--text-muted);
+  font-weight: 400;
+  margin: 0 0.2rem;
+}
+
+/* ── Terminal 2.0 — fullscreen ───────────────────────────────────────────── */
+
+.t2-fullscreen {
+  position: fixed;
+  top: 65px; /* navbar height + border */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 900;
+  margin: 0;
+  padding: 0;
+}
+
+.t2-fullscreen .t2-terminal {
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+}
+
+.t2-fullscreen-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+  margin-left: 0.25rem;
+}
+
+.t2-fullscreen-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+}
+
+/* ── Terminal 2.0 — bold server hint ─────────────────────────────────────── */
+
+.t2-server-bold {
+  font-weight: 700;
+}
+
+.t2-server-bold .t2-sys-prefix,
+.t2-server-bold .t2-server-text {
+  font-weight: 700;
+}

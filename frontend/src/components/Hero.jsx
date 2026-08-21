@@ -187,6 +187,59 @@ export default function Hero() {
         </div>
       </div>
 
+      <section className="h-section h-t2-section">
+        <div className="h-container">
+          <div className="h-t2-inner">
+            <div className="h-t2-text">
+              <h2 className="h-t2-title">Terminal 2.0</h2>
+              <p className="h-t2-desc">
+                A fresh start for the Terminal section. Terminal 2.0 is a much more comprehensive version than the Legacy one, offering a significantly better user experience.
+              </p>
+              <Link to="/terminal?v=2" className="h-t2-btn">
+                Try Terminal 2.0
+                <ArrowRight size={15} />
+              </Link>
+            </div>
+
+            <div className="h-t2-screens">
+            
+              <div className="h-t2-screen h-t2-screen-legacy">
+                <div className="h-t2-screen-bar">
+                  <span className="h-t2-dot h-t2-dot-r" />
+                  <span className="h-t2-dot h-t2-dot-y" />
+                  <span className="h-t2-dot h-t2-dot-g" />
+                  <span className="h-t2-screen-label">Legacy</span>
+                </div>
+                <div className="h-t2-screen-body">
+                  <div className="h-t2-mock-line h-t2-mock-prompt"><span className="h-t2-mock-ps">user@net2077:~$</span><span className="h-t2-mock-cursor" /></div>
+                  <div className="h-t2-mock-line h-t2-mock-dim">Filter: all  |  Easy  Medium  Hard</div>
+                  <div className="h-t2-mock-line">1. List files in directory</div>
+                  <div className="h-t2-mock-line h-t2-mock-solved">2. Show current shell ✓</div>
+                  <div className="h-t2-mock-line">3. Kill process by PID</div>
+                  <div className="h-t2-mock-line h-t2-mock-dim">Solved: 1 / 24</div>
+                </div>
+              </div>
+
+              <div className="h-t2-screen h-t2-screen-v2">
+                <div className="h-t2-screen-bar">
+                  <span className="h-t2-dot h-t2-dot-r" />
+                  <span className="h-t2-dot h-t2-dot-y" />
+                  <span className="h-t2-dot h-t2-dot-g" />
+                  <span className="h-t2-screen-label h-t2-screen-label-v2">Terminal 2.0</span>
+                </div>
+                <div className="h-t2-screen-body">
+                  <div className="h-t2-mock-line h-t2-mock-sys">net2077@terminal: <span className="h-t2-mock-white">Select a category</span></div>
+                  <div className="h-t2-mock-line h-t2-mock-red">  cd /easy</div>
+                  <div className="h-t2-mock-line h-t2-mock-red">  cd /medium</div>
+                  <div className="h-t2-mock-line h-t2-mock-red">  cd /hard</div>
+                  <div className="h-t2-mock-line h-t2-mock-prompt"><span className="h-t2-mock-ps">user@net2077:~$</span> <span className="h-t2-mock-typed">cd /easy</span><span className="h-t2-mock-cursor" /></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="h-section" id="tracks">
         <div className="h-container">
           <div className="h-section-header">
@@ -278,7 +331,6 @@ export default function Hero() {
         </div>
       </section>
 
-    
       <section className="h-section h-acadnet-section" id="prepare-acadnet">
         <div className="h-container">
           <div className="h-section-header">
