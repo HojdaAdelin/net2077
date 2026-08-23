@@ -1,5 +1,4 @@
 import User from '../models/User.js';
-import Question from '../models/Question.js';
 
 export const getLeaderboard = async (req, res) => {
   try {
@@ -34,26 +33,23 @@ export const getCategoryLeaderboard = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid category tag' });
     }
 
-    // Get all question IDs for this tag
-    const questions = await Question.find({ tags: normalizedTag }).select('_id').lean();
-    const questionIds = new Set(questions.map(q => q._id.toString()));
+    const sortField = `solvedByTag.${normalizedTag}`;
 
-    // Load users who solved at least one question, count per-tag solved
-    const users = await User.find({ solvedQuestions: { $exists: true, $not: { $size: 0 } } })
-      .select('username solvedQuestions level role')
+    const topUsers = await User.find({ [`solvedByTag.${normalizedTag}`]: { $gt: 0 } })
+      .select(`username level role solvedByTag`)
+      .sort({ [sortField]: -1 })
+      .limit(5)
       .lean();
 
-    const ranked = users
-      .map(u => {
-        const count = (u.solvedQuestions || []).filter(id => questionIds.has(id.toString())).length;
-        return { username: u.username, solved: count, level: u.level || 1, role: u.role || 'user' };
-      })
-      .filter(u => u.solved > 0)
-      .sort((a, b) => b.solved - a.solved)
-      .slice(0, 5)
-      .map((u, i) => ({ rank: i + 1, ...u }));
+    const leaderboard = topUsers.map((u, i) => ({
+      rank: i + 1,
+      username: u.username,
+      solved: u.solvedByTag?.[normalizedTag] || 0,
+      level: u.level || 1,
+      role: u.role || 'user'
+    }));
 
-    res.json({ success: true, leaderboard: ranked });
+    res.json({ success: true, leaderboard });
   } catch (error) {
     console.error('Category leaderboard error:', error);
     res.status(500).json({ success: false, message: 'Failed to fetch category leaderboard' });
