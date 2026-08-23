@@ -3,8 +3,67 @@ import { useState, useEffect, useContext } from 'react';
 import { getUserProgress, getDailyChallengeStatus } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { X, Monitor, Wifi, Cpu, BookOpen, Trophy, FileCheck, ArrowRight } from 'lucide-react';
+import { X, Monitor, Wifi, Cpu, BookOpen, Trophy, FileCheck, ArrowRight, Users } from 'lucide-react';
 import '../styles/Grile.css';
+
+function CategoryLeaderboardModal({ tag, label, color, onClose }) {
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch(`${API_URL}/leaderboard/category/${tag}`)
+      .then(r => r.json())
+      .then(data => {
+        setLeaderboard(data.leaderboard || []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [tag]);
+
+  const initials = (username) => username?.slice(0, 2).toUpperCase() || '??';
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="cat-lb-modal" onClick={e => e.stopPropagation()}>
+        <div className="cat-lb-header" style={{ '--lb-color': color }}>
+          <div className="cat-lb-title">
+            <Users size={18} />
+            <span>{label} Leaderboard</span>
+          </div>
+          <button className="modal-close" onClick={onClose}><X size={18} /></button>
+        </div>
+
+        <div className="cat-lb-body">
+          {loading ? (
+            <div className="cat-lb-loading">Loading...</div>
+          ) : leaderboard.length === 0 ? (
+            <div className="cat-lb-empty">No data yet. Be the first!</div>
+          ) : (
+            <div className="cat-lb-list">
+              {leaderboard.map((entry) => (
+                <div
+                  key={entry.username}
+                  className="cat-lb-row"
+                  onClick={() => { navigate(`/profile/${entry.username}`); onClose(); }}
+                >
+                  <span className="cat-lb-rank">#{entry.rank}</span>
+                  <div className="cat-lb-avatar" style={{ '--lb-color': color }}>
+                    {initials(entry.username)}
+                  </div>
+                  <span className="cat-lb-name">{entry.username}</span>
+                  <span className="cat-lb-solved" style={{ color }}>
+                    {entry.solved} solved
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
   const [selectedMode, setSelectedMode] = useState('');
@@ -288,6 +347,7 @@ export default function Grile() {
   const [showResultModal, setShowResultModal] = useState(false);
   const [resultMessage, setResultMessage] = useState({ type: '', title: '', message: '' });
   const [activeFilter, setActiveFilter] = useState('all'); // 'all', 'linux', 'network'
+  const [categoryLbModal, setCategoryLbModal] = useState(null); // { tag, label, color }
   const { user, updateUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -586,7 +646,8 @@ export default function Grile() {
       color: '#f59e0b',
       icon: <Monitor size={24} />,
       filter: 'linux',
-      preSelectedTag: 'LINUX'
+      preSelectedTag: 'LINUX',
+      leaderboardTag: 'LINUX',
     },
     { 
       title: 'Network Questions', 
@@ -598,7 +659,8 @@ export default function Grile() {
       color: '#3b82f6',
       icon: <Wifi size={24} />,
       filter: 'network',
-      preSelectedTag: 'NETWORK'
+      preSelectedTag: 'NETWORK',
+      leaderboardTag: 'NETWORK',
     },
     { 
       title: 'Arduino Questions', 
@@ -610,7 +672,8 @@ export default function Grile() {
       color: '#8b5cf6',
       icon: <Cpu size={24} />,
       filter: 'all',
-      preSelectedTag: 'ARDUINO'
+      preSelectedTag: 'ARDUINO',
+      leaderboardTag: 'ARDUINO',
     },
     { 
       title: 'Basic Commands', 
@@ -729,6 +792,26 @@ export default function Grile() {
                   <h3>{card.title}</h3>
                   <p>{card.desc}</p>
                 </div>
+                {card.leaderboardTag && (
+                  <button
+                    className="cat-lb-btn"
+                    style={{ '--lb-color': card.color }}
+                    onClick={e => {
+                      e.stopPropagation();
+                      setCategoryLbModal({ tag: card.leaderboardTag, label: card.category, color: card.color });
+                    }}
+                    title={`${card.category} Leaderboard`}
+                  >
+                    <div className="cat-lb-avatars">
+                      {[0,1,2,3,4].map(i => (
+                        <span key={i} className="cat-lb-avatar-mini" style={{ '--lb-color': card.color }}>
+                          {i + 1}
+                        </span>
+                      ))}
+                    </div>
+                    <span className="cat-lb-btn-label">Leaderboard</span>
+                  </button>
+                )}
                 {card.isDaily && (
                   <span className={`compact-status ${card.completed ? 'completed' : 'available'}`}>
                     {card.completed ? '✓' : '★'}
@@ -1055,6 +1138,14 @@ export default function Grile() {
             </button>
           </div>
         </div>
+      )}
+      {categoryLbModal && (
+        <CategoryLeaderboardModal
+          tag={categoryLbModal.tag}
+          label={categoryLbModal.label}
+          color={categoryLbModal.color}
+          onClose={() => setCategoryLbModal(null)}
+        />
       )}
     </>
   );

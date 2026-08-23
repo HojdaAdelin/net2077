@@ -1670,3 +1670,161 @@ daily-loading-info {
     font-size: 0.75rem;
   }
 }
+
+/* ── Category Leaderboard Button ─────────────────────────────────────────── */
+
+.cat-lb-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  flex-shrink: 0;
+}
+
+.cat-lb-btn:hover {
+  border-color: var(--lb-color);
+  background: color-mix(in srgb, var(--lb-color) 8%, transparent);
+}
+
+.cat-lb-avatars {
+  display: flex;
+  gap: -4px;
+}
+
+.cat-lb-avatar-mini {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--lb-color) 20%, var(--bg-secondary));
+  border: 2px solid var(--bg-card);
+  color: var(--lb-color);
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -5px;
+}
+
+.cat-lb-avatar-mini:first-child {
+  margin-left: 0;
+}
+
+.cat-lb-btn-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.cat-lb-btn:hover .cat-lb-btn-label {
+  color: var(--lb-color);
+}
+
+/* ── Category Leaderboard Modal ───────────────────────────────────────────── */
+
+.cat-lb-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px var(--shadow);
+}
+
+.cat-lb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.cat-lb-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--lb-color);
+}
+
+.cat-lb-body {
+  padding: 1rem;
+}
+
+.cat-lb-loading,
+.cat-lb-empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.cat-lb-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cat-lb-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.cat-lb-row:hover {
+  border-color: var(--lb-color);
+  background: color-mix(in srgb, var(--lb-color) 6%, var(--bg-secondary));
+}
+
+.cat-lb-rank {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  min-width: 1.8rem;
+}
+
+.cat-lb-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--lb-color) 18%, var(--bg-tertiary));
+  color: var(--lb-color);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid color-mix(in srgb, var(--lb-color) 30%, transparent);
+}
+
+.cat-lb-name {
+  flex: 1;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.cat-lb-solved {
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
