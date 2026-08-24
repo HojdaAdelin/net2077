@@ -47,6 +47,22 @@ export default function Quiz({ isExam = false }) {
     }
   }, [user]);
   const [sidebarPage, setSidebarPage] = useState(0);
+  const [difficultyFilter, setDifficultyFilter] = useState(null); // null | 'easy' | 'medium' | 'hard'
+  const [difficultyOpen, setDifficultyOpen] = useState(false);
+
+  // Questions displayed in sidebar/navigation — filtered by difficulty for non-exam/non-daily/non-random
+  const canFilterDifficulty = !isExam && type !== 'daily' && mode !== 'random';
+  const displayedQuestions = canFilterDifficulty && difficultyFilter
+    ? questions.filter(q => q.difficulty === difficultyFilter)
+    : questions;
+
+  // Keep currentIndex in bounds when filter changes
+  useEffect(() => {
+    if (currentIndex >= displayedQuestions.length && displayedQuestions.length > 0) {
+      setCurrentIndex(0);
+      setSidebarPage(0);
+    }
+  }, [difficultyFilter]);
 
   const handleShareQuestion = () => {
     const questionId = currentQuestion._id;
@@ -567,7 +583,7 @@ export default function Quiz({ isExam = false }) {
 
   // Wrong questions = submitted and incorrect, only for non-exam quiz
   const wrongQuestions = !isExam
-    ? questions.filter(q => submittedAnswers[q._id] === false)
+    ? displayedQuestions.filter(q => submittedAnswers[q._id] === false)
     : [];
 
   const handleRetryWrong = () => {
@@ -605,7 +621,7 @@ export default function Quiz({ isExam = false }) {
 
   const handleNext = () => {
     if (isExam && !examStarted) return;
-    if (currentIndex < questions.length - 1) {
+    if (currentIndex < displayedQuestions.length - 1) {
       const next = currentIndex + 1;
       setCurrentIndex(next);
       setSidebarPage(Math.floor(next / SIDEBAR_PAGE_SIZE));
@@ -622,7 +638,7 @@ export default function Quiz({ isExam = false }) {
   };
 
   const handleSubmitQuestion = async () => {
-    const currentQuestion = questions[currentIndex];
+    const currentQuestion = displayedQuestions[currentIndex];
     const userAnswers = selectedAnswers[currentQuestion._id] || [];
     const correctAnswers = currentQuestion.correctAnswers || [currentQuestion.correctIndex];
 
@@ -670,12 +686,20 @@ export default function Quiz({ isExam = false }) {
         console.error('Error saving progress:', error);
       }
       setTimeout(() => {
-        handleNext();
+        if (currentIndex < displayedQuestions.length - 1) {
+          const next = currentIndex + 1;
+          setCurrentIndex(next);
+          setSidebarPage(Math.floor(next / SIDEBAR_PAGE_SIZE));
+        }
       }, 500);
     }
     if (isExam && isCorrect) {
       setTimeout(() => {
-        handleNext();
+        if (currentIndex < displayedQuestions.length - 1) {
+          const next = currentIndex + 1;
+          setCurrentIndex(next);
+          setSidebarPage(Math.floor(next / SIDEBAR_PAGE_SIZE));
+        }
       }, 500);
     }
   };
@@ -689,23 +713,21 @@ export default function Quiz({ isExam = false }) {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
       if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
-        if (currentIndex < questions.length - 1) {
+        if (currentIndex < displayedQuestions.length - 1) {
           const next = currentIndex + 1;
-          // exam: skip locked questions
-          if (isExam && lockedQuestions[questions[next]?._id]) return;
+          if (isExam && lockedQuestions[displayedQuestions[next]?._id]) return;
           setCurrentIndex(next);
           setSidebarPage(Math.floor(next / SIDEBAR_PAGE_SIZE));
         }
       } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
         if (currentIndex > 0) {
           const prev = currentIndex - 1;
-          // exam: skip locked questions
-          if (isExam && lockedQuestions[questions[prev]?._id]) return;
+          if (isExam && lockedQuestions[displayedQuestions[prev]?._id]) return;
           setCurrentIndex(prev);
           setSidebarPage(Math.floor(prev / SIDEBAR_PAGE_SIZE));
         }
       } else if (e.key === 'Enter') {
-        const currentQuestion = questions[currentIndex];
+        const currentQuestion = displayedQuestions[currentIndex];
         if (!currentQuestion) return;
         const userAnswers = selectedAnswers[currentQuestion._id] || [];
         const alreadySubmitted = submittedAnswers[currentQuestion._id] !== undefined;
@@ -772,6 +794,19 @@ export default function Quiz({ isExam = false }) {
     );
   }
 
+  if (displayedQuestions.length === 0 && !loading) {
+    return (
+      <div className="container quiz-page">
+        <div className="empty-quiz">
+          <h2>No questions available</h2>
+          <button onClick={isExam ? handleExitExam : () => navigate('/grile')} className="btn btn-primary">
+            {isExam ? 'Back to Exams' : 'Back to Questions'}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (questions.length === 0) {
     return (
       <div className="container quiz-page">
@@ -785,7 +820,7 @@ export default function Quiz({ isExam = false }) {
     );
   }
 
-  const currentQuestion = questions[currentIndex];
+  const currentQuestion = displayedQuestions[currentIndex];
   const { totalPoints, maxPoints } = calculateScore();
   const percentage = maxPoints > 0 ? Math.round((totalPoints / maxPoints) * 100) : 0;
   const totalExamQuestions = examMeta?.questionCount || questions.length;
@@ -850,19 +885,48 @@ export default function Quiz({ isExam = false }) {
           <div className="quiz-progress">
             <h3>Progress</h3>
             <div className="progress-info">
-              <span>Question {currentIndex + 1} of {questions.length}</span>
+              <span>Question {currentIndex + 1} of {displayedQuestions.length}</span>
               <span>{Object.keys(selectedAnswers).length} answered</span>
             </div>
             <div className="progress-bar">
               <div 
                 className="progress-fill" 
-                style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
+                style={{ width: `${((currentIndex + 1) / displayedQuestions.length) * 100}%` }}
               />
             </div>
           </div>
 
+          {canFilterDifficulty && (
+            <div className="adv-filter-wrap">
+              <button
+                className={`adv-filter-toggle ${difficultyOpen ? 'open' : ''}`}
+                onClick={() => setDifficultyOpen(v => !v)}
+              >
+                <span>Advanced filtering</span>
+                <ChevronRight size={14} className="adv-filter-chevron" />
+              </button>
+              {difficultyOpen && (
+                <div className="adv-filter-options">
+                  {['easy', 'medium', 'hard'].map(d => (
+                    <button
+                      key={d}
+                      className={`adv-filter-btn adv-filter-${d} ${difficultyFilter === d ? 'active' : ''}`}
+                      onClick={() => {
+                        setDifficultyFilter(prev => prev === d ? null : d);
+                        setCurrentIndex(0);
+                        setSidebarPage(0);
+                      }}
+                    >
+                      {d.charAt(0).toUpperCase() + d.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="question-list">
-            {questions
+            {displayedQuestions
               .slice(sidebarPage * SIDEBAR_PAGE_SIZE, (sidebarPage + 1) * SIDEBAR_PAGE_SIZE)
               .map((q, pageIdx) => {
                 const idx = sidebarPage * SIDEBAR_PAGE_SIZE + pageIdx;
@@ -897,7 +961,7 @@ export default function Quiz({ isExam = false }) {
               })}
           </div>
 
-          {questions.length > SIDEBAR_PAGE_SIZE && (
+          {displayedQuestions.length > SIDEBAR_PAGE_SIZE && (
             <div className="sidebar-pagination">
               <button
                 className="sidebar-page-btn"
@@ -908,13 +972,13 @@ export default function Quiz({ isExam = false }) {
                 <ChevronLeft size={16} />
               </button>
               <span className="sidebar-page-info">
-                {sidebarPage * SIDEBAR_PAGE_SIZE + 1}–{Math.min((sidebarPage + 1) * SIDEBAR_PAGE_SIZE, questions.length)}
-                <span className="sidebar-page-total"> / {questions.length}</span>
+                {sidebarPage * SIDEBAR_PAGE_SIZE + 1}–{Math.min((sidebarPage + 1) * SIDEBAR_PAGE_SIZE, displayedQuestions.length)}
+                <span className="sidebar-page-total"> / {displayedQuestions.length}</span>
               </span>
               <button
                 className="sidebar-page-btn"
-                onClick={() => setSidebarPage(p => Math.min(Math.ceil(questions.length / SIDEBAR_PAGE_SIZE) - 1, p + 1))}
-                disabled={(sidebarPage + 1) * SIDEBAR_PAGE_SIZE >= questions.length}
+                onClick={() => setSidebarPage(p => Math.min(Math.ceil(displayedQuestions.length / SIDEBAR_PAGE_SIZE) - 1, p + 1))}
+                disabled={(sidebarPage + 1) * SIDEBAR_PAGE_SIZE >= displayedQuestions.length}
                 title="Next page"
               >
                 <ChevronRight size={16} />
