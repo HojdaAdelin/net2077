@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { User, Trophy, Zap, Target, Calendar, Activity, Award, Monitor, Globe, Terminal, Wrench, Crown, Medal, BadgeQuestionMark, Cpu } from 'lucide-react';
+import { User, Trophy, Zap,Microchip, Target, Calendar, Activity, Award, Monitor, Globe, Terminal, Wrench, Crown, Medal, BadgeQuestionMark, Cpu } from 'lucide-react';
 import '../styles/Profile.css';
 
 
@@ -162,6 +162,7 @@ export default function Profile() {
       case 'linux': return <Monitor size={20} />;
       case 'network': return <Globe size={20} />;
       case 'terminal': return <Terminal size={20} />;
+      case 'arduino': return <Microchip size={20} />;
       case 'is': return <Wrench size={20} />;
       default: return <Target size={20} />;
     }
@@ -324,6 +325,13 @@ export default function Profile() {
                   Terminal
                 </span>
                 <span className="user-profile-category-value">{profileData.categoryStats.terminal}</span>
+              </div>
+              <div className="user-profile-category-stat">
+                <span className="user-profile-category-label">
+                  <Microchip size={16} style={{ marginRight: '8px' }} />
+                  Arduino
+                </span>
+                <span className="user-profile-category-value">{profileData.categoryStats.arduino}</span>
               </div>
               <div className="user-profile-category-stat">
                 <span className="user-profile-category-label">

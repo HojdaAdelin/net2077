@@ -189,10 +189,6 @@ export default function Resurse() {
   return (
     <div className="container resurse-page">
       <div className="learn-hero">
-        <div className="learn-hero-badge">
-          <LucideIcons.Sparkles size={15} />
-          <span>Start Your Journey</span>
-        </div>
         <h1 className="learn-hero-title">Learning Paths</h1>
         <p className="learn-hero-subtitle">Structured roadmaps to take you from beginner to expert.</p>
         {isRoot && (
