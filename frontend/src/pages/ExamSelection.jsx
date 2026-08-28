@@ -204,7 +204,7 @@ export default function ExamSelection() {
         <div className="exams-grid">
           {filteredExams.map(exam => (
             <div key={exam.id} className={`exam-card${exam.new_test_badge ? ' exam-card--new' : ''}`}>
-              {exam.new_test_badge && <div className="exam-new-ribbon">NEW</div>}
+              {exam.new_test_badge && <div className="exam-new-ribbon" />}
               <div className="exam-badge">{exam.year}</div>
               {isRoot && (
                 <button className="exam-delete-btn" title="Delete exam" onClick={() => { setDeleteConfirm(exam); setDeleteInput(''); }}>
