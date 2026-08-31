@@ -178,6 +178,14 @@ function GoldGamble({ userGold, onGoldChange }) {
   );
 }
 
+const XP_PRIVILEGE_LEVELS = [
+  { multiplier: 1.2, price: 100,  itemId: 'xp_privilege_1', level: 1 },
+  { multiplier: 1.4, price: 500,  itemId: 'xp_privilege_2', level: 2 },
+  { multiplier: 1.6, price: 750,  itemId: 'xp_privilege_3', level: 3 },
+  { multiplier: 1.8, price: 1000, itemId: 'xp_privilege_4', level: 4 },
+  { multiplier: 2.0, price: 2000, itemId: 'xp_privilege_5', level: 5 },
+];
+
 const iconMap = {
   Zap: Zap,
   Sparkles: Sparkles,
@@ -187,7 +195,7 @@ const iconMap = {
 const SIDEBAR_CATEGORIES = [
   { id: 'all',      label: 'All Items',  icon: Package },
   { id: 'boost',    label: 'Boosts',     icon: Zap },
-  { id: 'misc',     label: 'Misc',       icon: RotateCcw },   
+  { id: 'misc',     label: 'Misc',       icon: RotateCcw },
   { id: 'cosmetic', label: 'Cosmetics',  icon: Sparkles },
   { id: 'addon',    label: 'Add-ons',    icon: PackagePlus },
 ];
@@ -259,7 +267,8 @@ export default function Shop() {
       if (data.success) {
         updateUser({ 
           gold: data.remainingGold,
-          inventory: data.inventory 
+          inventory: data.inventory,
+          ...(data.xpPrivilege !== undefined ? { xpPrivilege: data.xpPrivilege } : {})
         });
         setDialog({
           show: true,
@@ -501,15 +510,81 @@ export default function Shop() {
           <div className="shop-section">
             {(() => {
               const allItems = [...specialOffers, ...regularItems];
+
+              if (activeCategory === 'addon') {
+                const rawPrivilege = user.xpPrivilege;
+                const currentPrivilege = (rawPrivilege && rawPrivilege > 1.0) ? rawPrivilege : 1.0;
+                const ownedIndex = XP_PRIVILEGE_LEVELS.reduce((best, lvl, i) => {
+                  return currentPrivilege >= lvl.multiplier - 0.001 ? i : best;
+                }, -1);
+                const nextLevel = ownedIndex < XP_PRIVILEGE_LEVELS.length - 1
+                  ? XP_PRIVILEGE_LEVELS[ownedIndex + 1]
+                  : null;
+                const isMaxed = ownedIndex === XP_PRIVILEGE_LEVELS.length - 1;
+
+                return (
+                  <div className="items-grid">
+                    <div className="shop-item xp-privilege-card">
+                      <div className="shop-item-icon xp-privilege-icon">
+                        <PackagePlus size={32} />
+                      </div>
+                      <h3>XP Privilege</h3>
+                      <p>A permanent XP multiplier applied to all earned XP, stacking on top of temporary boosts.</p>
+
+                      <div className="xp-privilege-levels">
+                        {XP_PRIVILEGE_LEVELS.map(lvl => {
+                          const isOwned = currentPrivilege >= lvl.multiplier - 0.001;
+                          const isNext = nextLevel && Math.abs(lvl.multiplier - nextLevel.multiplier) < 0.001;
+                          return (
+                            <div
+                              key={lvl.level}
+                              className={`xp-privilege-tier${isOwned ? ' owned' : ''}${isNext ? ' next' : ''}`}
+                            >
+                              <span className="xp-privilege-tier-label">{lvl.multiplier}×</span>
+                              {isOwned
+                                ? <span className="xp-privilege-tier-status owned">Owned</span>
+                                : <span className="xp-privilege-tier-price"><Coins size={11} />{lvl.price}</span>
+                              }
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <div className="item-footer">
+                        <div className="price">
+                          <div className="xp-privilege-current">
+                            <span className="xp-privilege-current-label">Active</span>
+                            <span className="xp-privilege-current-value">{currentPrivilege.toFixed(1)}×</span>
+                          </div>
+                        </div>
+                        {isMaxed ? (
+                          <button className="btn btn-primary disabled" disabled>Maxed</button>
+                        ) : (
+                          <button
+                            className={`btn btn-primary ${purchasing ? 'disabled' : ''}`}
+                            onClick={() => handlePurchase(nextLevel.itemId)}
+                            disabled={purchasing || (user.gold || 0) < nextLevel.price}
+                          >
+                            {purchasing ? 'Processing...' : `Upgrade → ${nextLevel.multiplier}×`}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
               const filtered = activeCategory === 'all'
                 ? allItems
                 : allItems.filter(i => mapCategory(i.category) === activeCategory);
+
               if (filtered.length === 0) {
                 return <p className="shop-empty-msg">No items in this category.</p>;
               }
               return (
                 <div className="items-grid">
                   {filtered.map((item) => {
+                    if (item.category === 'addon') return null;
                     const Icon = iconMap[item.icon] || Zap;
                     return (
                       <div key={item.itemId} className="shop-item">

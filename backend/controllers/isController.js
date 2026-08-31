@@ -2,6 +2,7 @@ import IS from '../models/IS.js';
 import { levelFromXp } from '../utils/xpUtils.js';
 import User from '../models/User.js';
 import { calculateXPWithBoosts } from './shopController.js';
+import { trackCompetitiveXP } from './competitiveController.js';
 
 export const getAllISProblems = async (req, res) => {
   try {
@@ -94,6 +95,7 @@ export const submitISCode = async (req, res) => {
       const finalXP = await calculateXPWithBoosts(user._id, problem.xp);
       user.xp += finalXP;
       user.level = levelFromXp(user.xp);
+      await trackCompetitiveXP(user._id, finalXP);
       await user.save();
       return res.json({ success: true, message: `All tests passed! +${finalXP} XP`, xpGained: finalXP, newXP: user.xp, newLevel: user.level });
     } else if (allPassed && user.solvedIS.includes(problem._id)) {

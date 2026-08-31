@@ -40,6 +40,45 @@ export const purchaseItem = async (req, res) => {
       });
     }
 
+    if (item.category === 'addon' && item.privilegeLevel != null) {
+      const PRIVILEGE_LEVELS = [1.2, 1.4, 1.6, 1.8, 2.0];
+      const currentPrivilege = user.xpPrivilege || 1.0;
+
+      const currentIndex = currentPrivilege <= 1.0
+        ? -1
+        : PRIVILEGE_LEVELS.findIndex(l => Math.abs(l - currentPrivilege) < 0.001);
+
+      const targetIndex = PRIVILEGE_LEVELS.findIndex(l => Math.abs(l - item.multiplier) < 0.001);
+
+      if (targetIndex === -1) {
+        return res.status(400).json({ message: 'Invalid privilege level.' });
+      }
+      if (currentIndex >= targetIndex) {
+        return res.status(400).json({
+          message: `You already have XP Privilege ${currentPrivilege}x or higher.`
+        });
+      }
+      if (targetIndex !== currentIndex + 1) {
+        return res.status(400).json({
+          message: `You must purchase levels in order. Next available: ${PRIVILEGE_LEVELS[currentIndex + 1]}x`
+        });
+      }
+
+      user.gold -= item.price;
+      user.xpPrivilege = item.multiplier;
+
+      await user.save();
+
+      return res.json({
+        success: true,
+        message: `XP Privilege upgraded to ${item.multiplier}x! All future XP will be multiplied permanently.`,
+        item,
+        remainingGold: user.gold,
+        inventory: user.inventory,
+        xpPrivilege: user.xpPrivilege
+      });
+    }
+
     user.gold -= item.price;
     
     if (!user.inventory) {
@@ -190,29 +229,28 @@ export const getInventory = async (req, res) => {
   }
 };
 
-// Helper function to calculate XP with active boosts
 export const calculateXPWithBoosts = async (userId, baseXP) => {
   try {
-    const user = await User.findById(userId).select('activeBoosts');
+    const user = await User.findById(userId).select('activeBoosts xpPrivilege');
     if (!user) return baseXP;
 
-    // Clean expired boosts
     const now = new Date();
     const activeBoosts = user.activeBoosts?.filter(boost => boost.expiresAt > now) || [];
-    
-    // Update user if boosts were cleaned
+
     if (activeBoosts.length !== (user.activeBoosts?.length || 0)) {
       user.activeBoosts = activeBoosts;
       await user.save();
     }
 
-    // Find highest XP multiplier
+    const privilege = (user.xpPrivilege && user.xpPrivilege > 1.0) ? user.xpPrivilege : 1.0;
+    let xp = privilege > 1.0 ? Math.ceil(baseXP * privilege) : baseXP;
+
     const xpBoost = activeBoosts.find(boost => boost.type === 'xp_multiplier');
     if (xpBoost) {
-      return Math.floor(baseXP * xpBoost.multiplier);
+      xp = Math.ceil(xp * xpBoost.multiplier);
     }
 
-    return baseXP;
+    return xp;
   } catch (error) {
     console.error('Error calculating XP with boosts:', error);
     return baseXP;

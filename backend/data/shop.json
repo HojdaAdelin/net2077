@@ -49,5 +49,70 @@
     "isSpecialOffer": false,
     "isActive": true,
     "order": 4
+  },
+  {
+    "itemId": "xp_privilege_1",
+    "name": "XP Privilege 1.2×",
+    "description": "Permanently multiply all earned XP by 1.2×. Stacks with temporary boosts.",
+    "price": 100,
+    "category": "addon",
+    "icon": "Sparkles",
+    "multiplier": 1.2,
+    "privilegeLevel": 1,
+    "isSpecialOffer": false,
+    "isActive": true,
+    "order": 10
+  },
+  {
+    "itemId": "xp_privilege_2",
+    "name": "XP Privilege 1.4×",
+    "description": "Upgrade your XP Privilege to 1.4×. Permanently multiplies all earned XP.",
+    "price": 500,
+    "category": "addon",
+    "icon": "Sparkles",
+    "multiplier": 1.4,
+    "privilegeLevel": 2,
+    "isSpecialOffer": false,
+    "isActive": true,
+    "order": 11
+  },
+  {
+    "itemId": "xp_privilege_3",
+    "name": "XP Privilege 1.6×",
+    "description": "Upgrade your XP Privilege to 1.6×. Permanently multiplies all earned XP.",
+    "price": 750,
+    "category": "addon",
+    "icon": "Sparkles",
+    "multiplier": 1.6,
+    "privilegeLevel": 3,
+    "isSpecialOffer": false,
+    "isActive": true,
+    "order": 12
+  },
+  {
+    "itemId": "xp_privilege_4",
+    "name": "XP Privilege 1.8×",
+    "description": "Upgrade your XP Privilege to 1.8×. Permanently multiplies all earned XP.",
+    "price": 1000,
+    "category": "addon",
+    "icon": "Sparkles",
+    "multiplier": 1.8,
+    "privilegeLevel": 4,
+    "isSpecialOffer": false,
+    "isActive": true,
+    "order": 13
+  },
+  {
+    "itemId": "xp_privilege_5",
+    "name": "XP Privilege 2×",
+    "description": "Upgrade your XP Privilege to the maximum 2×. Permanently doubles all earned XP.",
+    "price": 2000,
+    "category": "addon",
+    "icon": "Sparkles",
+    "multiplier": 2.0,
+    "privilegeLevel": 5,
+    "isSpecialOffer": false,
+    "isActive": true,
+    "order": 14
   }
 ]

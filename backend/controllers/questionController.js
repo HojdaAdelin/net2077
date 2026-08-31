@@ -3,7 +3,7 @@ import User from '../models/User.js';
 import { updateUserStreak } from '../utils/streakUtils.js';
 import { trackCompetitiveXP } from './competitiveController.js';
 import { calculateXPWithBoosts } from './shopController.js';
-import { levelFromXp } from '../utils/xpUtils.js';
+import { levelFromXp, applyPrivilege } from '../utils/xpUtils.js';
 
 export const getQuestions = async (req, res) => {
   try {
@@ -237,10 +237,11 @@ export const completeDailyChallenge = async (req, res) => {
     }
 
     const doubleXP = score * 2;
-    user.xp += doubleXP;
+    const finalXP = applyPrivilege(doubleXP, user);
+    user.xp += finalXP;
     user.level = levelFromXp(user.xp);
 
-    await trackCompetitiveXP(user._id, doubleXP);
+    await trackCompetitiveXP(user._id, finalXP);
     
     if (!user.dailyChallenge) {
       user.dailyChallenge = {};
@@ -306,9 +307,10 @@ export const resetBasicStats = async (req, res) => {
     );
 
     const xpToAdd = solvedBasicQuestions.length;
-    user.xp += xpToAdd;
+    const finalXP = applyPrivilege(xpToAdd, user);
+    user.xp += finalXP;
     user.level = levelFromXp(user.xp);
-    await trackCompetitiveXP(user._id, xpToAdd);
+    await trackCompetitiveXP(user._id, finalXP);
   
     user.lastBasicReset = new Date();
     
@@ -382,9 +384,10 @@ export const resetLinuxStats = async (req, res) => {
     );
 
     const xpToAdd = solvedLinuxQuestions.length;
-    user.xp += xpToAdd;
+    const finalXP = applyPrivilege(xpToAdd, user);
+    user.xp += finalXP;
     user.level = levelFromXp(user.xp);
-    await trackCompetitiveXP(user._id, xpToAdd);
+    await trackCompetitiveXP(user._id, finalXP);
 
     await user.save();
 
@@ -443,9 +446,10 @@ export const resetArduinoStats = async (req, res) => {
     );
 
     const xpToAdd = solvedArduinoQuestions.length;
-    user.xp += xpToAdd;
+    const finalXP = applyPrivilege(xpToAdd, user);
+    user.xp += finalXP;
     user.level = levelFromXp(user.xp);
-    await trackCompetitiveXP(user._id, xpToAdd);
+    await trackCompetitiveXP(user._id, finalXP);
 
     user.lastArduinoReset = new Date();
     await user.save();
@@ -506,9 +510,10 @@ export const resetNetworkStats = async (req, res) => {
     );
 
     const xpToAdd = solvedNetworkQuestions.length;
-    user.xp += xpToAdd;
+    const finalXP = applyPrivilege(xpToAdd, user);
+    user.xp += finalXP;
     user.level = levelFromXp(user.xp);
-    await trackCompetitiveXP(user._id, xpToAdd);
+    await trackCompetitiveXP(user._id, finalXP);
 
     user.lastNetworkReset = new Date();
     await user.save();
@@ -541,16 +546,17 @@ export const submitRandom50 = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
     
-    user.xp += score;
+    const finalXP = applyPrivilege(score, user);
+    user.xp += finalXP;
     user.level = levelFromXp(user.xp);
-    await trackCompetitiveXP(user._id, score);
+    await trackCompetitiveXP(user._id, finalXP);
     
     await user.save();
     
     res.json({ 
       success: true, 
-      scoreAdded: score,
-      message: `Added ${score} points to your account!`
+      scoreAdded: finalXP,
+      message: `Added ${finalXP} points to your account!`
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });

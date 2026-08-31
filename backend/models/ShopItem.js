@@ -12,7 +12,8 @@ const shopItemSchema = new mongoose.Schema({
   multiplier: { type: Number },
   isSpecialOffer: { type: Boolean, default: false },
   isActive: { type: Boolean, default: true },
-  order: { type: Number, default: 0 }
+  order: { type: Number, default: 0 },
+  privilegeLevel: { type: Number, default: null }
 }, { timestamps: true });
 
 export default mongoose.model('ShopItem', shopItemSchema);

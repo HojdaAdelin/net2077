@@ -432,8 +432,8 @@ export default function Navbar() {
                 <div className="inventory-container" ref={inventoryRef}>
                   <button className="inventory-btn" onClick={toggleInventoryDropdown} title="Inventory">
                     <Package size={18} />
-                    {user.inventory && user.inventory.length > 0 && (
-                      <span className="inventory-badge">{user.inventory.length}</span>
+                    {user.inventory && user.inventory.filter(i => i.category !== 'addon').length > 0 && (
+                      <span className="inventory-badge">{user.inventory.filter(i => i.category !== 'addon').length}</span>
                     )}
                   </button>
                   {inventoryDropdownOpen && (
@@ -461,8 +461,8 @@ export default function Navbar() {
                             ))}
                           </div>
                         )}
-                        {user.inventory && user.inventory.length > 0 ? (
-                          user.inventory.map((item, index) => (
+                        {user.inventory && user.inventory.filter(i => i.category !== 'addon').length > 0 ? (
+                          user.inventory.filter(i => i.category !== 'addon').map((item, index) => (
                             <div key={index} className="inventory-item" title={item.name}>
                               <div className="inventory-item-icon">
                                 {item.icon === 'Zap' && <Zap size={16} />}

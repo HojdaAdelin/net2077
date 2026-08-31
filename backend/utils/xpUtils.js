@@ -47,10 +47,6 @@ export function levelFromXp(xp) {
   return level;
 }
 
-/**
- * Returns XP progress within the current level and XP needed for next level.
- * Useful for frontend progress bars.
- */
 export function xpProgressInLevel(xp) {
   let level = 1;
   let remaining = xp;
@@ -62,8 +58,14 @@ export function xpProgressInLevel(xp) {
 
   return {
     level,
-    currentLevelXp: remaining,           // XP earned within current level
-    xpForNextLevel: xpPerLevel(level),    // XP needed to reach next level
+    currentLevelXp: remaining,
+    xpForNextLevel: xpPerLevel(level),
     progressPercent: Math.floor((remaining / xpPerLevel(level)) * 100)
   };
+}
+
+export function applyPrivilege(baseXP, user) {
+  const privilege = user?.xpPrivilege;
+  if (!privilege || privilege <= 1.0) return baseXP;
+  return Math.ceil(baseXP * privilege);
 }

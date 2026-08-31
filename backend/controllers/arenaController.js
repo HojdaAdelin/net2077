@@ -1,5 +1,5 @@
 import ArenaMatch from '../models/ArenaMatch.js';
-import { levelFromXp } from '../utils/xpUtils.js';
+import { levelFromXp, applyPrivilege } from '../utils/xpUtils.js';
 import Question from '../models/Question.js';
 import User from '../models/User.js';
 import { updateUserStreak } from '../utils/streakUtils.js';
@@ -245,14 +245,14 @@ export const finishMatch = async (req, res) => {
     let opponentResult = 'draw';
 
     if (match.mode === 'normal') {
-      creatorXPGained = creatorScore;
-      opponentXPGained = opponentScore;
-      
-      creator.xp += creatorScore;
+      creatorXPGained = applyPrivilege(creatorScore, creator);
+      opponentXPGained = opponent ? applyPrivilege(opponentScore, opponent) : 0;
+
+      creator.xp += creatorXPGained;
       creator.level = levelFromXp(creator.xp);
-      
+
       if (opponent) {
-        opponent.xp += opponentScore;
+        opponent.xp += opponentXPGained;
         opponent.level = levelFromXp(opponent.xp);
       }
 
@@ -260,14 +260,14 @@ export const finishMatch = async (req, res) => {
       if (opponent && opponentScore > 0) await updateUserStreak(opponent);
     } else if (match.mode === 'bloody') {
       if (creatorScore === opponentScore) {
-        creatorXPGained = creatorScore;
-        opponentXPGained = opponentScore;
-        
-        creator.xp += creatorScore;
+        creatorXPGained = applyPrivilege(creatorScore, creator);
+        opponentXPGained = opponent ? applyPrivilege(opponentScore, opponent) : 0;
+
+        creator.xp += creatorXPGained;
         creator.level = levelFromXp(creator.xp);
-        
+
         if (opponent) {
-          opponent.xp += opponentScore;
+          opponent.xp += opponentXPGained;
           opponent.level = levelFromXp(opponent.xp);
         }
 
@@ -276,17 +276,17 @@ export const finishMatch = async (req, res) => {
       } else if (match.winner) {
         const totalXP = creatorScore + opponentScore;
         const winnerId = match.winner._id ? match.winner._id.toString() : match.winner.toString();
-        
+
         if (winnerId === creator._id.toString()) {
-          creatorXPGained = totalXP;
+          creatorXPGained = applyPrivilege(totalXP, creator);
           opponentXPGained = 0;
-          creator.xp += totalXP;
+          creator.xp += creatorXPGained;
           creator.level = levelFromXp(creator.xp);
           await updateUserStreak(creator);
         } else if (winnerId === opponent._id.toString()) {
           creatorXPGained = 0;
-          opponentXPGained = totalXP;
-          opponent.xp += totalXP;
+          opponentXPGained = applyPrivilege(totalXP, opponent);
+          opponent.xp += opponentXPGained;
           opponent.level = levelFromXp(opponent.xp);
           await updateUserStreak(opponent);
         }

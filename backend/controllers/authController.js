@@ -134,6 +134,7 @@ export const getMe = async (req, res) => {
         gold: user.gold || 0,
         inventory: user.inventory || [],
         activeBoosts,
+        xpPrivilege: user.xpPrivilege || 1.0,
         onboardingCompleted: user.onboarding?.completed || false
       } 
     });
