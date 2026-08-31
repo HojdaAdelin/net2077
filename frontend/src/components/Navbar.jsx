@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
 import { useInbox } from '../context/InboxContext';
-import { Languages, ChevronDown, LogIn, Swords, UserPlus, Star, LogOut, User, Sun, Moon, Settings, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap, FileTerminal, Users, Bookmark, Menu, X } from 'lucide-react';
+import { Languages, ChevronDown, LogIn, Swords, UserPlus, Star, LogOut, User, Sun, Moon, Settings, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap, Sparkles, FileTerminal, Users, Bookmark, Menu, X } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
 import SupportButton from './SupportButton';
@@ -443,10 +443,10 @@ export default function Navbar() {
                         <span>Inventory</span>
                       </div>
                       <div className="inventory-items">
-                        {user.activeBoosts && user.activeBoosts.length > 0 && (
+                        {(user.activeBoosts && user.activeBoosts.length > 0 || (user.xpPrivilege && user.xpPrivilege > 1.0)) && (
                           <div className="active-boosts-section">
                             <div className="active-boosts-header">Active Boosts</div>
-                            {user.activeBoosts.map((boost, index) => (
+                            {user.activeBoosts && user.activeBoosts.map((boost, index) => (
                               <div key={index} className="active-boost-item">
                                 <div className="boost-icon">
                                   <Zap size={16} />
@@ -459,6 +459,17 @@ export default function Navbar() {
                                 </div>
                               </div>
                             ))}
+                            {user.xpPrivilege && user.xpPrivilege > 1.0 && (
+                              <div className="active-boost-item">
+                                <div className="boost-icon privilege">
+                                  <Sparkles size={16} />
+                                </div>
+                                <div className="boost-info">
+                                  <span className="boost-name">{user.xpPrivilege.toFixed(1)}x XP Privilege</span>
+                                  <span className="boost-timer permanent">Permanent</span>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         )}
                         {user.inventory && user.inventory.filter(i => i.category !== 'addon').length > 0 ? (

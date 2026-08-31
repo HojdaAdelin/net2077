@@ -880,6 +880,12 @@
   color: white;
 }
 
+.boost-icon.privilege {
+  background: rgba(234, 179, 8, 0.12);
+  border: 1px solid rgba(234, 179, 8, 0.25);
+  color: #eab308;
+}
+
 .boost-info {
   flex: 1;
   display: flex;
@@ -897,6 +903,10 @@
   font-size: 0.75rem;
   color: var(--text-secondary);
   font-weight: 500;
+}
+
+.boost-timer.permanent {
+  color: #eab308;
 }
 
 .inventory-use-btn.disabled {
