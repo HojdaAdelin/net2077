@@ -93,6 +93,7 @@ export const purchaseItem = async (req, res) => {
         itemId: item.itemId,
         name: item.name,
         icon: item.icon,
+        duration: item.duration,
         category: item.category,
         quantity: 1
       });
@@ -210,7 +211,6 @@ export const getInventory = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Clean expired boosts
     const now = new Date();
     const activeBoosts = user.activeBoosts?.filter(boost => boost.expiresAt > now) || [];
     

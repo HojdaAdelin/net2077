@@ -68,7 +68,7 @@ export const getISTestInput = async (req, res) => {
 export const submitISCode = async (req, res) => {
   try {
     const { id } = req.params;
-    const { outputs } = req.body; // array of strings, one per test case
+    const { outputs } = req.body; 
     const user = await User.findById(req.userId);
     const problem = await IS.findById(id);
     
@@ -82,9 +82,8 @@ export const submitISCode = async (req, res) => {
       return res.status(400).json({ message: 'No output provided' });
     }
 
-    // Build expected: all outputs concatenated, strip all whitespace
     const expectedCombined = cases.map(tc => tc.output).join('').replace(/\s+/g, '');
-    // User submits one string with all outputs - strip all whitespace
+   
     const submittedCombined = (outputs[0] || '').replace(/\s+/g, '');
 
     const allPassed = submittedCombined === expectedCombined;

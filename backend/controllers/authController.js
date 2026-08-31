@@ -90,7 +90,8 @@ export const login = async (req, res) => {
         streak: streakInfo,
         gold: user.gold || 0,
         inventory: user.inventory || [],
-        activeBoosts: user.activeBoosts || []
+        activeBoosts: user.activeBoosts || [],
+        xpPrivilege: user.xpPrivilege || 1.0
       }
     });
   } catch (error) {

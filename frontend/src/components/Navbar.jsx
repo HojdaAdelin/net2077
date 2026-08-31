@@ -462,7 +462,7 @@ export default function Navbar() {
                             {user.xpPrivilege && user.xpPrivilege > 1.0 && (
                               <div className="active-boost-item">
                                 <div className="boost-icon privilege">
-                                  <Sparkles size={16} />
+                                  <Zap size={16} />
                                 </div>
                                 <div className="boost-info">
                                   <span className="boost-name">{user.xpPrivilege.toFixed(1)}x XP Privilege</span>
@@ -477,12 +477,12 @@ export default function Navbar() {
                             <div key={index} className="inventory-item" title={item.name}>
                               <div className="inventory-item-icon">
                                 {item.icon === 'Zap' && <Zap size={16} />}
-                                {item.icon === 'Sparkles' && <CircleAlert size={16} />}
-                                {item.icon === 'RotateCcw' && <CircleAlert size={16} />}
+                                {item.icon === 'Sparkles' && <Zap size={16} />}
+                                {item.icon === 'RotateCcw' && <Zap size={16} />}
                               </div>
                               <div className="inventory-item-info">
                                 <span className="inventory-item-name">{item.name}</span>
-                                <span className="inventory-item-quantity">x{item.quantity}</span>
+                                <span className="inventory-item-quantity">x{item.quantity} | {item.duration} min</span>
                               </div>
                               <button 
                                 className={`inventory-use-btn ${

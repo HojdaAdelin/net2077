@@ -99,6 +99,7 @@ const userSchema = new mongoose.Schema({
     itemId: String,
     name: String,
     icon: String,
+    duration: Number,
     category: String,
     quantity: { type: Number, default: 1 },
     purchasedAt: { type: Date, default: Date.now }
