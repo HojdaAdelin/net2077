@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { Zap, Sparkles, RotateCcw, ShoppingBag, Coins, ChevronLeft, ChevronRight, Send, X, Dices, TrendingUp, AlertTriangle } from 'lucide-react';
+import { Zap, Sparkles, RotateCcw, ShoppingBag, Coins, ChevronLeft, ChevronRight, Send, X, Dices, TrendingUp, AlertTriangle, Package, PackagePlus } from 'lucide-react';
 import LoginRequired from '../components/LoginRequired';
 import '../styles/Shop.css';
 
@@ -184,6 +184,21 @@ const iconMap = {
   RotateCcw: RotateCcw
 };
 
+const SIDEBAR_CATEGORIES = [
+  { id: 'all',      label: 'All Items',  icon: Package },
+  { id: 'boost',    label: 'Boosts',     icon: Zap },
+  { id: 'misc',     label: 'Misc',       icon: RotateCcw },   
+  { id: 'cosmetic', label: 'Cosmetics',  icon: Sparkles },
+  { id: 'addon',    label: 'Add-ons',    icon: PackagePlus },
+];
+
+function mapCategory(backendCategory) {
+  if (backendCategory === 'boost')    return 'boost';
+  if (backendCategory === 'reset')    return 'misc';
+  if (backendCategory === 'cosmetic') return 'cosmetic';
+  return 'addon';
+}
+
 export default function Shop() {
   const { user, updateUser } = useContext(AuthContext);
   const [specialOffers, setSpecialOffers] = useState([]);
@@ -191,6 +206,7 @@ export default function Shop() {
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [purchasing, setPurchasing] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('all');
   const [dialog, setDialog] = useState({ show: false, type: '', title: '', message: '' });
   const [transferModal, setTransferModal] = useState(false);
   const [transferForm, setTransferForm] = useState({ recipient: '', amount: '' });
@@ -461,106 +477,74 @@ export default function Shop() {
           </div>
         )}
 
-        {specialOffers.length > 0 && (
-          <div className="shop-section">
-            <h2>Special Offers</h2>
-            <div className="special-offers-carousel">
-              <button className="carousel-btn prev" onClick={prevSlide}>
-                <ChevronLeft size={24} />
-              </button>
-              
-              <div className="carousel-container">
-                <div 
-                  className="carousel-track" 
-                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+        <div className="shop-catalog-layout">
+          <aside className="shop-sidebar">
+            {SIDEBAR_CATEGORIES.map(cat => {
+              const Icon = cat.icon;
+              const allItems = [...specialOffers, ...regularItems];
+              const count = cat.id === 'all'
+                ? allItems.length
+                : allItems.filter(i => mapCategory(i.category) === cat.id).length;
+              return (
+                <button
+                  key={cat.id}
+                  className={`shop-nav-btn${activeCategory === cat.id ? ' active' : ''}${cat.id === 'addon' ? ' addon' : ''}`}
+                  onClick={() => setActiveCategory(cat.id)}
                 >
-                  {specialOffers.map((item) => {
+                  <Icon size={16} />
+                  <span>{cat.label}</span>
+                  {count > 0 && <span className="shop-nav-count">{count}</span>}
+                </button>
+              );
+            })}
+          </aside>
+          <div className="shop-section">
+            {(() => {
+              const allItems = [...specialOffers, ...regularItems];
+              const filtered = activeCategory === 'all'
+                ? allItems
+                : allItems.filter(i => mapCategory(i.category) === activeCategory);
+              if (filtered.length === 0) {
+                return <p className="shop-empty-msg">No items in this category.</p>;
+              }
+              return (
+                <div className="items-grid">
+                  {filtered.map((item) => {
                     const Icon = iconMap[item.icon] || Zap;
                     return (
-                      <div key={item.itemId} className="special-offer-item">
+                      <div key={item.itemId} className="shop-item">
                         {item.originalPrice && (
                           <span className="sale-badge">SALE</span>
                         )}
-                        <div className="offer-icon">
-                          <Icon size={48} />
+                        <div className="shop-item-icon">
+                          <Icon size={32} />
                         </div>
                         <h3>{item.name}</h3>
                         <p>{item.description}</p>
-                        <div className="price">
-                          {item.originalPrice && (
-                            <span className="old-price">{item.originalPrice} Gold</span>
-                          )}
-                          <div className="new-price">
-                            <Coins size={20} />
-                            <span>{item.price} Gold</span>
+                        <div className="item-footer">
+                          <div className="price">
+                            {item.originalPrice && (
+                              <span className="old-price">{item.originalPrice}</span>
+                            )}
+                            <div className="new-price">
+                              <Coins size={16} />
+                              <span>{item.price}</span>
+                            </div>
                           </div>
+                          <button
+                            className={`btn btn-primary ${purchasing ? 'disabled' : ''}`}
+                            onClick={() => handlePurchase(item.itemId)}
+                            disabled={purchasing}
+                          >
+                            {purchasing ? 'Processing...' : 'Buy'}
+                          </button>
                         </div>
-                        <button 
-                          className={`btn btn-primary ${purchasing ? 'disabled' : ''}`}
-                          onClick={() => handlePurchase(item.itemId)}
-                          disabled={purchasing}
-                        >
-                          {purchasing ? 'Processing...' : 'Purchase Now'}
-                        </button>
                       </div>
                     );
                   })}
                 </div>
-              </div>
-
-              <button className="carousel-btn next" onClick={nextSlide}>
-                <ChevronRight size={24} />
-              </button>
-
-              <div className="carousel-indicators">
-                {specialOffers.map((_, index) => (
-                  <button
-                    key={index}
-                    className={`indicator ${index === currentSlide ? 'active' : ''}`}
-                    onClick={() => goToSlide(index)}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="shop-section">
-          <h2>All Items</h2>
-          <div className="items-grid">
-            {[...specialOffers, ...regularItems].map((item) => {
-              const Icon = iconMap[item.icon] || Zap;
-              return (
-                <div key={item.itemId} className="shop-item">
-                  {item.originalPrice && (
-                    <span className="sale-badge">SALE</span>
-                  )}
-                  <div className="shop-item-icon">
-                    <Icon size={32} />
-                  </div>
-                  <h3>{item.name}</h3>
-                  <p>{item.description}</p>
-                  <div className="item-footer">
-                    <div className="price">
-                      {item.originalPrice && (
-                        <span className="old-price">{item.originalPrice}</span>
-                      )}
-                      <div className="new-price">
-                        <Coins size={16} />
-                        <span>{item.price}</span>
-                      </div>
-                    </div>
-                    <button 
-                      className={`btn btn-primary ${purchasing ? 'disabled' : ''}`}
-                      onClick={() => handlePurchase(item.itemId)}
-                      disabled={purchasing}
-                    >
-                      {purchasing ? 'Processing...' : 'Buy'}
-                    </button>
-                  </div>
-                </div>
               );
-            })}
+            })()}
           </div>
         </div>
 

@@ -6,7 +6,7 @@ const shopItemSchema = new mongoose.Schema({
   description: { type: String, required: true },
   price: { type: Number, required: true },
   originalPrice: { type: Number },
-  category: { type: String, enum: ['boost', 'reset', 'cosmetic'], required: true },
+  category: { type: String, enum: ['boost', 'reset', 'cosmetic', 'addon'], required: true },
   icon: { type: String, required: true },
   duration: { type: Number },
   multiplier: { type: Number },
