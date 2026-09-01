@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
 import { useInbox } from '../context/InboxContext';
-import { Languages, ChevronDown, LogIn, Swords, UserPlus, Star, LogOut, User, Sun, Moon, Settings, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap, Sparkles, FileTerminal, Users, Bookmark, Menu, X } from 'lucide-react';
+import { Languages, ChevronDown, LogIn, Swords, UserPlus, Star,RotateCcw, LogOut, User, Sun, Moon, Settings, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap, Sparkles, FileTerminal, Users, Bookmark, Menu, X, Circle, CircleArrowDown, CircleArrowOutDownLeft, CircleArrowRight } from 'lucide-react';
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
 import SupportButton from './SupportButton';
@@ -478,11 +478,12 @@ export default function Navbar() {
                               <div className="inventory-item-icon">
                                 {item.icon === 'Zap' && <Zap size={16} />}
                                 {item.icon === 'Sparkles' && <Zap size={16} />}
-                                {item.icon === 'RotateCcw' && <Zap size={16} />}
+                                {item.icon === 'RotateCcw' && <RotateCcw size={16} />}
                               </div>
                               <div className="inventory-item-info">
                                 <span className="inventory-item-name">{item.name}</span>
-                                <span className="inventory-item-quantity">x{item.quantity} | {item.duration} min</span>
+                                {item.category !== 'reset' && <span className="inventory-item-quantity">x{item.quantity} | {item.duration} min</span>}
+                                {item.category === 'reset' && <span className="inventory-item-quantity">x{item.quantity} </span>}
                               </div>
                               <button 
                                 className={`inventory-use-btn ${
