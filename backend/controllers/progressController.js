@@ -131,7 +131,7 @@ export const claimLevelRewards = async (req, res) => {
 
     // Calculate rewards (2 gold per level)
     const levelsToReward = currentLevel - lastRewarded;
-    const goldReward = levelsToReward * 2;
+    const goldReward = levelsToReward * 10;
 
     // Update user
     user.gold += goldReward;

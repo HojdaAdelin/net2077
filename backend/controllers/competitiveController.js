@@ -84,7 +84,7 @@ export const checkAndResetPeriod = async () => {
         .limit(5)
         .select('username competitiveStats.currentPeriodXP gold');
      
-      const goldRewards = [20, 10, 5, 3, 3];
+      const goldRewards = [100, 90, 80, 60, 60];
       const winners = [];
       
       for (let i = 0; i < topUsers.length; i++) {
@@ -182,7 +182,7 @@ export const getCompetitiveLeaderboard = async (req, res) => {
       username: user.username,
       level: user.level,
       xpEarned: user.competitiveStats.currentPeriodXP,
-      goldReward: [20, 10, 5, 3, 3][index]
+      goldReward: [100, 90, 80, 60, 60][index]
     }));
     
     // Calculate time remaining
