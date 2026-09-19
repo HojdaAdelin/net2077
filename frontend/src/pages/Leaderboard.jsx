@@ -44,6 +44,7 @@ export default function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState([]);
   const [competitiveData, setCompetitiveData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [competitiveLoading, setCompetitiveLoading] = useState(true);
   const [error, setError] = useState('');
   const [timeRemaining, setTimeRemaining] = useState('');
   const [activeTab, setActiveTab] = useState(tab === 'season' ? 'competitive' : 'alltime'); 
@@ -87,13 +88,20 @@ export default function Leaderboard() {
     setTimeRemaining(`${hours}h ${minutes}m ${seconds}s`);
   };
 
-  const fetchCompetitiveLeaderboard = async () => {
+  const fetchCompetitiveLeaderboard = async (retries = 2) => {
     try {
       const response = await fetch(`${API_URL}/competitive/leaderboard`);
+      if (!response.ok) throw new Error(`Status ${response.status}`);
       const data = await response.json();
       setCompetitiveData(data);
     } catch (error) {
-      console.error('Error loading competitive leaderboard:', error);
+      if (retries > 0) {
+        setTimeout(() => fetchCompetitiveLeaderboard(retries - 1), 1500);
+      } else {
+        console.error('Error loading competitive leaderboard:', error);
+      }
+    } finally {
+      setCompetitiveLoading(false);
     }
   };
 
@@ -192,7 +200,15 @@ export default function Leaderboard() {
         </div>
 
       
-        {activeTab === 'competitive' && competitiveData && (
+        {activeTab === 'competitive' && (
+          competitiveLoading ? (
+            <div className="competitive-leaderboard-section">
+              <div className="loading-state">
+                <div className="loading-spinner"></div>
+                <p>Loading season data...</p>
+              </div>
+            </div>
+          ) : competitiveData && (
           <div className="competitive-leaderboard-section">
             <div className="competitive-header">
               <div className="competitive-title">
@@ -254,6 +270,7 @@ export default function Leaderboard() {
               )}
             </div>
           </div>
+          )
         )}
 
         {activeTab === 'alltime' && (

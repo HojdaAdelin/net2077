@@ -164,19 +164,28 @@ export const checkAndResetPeriod = async () => {
 
 export const getCompetitiveLeaderboard = async (req, res) => {
   try {
-    await checkAndResetPeriod();
-    
     const activePeriod = await CompetitivePeriod.findOne({ isActive: true });
-    
+
     if (!activePeriod) {
-      return res.status(404).json({ message: 'No active period' });
+      checkAndResetPeriod().catch(e => console.error('[Competitive] bg reset error:', e));
+      return res.json({
+        leaderboard: [],
+        periodNumber: 1,
+        endDate: getNextResetTime(),
+        timeRemaining: 0
+      });
     }
-    
+
+    const now = new Date();
+    if (now >= activePeriod.endDate && !activePeriod.rewardsDistributed) {
+      checkAndResetPeriod().catch(e => console.error('[Competitive] bg reset error:', e));
+    }
+
     const topUsers = await User.find({ 'competitiveStats.currentPeriodXP': { $gt: 0 } })
       .sort({ 'competitiveStats.currentPeriodXP': -1 })
       .limit(5)
       .select('username level competitiveStats.currentPeriodXP');
-    
+
     const leaderboard = topUsers.map((user, index) => ({
       rank: index + 1,
       username: user.username,
@@ -184,11 +193,9 @@ export const getCompetitiveLeaderboard = async (req, res) => {
       xpEarned: user.competitiveStats.currentPeriodXP,
       goldReward: [20, 10, 5, 3, 3][index]
     }));
-    
-    // Calculate time remaining
-    const now = new Date();
+
     const timeRemaining = activePeriod.endDate - now;
-    
+
     res.json({
       leaderboard,
       periodNumber: activePeriod.periodNumber,
