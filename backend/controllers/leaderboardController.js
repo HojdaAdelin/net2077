@@ -3,7 +3,7 @@ import User from '../models/User.js';
 export const getLeaderboard = async (req, res) => {
   try {
     const topUsers = await User.find({})
-      .select('username xp level role frames')
+      .select('username xp level role frames nameEffects')
       .sort({ xp: -1 })
       .limit(10)
       .lean();
@@ -15,6 +15,7 @@ export const getLeaderboard = async (req, res) => {
       level: user.level || 1,
       role: user.role || 'user',
       activeFrame: user.frames?.active ?? null,
+      activeNameEffect: user.nameEffects?.active ?? null,
     }));
 
     res.json({ success: true, leaderboard });

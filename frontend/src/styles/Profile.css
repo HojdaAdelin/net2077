@@ -52,6 +52,9 @@
   margin-bottom: 1rem;
 }
 
+/* ── Autumn Wave name effect ─────────────────────────────────────────────── */
+@import './NameEffects.css';
+
 .user-profile-badges {
   display: flex;
   gap: 1rem;

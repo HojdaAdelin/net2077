@@ -43,6 +43,7 @@ export const getUserProfile = async (req, res) => {
       joinedAt: user.createdAt,
       lastActivity: user.streak.lastActivity,
       activeFrame: user.frames?.active ?? null,
+      activeNameEffect: user.nameEffects?.active ?? null,
     };
 
     res.json(profileData);

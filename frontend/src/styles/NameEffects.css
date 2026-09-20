@@ -1,0 +1,25 @@
+/* ── Name Effects — shared across Profile, Leaderboard, etc. ────────────── */
+
+.name-effect-autumn-wave {
+  background: linear-gradient(
+    90deg,
+    #c8540a,
+    #d4720f,
+    #b8860b,
+    #a0522d,
+    #c8540a,
+    #e07820,
+    #b8860b,
+    #c8540a
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: name-effect-wave 4s linear infinite;
+}
+
+@keyframes name-effect-wave {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}

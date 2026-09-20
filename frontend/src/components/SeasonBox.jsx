@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Coins, RotateCcw, Zap, Sparkles, X, ChevronRight } from 'lucide-react';
+import { Coins, RotateCcw, Zap, Sparkles, X, FastForward, Gauge } from 'lucide-react';
 import { API_URL } from '../config';
 import '../styles/SeasonBox.css';
 
@@ -22,18 +22,26 @@ function PrizeIcon({ prize, size = 26 }) {
     const src = FRAME_SRCS[prize.frameKey] || `/${prize.frameKey}.png`;
     return <img src={src} alt={prize.label} className="sb-prize-img" draggable={false} style={{ width: size, height: size }} />;
   }
+  if (prize.type === 'nameEffect') {
+    return (
+      <span className="sb-nameeffect-preview" style={{ fontSize: size * 0.55 }}>
+        Aa
+      </span>
+    );
+  }
   const Icon = ICON_MAP[prize.icon] || Coins;
   return <Icon size={size} />;
 }
 
 function rarityClass(id) {
-  if (id === 'frame_diamond_s1') return 'rarity-legendary';
-  if (id === 'frame_gold_s1')    return 'rarity-epic';
-  if (id === 'frame_silver_s1')  return 'rarity-rare';
-  if (id === '3x_xp_10min')      return 'rarity-legendary';
-  if (id === '2x_xp_20min')      return 'rarity-epic';
-  if (id === '2x_xp_10min')      return 'rarity-rare';
-  if (id === 'gold_15')          return 'rarity-uncommon';
+  if (id === 'frame_diamond_s1')       return 'rarity-legendary';
+  if (id === 'frame_gold_s1')          return 'rarity-epic';
+  if (id === 'frame_silver_s1')        return 'rarity-rare';
+  if (id === 'nameeffect_autumn_wave') return 'rarity-epic';
+  if (id === '3x_xp_10min')           return 'rarity-legendary';
+  if (id === '2x_xp_20min')           return 'rarity-epic';
+  if (id === '2x_xp_10min')           return 'rarity-rare';
+  if (id === 'gold_15')               return 'rarity-uncommon';
   return 'rarity-common';
 }
 
@@ -63,9 +71,12 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
   const [showSummary, setShowSummary] = useState(false);
 
   const [error, setError] = useState('');
+  const [isFast, setIsFast] = useState(false);
 
-  const stripRef   = useRef(null);
-  const pendingRef = useRef([]); 
+  const stripRef    = useRef(null);
+  const pendingRef  = useRef([]);
+  const skipRef     = useRef(null);   // stores the current reel's done() callback
+  const fastRef     = useRef(false);  // fast spin mode toggle
 
   useEffect(() => {
     fetch(`${API_URL}/season-box/prizes`)
@@ -89,30 +100,64 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
     setReelLabel(total > 1 ? `Opening ${idx + 1} / ${total}` : 'Opening Season Box...');
     setShowReel(true);
 
+    let called = false;
+    const safeDone = () => {
+      if (called) return;
+      called = true;
+      skipRef.current = null;
+      done();
+    };
+
+    // Store safeDone so skip button can call it immediately
+    skipRef.current = safeDone;
+
+    const duration = fastRef.current ? 800 : 4200;
+    const settle   = fastRef.current ? 900 : 4400;
+
     setTimeout(() => {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           const el = stripRef.current;
-          if (!el) return done();
+          if (!el) return safeDone();
 
           el.style.transition = 'none';
           el.style.transform  = 'translateX(0)';
           el.getBoundingClientRect();
 
           const winner = el.children[WIN_IDX];
-          if (!winner) return done();
+          if (!winner) return safeDone();
 
           const cRect = el.parentElement.getBoundingClientRect();
           const tRect = winner.getBoundingClientRect();
           const finalX = -((tRect.left + tRect.width / 2) - (cRect.left + cRect.width / 2));
 
-          el.style.transition = 'transform 4200ms cubic-bezier(0.12, 0.8, 0.24, 1)';
+          const easing = fastRef.current
+            ? 'cubic-bezier(0.25, 0.8, 0.4, 1)'
+            : 'cubic-bezier(0.12, 0.8, 0.24, 1)';
+
+          el.style.transition = `transform ${duration}ms ${easing}`;
           el.style.transform  = `translateX(${finalX}px)`;
 
-          setTimeout(done, 4400);
+          setTimeout(safeDone, settle);
         });
       });
     }, 80);
+  };
+
+  // Skip current reel animation — jump strip to final position immediately
+  const handleSkip = () => {
+    const el = stripRef.current;
+    if (el) {
+      el.style.transition = 'none';
+    }
+    const cb = skipRef.current;
+    if (cb) cb();
+  };
+
+  const toggleFast = () => {
+    const next = !fastRef.current;
+    fastRef.current = next;
+    setIsFast(next);
   };
 
 
@@ -250,6 +295,24 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
               <div className="sb-marker-left" />
               <div className="sb-marker-right" />
               <div className="sb-center-highlight" />
+            </div>
+            <div className="sb-reel-actions">
+              <button
+                className={`sb-action-btn sb-fast-btn ${isFast ? 'active' : ''}`}
+                onClick={toggleFast}
+                title="Fast spin mode"
+              >
+                <Gauge size={15} />
+                {isFast ? 'Fast: On' : 'Fast: Off'}
+              </button>
+              <button
+                className="sb-action-btn sb-skip-btn"
+                onClick={handleSkip}
+                title="Skip to result"
+              >
+                <FastForward size={15} />
+                Skip
+              </button>
             </div>
           </div>
         </div>

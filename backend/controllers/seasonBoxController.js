@@ -111,6 +111,16 @@ export const SEASON_BOX_PRIZES = [
     frameKey: 'silver-season1',
     rarity: 'silver',
     min: 8001,
+    max: 9000,
+  },
+  {
+    id: 'nameeffect_autumn_wave',
+    label: 'Autumn Wave',
+    icon: 'Sparkles',
+    type: 'nameEffect',
+    effectKey: 'autumn-wave',
+    rarity: 'epic',
+    min: 9001,
     max: 9200,
   },
   {
@@ -149,10 +159,11 @@ function getPrizeForToken(token) {
 }
 
 export const getSeasonBoxPrizes = async (req, res) => {
-  const prizes = SEASON_BOX_PRIZES.map(({ id, label, icon, type, amount, frameKey, rarity, min, max }) => ({
+  const prizes = SEASON_BOX_PRIZES.map(({ id, label, icon, type, amount, frameKey, effectKey, rarity, min, max }) => ({
     id, label, icon, type,
     amount: amount ?? null,
     frameKey: frameKey ?? null,
+    effectKey: effectKey ?? null,
     rarity: rarity ?? null,
     min, max,
   }));
@@ -212,6 +223,17 @@ export const openSeasonBox = async (req, res) => {
           user.frames.owned.push(prize.frameKey);
           if (!user.frames.active) user.frames.active = prize.frameKey;
         }
+      } else if (prize.type === 'nameEffect') {
+        if (!user.nameEffects) user.nameEffects = { owned: [], active: null };
+        if (!user.nameEffects.owned) user.nameEffects.owned = [];
+
+        if (user.nameEffects.owned.includes(prize.effectKey)) {
+          user.gold += FRAME_DUPLICATE_GOLD;
+          duplicate = true;
+        } else {
+          user.nameEffects.owned.push(prize.effectKey);
+          if (!user.nameEffects.active) user.nameEffects.active = prize.effectKey;
+        }
       }
 
       results.push({
@@ -222,6 +244,7 @@ export const openSeasonBox = async (req, res) => {
         type: prize.type,
         amount: prize.amount ?? null,
         frameKey: prize.frameKey ?? null,
+        effectKey: prize.effectKey ?? null,
         rarity: prize.rarity ?? null,
         duplicate,
         duplicateGold: duplicate ? FRAME_DUPLICATE_GOLD : null,
@@ -236,9 +259,33 @@ export const openSeasonBox = async (req, res) => {
       remainingGold: user.gold,
       inventory: user.inventory,
       frames: user.frames,
+      nameEffects: user.nameEffects,
     });
   } catch (error) {
     console.error('[SeasonBox] Error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const setActiveNameEffect = async (req, res) => {
+  try {
+    const { effect } = req.body;
+
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    if (effect !== null && effect !== undefined) {
+      if (!user.nameEffects?.owned?.includes(effect)) {
+        return res.status(403).json({ message: 'Name effect not owned' });
+      }
+    }
+
+    if (!user.nameEffects) user.nameEffects = { owned: [], active: null };
+    user.nameEffects.active = effect ?? null;
+    await user.save();
+
+    res.json({ success: true, nameEffects: user.nameEffects });
+  } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };

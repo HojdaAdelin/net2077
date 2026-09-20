@@ -45,6 +45,7 @@ export const getUserProgress = async (req, res) => {
         : null,
       onboarding: user.onboarding || null,
       frames: user.frames || { owned: [], active: null },
+      nameEffects: user.nameEffects || { owned: [], active: null },
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });

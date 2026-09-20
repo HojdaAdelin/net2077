@@ -1716,3 +1716,32 @@
 .frame-selector-item.active .frame-selector-label {
   color: var(--text-primary);
 }
+
+/* ── Name Effect Preview (in selector card) ─────────────────────────────── */
+.ne-preview-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.18s;
+}
+
+.ne-preview-none .ne-preview-text {
+  color: var(--text-muted);
+}
+
+.frame-selector-item:hover:not(:disabled) .ne-preview-wrap,
+.frame-selector-item.active .ne-preview-wrap {
+  border-color: var(--accent-primary);
+}
+
+.ne-preview-text {
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1;
+  display: inline-block;
+}

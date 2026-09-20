@@ -217,7 +217,9 @@ export default function Profile() {
               <AvatarFrame frame={profileData.activeFrame} size={80} />
             </div>
             <div className="user-profile-info">
-              <h1 className="user-profile-username">{profileData.username}</h1>
+              <h1 className={`user-profile-username${profileData.activeNameEffect ? ` name-effect-${profileData.activeNameEffect}` : ''}`}>
+                {profileData.username}
+              </h1>
               <div className="user-profile-badges">
                 <span className="user-profile-role" data-role={profileData.role}>
                   {profileData.role.charAt(0).toUpperCase() + profileData.role.slice(1)}

@@ -34,8 +34,12 @@ const userSchema = new mongoose.Schema({
     solved: { type: Number, default: 0 }
   },
   frames: {
-    owned: [{ type: String }],          // e.g. 'silver-season1', 'gold-season2'
-    active: { type: String, default: null }  // frameKey activ sau null
+    owned: [{ type: String }],          
+    active: { type: String, default: null }  
+  },
+  nameEffects: {
+    owned: [{ type: String }],        
+    active: { type: String, default: null }
   },
   startedRoadmaps: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Roadmap' }],
   linuxChapterStats: {

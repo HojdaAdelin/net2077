@@ -184,7 +184,7 @@ export const getCompetitiveLeaderboard = async (req, res) => {
     const topUsers = await User.find({ 'competitiveStats.currentPeriodXP': { $gt: 0 } })
       .sort({ 'competitiveStats.currentPeriodXP': -1 })
       .limit(5)
-      .select('username level competitiveStats.currentPeriodXP frames');
+      .select('username level competitiveStats.currentPeriodXP frames nameEffects');
 
     const leaderboard = topUsers.map((user, index) => ({
       rank: index + 1,
@@ -193,6 +193,7 @@ export const getCompetitiveLeaderboard = async (req, res) => {
       xpEarned: user.competitiveStats.currentPeriodXP,
       goldReward: [100, 90, 80, 60, 60][index],
       activeFrame: user.frames?.active ?? null,
+      activeNameEffect: user.nameEffects?.active ?? null,
     }));
 
     const timeRemaining = activePeriod.endDate - now;

@@ -8,6 +8,7 @@ import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp, Gift, X, Coins,
 import { xpProgressInLevel } from '../utils/xpUtils.js';
 import AvatarFrame from '../components/AvatarFrame';
 import '../styles/AvatarFrame.css';
+import '../styles/NameEffects.css';
 import '../styles/Progress.css';
 
 // ── Daily Activity Chart ──
@@ -140,6 +141,8 @@ export default function Progress() {
   const [showXpInfo, setShowXpInfo] = useState(false);
   const [activeFrame, setActiveFrame]   = useState(null);
   const [frameChanging, setFrameChanging] = useState(false);
+  const [activeNameEffect, setActiveNameEffect] = useState(null);
+  const [effectChanging, setEffectChanging] = useState(false);
   const { t } = useLanguage();
 
   useEffect(() => {
@@ -147,6 +150,7 @@ export default function Progress() {
       getUserProgress().then(data => {
         setProgress(data);
         setActiveFrame(data?.frames?.active ?? null);
+        setActiveNameEffect(data?.nameEffects?.active ?? null);
       }).catch(() => {});
       checkPendingRewards().then(setPendingRewards).catch(() => {});
     }
@@ -276,6 +280,23 @@ export default function Progress() {
       if (data.success) setActiveFrame(data.frames.active);
     } catch { /* silent */ } finally {
       setFrameChanging(false);
+    }
+  };
+
+  const handleSetNameEffect = async (effectKey) => {
+    if (effectChanging) return;
+    setEffectChanging(true);
+    try {
+      const resp = await fetch(`${API_URL}/season-box/name-effect`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ effect: effectKey }),
+      });
+      const data = await resp.json();
+      if (data.success) setActiveNameEffect(data.nameEffects.active);
+    } catch { /* silent */ } finally {
+      setEffectChanging(false);
     }
   };
 
@@ -471,6 +492,54 @@ export default function Progress() {
                 <AvatarFrame frame={fk} size={56} />
                 <span className="frame-selector-label">
                   {fk.replace('-season', ' S')}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Name Effect Selector ── */}
+      {progress.nameEffects?.owned?.length > 0 && (
+        <div className="frame-selector-card">
+          <div className="frame-selector-header">
+            <span className="frame-selector-title">Name Effect</span>
+            {activeNameEffect && (
+              <button
+                className="frame-selector-remove"
+                onClick={() => handleSetNameEffect(null)}
+                disabled={effectChanging}
+              >
+                Remove
+              </button>
+            )}
+          </div>
+          <div className="frame-selector-list">
+            <button
+              className={`frame-selector-item ${!activeNameEffect ? 'active' : ''}`}
+              onClick={() => handleSetNameEffect(null)}
+              disabled={effectChanging}
+              title="No effect"
+            >
+              <div className="ne-preview-wrap ne-preview-none">
+                <span className="ne-preview-text">Aa</span>
+              </div>
+              <span className="frame-selector-label">None</span>
+            </button>
+
+            {progress.nameEffects.owned.map((ek) => (
+              <button
+                key={ek}
+                className={`frame-selector-item ${activeNameEffect === ek ? 'active' : ''}`}
+                onClick={() => handleSetNameEffect(ek)}
+                disabled={effectChanging}
+                title={ek}
+              >
+                <div className="ne-preview-wrap">
+                  <span className={`ne-preview-text name-effect-${ek}`}>Aa</span>
+                </div>
+                <span className="frame-selector-label">
+                  {ek.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
                 </span>
               </button>
             ))}

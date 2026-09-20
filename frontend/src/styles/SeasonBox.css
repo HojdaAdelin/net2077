@@ -21,6 +21,23 @@
   display: block;
 }
 
+.sb-nameeffect-preview {
+  font-weight: 800;
+  background: linear-gradient(90deg, #c8540a, #d4720f, #b8860b, #a0522d, #e07820);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: autumn-wave 3s linear infinite;
+  display: inline-block;
+  line-height: 1;
+}
+
+@keyframes autumn-wave {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
 .season-box-footer {
   padding: 14px 20px;
   display: flex;
@@ -479,7 +496,52 @@
   .sb-multi-grid     { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* ── Contents modal ─────────────────────────────────────────────────────── */
+/* ── Reel action buttons (Skip / Fast) ──────────────────────────────────── */
+.sb-reel-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.sb-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 18px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  letter-spacing: 0.2px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.sb-action-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: rgba(255,255,255,0.15);
+}
+
+.sb-skip-btn:hover {
+  border-color: rgba(234, 179, 8, 0.5);
+  color: #eab308;
+  background: rgba(234, 179, 8, 0.08);
+}
+
+.sb-fast-btn.active {
+  border-color: rgba(96, 165, 250, 0.55);
+  color: #60a5fa;
+  background: rgba(96, 165, 250, 0.1);
+}
+
+.sb-fast-btn.active:hover {
+  border-color: rgba(96, 165, 250, 0.8);
+  background: rgba(96, 165, 250, 0.15);
+}
 .season-box-img--clickable {
   cursor: pointer;
   transition: filter 0.2s ease, transform 0.2s ease;
