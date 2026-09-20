@@ -6,6 +6,8 @@ import { API_URL } from '../config';
 import { useLanguage } from '../context/LanguageContext';
 import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp, Gift, X, Coins, CheckCircle, XCircle, Activity, Sparkles, Flame, Target, Pencil, Clock } from 'lucide-react';
 import { xpProgressInLevel } from '../utils/xpUtils.js';
+import AvatarFrame from '../components/AvatarFrame';
+import '../styles/AvatarFrame.css';
 import '../styles/Progress.css';
 
 // ── Daily Activity Chart ──
@@ -136,11 +138,16 @@ export default function Progress() {
   const [streakRewardDone, setStreakRewardDone] = useState(false);
   const [editGoal, setEditGoal] = useState(false);
   const [showXpInfo, setShowXpInfo] = useState(false);
+  const [activeFrame, setActiveFrame]   = useState(null);
+  const [frameChanging, setFrameChanging] = useState(false);
   const { t } = useLanguage();
 
   useEffect(() => {
     if (user) {
-      getUserProgress().then(setProgress).catch(() => {});
+      getUserProgress().then(data => {
+        setProgress(data);
+        setActiveFrame(data?.frames?.active ?? null);
+      }).catch(() => {});
       checkPendingRewards().then(setPendingRewards).catch(() => {});
     }
   }, [user]);
@@ -252,6 +259,23 @@ export default function Progress() {
       }
     } finally {
       setClaimingStreak(false);
+    }
+  };
+
+  const handleSetFrame = async (frameKey) => {
+    if (frameChanging) return;
+    setFrameChanging(true);
+    try {
+      const resp = await fetch(`${API_URL}/season-box/frame`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ frame: frameKey }),
+      });
+      const data = await resp.json();
+      if (data.success) setActiveFrame(data.frames.active);
+    } catch { /* silent */ } finally {
+      setFrameChanging(false);
     }
   };
 
@@ -409,9 +433,53 @@ export default function Progress() {
         </div>
       </div>
 
+      {/* ── Frame Selector ── */}
+      {progress.frames?.owned?.length > 0 && (
+        <div className="frame-selector-card">
+          <div className="frame-selector-header">
+            <span className="frame-selector-title">Avatar Frame</span>
+            {activeFrame && (
+              <button
+                className="frame-selector-remove"
+                onClick={() => handleSetFrame(null)}
+                disabled={frameChanging}
+              >
+                Remove
+              </button>
+            )}
+          </div>
+          <div className="frame-selector-list">
+            {/* None option */}
+            <button
+              className={`frame-selector-item ${!activeFrame ? 'active' : ''}`}
+              onClick={() => handleSetFrame(null)}
+              disabled={frameChanging}
+              title="No frame"
+            >
+              <AvatarFrame frame={null} size={56} />
+              <span className="frame-selector-label">None</span>
+            </button>
+
+            {progress.frames.owned.map((fk) => (
+              <button
+                key={fk}
+                className={`frame-selector-item ${activeFrame === fk ? 'active' : ''}`}
+                onClick={() => handleSetFrame(fk)}
+                disabled={frameChanging}
+                title={fk}
+              >
+                <AvatarFrame frame={fk} size={56} />
+                <span className="frame-selector-label">
+                  {fk.replace('-season', ' S')}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="category-progress-section">
-        <h2>{t('progress.progressByCategory')}</h2>
-        <div className="category-cards">
+        <h2>{t('progress.progressByCategory')}</h2>        <div className="category-cards">
           <div className="category-progress-card">
             <div className="category-header">
               <h3>Linux</h3>

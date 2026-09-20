@@ -523,6 +523,12 @@
   gap: 4px;
 }
 
+.competitive-user-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .competitive-username {
   font-size: 1.125rem;
   font-weight: 600;

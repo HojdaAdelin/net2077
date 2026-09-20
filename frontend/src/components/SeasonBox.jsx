@@ -1,38 +1,59 @@
 import { useState, useEffect, useRef } from 'react';
-import { Coins, RotateCcw, Zap, Sparkles, X } from 'lucide-react';
+import { Coins, RotateCcw, Zap, Sparkles, X, ChevronRight } from 'lucide-react';
 import { API_URL } from '../config';
 import '../styles/SeasonBox.css';
 
 const ICON_MAP = { Coins, RotateCcw, Zap, Sparkles };
 
-function PrizeIcon({ name, size = 26 }) {
-  const Icon = ICON_MAP[name] || Coins;
+const FRAME_SRCS = {
+  'silver-season1':  '/silver-season1.png',
+  'gold-season1':    '/gold-season1.png',
+  'diamond-season1': '/diamond-season1.png',
+};
+
+function PrizeIcon({ prize, size = 26 }) {
+  if (prize.type === 'frame' && prize.frameKey) {
+    const src = FRAME_SRCS[prize.frameKey] || `/${prize.frameKey}.png`;
+    return <img src={src} alt={prize.label} style={{ width: size, height: size, objectFit: 'contain' }} draggable={false} />;
+  }
+  const Icon = ICON_MAP[prize.icon] || Coins;
   return <Icon size={size} />;
 }
 
 function rarityClass(id) {
-  if (id === '3x_xp_10min') return 'rarity-legendary';
-  if (id === '2x_xp_20min') return 'rarity-epic';
-  if (id === '2x_xp_10min') return 'rarity-rare';
-  if (id === 'gold_15')     return 'rarity-uncommon';
+  if (id === 'frame_diamond_s1') return 'rarity-legendary';
+  if (id === 'frame_gold_s1')    return 'rarity-epic';
+  if (id === 'frame_silver_s1')  return 'rarity-rare';
+  if (id === '3x_xp_10min')      return 'rarity-legendary';
+  if (id === '2x_xp_20min')      return 'rarity-epic';
+  if (id === '2x_xp_10min')      return 'rarity-rare';
+  if (id === 'gold_15')          return 'rarity-uncommon';
   return 'rarity-common';
 }
 
-const TILE_W  = 120;
 const STRIP_N = 40;
 const WIN_IDX = 28;
+const COUNTS  = [1, 2, 3, 5];
 
 export default function SeasonBox({ userGold, onGoldChange, onInventoryChange }) {
-  const [prizes, setPrizes]         = useState([]);
-  const [cost, setCost]             = useState(20);
-  const [spinning, setSpinning]     = useState(false);
-  const [strip, setStrip]           = useState([]);
-  const [showReel, setShowReel]     = useState(false);  // modal visibility
-  const [result, setResult]         = useState(null);
-  const [showResult, setShowResult] = useState(false);
-  const [error, setError]           = useState('');
+  const [prizes, setPrizes]       = useState([]);
+  const [cost, setCost]           = useState(20);
+  const [openCount, setOpenCount] = useState(1);
 
-  const stripRef = useRef(null);
+
+  const [spinning, setSpinning]       = useState(false);
+  const [strip, setStrip]             = useState([]);
+  const [showReel, setShowReel]       = useState(false);
+  const [reelIdx, setReelIdx]         = useState(0);   
+  const [reelLabel, setReelLabel]     = useState('');  
+
+  const [allResults, setAllResults]   = useState([]);  
+  const [showSummary, setShowSummary] = useState(false);
+
+  const [error, setError] = useState('');
+
+  const stripRef   = useRef(null);
+  const pendingRef = useRef([]); 
 
   useEffect(() => {
     fetch(`${API_URL}/season-box/prizes`)
@@ -41,65 +62,81 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
       .catch(() => {});
   }, []);
 
-  const buildStrip = (winnerPrize, allPrizes) => {
-    return Array.from({ length: STRIP_N }, (_, i) => {
+  const buildStrip = (winnerPrize) =>
+    Array.from({ length: STRIP_N }, (_, i) => {
       if (i === WIN_IDX) return winnerPrize;
       const token = Math.floor(Math.random() * 10000) + 1;
-      return allPrizes.find(p => token >= p.min && token <= p.max) || allPrizes[0];
+      return prizes.find(p => token >= p.min && token <= p.max) || prizes[0];
     });
-  };
 
-  const runSpin = (winnerPrize, allPrizes, callback) => {
-    const tiles = buildStrip(winnerPrize, allPrizes);
+  // Animate a single reel, then call done()
+  const animateReel = (prize, idx, total, done) => {
+    const tiles = buildStrip(prize);
     setStrip(tiles);
-
+    setReelIdx(idx);
+    setReelLabel(total > 1 ? `Opening ${idx + 1} / ${total}` : 'Opening Season Box...');
     setShowReel(true);
 
     setTimeout(() => {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           const el = stripRef.current;
-          if (!el) return;
+          if (!el) return done();
 
-          // Reset without transition
           el.style.transition = 'none';
           el.style.transform  = 'translateX(0)';
-          el.getBoundingClientRect(); // force reflow
+          el.getBoundingClientRect();
 
-          // Measure the actual winner tile position after render
-          const winnerTile = el.children[WIN_IDX];
-          if (!winnerTile) return;
+          const winner = el.children[WIN_IDX];
+          if (!winner) return done();
 
-          const containerRect = el.parentElement.getBoundingClientRect();
-          const tileRect      = winnerTile.getBoundingClientRect();
+          const cRect = el.parentElement.getBoundingClientRect();
+          const tRect = winner.getBoundingClientRect();
+          const finalX = -((tRect.left + tRect.width / 2) - (cRect.left + cRect.width / 2));
 
-          // Center of container vs center of tile (both relative to viewport)
-          const containerCenter = containerRect.left + containerRect.width / 2;
-          const tileCenter      = tileRect.left + tileRect.width / 2;
-
-          // How much we need to shift left so tile center == container center
-          const finalX = -(tileCenter - containerCenter);
-
-          el.style.transition = `transform 4200ms cubic-bezier(0.12, 0.8, 0.24, 1)`;
+          el.style.transition = 'transform 4200ms cubic-bezier(0.12, 0.8, 0.24, 1)';
           el.style.transform  = `translateX(${finalX}px)`;
 
-          setTimeout(callback, 4400);
+          setTimeout(done, 4400);
         });
       });
     }, 80);
   };
 
+
+  const runQueue = (queue, onFinish) => {
+    const go = (i) => {
+      if (i >= queue.length) {
+        setShowReel(false);
+        onFinish();
+        return;
+      }
+      animateReel(queue[i], i, queue.length, () => {
+
+        if (i < queue.length - 1) {
+          setTimeout(() => go(i + 1), 400);
+        } else {
+          setShowReel(false);
+          onFinish();
+        }
+      });
+    };
+    go(0);
+  };
+
   const handleOpen = async () => {
     if (spinning || prizes.length === 0) return;
     setError('');
-    setResult(null);
-    setShowResult(false);
+    setAllResults([]);
+    setShowSummary(false);
     setSpinning(true);
 
     try {
       const resp = await fetch(`${API_URL}/season-box/open`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
+        body: JSON.stringify({ count: openCount }),
       });
       const data = await resp.json();
 
@@ -109,10 +146,11 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
         return;
       }
 
-      runSpin(data.prize, prizes, () => {
-        setShowReel(false);
-        setResult(data.prize);
-        setShowResult(true);
+      setAllResults(data.results);
+      pendingRef.current = data.results;
+
+      runQueue(data.results, () => {
+        setShowSummary(true);
         setSpinning(false);
         onGoldChange?.(data.remainingGold);
         onInventoryChange?.(data.inventory);
@@ -123,15 +161,30 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
     }
   };
 
-  const canOpen = (userGold ?? 0) >= cost && !spinning;
+  const totalCost = cost * openCount;
+  const canOpen   = (userGold ?? 0) >= totalCost && !spinning;
 
   return (
     <>
-      {/* ── Static card ── */}
+
       <div className="season-box-card">
         <img src="/season.png" alt="Season Box" className="season-box-img" />
 
         <div className="season-box-footer">
+
+          <div className="sb-count-selector">
+            {COUNTS.map(n => (
+              <button
+                key={n}
+                className={`sb-count-btn ${openCount === n ? 'active' : ''}`}
+                onClick={() => setOpenCount(n)}
+                disabled={spinning}
+              >
+                {n}×
+              </button>
+            ))}
+          </div>
+
           {error && <p className="season-box-error">{error}</p>}
 
           <button
@@ -142,29 +195,35 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
             {spinning ? (
               <><span className="sb-spin-dot" /> Opening...</>
             ) : (
-              <><Coins size={16} /> Open {cost} Gold</>
+              <><Coins size={16} /> Open {openCount > 1 ? `${openCount}×` : ''} / {totalCost} Gold</>
             )}
           </button>
 
           {!canOpen && !spinning && (
             <p className="season-box-insufficient">
-              Need {cost} gold (have {userGold ?? 0})
+              Need {totalCost} gold (have {userGold ?? 0})
             </p>
           )}
         </div>
       </div>
 
-      {/* ── Spin modal ── */}
       {showReel && (
         <div className="sb-modal-overlay">
           <div className="sb-modal">
-            <p className="sb-modal-title">Opening Season Box...</p>
+            <p className="sb-modal-title">{reelLabel}</p>
+            {openCount > 1 && (
+              <div className="sb-progress-dots">
+                {Array.from({ length: openCount }, (_, i) => (
+                  <span key={i} className={`sb-progress-dot ${i <= reelIdx ? 'done' : ''} ${i === reelIdx ? 'current' : ''}`} />
+                ))}
+              </div>
+            )}
             <div className="sb-reel-mask">
               <div className="sb-strip" ref={stripRef}>
                 {strip.map((prize, idx) => (
                   <div key={idx} className={`sb-tile ${rarityClass(prize.id)}`}>
                     <div className="sb-tile-inner">
-                      <PrizeIcon name={prize.icon} size={24} />
+                      <PrizeIcon prize={prize} size={24} />
                       <span className="sb-tile-label">{prize.label}</span>
                     </div>
                   </div>
@@ -178,20 +237,41 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
         </div>
       )}
 
-      {/* ── Result popup ── */}
-      {showResult && result && (
-        <div className="sb-result-overlay" onClick={() => setShowResult(false)}>
-          <div className="sb-result-card" onClick={e => e.stopPropagation()}>
-            <button className="sb-result-close" onClick={() => setShowResult(false)}>
+      {showSummary && allResults.length > 0 && (
+        <div className="sb-result-overlay" onClick={() => setShowSummary(false)}>
+          <div className="sb-result-card sb-result-card--multi" onClick={e => e.stopPropagation()}>
+            <button className="sb-result-close" onClick={() => setShowSummary(false)}>
               <X size={17} />
             </button>
-            <p className="sb-result-label">You got</p>
-            <div className={`sb-result-icon-wrap ${rarityClass(result.id)}`}>
-              <PrizeIcon name={result.icon} size={48} />
-            </div>
-            <h3 className="sb-result-name">{result.label}</h3>
-            <button className="sb-result-ok" onClick={() => setShowResult(false)}>
-              Nice!
+
+            {allResults.length === 1 ? (
+
+              <>
+                <p className="sb-result-label">You got</p>
+                <div className={`sb-result-icon-wrap ${rarityClass(allResults[0].id)}`}>
+                  <PrizeIcon prize={allResults[0]} size={48} />
+                </div>
+                <h3 className="sb-result-name">{allResults[0].label}</h3>
+              </>
+            ) : (
+
+              <>
+                <p className="sb-result-label">You got {allResults.length} prizes</p>
+                <div className="sb-multi-grid">
+                  {allResults.map((r, i) => (
+                    <div key={i} className={`sb-multi-item ${rarityClass(r.id)}`}>
+                      <div className="sb-multi-icon">
+                        <PrizeIcon prize={r} size={32} />
+                      </div>
+                      <span className="sb-multi-label">{r.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            <button className="sb-result-ok" onClick={() => setShowSummary(false)}>
+              {allResults.length > 1 ? 'Collect All' : 'Nice!'}
             </button>
           </div>
         </div>

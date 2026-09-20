@@ -43,7 +43,8 @@ export const getUserProgress = async (req, res) => {
             chapters: Object.fromEntries(user.linuxChapterStats.chapters || new Map())
           }
         : null,
-      onboarding: user.onboarding || null
+      onboarding: user.onboarding || null,
+      frames: user.frames || { owned: [], active: null },
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });

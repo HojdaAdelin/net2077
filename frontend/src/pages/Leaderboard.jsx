@@ -6,6 +6,8 @@ import { useLanguage } from '../context/LanguageContext';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
 import SeasonBox from '../components/SeasonBox';
+import AvatarFrame from '../components/AvatarFrame';
+import '../styles/AvatarFrame.css';
 import '../styles/Leaderboard.css';
 
 const ROLE_CONFIG = {
@@ -254,10 +256,15 @@ export default function Leaderboard() {
                     </div>
                     
                     <div className="competitive-user">
-                      <Link to={`/profile/${user.username}`} className="competitive-username">
-                        {user.username}
-                      </Link>
-                      <div className="competitive-level">Level {user.level}</div>
+                      <div className="competitive-user-inner">
+                        <AvatarFrame frame={user.activeFrame} size={36} />
+                        <div>
+                          <Link to={`/profile/${user.username}`} className="competitive-username">
+                            {user.username}
+                          </Link>
+                          <div className="competitive-level">Level {user.level}</div>
+                        </div>
+                      </div>
                     </div>
                     
                     <div className="competitive-xp">
@@ -296,6 +303,7 @@ export default function Leaderboard() {
                   
                   <div className="user-info">
                     <div className="username">
+                      <AvatarFrame frame={user.activeFrame} size={36} />
                       <Link 
                         to={`/profile/${user.username}`} 
                         className="leaderboard-username-link"

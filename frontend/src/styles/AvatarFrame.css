@@ -1,0 +1,31 @@
+.avatar-frame-wrap {
+  position: relative;
+  width: var(--af-size);
+  height: var(--af-size);
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-frame-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Frame image sits on top, slightly larger than the circle so it wraps around */
+.avatar-frame-img {
+  position: absolute;
+  inset: -14%;          /* extends beyond the circle edge */
+  width: 128%;
+  height: 128%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}

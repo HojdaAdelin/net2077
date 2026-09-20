@@ -41,7 +41,8 @@ export const getUserProfile = async (req, res) => {
       categoryStats,
       leaderboardRank,
       joinedAt: user.createdAt,
-      lastActivity: user.streak.lastActivity
+      lastActivity: user.streak.lastActivity,
+      activeFrame: user.frames?.active ?? null,
     };
 
     res.json(profileData);

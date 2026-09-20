@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema({
   scriptingStats: {
     solved: { type: Number, default: 0 }
   },
+  frames: {
+    owned: [{ type: String }],          // e.g. 'silver-season1', 'gold-season2'
+    active: { type: String, default: null }  // frameKey activ sau null
+  },
   startedRoadmaps: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Roadmap' }],
   linuxChapterStats: {
     lastTaken: { type: Date, default: null },

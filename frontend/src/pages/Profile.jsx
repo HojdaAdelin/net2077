@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
 import { User, Trophy, Zap,Microchip, Target, Calendar, Activity, Award, Monitor, Globe, Terminal, Wrench, Crown, Medal, BadgeQuestionMark, Cpu } from 'lucide-react';
+import AvatarFrame from '../components/AvatarFrame';
+import '../styles/AvatarFrame.css';
 import '../styles/Profile.css';
 
 
@@ -212,7 +214,7 @@ export default function Profile() {
         <div className="user-profile-header">
           <div className="user-profile-left">
             <div className="user-profile-avatar">
-              <User size={48} />
+              <AvatarFrame frame={profileData.activeFrame} size={80} />
             </div>
             <div className="user-profile-info">
               <h1 className="user-profile-username">{profileData.username}</h1>
