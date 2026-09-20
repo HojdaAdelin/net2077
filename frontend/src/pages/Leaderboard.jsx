@@ -266,15 +266,17 @@ export default function Leaderboard() {
                         </div>
                       </div>
                     </div>
-                    
-                    <div className="competitive-xp">
-                      <Zap size={16} />
-                      <span>{user.xpEarned.toLocaleString()} XP</span>
-                    </div>
-                    
-                    <div className="competitive-reward">
-                      <Coins size={18} className="gold-icon" />
-                      <span className="gold-amount">{user.goldReward}</span>
+
+                    <div className="competitive-xp-reward-row">
+                      <div className="competitive-xp">
+                        <Zap size={16} />
+                        <span>{user.xpEarned.toLocaleString()} XP</span>
+                      </div>
+                      
+                      <div className="competitive-reward">
+                        <Coins size={18} className="gold-icon" />
+                        <span className="gold-amount">{user.goldReward}</span>
+                      </div>
                     </div>
                   </div>
                 ))

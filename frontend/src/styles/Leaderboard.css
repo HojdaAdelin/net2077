@@ -173,6 +173,7 @@
   flex-direction: column;
   gap: 6px;
   min-width: 0;
+  overflow: hidden;
 }
 
 .username {
@@ -347,9 +348,33 @@
     width: 20px;
     height: 20px;
   }
-}
 
-/* ============================================
+  .username {
+    font-size: 0.88rem;
+    gap: 6px;
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  .leaderboard-username-link {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  .lb-staff-badge {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .leaderboard-item {
+    grid-template-columns: 44px 1fr 68px;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+}/* ============================================
    COMPETITIVE LEADERBOARD - 48h Season
    ============================================ */
 
@@ -483,6 +508,11 @@
   transition: all 0.2s ease;
 }
 
+/* On desktop the wrapper is transparent — children participate directly in the flex row */
+.competitive-xp-reward-row {
+  display: contents;
+}
+
 .competitive-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -593,6 +623,107 @@
     flex-direction: column;
     gap: 12px;
     align-items: flex-start;
+  }
+
+  .competitive-item {
+    gap: 12px;
+    padding: 14px 16px;
+    flex-wrap: wrap;
+  }
+
+  .competitive-rank {
+    min-width: 60px;
+    gap: 8px;
+  }
+
+  .competitive-rank .rank-number {
+    font-size: 1.1rem;
+  }
+
+  .competitive-user {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .competitive-username {
+    font-size: 0.95rem;
+  }
+
+  .competitive-xp {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .competitive-reward {
+    padding: 6px 14px;
+  }
+
+  .gold-amount {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .competitive-item {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    grid-template-rows: auto auto;
+    gap: 8px 10px;
+    padding: 12px 14px;
+  }
+
+  .competitive-rank {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    flex-direction: column;
+    justify-content: center;
+    min-width: unset;
+    gap: 4px;
+  }
+
+  .competitive-rank .rank-number {
+    font-size: 1rem;
+  }
+
+  .competitive-user {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .competitive-user-inner {
+    gap: 8px;
+  }
+
+  .competitive-username {
+    font-size: 0.9rem;
+  }
+
+  .competitive-level {
+    font-size: 0.78rem;
+  }
+
+  .competitive-xp-reward-row {
+    display: flex;
+    gap: 8px;
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .competitive-xp {
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .competitive-reward {
+    padding: 4px 10px;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .gold-amount {
+    font-size: 0.85rem;
   }
 }
 
