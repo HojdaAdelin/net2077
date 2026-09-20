@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { Trophy, Medal, Award, Crown, User, Coins, Clock, Zap, ShoppingBag, Shield } from 'lucide-react';
+import { Trophy, Medal, Award, Crown, User, Coins, Clock, Zap, Shield, ShoppingBag } from 'lucide-react';
 import { getLeaderboard } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
 import { AuthContext } from '../context/AuthContext';
@@ -215,23 +215,17 @@ export default function Leaderboard() {
           <div className="competitive-leaderboard-section">
             <div className="competitive-header">
               <div className="competitive-title">
-                <Zap size={24} className="competitive-icon" />
-                <div>
-                  <h2>Competitive Season #{competitiveData.periodNumber}</h2>
-                  <p>Top 5 players earn Gold rewards every 24 hours</p>
-                </div>
+                <Zap size={16} className="competitive-icon" />
+                <span>Competitive Season</span>
               </div>
-              <div className="competitive-actions">
+              <div className="competitive-header-right">
                 <div className="competitive-timer">
-                  <Clock size={20} />
-                  <div className="timer-content">
-                    <span className="timer-label">Resets in</span>
-                    <span className="timer-value">{timeRemaining}</span>
-                  </div>
+                  <Clock size={15} />
+                  <span className="timer-value">{timeRemaining}</span>
                 </div>
                 <Link to="/shop" className="competitive-shop-link">
-                  <ShoppingBag size={18} />
-                  Visit Shop
+                  <ShoppingBag size={14} />
+                  View Shop
                 </Link>
               </div>
             </div>
