@@ -16,6 +16,11 @@
   background: var(--bg-secondary);
 }
 
+.sb-prize-img {
+  object-fit: contain;
+  display: block;
+}
+
 .season-box-footer {
   padding: 14px 20px;
   display: flex;

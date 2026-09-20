@@ -11,10 +11,16 @@ const FRAME_SRCS = {
   'diamond-season1': '/diamond-season1.png',
 };
 
+// Preload all known assets at module import time (same pattern as AvatarFrame)
+[...Object.values(FRAME_SRCS), '/season.png'].forEach((src) => {
+  const img = new Image();
+  img.src = src;
+});
+
 function PrizeIcon({ prize, size = 26 }) {
   if (prize.type === 'frame' && prize.frameKey) {
     const src = FRAME_SRCS[prize.frameKey] || `/${prize.frameKey}.png`;
-    return <img src={src} alt={prize.label} style={{ width: size, height: size, objectFit: 'contain' }} draggable={false} />;
+    return <img src={src} alt={prize.label} className="sb-prize-img" draggable={false} style={{ width: size, height: size }} />;
   }
   const Icon = ICON_MAP[prize.icon] || Coins;
   return <Icon size={size} />;

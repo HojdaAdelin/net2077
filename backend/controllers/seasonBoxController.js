@@ -142,7 +142,7 @@ export const FRAME_IMAGE_MAP = {
 };
 
 const OPEN_COST = 20;
-const FRAME_DUPLICATE_GOLD = 200;
+const FRAME_DUPLICATE_GOLD = 50;
 
 function getPrizeForToken(token) {
   return SEASON_BOX_PRIZES.find(p => token >= p.min && token <= p.max);
