@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Trophy, Medal, Award, Crown, User, Coins, Clock, Zap, ShoppingBag, Shield } from 'lucide-react';
 import { getLeaderboard } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
+import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
+import SeasonBox from '../components/SeasonBox';
 import '../styles/Leaderboard.css';
 
 const ROLE_CONFIG = {
@@ -41,6 +43,7 @@ export default function Leaderboard() {
   const { t } = useLanguage();
   const { tab } = useParams();
   const navigate = useNavigate();
+  const { user, updateUser } = useContext(AuthContext);
   const [leaderboard, setLeaderboard] = useState([]);
   const [competitiveData, setCompetitiveData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -233,8 +236,15 @@ export default function Leaderboard() {
               </div>
             </div>
 
-            <div className="competitive-leaderboard-list">
-              {competitiveData.leaderboard.length === 0 ? (
+            {user && (
+              <SeasonBox
+                userGold={user.gold ?? 0}
+                onGoldChange={(newGold) => updateUser({ gold: newGold })}
+                onInventoryChange={(inv) => updateUser({ inventory: inv })}
+              />
+            )}
+
+            <div className="competitive-leaderboard-list">              {competitiveData.leaderboard.length === 0 ? (
                 <div className="empty-competitive">
                   <Zap size={48} />
                   <p>No competitors yet. Be the first to earn XP!</p>

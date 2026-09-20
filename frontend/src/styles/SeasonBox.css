@@ -1,0 +1,349 @@
+/* ── Season Box Card ─────────────────────────────────────────────────────── */
+.season-box-card {
+  max-width: 480px;
+  margin: 0 auto 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.season-box-img {
+  width: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  background: var(--bg-secondary);
+}
+
+.season-box-footer {
+  padding: 14px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.season-box-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 26px;
+  background: linear-gradient(135deg, rgba(234,179,8,0.18), rgba(234,179,8,0.08));
+  border: 2px solid rgba(234,179,8,0.45);
+  color: #eab308;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.season-box-btn:hover:not(.disabled) {
+  background: linear-gradient(135deg, rgba(234,179,8,0.28), rgba(234,179,8,0.15));
+  border-color: rgba(234,179,8,0.7);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(234,179,8,0.25);
+}
+
+.season-box-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sb-spin-dot {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(234,179,8,0.35);
+  border-top-color: #eab308;
+  border-radius: 50%;
+  animation: sb-spin 0.7s linear infinite;
+}
+
+@keyframes sb-spin {
+  to { transform: rotate(360deg); }
+}
+
+.season-box-error {
+  font-size: 0.875rem;
+  color: var(--error);
+  margin: 0;
+}
+
+.season-box-insufficient {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ── Spin modal overlay ──────────────────────────────────────────────────── */
+.sb-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: sb-overlay-in 0.2s ease;
+}
+
+@keyframes sb-overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.sb-modal {
+  width: min(760px, 92vw);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  animation: sb-modal-pop 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes sb-modal-pop {
+  from { transform: scale(0.88); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+.sb-modal-title {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+/* ── Reel ──────────────────────────────────────────────────────────────────── */
+.sb-reel-mask {
+  position: relative;
+  width: 100%;
+  height: 104px;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+/* Fade edges */
+.sb-reel-mask::before,
+.sb-reel-mask::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100px;
+  z-index: 3;
+  pointer-events: none;
+}
+.sb-reel-mask::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-secondary), transparent);
+}
+.sb-reel-mask::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-secondary), transparent);
+}
+
+.sb-strip {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  will-change: transform;
+  position: relative;
+  z-index: 1;
+}
+
+/* Centre marker lines */
+.sb-marker-left,
+.sb-marker-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  z-index: 4;
+  pointer-events: none;
+}
+.sb-marker-left {
+  left: calc(50% - 61px);
+  background: rgba(250, 204, 21, 0.9);
+  box-shadow: 0 0 8px 2px rgba(250, 204, 21, 0.4);
+}
+.sb-marker-right {
+  left: calc(50% + 61px);
+  background: rgba(250, 204, 21, 0.9);
+  box-shadow: 0 0 8px 2px rgba(250, 204, 21, 0.4);
+}
+.sb-center-highlight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 61px);
+  width: 122px;
+  background: rgba(250, 204, 21, 0.06);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ── Tiles ───────────────────────────────────────────────────────────────── */
+.sb-tile {
+  flex-shrink: 0;
+  width: 120px;
+  height: 90px;
+  margin: 0 1px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+.sb-tile-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 4px;
+}
+
+.sb-tile-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.2;
+  max-width: 108px;
+}
+
+/* Rarity borders */
+.rarity-common    { border-color: var(--border); }
+.rarity-uncommon  { border-color: rgba(74,222,128,0.5);  background: rgba(74,222,128,0.05); }
+.rarity-rare      { border-color: rgba(96,165,250,0.55); background: rgba(96,165,250,0.07); }
+.rarity-epic      { border-color: rgba(167,139,250,0.6); background: rgba(167,139,250,0.08); }
+.rarity-legendary { border-color: rgba(251,191,36,0.7);  background: rgba(251,191,36,0.1); }
+
+/* Icon colours */
+.rarity-common    svg { color: #eab308; }
+.rarity-uncommon  svg { color: #4ade80; }
+.rarity-rare      svg { color: #60a5fa; }
+.rarity-epic      svg { color: #a78bfa; }
+.rarity-legendary svg { color: #fbbf24; }
+
+/* ── Result overlay ──────────────────────────────────────────────────────── */
+.sb-result-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(5px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: sb-overlay-in 0.22s ease;
+}
+
+.sb-result-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 48px 56px;
+  text-align: center;
+  min-width: 280px;
+  animation: sb-modal-pop 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.sb-result-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.sb-result-close:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.sb-result-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 20px;
+}
+
+.sb-result-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 90px;
+  border-radius: 16px;
+  border: 2px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.sb-result-icon-wrap.rarity-uncommon  { border-color: rgba(74,222,128,0.6);  background: rgba(74,222,128,0.08); }
+.sb-result-icon-wrap.rarity-rare      { border-color: rgba(96,165,250,0.65); background: rgba(96,165,250,0.1); }
+.sb-result-icon-wrap.rarity-epic      { border-color: rgba(167,139,250,0.7); background: rgba(167,139,250,0.1); }
+.sb-result-icon-wrap.rarity-legendary { border-color: rgba(251,191,36,0.8);  background: rgba(251,191,36,0.12); box-shadow: 0 0 28px rgba(251,191,36,0.3); }
+
+.sb-result-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 28px;
+}
+
+.sb-result-ok {
+  padding: 10px 44px;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.18s, transform 0.18s;
+}
+.sb-result-ok:hover {
+  opacity: 0.82;
+  transform: translateY(-1px);
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .season-box-card   { max-width: 100%; }
+  .season-box-footer { padding: 12px 16px; }
+  .sb-modal          { padding: 24px 16px; }
+  .sb-reel-mask      { height: 88px; }
+  .sb-tile           { width: 100px; height: 76px; }
+  .sb-marker-left    { left: calc(50% - 51px); }
+  .sb-marker-right   { left: calc(50% + 51px); }
+  .sb-center-highlight { left: calc(50% - 51px); width: 102px; }
+  .sb-result-card    { padding: 36px 28px; min-width: unset; width: 88vw; }
+}
