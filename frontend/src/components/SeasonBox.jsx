@@ -41,10 +41,16 @@ const STRIP_N = 40;
 const WIN_IDX = 28;
 const COUNTS  = [1, 2, 3, 5];
 
+// Sorted from most common to rarest (by chance descending)
+function chancePercent(prize) {
+  return ((prize.max - prize.min + 1) / 10000 * 100).toFixed(1);
+}
+
 export default function SeasonBox({ userGold, onGoldChange, onInventoryChange }) {
   const [prizes, setPrizes]       = useState([]);
   const [cost, setCost]           = useState(20);
   const [openCount, setOpenCount] = useState(1);
+  const [showContents, setShowContents] = useState(false);
 
 
   const [spinning, setSpinning]       = useState(false);
@@ -174,7 +180,13 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
     <>
 
       <div className="season-box-card">
-        <img src="/season.png" alt="Season Box" className="season-box-img" />
+        <img
+          src="/season.png"
+          alt="Season Box"
+          className="season-box-img season-box-img--clickable"
+          onClick={() => setShowContents(true)}
+          title="Click to see possible rewards"
+        />
 
         <div className="season-box-footer">
 
@@ -279,6 +291,35 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
             <button className="sb-result-ok" onClick={() => setShowSummary(false)}>
               {allResults.length > 1 ? 'Collect All' : 'Nice!'}
             </button>
+          </div>
+        </div>
+      )}
+      {showContents && (
+        <div className="sb-contents-overlay" onClick={() => setShowContents(false)}>
+          <div className="sb-contents-modal" onClick={e => e.stopPropagation()}>
+            <button className="sb-result-close" onClick={() => setShowContents(false)}>
+              <X size={17} />
+            </button>
+            <p className="sb-modal-title">Possible Rewards</p>
+            <div className="sb-contents-list">
+              {[...prizes]
+                .sort((a, b) => (b.max - b.min) - (a.max - a.min))
+                .map(prize => (
+                  <div key={prize.id} className={`sb-contents-row ${rarityClass(prize.id)}`}>
+                    <div className="sb-contents-icon">
+                      <PrizeIcon prize={prize} size={22} />
+                    </div>
+                    <span className="sb-contents-name">{prize.label}</span>
+                    <span className="sb-contents-chance">{chancePercent(prize)}%</span>
+                    <div className="sb-contents-bar-wrap">
+                      <div
+                        className="sb-contents-bar"
+                        style={{ width: `${chancePercent(prize)}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+            </div>
           </div>
         </div>
       )}
