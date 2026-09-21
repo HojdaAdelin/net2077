@@ -198,7 +198,10 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
       const data = await resp.json();
 
       if (!resp.ok) {
-        setError(data.message || 'Failed to open box');
+        const msg = resp.status === 401
+          ? 'Session expired — please log in again.'
+          : data.message || 'Failed to open box';
+        setError(msg);
         setSpinning(false);
         return;
       }

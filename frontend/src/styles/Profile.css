@@ -52,8 +52,7 @@
   margin-bottom: 1rem;
 }
 
-/* ── Autumn Wave name effect ─────────────────────────────────────────────── */
-@import './NameEffects.css';
+/* ── Autumn Wave name effect — see NameEffects.css imported in Profile.jsx ── */
 
 .user-profile-badges {
   display: flex;

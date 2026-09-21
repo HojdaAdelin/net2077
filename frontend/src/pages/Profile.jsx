@@ -5,6 +5,7 @@ import { API_URL } from '../config';
 import { User, Trophy, Zap,Microchip, Target, Calendar, Activity, Award, Monitor, Globe, Terminal, Wrench, Crown, Medal, BadgeQuestionMark, Cpu } from 'lucide-react';
 import AvatarFrame from '../components/AvatarFrame';
 import '../styles/AvatarFrame.css';
+import '../styles/NameEffects.css';
 import '../styles/Profile.css';
 
 
