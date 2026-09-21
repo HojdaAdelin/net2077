@@ -59,6 +59,8 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
   const [cost, setCost]           = useState(20);
   const [openCount, setOpenCount] = useState(1);
   const [showContents, setShowContents] = useState(false);
+  const [loadingPrizes, setLoadingPrizes] = useState(true);
+  const [prizesError, setPrizesError] = useState(''); // separate from open errors
 
 
   const [spinning, setSpinning]       = useState(false);
@@ -79,10 +81,16 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
   const fastRef     = useRef(false);  // fast spin mode toggle
 
   useEffect(() => {
+    setLoadingPrizes(true);
+    setPrizesError('');
     fetch(`${API_URL}/season-box/prizes`)
       .then(r => r.json())
-      .then(d => { if (d.success) { setPrizes(d.prizes); setCost(d.cost); } })
-      .catch(() => {});
+      .then(d => {
+        if (d.success) { setPrizes(d.prizes); setCost(d.cost); }
+        else { setPrizesError('Failed to load prizes. Try refreshing.'); }
+      })
+      .catch(() => setPrizesError('Failed to load prizes. Try refreshing.'))
+      .finally(() => setLoadingPrizes(false));
   }, []);
 
   const buildStrip = (winnerPrize) =>
@@ -222,7 +230,7 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
   };
 
   const totalCost = cost * openCount;
-  const canOpen   = (userGold ?? 0) >= totalCost && !spinning;
+  const canOpen   = (userGold ?? 0) >= totalCost && !spinning && prizes.length > 0;
 
   return (
     <>
@@ -265,7 +273,10 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
             )}
           </button>
 
-          {!canOpen && !spinning && (
+          {!canOpen && !spinning && prizes.length === 0 && !error && (
+            <p className="season-box-insufficient">Loading prizes...</p>
+          )}
+          {!canOpen && !spinning && prizes.length > 0 && (userGold ?? 0) < totalCost && (
             <p className="season-box-insufficient">
               Need {totalCost} gold (have {userGold ?? 0})
             </p>

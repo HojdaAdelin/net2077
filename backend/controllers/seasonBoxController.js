@@ -177,10 +177,17 @@ export const openSeasonBox = async (req, res) => {
     const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
+    // Normalize fields that may be missing on old accounts
+    if (!user.frames)      user.frames      = { owned: [], active: null };
+    if (!user.frames.owned) user.frames.owned = [];
+    if (!user.nameEffects)       user.nameEffects       = { owned: [], active: null };
+    if (!user.nameEffects.owned) user.nameEffects.owned = [];
+    if (user.gold === undefined || user.gold === null) user.gold = 0;
+
     const totalCost = OPEN_COST * count;
-    if ((user.gold ?? 0) < totalCost) {
+    if (user.gold < totalCost) {
       return res.status(400).json({
-        message: `Insufficient gold. Need ${totalCost}, have ${user.gold ?? 0}.`,
+        message: `Insufficient gold. Need ${totalCost}, have ${user.gold}.`,
       });
     }
 
@@ -213,9 +220,6 @@ export const openSeasonBox = async (req, res) => {
           });
         }
       } else if (prize.type === 'frame') {
-        if (!user.frames) user.frames = { owned: [], active: null };
-        if (!user.frames.owned) user.frames.owned = [];
-
         if (user.frames.owned.includes(prize.frameKey)) {
           user.gold += FRAME_DUPLICATE_GOLD;
           duplicate = true;
@@ -224,9 +228,6 @@ export const openSeasonBox = async (req, res) => {
           if (!user.frames.active) user.frames.active = prize.frameKey;
         }
       } else if (prize.type === 'nameEffect') {
-        if (!user.nameEffects) user.nameEffects = { owned: [], active: null };
-        if (!user.nameEffects.owned) user.nameEffects.owned = [];
-
         if (user.nameEffects.owned.includes(prize.effectKey)) {
           user.gold += FRAME_DUPLICATE_GOLD;
           duplicate = true;
