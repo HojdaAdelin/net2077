@@ -35,13 +35,14 @@ function PrizeIcon({ prize, size = 26 }) {
 
 function rarityClass(id) {
   if (id === 'frame_diamond_s1')       return 'rarity-legendary';
+  if (id === 'gold_500')               return 'rarity-legendary';
   if (id === 'frame_gold_s1')          return 'rarity-epic';
   if (id === 'frame_silver_s1')        return 'rarity-rare';
   if (id === 'nameeffect_autumn_wave') return 'rarity-epic';
   if (id === '3x_xp_10min')           return 'rarity-legendary';
   if (id === '2x_xp_20min')           return 'rarity-epic';
   if (id === '2x_xp_10min')           return 'rarity-rare';
-  if (id === 'gold_15')               return 'rarity-uncommon';
+  if (id === 'gold_20')               return 'rarity-uncommon';
   return 'rarity-common';
 }
 

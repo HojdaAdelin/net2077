@@ -3,36 +3,27 @@ import User from '../models/User.js';
 // Token range: 1-10000
 //
 // Distribution:
-//   5 gold          1-2000   (20%)
-//   reset_daily     2001-4000 (20%)
-//   10 gold         4001-5400 (14%)
-//   15 gold         5401-6400 (10%)
-//   2x XP 10min     6401-7200 (8%)
-//   2x XP 20min     7201-7700 (5%)
-//   3x XP 10min     7701-8000 (3%)
-//   frame_silver    8001-9200 (12%)
-//   frame_gold      8001... wait —
-//
-//   5 gold          1-2000   (20%)
-//   reset_daily     2001-4000 (20%)
-//   10 gold         4001-5400 (14%)
-//   15 gold         5401-6400 (10%)
-//   2x XP 10min     6401-7200 (8%)
-//   2x XP 20min     7201-7700 (5%)
-//   3x XP 10min     7701-8000 (3%)
-//   frame_silver    8001-9200 (12%)
-//   frame_gold      9201-9700 (5%)
-//   frame_diamond   9701-10000(3%)
+//   10 gold         1-2400   (24%)
+//   reset_daily     2401-4700 (23%)
+//   20 gold         4701-6400 (17%)
+//   2x XP 10min     6401-7100 (7%)
+//   2x XP 20min     7101-7600 (5%)
+//   3x XP 10min     7601-7900 (3%)
+//   frame_silver    7901-8900 (10%)
+//   nameeffect_aw   8901-9100 (2%)
+//   frame_gold      9101-9600 (5%)
+//   frame_diamond   9601-9900 (3%)
+//   500 gold        9901-10000(1%)
 
 export const SEASON_BOX_PRIZES = [
   {
-    id: 'gold_5',
-    label: '5 Gold',
+    id: 'gold_10',
+    label: '10 Gold',
     icon: 'Coins',
     type: 'gold',
-    amount: 5,
+    amount: 10,
     min: 1,
-    max: 2000,
+    max: 2400,
   },
   {
     id: 'reset_daily',
@@ -43,25 +34,16 @@ export const SEASON_BOX_PRIZES = [
     itemName: 'Reset Daily Challenge',
     itemCategory: 'reset',
     itemDuration: null,
-    min: 2001,
-    max: 4000,
+    min: 2401,
+    max: 4700,
   },
   {
-    id: 'gold_10',
-    label: '10 Gold',
+    id: 'gold_20',
+    label: '20 Gold',
     icon: 'Coins',
     type: 'gold',
-    amount: 10,
-    min: 4001,
-    max: 5400,
-  },
-  {
-    id: 'gold_15',
-    label: '15 Gold',
-    icon: 'Coins',
-    type: 'gold',
-    amount: 15,
-    min: 5401,
+    amount: 20,
+    min: 4701,
     max: 6400,
   },
   {
@@ -75,7 +57,7 @@ export const SEASON_BOX_PRIZES = [
     itemDuration: 10,
     itemMultiplier: 2,
     min: 6401,
-    max: 7200,
+    max: 7100,
   },
   {
     id: '2x_xp_20min',
@@ -87,8 +69,8 @@ export const SEASON_BOX_PRIZES = [
     itemCategory: 'boost',
     itemDuration: 20,
     itemMultiplier: 2,
-    min: 7201,
-    max: 7700,
+    min: 7101,
+    max: 7600,
   },
   {
     id: '3x_xp_10min',
@@ -100,8 +82,8 @@ export const SEASON_BOX_PRIZES = [
     itemCategory: 'boost',
     itemDuration: 10,
     itemMultiplier: 3,
-    min: 7701,
-    max: 8000,
+    min: 7601,
+    max: 7900,
   },
   {
     id: 'frame_silver_s1',
@@ -110,8 +92,8 @@ export const SEASON_BOX_PRIZES = [
     type: 'frame',
     frameKey: 'silver-season1',
     rarity: 'silver',
-    min: 8001,
-    max: 9000,
+    min: 7901,
+    max: 8900,
   },
   {
     id: 'nameeffect_autumn_wave',
@@ -120,8 +102,8 @@ export const SEASON_BOX_PRIZES = [
     type: 'nameEffect',
     effectKey: 'autumn-wave',
     rarity: 'epic',
-    min: 9001,
-    max: 9200,
+    min: 8901,
+    max: 9100,
   },
   {
     id: 'frame_gold_s1',
@@ -130,8 +112,8 @@ export const SEASON_BOX_PRIZES = [
     type: 'frame',
     frameKey: 'gold-season1',
     rarity: 'gold',
-    min: 9201,
-    max: 9700,
+    min: 9101,
+    max: 9600,
   },
   {
     id: 'frame_diamond_s1',
@@ -140,7 +122,16 @@ export const SEASON_BOX_PRIZES = [
     type: 'frame',
     frameKey: 'diamond-season1',
     rarity: 'diamond',
-    min: 9701,
+    min: 9601,
+    max: 9900,
+  },
+  {
+    id: 'gold_500',
+    label: '500 Gold',
+    icon: 'Coins',
+    type: 'gold',
+    amount: 500,
+    min: 9901,
     max: 10000,
   },
 ];
