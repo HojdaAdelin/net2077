@@ -3,17 +3,19 @@ import User from '../models/User.js';
 // Token range: 1-10000
 //
 // Distribution:
-//   10 gold         1-2400   (24%)
-//   reset_daily     2401-4700 (23%)
-//   20 gold         4701-6400 (17%)
-//   2x XP 10min     6401-7100 (7%)
-//   2x XP 20min     7101-7600 (5%)
-//   3x XP 10min     7601-7900 (3%)
-//   frame_silver    7901-8900 (10%)
-//   nameeffect_aw   8901-9100 (2%)
-//   frame_gold      9101-9600 (5%)
-//   frame_diamond   9601-9900 (3%)
-//   500 gold        9901-10000(1%)
+//   10 gold           1-2000   (20%)
+//   reset_daily       2001-4200 (22%)
+//   20 gold           4201-5700 (15%)
+//   2x XP 10min       5701-6400 (7%)
+//   2x XP 20min       6401-6900 (5%)
+//   3x XP 10min       6901-7200 (3%)
+//   frame_silver      7201-8200 (10%)
+//   nameeffect_aw     8201-8400 (2%)
+//   nameeffect_flame  8401-8600 (2%)
+//   profileeffect_fl  8601-9100 (5%)
+//   frame_gold        9101-9600 (5%)
+//   frame_diamond     9601-9900 (3%)
+//   500 gold          9901-10000(1%)
 
 export const SEASON_BOX_PRIZES = [
   {
@@ -23,7 +25,7 @@ export const SEASON_BOX_PRIZES = [
     type: 'gold',
     amount: 10,
     min: 1,
-    max: 2400,
+    max: 2000,
   },
   {
     id: 'reset_daily',
@@ -34,8 +36,8 @@ export const SEASON_BOX_PRIZES = [
     itemName: 'Reset Daily Challenge',
     itemCategory: 'reset',
     itemDuration: null,
-    min: 2401,
-    max: 4700,
+    min: 2001,
+    max: 4200,
   },
   {
     id: 'gold_20',
@@ -43,8 +45,8 @@ export const SEASON_BOX_PRIZES = [
     icon: 'Coins',
     type: 'gold',
     amount: 20,
-    min: 4701,
-    max: 6400,
+    min: 4201,
+    max: 5700,
   },
   {
     id: '2x_xp_10min',
@@ -56,8 +58,8 @@ export const SEASON_BOX_PRIZES = [
     itemCategory: 'boost',
     itemDuration: 10,
     itemMultiplier: 2,
-    min: 6401,
-    max: 7100,
+    min: 5701,
+    max: 6400,
   },
   {
     id: '2x_xp_20min',
@@ -69,8 +71,8 @@ export const SEASON_BOX_PRIZES = [
     itemCategory: 'boost',
     itemDuration: 20,
     itemMultiplier: 2,
-    min: 7101,
-    max: 7600,
+    min: 6401,
+    max: 6900,
   },
   {
     id: '3x_xp_10min',
@@ -82,8 +84,8 @@ export const SEASON_BOX_PRIZES = [
     itemCategory: 'boost',
     itemDuration: 10,
     itemMultiplier: 3,
-    min: 7601,
-    max: 7900,
+    min: 6901,
+    max: 7200,
   },
   {
     id: 'frame_silver_s1',
@@ -92,8 +94,8 @@ export const SEASON_BOX_PRIZES = [
     type: 'frame',
     frameKey: 'silver-season1',
     rarity: 'silver',
-    min: 7901,
-    max: 8900,
+    min: 7201,
+    max: 8200,
   },
   {
     id: 'nameeffect_autumn_wave',
@@ -102,7 +104,27 @@ export const SEASON_BOX_PRIZES = [
     type: 'nameEffect',
     effectKey: 'autumn-wave',
     rarity: 'epic',
-    min: 8901,
+    min: 8201,
+    max: 8400,
+  },
+  {
+    id: 'nameeffect_flame',
+    label: 'Flame Effect',
+    icon: 'Sparkles',
+    type: 'nameEffect',
+    effectKey: 'flame',
+    rarity: 'epic',
+    min: 8401,
+    max: 8600,
+  },
+  {
+    id: 'profileeffect_flame',
+    label: 'Profile Flame',
+    icon: 'Sparkles',
+    type: 'profileEffect',
+    effectKey: 'flame',
+    rarity: 'legendary',
+    min: 8601,
     max: 9100,
   },
   {
@@ -173,6 +195,8 @@ export const openSeasonBox = async (req, res) => {
     if (!user.frames.owned) user.frames.owned = [];
     if (!user.nameEffects)       user.nameEffects       = { owned: [], active: null };
     if (!user.nameEffects.owned) user.nameEffects.owned = [];
+    if (!user.profileEffects)        user.profileEffects        = { owned: [], active: null };
+    if (!user.profileEffects.owned)  user.profileEffects.owned  = [];
     if (user.gold === undefined || user.gold === null) user.gold = 0;
 
     const totalCost = OPEN_COST * count;
@@ -226,6 +250,14 @@ export const openSeasonBox = async (req, res) => {
           user.nameEffects.owned.push(prize.effectKey);
           if (!user.nameEffects.active) user.nameEffects.active = prize.effectKey;
         }
+      } else if (prize.type === 'profileEffect') {
+        if (user.profileEffects.owned.includes(prize.effectKey)) {
+          user.gold += FRAME_DUPLICATE_GOLD;
+          duplicate = true;
+        } else {
+          user.profileEffects.owned.push(prize.effectKey);
+          if (!user.profileEffects.active) user.profileEffects.active = prize.effectKey;
+        }
       }
 
       results.push({
@@ -252,6 +284,7 @@ export const openSeasonBox = async (req, res) => {
       inventory: user.inventory,
       frames: user.frames,
       nameEffects: user.nameEffects,
+      profileEffects: user.profileEffects,
     });
   } catch (error) {
     console.error('[SeasonBox] Error:', error);
@@ -277,6 +310,28 @@ export const setActiveNameEffect = async (req, res) => {
     await user.save();
 
     res.json({ success: true, nameEffects: user.nameEffects });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const setActiveProfileEffect = async (req, res) => {
+  try {
+    const { effect } = req.body;
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    if (effect !== null && effect !== undefined) {
+      if (!user.profileEffects?.owned?.includes(effect)) {
+        return res.status(403).json({ message: 'Profile effect not owned' });
+      }
+    }
+
+    if (!user.profileEffects) user.profileEffects = { owned: [], active: null };
+    user.profileEffects.active = effect ?? null;
+    await user.save();
+
+    res.json({ success: true, profileEffects: user.profileEffects });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

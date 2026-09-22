@@ -23,3 +23,33 @@
   0%   { background-position: 0% center; }
   100% { background-position: 200% center; }
 }
+
+/* ── Flame Effect ─────────────────────────────────────────────────────────── */
+/* Gradient on the text itself — canvas in FlameText.jsx handles the actual flames */
+
+.name-effect-flame {
+  background: linear-gradient(
+    90deg,
+    #ff1a00,
+    #ff6600,
+    #ff9900,
+    #ffcc00,
+    #ff4400,
+    #ff1a00,
+    #ff6600,
+    #ff1a00
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: flame-slide 2.5s linear infinite;
+  filter:
+    drop-shadow(0 0 3px rgba(255, 100, 0, 0.85))
+    drop-shadow(0 0 7px rgba(255, 40, 0, 0.5));
+}
+
+@keyframes flame-slide {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}

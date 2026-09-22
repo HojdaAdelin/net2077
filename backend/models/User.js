@@ -41,6 +41,10 @@ const userSchema = new mongoose.Schema({
     owned: [{ type: String }],        
     active: { type: String, default: null }
   },
+  profileEffects: {
+    owned: [{ type: String }],
+    active: { type: String, default: null }
+  },
   startedRoadmaps: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Roadmap' }],
   linuxChapterStats: {
     lastTaken: { type: Date, default: null },

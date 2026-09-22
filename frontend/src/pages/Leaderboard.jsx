@@ -7,6 +7,7 @@ import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
 import SeasonBox from '../components/SeasonBox';
 import AvatarFrame from '../components/AvatarFrame';
+import NameEffectRenderer from '../components/NameEffectRenderer';
 import '../styles/AvatarFrame.css';
 import '../styles/NameEffects.css';
 import '../styles/Leaderboard.css';
@@ -260,9 +261,11 @@ export default function Leaderboard() {
                       <div className="competitive-user-inner">
                         <AvatarFrame frame={user.activeFrame} size={36} />
                         <div>
-                          <Link to={`/profile/${user.username}`} className={`competitive-username${user.activeNameEffect ? ` name-effect-${user.activeNameEffect}` : ''}`}>
-                            {user.username}
-                          </Link>
+                          <NameEffectRenderer effect={user.activeNameEffect}>
+                            <Link to={`/profile/${user.username}`} className="competitive-username">
+                              {user.username}
+                            </Link>
+                          </NameEffectRenderer>
                           <div className="competitive-level">Level {user.level}</div>
                         </div>
                       </div>
@@ -307,13 +310,15 @@ export default function Leaderboard() {
                   <div className="user-info">
                     <div className="username">
                       <AvatarFrame frame={user.activeFrame} size={36} />
-                      <Link 
-                        to={`/profile/${user.username}`} 
-                        className={`leaderboard-username-link${user.activeNameEffect ? ` name-effect-${user.activeNameEffect}` : ''}`}
-                        title={`View ${user.username}'s profile`}
-                      >
-                        {user.username}
-                      </Link>
+                      <NameEffectRenderer effect={user.activeNameEffect}>
+                        <Link
+                          to={`/profile/${user.username}`}
+                          className="leaderboard-username-link"
+                          title={`View ${user.username}'s profile`}
+                        >
+                          {user.username}
+                        </Link>
+                      </NameEffectRenderer>
                       <Link 
                         to={`/profile/${user.username}`} 
                         className="leaderboard-profile-link"
