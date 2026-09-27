@@ -366,30 +366,6 @@ export default function Navbar() {
           {user && <Link to="/progress" onClick={closeMobileMenu}>Progress</Link>}
           
           <div className="nav-auth">
-            <div className="language-selector" ref={dropdownRef}>
-              <button className="lang-btn" onClick={toggleLangDropdown}>
-                <Languages size={18} />
-                <span>{language.toUpperCase()}</span>
-                <ChevronDown size={16} />
-              </button>
-              {langDropdownOpen && (
-                <div className="lang-dropdown">
-                  <button 
-                    onClick={() => handleLanguageChange('en')}
-                    className={language === 'en' ? 'active' : ''}
-                  >
-                    English
-                  </button>
-                  <button 
-                    onClick={() => handleLanguageChange('ro')}
-                    className={language === 'ro' ? 'active' : ''}
-                  >
-                    Română
-                  </button>
-                </div>
-              )}
-            </div>
-
             <button className="theme-btn" onClick={toggleTheme} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
               {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
             </button>
