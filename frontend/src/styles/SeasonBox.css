@@ -575,7 +575,7 @@
   gap: 20px;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
   animation: sb-modal-pop 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  max-height: 80vh;
+  max-height: 85vh;
   overflow: hidden;
 }
 
@@ -583,6 +583,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  max-height: calc((85vh - 120px) * 0.85);
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -665,4 +666,95 @@
 
 @media (max-width: 600px) {
   .sb-contents-modal { padding: 24px 16px 20px; }
+}
+
+/* ── Recent Rare Drops ── */
+.sb-rare-section {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.sb-rare-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 10px 0;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sb-rare-empty {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 8px 0;
+  margin: 0;
+}
+
+.sb-rare-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-height: calc((85vh - 120px) * 0.15);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.sb-rare-list::-webkit-scrollbar { width: 4px; }
+.sb-rare-list::-webkit-scrollbar-track { background: transparent; }
+.sb-rare-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.sb-rare-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.sb-rare-row.rarity-epic {
+  border-color: rgba(167,139,250,0.35);
+  background: rgba(167,139,250,0.06);
+}
+.sb-rare-row.rarity-legendary {
+  border-color: rgba(251,191,36,0.4);
+  background: rgba(251,191,36,0.06);
+}
+
+.sb-rare-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.sb-rare-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.sb-rare-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sb-rare-meta {
+  font-size: 11px;
+  color: var(--text-muted);
 }

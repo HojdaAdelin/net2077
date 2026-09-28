@@ -1,10 +1,11 @@
 import express from 'express';
-import { getSeasonBoxPrizes, openSeasonBox, setActiveFrame, setActiveNameEffect, setActiveProfileEffect } from '../controllers/seasonBoxController.js';
+import { getSeasonBoxPrizes, openSeasonBox, setActiveFrame, setActiveNameEffect, setActiveProfileEffect, getRecentRareDrops } from '../controllers/seasonBoxController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
 router.get('/prizes', getSeasonBoxPrizes);
+router.get('/recent-rare', getRecentRareDrops);
 router.post('/open', authMiddleware, openSeasonBox);
 router.put('/frame', authMiddleware, setActiveFrame);
 router.put('/name-effect', authMiddleware, setActiveNameEffect);

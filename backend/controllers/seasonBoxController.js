@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import RareDrop from '../models/RareDrop.js';
 
 // Token range: 1-10000
 //
@@ -273,6 +274,28 @@ export const openSeasonBox = async (req, res) => {
         duplicate,
         duplicateGold: duplicate ? FRAME_DUPLICATE_GOLD : null,
       });
+
+      // Log rare drops (≤5% chance) — collect for bulk trim after loop
+      const chance = ((prize.max - prize.min + 1) / 10000) * 100;
+      if (chance <= 5 && !duplicate) {
+        await RareDrop.create({
+          username: user.username,
+          prizeId:  prize.id,
+          label:    prize.label,
+          icon:     prize.icon,
+          type:     prize.type,
+          frameKey: prize.frameKey ?? null,
+          effectKey:prize.effectKey ?? null,
+          rarity:   prize.rarity ?? null,
+          chance:   parseFloat(chance.toFixed(1)),
+        });
+      }
+    }
+
+    // Trim rare drops to last 5 globally (done once after all inserts)
+    const oldDrops = await RareDrop.find().sort({ droppedAt: -1 }).skip(5);
+    if (oldDrops.length) {
+      await RareDrop.deleteMany({ _id: { $in: oldDrops.map(d => d._id) } });
     }
 
     await user.save();
@@ -355,6 +378,15 @@ export const setActiveFrame = async (req, res) => {
     await user.save();
 
     res.json({ success: true, frames: user.frames });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const getRecentRareDrops = async (req, res) => {
+  try {
+    const drops = await RareDrop.find().sort({ droppedAt: -1 }).limit(5).lean();
+    res.json({ success: true, drops });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

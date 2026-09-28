@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Coins, RotateCcw, Zap, Sparkles, X, FastForward, Gauge } from 'lucide-react';
+import { Coins, RotateCcw, Zap, Sparkles, X, FastForward, Gauge, Gift } from 'lucide-react';
 import { API_URL } from '../config';
 import '../styles/SeasonBox.css';
 
@@ -56,13 +56,25 @@ function chancePercent(prize) {
   return ((prize.max - prize.min + 1) / 10000 * 100).toFixed(1);
 }
 
+function formatTimeAgo(dateStr) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1)  return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24)  return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
+}
+
 export default function SeasonBox({ userGold, onGoldChange, onInventoryChange }) {
   const [prizes, setPrizes]       = useState([]);
   const [cost, setCost]           = useState(20);
   const [openCount, setOpenCount] = useState(1);
   const [showContents, setShowContents] = useState(false);
   const [loadingPrizes, setLoadingPrizes] = useState(true);
-  const [prizesError, setPrizesError] = useState(''); // separate from open errors
+  const [prizesError, setPrizesError] = useState('');
+  const [recentRare, setRecentRare] = useState([]);
+  const [loadingRare, setLoadingRare] = useState(false);
 
 
   const [spinning, setSpinning]       = useState(false);
@@ -242,7 +254,15 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
           src="/season.png"
           alt="Season Box"
           className="season-box-img season-box-img--clickable"
-          onClick={() => setShowContents(true)}
+          onClick={() => {
+            setShowContents(true);
+            setLoadingRare(true);
+            fetch(`${API_URL}/season-box/recent-rare`)
+              .then(r => r.json())
+              .then(d => setRecentRare(d.drops || []))
+              .catch(() => setRecentRare([]))
+              .finally(() => setLoadingRare(false));
+          }}
           title="Click to see possible rewards"
         />
 
@@ -398,6 +418,30 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
                     </div>
                   </div>
                 ))}
+            </div>
+
+            {/* Recent rare drops */}
+            <div className="sb-rare-section">
+              <p className="sb-rare-title"><Gift size={14} /> Recent Rare Drops</p>
+              {loadingRare ? (
+                <p className="sb-rare-empty">Loading...</p>
+              ) : recentRare.length === 0 ? (
+                <p className="sb-rare-empty">No rare drops yet. Be the first!</p>
+              ) : (
+                <div className="sb-rare-list">
+                  {recentRare.map((drop, i) => (
+                    <div key={i} className={`sb-rare-row ${rarityClass(drop.prizeId)}`}>
+                      <div className="sb-rare-icon">
+                        <PrizeIcon prize={{ id: drop.prizeId, icon: drop.icon, type: drop.type, frameKey: drop.frameKey, effectKey: drop.effectKey }} size={18} />
+                      </div>
+                      <div className="sb-rare-info">
+                        <span className="sb-rare-label">{drop.label}</span>
+                        <span className="sb-rare-meta">{drop.username} · {drop.chance}% · {formatTimeAgo(drop.droppedAt)}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
