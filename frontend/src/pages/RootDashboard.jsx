@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
+import QuestionTitle from '../components/QuestionTitle';
 import '../styles/RootDashboard.css';
 
 const STATUS_LABELS = { open: 'Open', 'in-progress': 'In Progress', closed: 'Closed' };
@@ -459,34 +460,82 @@ function QuestionManagerPanel() {
   return (
     <div className="rd-qmgr">
       {/* Edit Modal */}
-      {editTarget && (
-        <div className="rd-modal-overlay" onClick={() => setEditTarget(null)}>
-          <div className="rd-modal" onClick={e => e.stopPropagation()}>
-            <div className="rd-modal-header">
-              <span className="rd-modal-title"><Pencil size={14} /> Edit Question</span>
-              <button className="rd-icon-btn" onClick={() => setEditTarget(null)}><X size={16} /></button>
-            </div>
-            <div className="rd-modal-meta">
-              <span className="rd-qmgr-badge type">{editTarget.type}</span>
-              <span className="rd-qmgr-badge diff" data-diff={editTarget.difficulty}>{editTarget.difficulty}</span>
-              <span className="rd-modal-id">ID: {editTarget._id}</span>
-            </div>
-            <textarea
-              className="rd-modal-textarea"
-              value={editJson}
-              onChange={e => { setEditJson(e.target.value); setEditError(''); }}
-              spellCheck={false}
-            />
-            {editError && <div className="rd-msg error">{editError}</div>}
-            <div className="rd-modal-footer">
-              <button className="rd-add-btn" onClick={() => setEditTarget(null)}>Dismiss</button>
-              <button className="rd-primary-btn" onClick={handleEditSave} disabled={editSaving} style={{ marginTop: 0 }}>
-                {editSaving ? 'Saving...' : 'Save'}
-              </button>
+      {editTarget && (() => {
+        let preview = null;
+        try { preview = JSON.parse(editJson); } catch { preview = null; }
+        return (
+          <div className="rd-modal-overlay" onClick={() => setEditTarget(null)}>
+            <div className="rd-modal rd-modal-wide" onClick={e => e.stopPropagation()}>
+              <div className="rd-modal-header">
+                <span className="rd-modal-title"><Pencil size={14} /> Edit Question</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span className="rd-modal-id">ID: {editTarget._id}</span>
+                  <button className="rd-icon-btn" onClick={() => setEditTarget(null)}><X size={16} /></button>
+                </div>
+              </div>
+
+              <div className="rd-modal-split">
+                {/* Left — JSON editor */}
+                <div className="rd-modal-editor-col">
+                  <div className="rd-modal-col-label">JSON</div>
+                  <textarea
+                    className="rd-modal-textarea"
+                    value={editJson}
+                    onChange={e => { setEditJson(e.target.value); setEditError(''); }}
+                    spellCheck={false}
+                  />
+                  {editError && <div className="rd-msg error" style={{ marginTop: 6 }}>{editError}</div>}
+                </div>
+
+                {/* Right — live preview */}
+                <div className="rd-modal-preview-col">
+                  <div className="rd-modal-col-label">Preview</div>
+                  {preview ? (
+                    <div className="rd-qpreview">
+                      <div className="rd-qpreview-badges">
+                        {preview.type && <span className="rd-qmgr-badge type">{preview.type}</span>}
+                        {preview.difficulty && <span className="rd-qmgr-badge diff" data-diff={preview.difficulty}>{preview.difficulty}</span>}
+                        {(preview.tags || []).map(t => <span key={t} className="rd-qmgr-badge tag">{t}</span>)}
+                        {preview.points && <span className="rd-qmgr-badge tag">{preview.points}pt</span>}
+                        {preview.multipleCorrect && <span className="rd-qmgr-badge type" style={{ background: 'rgba(16,185,129,0.1)', color: '#10b981' }}>multi</span>}
+                      </div>
+                      <div className="rd-qpreview-title">
+                        {preview.title
+                          ? <QuestionTitle title={preview.title} />
+                          : <em style={{ opacity: 0.4 }}>No title</em>}
+                      </div>
+                      <div className="rd-qpreview-answers">
+                        {(preview.answers || []).map((ans, i) => {
+                          const isCorrect = (preview.correctAnswers || []).includes(i);
+                          return (
+                            <div key={i} className={`rd-qpreview-ans ${isCorrect ? 'correct' : ''}`}>
+                              <span className="rd-qpreview-letter">{String.fromCharCode(65 + i)}</span>
+                              <span className="rd-qpreview-text">{ans}</span>
+                              {isCorrect && <span className="rd-qpreview-check">✓</span>}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      {!(preview.answers?.length) && (
+                        <div style={{ opacity: 0.4, fontSize: 12, marginTop: 8 }}>No answers defined</div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="rd-qpreview-invalid">Invalid JSON</div>
+                  )}
+                </div>
+              </div>
+
+              <div className="rd-modal-footer">
+                <button className="rd-add-btn" onClick={() => setEditTarget(null)}>Dismiss</button>
+                <button className="rd-primary-btn" onClick={handleEditSave} disabled={editSaving} style={{ marginTop: 0 }}>
+                  {editSaving ? 'Saving...' : 'Save'}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       <div className="rd-qmgr-header">
         <div className="rd-section-label" style={{ margin: 0 }}>
