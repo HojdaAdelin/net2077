@@ -4,7 +4,7 @@ import {
   Settings, Users, FileText, Megaphone, Upload,
   Trash2, Plus, X, RefreshCw, Send, Sparkles, Zap, Bug,
   ChevronDown, CheckCircle, XCircle, Clock, Download,
-  Search, Copy, Database, ListFilter, ClipboardList, BarChart2, ScrollText
+  Search, Copy, Database, ListFilter, ClipboardList, BarChart2, ScrollText, Pencil
 } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
@@ -358,6 +358,10 @@ function QuestionManagerPanel() {
   const [deleted, setDeleted] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const [editTarget, setEditTarget] = useState(null);   // question being edited
+  const [editJson, setEditJson] = useState('');
+  const [editError, setEditError] = useState('');
+  const [editSaving, setEditSaving] = useState(false);
 
   const search = async (all = false) => {
     setLoading(true);
@@ -414,8 +418,76 @@ function QuestionManagerPanel() {
     setConfirmDelete(null);
   };
 
+  const openEdit = (q) => {
+    const { _id, __v, createdAt, updatedAt, ...clean } = q;
+    setEditTarget(q);
+    setEditJson(JSON.stringify(clean, null, 2));
+    setEditError('');
+  };
+
+  const handleEditSave = async () => {
+    let parsed;
+    try {
+      parsed = JSON.parse(editJson);
+    } catch {
+      setEditError('JSON invalid. Verifică sintaxa.');
+      return;
+    }
+    setEditSaving(true);
+    setEditError('');
+    try {
+      const res = await fetch(`${API_URL}/questions/${editTarget._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(parsed),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setResults(prev => prev.map(q => q._id === editTarget._id ? data.question : q));
+        setEditTarget(null);
+      } else {
+        setEditError(data.message || 'Eroare la salvare.');
+      }
+    } catch {
+      setEditError('Eroare de rețea.');
+    } finally {
+      setEditSaving(false);
+    }
+  };
+
   return (
     <div className="rd-qmgr">
+      {/* Edit Modal */}
+      {editTarget && (
+        <div className="rd-modal-overlay" onClick={() => setEditTarget(null)}>
+          <div className="rd-modal" onClick={e => e.stopPropagation()}>
+            <div className="rd-modal-header">
+              <span className="rd-modal-title"><Pencil size={14} /> Edit Question</span>
+              <button className="rd-icon-btn" onClick={() => setEditTarget(null)}><X size={16} /></button>
+            </div>
+            <div className="rd-modal-meta">
+              <span className="rd-qmgr-badge type">{editTarget.type}</span>
+              <span className="rd-qmgr-badge diff" data-diff={editTarget.difficulty}>{editTarget.difficulty}</span>
+              <span className="rd-modal-id">ID: {editTarget._id}</span>
+            </div>
+            <textarea
+              className="rd-modal-textarea"
+              value={editJson}
+              onChange={e => { setEditJson(e.target.value); setEditError(''); }}
+              spellCheck={false}
+            />
+            {editError && <div className="rd-msg error">{editError}</div>}
+            <div className="rd-modal-footer">
+              <button className="rd-add-btn" onClick={() => setEditTarget(null)}>Dismiss</button>
+              <button className="rd-primary-btn" onClick={handleEditSave} disabled={editSaving} style={{ marginTop: 0 }}>
+                {editSaving ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="rd-qmgr-header">
         <div className="rd-section-label" style={{ margin: 0 }}>
           <Database size={13} /> Question Manager
@@ -479,6 +551,13 @@ function QuestionManagerPanel() {
                     onClick={() => handleCopy(q)}
                   >
                     {copied === q._id ? <CheckCircle size={15} /> : <Copy size={15} />}
+                  </button>
+                  <button
+                    className="rd-icon-btn"
+                    title="Edit question"
+                    onClick={() => openEdit(q)}
+                  >
+                    <Pencil size={15} />
                   </button>
                   {confirmDelete === q._id ? (
                     <div className="rd-qmgr-confirm">

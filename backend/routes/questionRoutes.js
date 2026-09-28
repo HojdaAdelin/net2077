@@ -1,5 +1,5 @@
 import express from 'express';
-import { getQuestions, getQuestionById, getUnsolvedQuestions, getRandom50, markSolved, dailyLinux, getDailyChallengeStatus, completeDailyChallenge, resetBasicStats, dailyNetwork, resetLinuxStats, resetArduinoStats, resetNetworkStats, getLinuxOverviewTest, submitRandom50, exportAllQuestions, searchQuestions, deleteQuestion } from '../controllers/questionController.js';
+import { getQuestions, getQuestionById, getUnsolvedQuestions, getRandom50, markSolved, dailyLinux, getDailyChallengeStatus, completeDailyChallenge, resetBasicStats, dailyNetwork, resetLinuxStats, resetArduinoStats, resetNetworkStats, getLinuxOverviewTest, submitRandom50, exportAllQuestions, searchQuestions, deleteQuestion, updateQuestion } from '../controllers/questionController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { checkRole } from '../middleware/checkRole.js';
 
@@ -21,6 +21,7 @@ router.post('/resetNetworkStats', authMiddleware, resetNetworkStats);
 router.get('/export', authMiddleware, checkRole('root'), exportAllQuestions);
 router.get('/search', authMiddleware, checkRole('root'), searchQuestions);
 router.delete('/:id', authMiddleware, checkRole('root'), deleteQuestion);
+router.put('/:id', authMiddleware, checkRole('root'), updateQuestion);
 router.get('/', getQuestions);
 router.get('/:id', getQuestionById);
 router.post('/submitRandom50', authMiddleware, submitRandom50);

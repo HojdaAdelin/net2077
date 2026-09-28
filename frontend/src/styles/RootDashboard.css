@@ -1143,3 +1143,82 @@
   }
   .rd-export-btn { width: 100%; justify-content: center; }
 }
+
+/* Edit Question Modal */
+.rd-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.rd-modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  max-height: 90vh;
+}
+
+.rd-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rd-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.rd-modal-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.rd-modal-id {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: monospace;
+  margin-left: 4px;
+}
+
+.rd-modal-textarea {
+  width: 100%;
+  min-height: 340px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  padding: 12px;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.rd-modal-textarea:focus { border-color: var(--accent-primary); }
+
+.rd-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}

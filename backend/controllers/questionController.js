@@ -591,6 +591,18 @@ export const deleteQuestion = async (req, res) => {
   }
 };
 
+export const updateQuestion = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { _id, __v, createdAt, updatedAt, ...updates } = req.body;
+    const q = await Question.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+    if (!q) return res.status(404).json({ message: 'Question not found' });
+    res.json({ success: true, question: q });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 export 
 const exportAllQuestions = async (req, res) => {
   try {
