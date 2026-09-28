@@ -1354,25 +1354,6 @@
 
 /* QuestionTitle code block (used in edit preview) */
 .rd-qpreview .qt-code-block {
-  display: block;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent-primary);
-  border-radius: 8px;
-  padding: 10px 14px;
   margin: 8px 0;
-  overflow-x: auto;
-  white-space: pre;
-  max-width: 100%;
-  box-sizing: border-box;
-  word-break: break-all;
-}
-
-.rd-qpreview .qt-code-block code {
-  font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
-  font-size: 0.82rem;
-  line-height: 1.6;
-  color: var(--text-primary);
-  white-space: pre-wrap;
-  word-break: break-word;
+  padding: 10px 14px;
 }
