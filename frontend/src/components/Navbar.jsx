@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -19,6 +19,7 @@ export default function Navbar() {
   const { language, changeLanguage, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const { showMessage } = useMessage();
+  const location = useLocation();
   
   let unreadCount = 0;
   let refreshUnreadCount = () => {};
@@ -50,6 +51,13 @@ export default function Navbar() {
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const closeMobileMenu = () => setMobileMenuOpen(false);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setPracticeDropdownOpen(false);
+    setCommunityDropdownOpen(false);
+  }, [location.pathname, location.search]);
   const toggleLangDropdown = () => setLangDropdownOpen(!langDropdownOpen);
   const toggleProfileDropdown = () => setProfileDropdownOpen(!profileDropdownOpen);
   const toggleInventoryDropdown = () => setInventoryDropdownOpen(!inventoryDropdownOpen);
