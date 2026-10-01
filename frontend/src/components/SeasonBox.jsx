@@ -236,6 +236,11 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
         setSpinning(false);
         onGoldChange?.(data.remainingGold);
         onInventoryChange?.(data.inventory);
+        // Refresh rare drops list after opening
+        fetch(`${API_URL}/season-box/recent-rare`)
+          .then(r => r.json())
+          .then(d => setRecentRare(d.drops || []))
+          .catch(() => {});
       });
     } catch {
       setError('Network error');

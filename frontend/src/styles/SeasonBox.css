@@ -583,7 +583,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  max-height: calc((85vh - 120px) * 0.85);
+  max-height: calc((85vh - 120px) * 0.8);
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -698,7 +698,7 @@
   display: flex;
   flex-direction: column;
   gap: 7px;
-  max-height: calc((85vh - 120px) * 0.15);
+  max-height: calc((85vh - 120px) * 0.2);
   overflow-y: auto;
   padding-right: 4px;
 }
