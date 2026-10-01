@@ -213,6 +213,12 @@ export const getCompetitiveLeaderboard = async (req, res) => {
 // Track XP gain for competitive
 export const trackCompetitiveXP = async (userId, xpGained) => {
   try {
+    // Check if current period has expired before adding XP
+    const activePeriod = await CompetitivePeriod.findOne({ isActive: true });
+    if (!activePeriod || (new Date() >= activePeriod.endDate && !activePeriod.rewardsDistributed)) {
+      await checkAndResetPeriod();
+    }
+
     const user = await User.findById(userId);
     if (!user) return;
     
