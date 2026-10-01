@@ -94,6 +94,7 @@
   border-radius: 12px;
   transition: all 0.2s ease;
   position: relative;
+  overflow: visible;
 }
 
 .leaderboard-item:hover {
@@ -173,7 +174,6 @@
   flex-direction: column;
   gap: 6px;
   min-width: 0;
-  overflow: hidden;
 }
 
 .username {
@@ -758,7 +758,7 @@
   gap: 2px;
   white-space: nowrap;
   pointer-events: none;
-  z-index: 50;
+  z-index: 1000;
   box-shadow: 0 4px 16px rgba(0,0,0,0.2);
 }
 

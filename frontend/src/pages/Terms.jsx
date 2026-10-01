@@ -8,6 +8,7 @@ export default function Terms() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetch(`${API_URL}/terms`)
       .then(r => r.json())
       .then(d => { setTerms(d.terms); setLoading(false); })
