@@ -37,6 +37,7 @@ import ArenaWaiting from './pages/ArenaWaiting';
 import Shop from './pages/Shop';
 import Scripts from './pages/Scripts';
 import ScriptingProblems from './pages/ScriptingProblems';
+import Season from './pages/Season';
 import LinuxStartTest from './pages/LinuxStartTest';
 import './styles/global.css';
 
@@ -82,6 +83,7 @@ export default function App() {
                   <Route path="/scripts" element={<Scripts />} />
                   <Route path="/scripting/problems" element={<ScriptingProblems />} />
                   <Route path="/linux-start-test" element={<LinuxStartTest />} />
+                  <Route path="/season" element={<Season />} />
                   <Route path="/profile/:username" element={<Profile />} />
                   <Route path="/terms" element={<Terms />} />
                 </Routes>

@@ -1029,3 +1029,39 @@ r Dialog */
   border: 1px solid var(--accent-primary);
   color: #fff;
 }
+
+/* Season nav link */
+.nav-season-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-season-icon {
+  color: var(--accent-primary);
+  transition: transform 0.3s ease;
+}
+
+.nav-season-link:hover .nav-season-icon {
+  transform: rotate(20deg) scale(1.2);
+}
+
+.nav-season-link::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 14px;
+  right: 14px;
+  height: 2px;
+  background: var(--accent-primary);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transition: transform 0.25s ease;
+  transform-origin: center;
+}
+
+.nav-season-link:hover::after {
+  transform: scaleX(1);
+}

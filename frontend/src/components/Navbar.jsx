@@ -370,6 +370,10 @@ export default function Navbar() {
             )}
           </div>
           
+          <Link to="/season" className="nav-season-link" onClick={closeMobileMenu}>
+            <Zap size={14} className="nav-season-icon" />
+            Season
+          </Link>
           <Link to="/learn" onClick={closeMobileMenu}>Learn</Link>
           {user && <Link to="/progress" onClick={closeMobileMenu}>Progress</Link>}
           
