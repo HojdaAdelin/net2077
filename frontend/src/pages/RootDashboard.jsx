@@ -1049,6 +1049,320 @@ function TermsPanel() {
   );
 }
 
+/* ─── Season Panel ─── */
+function SeasonPanel() {
+  const [passes, setPasses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [testXpAmount, setTestXpAmount] = useState('');
+  const [testXpMsg, setTestXpMsg] = useState('');
+  const [testXpLoading, setTestXpLoading] = useState(false);
+
+  const handleAddTestXP = async () => {
+    const amount = parseInt(testXpAmount);
+    if (!amount || amount <= 0) { setTestXpMsg('Enter a valid amount.'); return; }
+    setTestXpLoading(true); setTestXpMsg('');
+    try {
+      const res = await fetch(`${API_URL}/season-pass/test-xp`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', body: JSON.stringify({ amount }),
+      });
+      const data = await res.json();
+      if (data.success) setTestXpMsg(`✓ Pass XP: ${data.xp} · Level: ${data.level}`);
+      else setTestXpMsg(data.message || 'Error');
+    } catch { setTestXpMsg('Network error'); }
+    finally { setTestXpLoading(false); }
+  };
+  const [editing, setEditing] = useState(null); // pass being edited, or 'new'
+  const [form, setForm] = useState({
+    name: '', hasPremium: true, premiumCost: 200,
+    totalLevels: 10, xpPerLevel: 100, isActive: false, levels: []
+  });
+  const [saving, setSaving] = useState(false);
+  const [msg, setMsg] = useState('');
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/season-pass`, { credentials: 'include' });
+      const data = await res.json();
+      setPasses(data.passes || []);
+    } finally { setLoading(false); }
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  const openNew = () => {
+    setForm({ name: '', hasPremium: true, premiumCost: 200, totalLevels: 10, xpPerLevel: 100, isActive: false, levels: [] });
+    setMsg('');
+    setEditing('new');
+  };
+
+  const openEdit = (pass) => {
+    setForm({
+      name: pass.name,
+      hasPremium: pass.hasPremium,
+      premiumCost: pass.premiumCost,
+      totalLevels: pass.totalLevels,
+      xpPerLevel: pass.xpPerLevel,
+      isActive: pass.isActive,
+      levels: pass.levels || [],
+    });
+    setMsg('');
+    setEditing(pass._id);
+  };
+
+  const handleSave = async () => {
+    if (!form.name.trim()) { setMsg('Name is required.'); return; }
+    if (!form.totalLevels || form.totalLevels < 1) { setMsg('Total levels must be >= 1.'); return; }
+    setSaving(true); setMsg('');
+    try {
+      const isNew = editing === 'new';
+      const url = isNew ? `${API_URL}/season-pass` : `${API_URL}/season-pass/${editing}`;
+      const method = isNew ? 'POST' : 'PUT';
+      const res = await fetch(url, {
+        method, headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', body: JSON.stringify(form)
+      });
+      const data = await res.json();
+      if (data.success) {
+        setMsg(isNew ? 'Pass created!' : 'Saved!');
+        load();
+        setTimeout(() => setEditing(null), 800);
+      } else {
+        setMsg(data.message || 'Error');
+      }
+    } catch { setMsg('Network error'); }
+    finally { setSaving(false); }
+  };
+
+  const handleDelete = async (id) => {
+    if (!confirm('Delete this season pass?')) return;
+    await fetch(`${API_URL}/season-pass/${id}`, { method: 'DELETE', credentials: 'include' });
+    load();
+  };
+
+  const toggleActive = async (pass) => {
+    const res = await fetch(`${API_URL}/season-pass/${pass._id}`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' },
+      credentials: 'include', body: JSON.stringify({ isActive: !pass.isActive })
+    });
+    const data = await res.json();
+    if (data.success) load();
+  };
+
+  // Level reward helpers
+  const updateLevelReward = (lvl, tier, field, value) => {
+    setForm(prev => {
+      const levels = [...(prev.levels || [])];
+      let entry = levels.find(l => l.level === lvl);
+      if (!entry) {
+        entry = { level: lvl, free: { type: 'none', label: '', value: null }, premium: { type: 'none', label: '', value: null } };
+        levels.push(entry);
+      } else {
+        entry = { ...entry };
+        levels[levels.findIndex(l => l.level === lvl)] = entry;
+      }
+      entry[tier] = { ...(entry[tier] || {}), [field]: value };
+      return { ...prev, levels };
+    });
+  };
+
+  const getLevelReward = (lvl, tier) => {
+    const entry = form.levels?.find(l => l.level === lvl);
+    return entry?.[tier] || { type: 'none', label: '', value: '' };
+  };
+
+  if (editing) {
+    const totalLevels = Number(form.totalLevels) || 0;
+    const levelNums = Array.from({ length: totalLevels }, (_, i) => i + 1);
+
+    return (
+      <div className="rd-season">
+        <button className="rd-back" onClick={() => setEditing(null)}>← Back to passes</button>
+        <div className="rd-section-label">{editing === 'new' ? 'New Season Pass' : `Edit: ${form.name}`}</div>
+
+        {/* Basic settings */}
+        <div className="rd-season-form-grid">
+          <div className="rd-field">
+            <label>Name</label>
+            <input className="rd-input" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} placeholder="e.g. Cyber Surge" maxLength={60} />
+          </div>
+          <div className="rd-field">
+            <label>Total Levels</label>
+            <input className="rd-input" type="number" min={1} max={100} value={form.totalLevels}
+              onChange={e => setForm(p => ({ ...p, totalLevels: Number(e.target.value) }))} />
+          </div>
+          <div className="rd-field">
+            <label>XP per Level</label>
+            <input className="rd-input" type="number" min={1} value={form.xpPerLevel}
+              onChange={e => setForm(p => ({ ...p, xpPerLevel: Number(e.target.value) }))} />
+          </div>
+          <div className="rd-field rd-field--check">
+            <label>
+              <input type="checkbox" checked={form.hasPremium} onChange={e => setForm(p => ({ ...p, hasPremium: e.target.checked }))} />
+              Has Premium Track
+            </label>
+          </div>
+          {form.hasPremium && (
+            <div className="rd-field">
+              <label>Premium Cost (Gold)</label>
+              <input className="rd-input" type="number" min={0} value={form.premiumCost}
+                onChange={e => setForm(p => ({ ...p, premiumCost: Number(e.target.value) }))} />
+            </div>
+          )}
+          <div className="rd-field rd-field--check">
+            <label>
+              <input type="checkbox" checked={form.isActive} onChange={e => setForm(p => ({ ...p, isActive: e.target.checked }))} />
+              Active (only one can be active)
+            </label>
+          </div>
+        </div>
+
+        {/* Level rewards */}
+        {totalLevels > 0 && (
+          <div className="rd-season-levels">
+            <div className="rd-section-label" style={{ marginTop: 16 }}>Level Rewards</div>
+            <div className="rd-season-levels-header">
+              <span>Lvl</span>
+              {form.hasPremium && <span>Premium Reward</span>}
+              <span>Free Reward</span>
+            </div>
+            {levelNums.map(lvl => (
+              <div key={lvl} className="rd-season-level-row">
+                <span className="rd-season-lvl-num">{lvl}</span>
+                {form.hasPremium && (
+                  <div className="rd-season-reward-inputs">
+                    <select className="rd-input rd-input--sm"
+                      value={getLevelReward(lvl, 'premium').type}
+                      onChange={e => updateLevelReward(lvl, 'premium', 'type', e.target.value)}>
+                      <option value="none">None</option>
+                      <option value="gold">Gold</option>
+                      <option value="item">Item</option>
+                      <option value="frame">Frame</option>
+                      <option value="nameEffect">Name Effect</option>
+                    </select>
+                    {getLevelReward(lvl, 'premium').type !== 'none' && (
+                      <>
+                        <input className="rd-input rd-input--sm" placeholder="Label" maxLength={40}
+                          value={getLevelReward(lvl, 'premium').label || ''}
+                          onChange={e => updateLevelReward(lvl, 'premium', 'label', e.target.value)} />
+                        <input className="rd-input rd-input--sm" placeholder="Value (e.g. 50 for gold)"
+                          value={getLevelReward(lvl, 'premium').value || ''}
+                          onChange={e => updateLevelReward(lvl, 'premium', 'value', e.target.value)} />
+                      </>
+                    )}
+                  </div>
+                )}
+                <div className="rd-season-reward-inputs">
+                  <select className="rd-input rd-input--sm"
+                    value={getLevelReward(lvl, 'free').type}
+                    onChange={e => updateLevelReward(lvl, 'free', 'type', e.target.value)}>
+                    <option value="none">None</option>
+                    <option value="gold">Gold</option>
+                    <option value="item">Item</option>
+                    <option value="frame">Frame</option>
+                    <option value="nameEffect">Name Effect</option>
+                  </select>
+                  {getLevelReward(lvl, 'free').type !== 'none' && (
+                    <>
+                      <input className="rd-input rd-input--sm" placeholder="Label" maxLength={40}
+                        value={getLevelReward(lvl, 'free').label || ''}
+                        onChange={e => updateLevelReward(lvl, 'free', 'label', e.target.value)} />
+                      <input className="rd-input rd-input--sm" placeholder="Value (e.g. 50 for gold)"
+                        value={getLevelReward(lvl, 'free').value || ''}
+                        onChange={e => updateLevelReward(lvl, 'free', 'value', e.target.value)} />
+                    </>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {msg && <div className={`rd-msg ${msg.includes('!') ? 'success' : 'error'}`}>{msg}</div>}
+        <button className="rd-primary-btn" onClick={handleSave} disabled={saving}>
+          {saving ? 'Saving...' : (editing === 'new' ? 'Create Pass' : 'Save Changes')}
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rd-season">
+      <div className="rd-toolbar">
+        <div className="rd-section-label" style={{ margin: 0 }}><Zap size={13} /> Season Passes</div>
+        <button className="rd-primary-btn" style={{ marginTop: 0 }} onClick={openNew}>
+          <Plus size={14} /> New Pass
+        </button>
+      </div>
+
+      {loading ? <div className="rd-loading">Loading...</div>
+        : passes.length === 0 ? <div className="rd-empty">No season passes yet.</div>
+        : (
+          <div className="rd-season-list">
+            {passes.map(pass => (
+              <div key={pass._id} className={`rd-season-item ${pass.isActive ? 'active' : ''}`}>
+                <div className="rd-season-item-left">
+                  <div className="rd-season-item-name">
+                    {pass.name}
+                    <span className="rd-season-num">#{pass.number}</span>
+                  </div>
+                  <div className="rd-season-item-meta">
+                    {pass.totalLevels} levels · {pass.xpPerLevel} XP/lvl
+                    {pass.hasPremium && ` · Premium: ${pass.premiumCost}g`}
+                  </div>
+                </div>
+                <div className="rd-season-item-right">
+                  <button
+                    className={`rd-season-active-btn ${pass.isActive ? 'is-active' : ''}`}
+                    onClick={() => toggleActive(pass)}
+                    title={pass.isActive ? 'Deactivate' : 'Set as active'}
+                  >
+                    {pass.isActive ? 'Active' : 'Inactive'}
+                  </button>
+                  <button className="rd-icon-btn" onClick={() => openEdit(pass)} title="Edit">
+                    <Pencil size={15} />
+                  </button>
+                  <button className="rd-icon-btn danger" onClick={() => handleDelete(pass._id)} title="Delete">
+                    <Trash2 size={15} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+      {/* Test XP */}
+      <div className="rd-season-testxp">
+        <div className="rd-section-label" style={{ margin: '0 0 8px' }}>
+          Add Pass XP (test only — no account XP)
+        </div>
+        <div className="rd-feature-row">
+          <input
+            className="rd-input"
+            type="number"
+            min={1}
+            placeholder="XP amount"
+            value={testXpAmount}
+            onChange={e => { setTestXpAmount(e.target.value); setTestXpMsg(''); }}
+          />
+          <button
+            className="rd-primary-btn"
+            style={{ marginTop: 0 }}
+            onClick={handleAddTestXP}
+            disabled={testXpLoading || !testXpAmount}
+          >
+            {testXpLoading ? 'Adding...' : 'Add XP'}
+          </button>
+        </div>
+        {testXpMsg && (
+          <div className={`rd-msg ${testXpMsg.startsWith('✓') ? 'success' : 'error'}`}>{testXpMsg}</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Main Dashboard ─── */
 const TABS = [
   { id: 'support',   label: 'Support',    icon: Users },
@@ -1059,6 +1373,7 @@ const TABS = [
   { id: 'planner',   label: 'Planner',    icon: ClipboardList },
   { id: 'stats',     label: 'Stats',      icon: BarChart2 },
   { id: 'terms',     label: 'Terms',      icon: ScrollText },
+  { id: 'season',    label: 'Season',     icon: Zap },
 ];
 
 export default function RootDashboard() {
@@ -1102,6 +1417,7 @@ export default function RootDashboard() {
             {activeTab === 'planner'   && <PlannerPanel />}
             {activeTab === 'stats'     && <StatsPanel />}
             {activeTab === 'terms'     && <TermsPanel />}
+            {activeTab === 'season'    && <SeasonPanel />}
           </main>
         </div>
       </div>

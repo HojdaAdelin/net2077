@@ -1,0 +1,27 @@
+import mongoose from 'mongoose';
+
+const rewardSchema = new mongoose.Schema({
+  type: { type: String, enum: ['gold', 'item', 'frame', 'nameEffect', 'none'], default: 'none' },
+  label: { type: String, default: '' },
+  value: { type: mongoose.Schema.Types.Mixed, default: null }, // gold amount, itemId, frameKey, etc.
+  icon: { type: String, default: '' },
+}, { _id: false });
+
+const levelRewardSchema = new mongoose.Schema({
+  level: { type: Number, required: true },
+  free: rewardSchema,
+  premium: rewardSchema,
+}, { _id: false });
+
+const seasonPassSchema = new mongoose.Schema({
+  number: { type: Number, required: true, unique: true },
+  name: { type: String, required: true },
+  isActive: { type: Boolean, default: false },
+  hasPremium: { type: Boolean, default: true },
+  premiumCost: { type: Number, default: 200 }, // gold to unlock premium
+  totalLevels: { type: Number, default: 10 },
+  xpPerLevel: { type: Number, default: 100 },
+  levels: [levelRewardSchema],
+}, { timestamps: true });
+
+export default mongoose.model('SeasonPass', seasonPassSchema);

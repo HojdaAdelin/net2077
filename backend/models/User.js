@@ -122,6 +122,16 @@ const userSchema = new mongoose.Schema({
     totalGoldEarned: { type: Number, default: 0 }
   },
   lastSeenVersion: { type: String, default: null },
+  seasonPass: {
+    passId: { type: mongoose.Schema.Types.ObjectId, ref: 'SeasonPass', default: null },
+    xp: { type: Number, default: 0 },
+    level: { type: Number, default: 0 },
+    isPremium: { type: Boolean, default: false },
+    claimedLevels: {
+      free: [{ type: Number }],
+      premium: [{ type: Number }],
+    },
+  },
   dailyActivity: [{
     date: { type: String, required: true },   // 'YYYY-MM-DD'
     count: { type: Number, default: 0 }

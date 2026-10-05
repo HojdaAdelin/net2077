@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import CompetitivePeriod from '../models/CompetitivePeriod.js';
 import InboxMessage from '../models/InboxMessage.js';
+import { trackSeasonPassXP } from './seasonPassController.js';
 
 // Get next reset time (19:00 every 24h)
 const getNextResetTime = () => {
@@ -234,6 +235,9 @@ export const trackCompetitiveXP = async (userId, xpGained) => {
     
     user.competitiveStats.currentPeriodXP += xpGained;
     await user.save();
+
+    // Also track season pass XP
+    await trackSeasonPassXP(userId, xpGained);
   } catch (error) {
     console.error('[Competitive] Error tracking XP:', error);
   }

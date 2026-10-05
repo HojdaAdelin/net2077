@@ -6,6 +6,7 @@ import { API_URL } from '../config';
 import SeasonBox from '../components/SeasonBox';
 import AvatarFrame from '../components/AvatarFrame';
 import NameEffectRenderer from '../components/NameEffectRenderer';
+import SeasonPassTrack from '../components/SeasonPassTrack';
 import '../styles/AvatarFrame.css';
 import '../styles/NameEffects.css';
 import '../styles/Season.css';
@@ -146,6 +147,9 @@ export default function Season() {
             ) : null}
           </div>
         </div>
+
+        {/* Season Pass Track */}
+        <SeasonPassTrack />
 
       </div>
     </div>
