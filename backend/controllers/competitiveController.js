@@ -78,6 +78,14 @@ export const checkAndResetPeriod = async () => {
     }
     
     if (now >= activePeriod.endDate && !activePeriod.rewardsDistributed) {
+      
+      const claimedPeriod = await CompetitivePeriod.findOneAndUpdate(
+        { _id: activePeriod._id, rewardsDistributed: false },
+        { $set: { rewardsDistributed: true } },
+        { new: true }
+      );
+      if (!claimedPeriod) return; 
+
       console.log('[Competitive] Period ended, distributing rewards...');
       
       const topUsers = await User.find({ 'competitiveStats.currentPeriodXP': { $gt: 0 } })
@@ -116,8 +124,8 @@ export const checkAndResetPeriod = async () => {
           recipientId: user._id,
           recipientUsername: user.username,
           sender: 'NET2077 System',
-          title: `${rankEmojis[i]} Competitive Season #${activePeriod.periodNumber} - Rank ${i + 1}`,
-          description: `Congratulations! You finished Rank ${i + 1} in Competitive Season #${activePeriod.periodNumber}!\n\n🏆 Reward: ${goldAwarded} Gold\n\nYour gold has been added to your account. Keep up the great work in the next season!`
+          title: `${rankEmojis[i]} Competitive Season #${claimedPeriod.periodNumber} - Rank ${i + 1}`,
+          description: `Congratulations! You finished Rank ${i + 1} in Competitive Season #${claimedPeriod.periodNumber}!\n\n🏆 Reward: ${goldAwarded} Gold\n\nYour gold has been added to your account. Keep up the great work in the next season!`
         });
         
         await inboxMessage.save();
@@ -138,17 +146,17 @@ export const checkAndResetPeriod = async () => {
         { $set: { 'competitiveStats.currentPeriodXP': 0 } }
       );
       
-      activePeriod.winners = winners;
-      activePeriod.rewardsDistributed = true;
-      activePeriod.isActive = false;
-      await activePeriod.save();
+      claimedPeriod.winners = winners;
+      claimedPeriod.rewardsDistributed = true;
+      claimedPeriod.isActive = false;
+      await claimedPeriod.save();
      
       // Calculate next reset time (next day at 19:00)
-      const newPeriodStart = activePeriod.endDate;
+      const newPeriodStart = claimedPeriod.endDate;
       const newPeriodEnd = getNextResetTime(); // Use the function to get next 19:00
       
       const newPeriod = new CompetitivePeriod({
-        periodNumber: activePeriod.periodNumber + 1,
+        periodNumber: claimedPeriod.periodNumber + 1,
         startDate: newPeriodStart,
         endDate: newPeriodEnd,
         isActive: true
