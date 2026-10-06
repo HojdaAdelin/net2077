@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import {
   Zap, Lock, Crown, Coins, Gift, X,
-  ChevronLeft, ChevronRight, CheckCircle, LogIn, Ticket, ShieldCheck,
+  ChevronLeft, ChevronRight, LogIn, Ticket, ShieldCheck,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -79,6 +79,8 @@ export default function SeasonPassTrack() {
 
   const xpInLevel  = userXP - userLevel * xpPerLevel;
   const xpPct      = Math.min((xpInLevel / xpPerLevel) * 100, 100);
+  const isMaxLevel = userLevel >= pass.totalLevels;
+  const maxXP      = pass.totalLevels * xpPerLevel;
 
   const getReward  = (lvl, tier) => pass.levels?.find(l => l.level === lvl)?.[tier] ?? null;
   const isClaimed  = (lvl, tier) => (tier === 'free' ? claimedFree : claimedPrem).includes(lvl);
@@ -190,10 +192,12 @@ export default function SeasonPassTrack() {
           {/* XP bar */}
           <div className="spt-xp-block">
             <div className="spt-xp-bar-wrap">
-              <div className="spt-xp-bar-fill" style={{ width: `${xpPct}%` }} />
-              <span className="spt-xp-bar-label">{xpInLevel} / {xpPerLevel} XP</span>
+              <div className="spt-xp-bar-fill" style={{ width: isMaxLevel ? '100%' : `${xpPct}%` }} />
             </div>
-            <span className="spt-xp-next">→ Level {userLevel + 1}</span>
+            {isMaxLevel
+              ? <span className="spt-xp-next spt-xp-maxed">Max Level</span>
+              : <span className="spt-xp-next">→ Level {userLevel + 1}</span>
+            }
           </div>
         </div>
 
@@ -254,11 +258,13 @@ export default function SeasonPassTrack() {
 
             <div className="spt-modal-xp">
               <div className="spt-modal-xp-track">
-                <div className="spt-modal-xp-fill" style={{ width: `${xpPct}%` }} />
+                <div className="spt-modal-xp-fill" style={{ width: isMaxLevel ? '100%' : `${xpPct}%` }} />
               </div>
               <div className="spt-modal-xp-labels">
-                <span>{xpInLevel} / {xpPerLevel} XP</span>
-                <span>Next: Level {userLevel + 1}</span>
+                {isMaxLevel
+                  ? <><span>{maxXP.toLocaleString()} XP</span><span className="spt-maxed-label">Max Level Reached</span></>
+                  : <><span>{xpInLevel} / {xpPerLevel} XP</span><span>Next: Level {userLevel + 1}</span></>
+                }
               </div>
             </div>
 
@@ -278,7 +284,11 @@ export default function SeasonPassTrack() {
                       const unlocked    = userLevel >= lvl;
                       const key         = `${lvl}-premium`;
                       return (
-                        <div key={lvl} className={`spt-cell premium ${unlocked ? 'unlocked' : ''} ${claimed ? 'claimed' : ''} ${lvl === userLevel + 1 ? 'next' : ''}`}>
+                        <div
+                          key={lvl}
+                          className={`spt-cell premium ${unlocked ? 'unlocked' : ''} ${claimed ? 'claimed' : ''} ${lvl === userLevel + 1 ? 'next' : ''} ${collectable ? 'collectable' : ''}`}
+                          onClick={collectable ? () => handleCollect(lvl, 'premium') : undefined}
+                        >
                           {reward && reward.type !== 'none' ? (
                             <>
                               <div className={`spt-cell-reward ${!isPremium ? 'dimmed' : ''}`}>
@@ -286,11 +296,10 @@ export default function SeasonPassTrack() {
                               </div>
                               {!isPremium && <div className="spt-lock-overlay"><Lock size={11} /></div>}
                               {collectable && (
-                                <button className="spt-collect-btn" onClick={() => handleCollect(lvl, 'premium')} disabled={collecting === key}>
-                                  {collecting === key ? '...' : 'Collect'}
-                                </button>
+                                <div className="spt-collect-overlay">
+                                  {collecting === key ? <span className="spt-collecting-dots" /> : <span className="spt-collect-label">Collect</span>}
+                                </div>
                               )}
-                              {claimed && <div className="spt-claimed"><CheckCircle size={12} /></div>}
                             </>
                           ) : (
                             <>
@@ -305,24 +314,26 @@ export default function SeasonPassTrack() {
                 </div>
               )}
 
-              {/* Level markers */}
-              <div className="spt-row spt-row-levels">
-                <div className="spt-row-label spt-lbl-lvl">Lvl</div>
-                <div className="spt-cells">
-                  {visibleLvls.map(lvl => {
-                    const unlocked  = userLevel >= lvl;
-                    const isCurrent = userLevel + 1 === lvl;
-                    return (
-                      <div key={lvl} className={`spt-lvl-marker ${unlocked ? 'unlocked' : ''} ${isCurrent ? 'current' : ''}`}>
-                        {!unlocked && <div className="spt-lvl-bubble">{lvl}</div>}
-                      </div>
-                    );
-                  })}
+              {/* Level markers — above free when premium exists, below free when no premium */}
+              {pass.hasPremium && (
+                <div className="spt-row spt-row-levels">
+                  <div className="spt-row-label spt-lbl-lvl">Lvl</div>
+                  <div className="spt-cells">
+                    {visibleLvls.map(lvl => {
+                      const unlocked  = userLevel >= lvl;
+                      const isCurrent = userLevel + 1 === lvl;
+                      return (
+                        <div key={lvl} className={`spt-lvl-marker ${unlocked ? 'unlocked' : ''} ${isCurrent ? 'current' : ''}`}>
+                          <div className="spt-lvl-bubble">{lvl}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Free row */}
-              <div className="spt-row spt-row-free">
+              <div className={`spt-row spt-row-free ${!pass.hasPremium ? 'spt-row-free--solo' : ''}`}>
                 <div className="spt-row-label">
                   <Gift size={11} className="spt-lbl-gift" />
                   <span>Free</span>
@@ -335,18 +346,21 @@ export default function SeasonPassTrack() {
                     const unlocked    = userLevel >= lvl;
                     const key         = `${lvl}-free`;
                     return (
-                      <div key={lvl} className={`spt-cell free ${unlocked ? 'unlocked' : ''} ${claimed ? 'claimed' : ''} ${lvl === userLevel + 1 ? 'next' : ''}`}>
+                      <div
+                        key={lvl}
+                        className={`spt-cell free ${unlocked ? 'unlocked' : ''} ${claimed ? 'claimed' : ''} ${lvl === userLevel + 1 ? 'next' : ''} ${collectable ? 'collectable' : ''}`}
+                        onClick={collectable ? () => handleCollect(lvl, 'free') : undefined}
+                      >
                         {reward && reward.type !== 'none' ? (
                           <>
                             <div className="spt-cell-reward">
                               <RewardIcon reward={reward} />
                             </div>
                             {collectable && (
-                              <button className="spt-collect-btn" onClick={() => handleCollect(lvl, 'free')} disabled={collecting === key}>
-                                {collecting === key ? '...' : 'Collect'}
-                              </button>
+                              <div className="spt-collect-overlay">
+                                {collecting === key ? <span className="spt-collecting-dots" /> : <span className="spt-collect-label">Collect</span>}
+                              </div>
                             )}
-                            {claimed && <div className="spt-claimed"><CheckCircle size={12} /></div>}
                           </>
                         ) : (
                           <span className="spt-dash">—</span>
@@ -356,6 +370,24 @@ export default function SeasonPassTrack() {
                   })}
                 </div>
               </div>
+
+              {/* Level markers below free when no premium track */}
+              {!pass.hasPremium && (
+                <div className="spt-row spt-row-levels spt-row-levels--below">
+                  <div className="spt-row-label spt-lbl-lvl">Lvl</div>
+                  <div className="spt-cells">
+                    {visibleLvls.map(lvl => {
+                      const unlocked  = userLevel >= lvl;
+                      const isCurrent = userLevel + 1 === lvl;
+                      return (
+                        <div key={lvl} className={`spt-lvl-marker ${unlocked ? 'unlocked' : ''} ${isCurrent ? 'current' : ''}`}>
+                          <div className="spt-lvl-bubble">{lvl}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
 
             {totalPages > 1 && (

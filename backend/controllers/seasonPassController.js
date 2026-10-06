@@ -242,6 +242,8 @@ export const addTestXP = async (req, res) => {
     }
 
     target.seasonPass.xp = (target.seasonPass.xp || 0) + xp;
+    const maxXP_ = pass.totalLevels * pass.xpPerLevel;
+    target.seasonPass.xp = Math.min(target.seasonPass.xp, maxXP_);
     target.seasonPass.level = Math.min(Math.floor(target.seasonPass.xp / pass.xpPerLevel), pass.totalLevels);
     target.markModified('seasonPass');
     await target.save();
@@ -276,6 +278,8 @@ export const trackSeasonPassXP = async (userId, xpGained) => {
     }
 
     user.seasonPass.xp = (user.seasonPass.xp || 0) + xpGained;
+    const maxXP   = pass.totalLevels * pass.xpPerLevel;
+    user.seasonPass.xp = Math.min(user.seasonPass.xp, maxXP);
     const newLevel = Math.min(Math.floor(user.seasonPass.xp / pass.xpPerLevel), pass.totalLevels);
     user.seasonPass.level = newLevel;
     user.markModified('seasonPass');
