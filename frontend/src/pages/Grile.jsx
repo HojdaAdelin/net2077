@@ -93,7 +93,7 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
     { id: 'CHAPTER15', label: 'Chapter 12 - Embedded Systems' }
   ];
 
-  const showChapterFilter = type === 'all' && selectedTag === 'LINUX' && selectedMode === 'unsolved';
+  const showChapterFilter = type === 'all' && selectedTag === 'LINUX' && (selectedMode === 'unsolved' || selectedMode === 'all');
 
   const toggleChapter = (chapterId) => {
     setSelectedChapters(prev => 
@@ -158,13 +158,15 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
           <div className="modal-section">
             <h3 className="section-title">Quiz Mode</h3>
             <div className="mode-options">
-              <button 
-                className={`mode-option ${selectedMode === 'unsolved' ? 'selected' : ''}`}
-                onClick={() => setSelectedMode('unsolved')}
-              >
-                <div className="mode-title">Unsolved Questions</div>
-                <div className="mode-desc">Practice questions you haven't answered yet</div>
-              </button>
+              {user && (
+                <button 
+                  className={`mode-option ${selectedMode === 'unsolved' ? 'selected' : ''}`}
+                  onClick={() => setSelectedMode('unsolved')}
+                >
+                  <div className="mode-title">Unsolved Questions</div>
+                  <div className="mode-desc">Practice questions you haven't answered yet</div>
+                </button>
+              )}
               
               <button 
                 className={`mode-option ${selectedMode === 'all' ? 'selected' : ''}`}
@@ -188,31 +190,6 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
                 You need an account to track unsolved questions.
               </p>
             )}
-          </div>
-        )}
-
-        {showChapterFilter && (
-          <div className="modal-section">
-            <h3 className="section-title">
-              Chapter <span className="optional-label">(optional)</span>
-            </h3>
-            <div className="chapter-tags-grid">
-              {chapterTags.map(chapter => (
-                <button
-                  key={chapter.id}
-                  className={`chapter-tag ${selectedChapters.includes(chapter.id) ? 'selected' : ''}`}
-                  onClick={() => toggleChapter(chapter.id)}
-                >
-                  {chapter.label}
-                </button>
-              ))}
-            </div>
-            <p className="tag-helper">
-              {selectedChapters.length === 0 
-                ? 'Optional: select one or more chapters to filter questions.'
-                : `${selectedChapters.length} chapter${selectedChapters.length > 1 ? 's' : ''} selected`
-              }
-            </p>
           </div>
         )}
 
@@ -244,6 +221,31 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
                 Optional: narrow down to Linux or Network questions.
               </p>
             )}
+          </div>
+        )}
+
+        {showChapterFilter && (
+          <div className="modal-section">
+            <h3 className="section-title">
+              Chapter <span className="optional-label">(optional)</span>
+            </h3>
+            <div className="chapter-tags-grid">
+              {chapterTags.map(chapter => (
+                <button
+                  key={chapter.id}
+                  className={`chapter-tag ${selectedChapters.includes(chapter.id) ? 'selected' : ''}`}
+                  onClick={() => toggleChapter(chapter.id)}
+                >
+                  {chapter.label}
+                </button>
+              ))}
+            </div>
+            <p className="tag-helper">
+              {selectedChapters.length === 0 
+                ? 'Optional: select one or more chapters to filter questions.'
+                : `${selectedChapters.length} chapter${selectedChapters.length > 1 ? 's' : ''} selected`
+              }
+            </p>
           </div>
         )}
 

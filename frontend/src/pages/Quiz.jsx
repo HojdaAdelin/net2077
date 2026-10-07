@@ -794,14 +794,58 @@ export default function Quiz({ isExam = false }) {
     );
   }
 
-  if (displayedQuestions.length === 0 && !loading) {
+  if (displayedQuestions.length === 0 && !loading && questions.length > 0) {
+    // Difficulty filter returned no results — stay on page, show inline message
+    const currentQuestion = null;
+    const { totalPoints, maxPoints } = calculateScore();
+    const percentage = maxPoints > 0 ? Math.round((totalPoints / maxPoints) * 100) : 0;
+    const totalExamQuestions = examMeta?.questionCount || questions.length;
+
     return (
-      <div className="container quiz-page">
-        <div className="empty-quiz">
-          <h2>No questions available</h2>
-          <button onClick={isExam ? handleExitExam : () => navigate('/grile')} className="btn btn-primary">
-            {isExam ? 'Back to Exams' : 'Back to Questions'}
-          </button>
+      <div className="quiz-page">
+        <div className="quiz-container">
+          <div className="quiz-sidebar">
+            <div className="quiz-progress">
+              <h3>Progress</h3>
+              <div className="progress-info">
+                <span>0 questions</span>
+              </div>
+            </div>
+            {canFilterDifficulty && (
+              <div className="adv-filter-wrap">
+                <button
+                  className={`adv-filter-toggle ${difficultyOpen ? 'open' : ''}`}
+                  onClick={() => setDifficultyOpen(v => !v)}
+                >
+                  <span>Advanced filtering</span>
+                  <ChevronRight size={14} className="adv-filter-chevron" />
+                </button>
+                {difficultyOpen && (
+                  <div className="adv-filter-options">
+                    {['easy', 'medium', 'hard'].map(d => (
+                      <button
+                        key={d}
+                        className={`adv-filter-btn adv-filter-${d} ${difficultyFilter === d ? 'active' : ''}`}
+                        onClick={() => {
+                          setDifficultyFilter(prev => prev === d ? null : d);
+                          setCurrentIndex(0);
+                          setSidebarPage(0);
+                        }}
+                      >
+                        {d.charAt(0).toUpperCase() + d.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+          <div className="quiz-content">
+            <div className="empty-quiz-inline">
+              <h2>No questions available</h2>
+              <p>No questions match the selected difficulty. Try a different filter.</p>
+            </div>
+          </div>
         </div>
       </div>
     );
