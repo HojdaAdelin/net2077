@@ -147,8 +147,24 @@ export const collectReward = async (req, res) => {
     if (reward && reward.type !== 'none') {
       if (reward.type === 'gold') {
         user.gold = (user.gold || 0) + Number(reward.value || 0);
+      } else if (reward.type === 'frame') {
+        // Add frame to user's owned frames
+        if (!user.frames) user.frames = { owned: [], active: null };
+        if (!user.frames.owned) user.frames.owned = [];
+        const frameKey = reward.value;
+        if (frameKey && !user.frames.owned.includes(frameKey)) {
+          user.frames.owned.push(frameKey);
+        }
+      } else if (reward.type === 'nameEffect') {
+        // Add name effect to user's owned effects
+        if (!user.nameEffects) user.nameEffects = { owned: [], active: null };
+        if (!user.nameEffects.owned) user.nameEffects.owned = [];
+        const effectKey = reward.value;
+        if (effectKey && !user.nameEffects.owned.includes(effectKey)) {
+          user.nameEffects.owned.push(effectKey);
+        }
       }
-      // Other reward types (frame, nameEffect, item) can be implemented later
+      // Other reward types (item) can be implemented later
     }
 
     // Mark as claimed

@@ -1150,6 +1150,16 @@ function SeasonPanel() {
     if (data.success) load();
   };
 
+  // Available frames for selection
+  const AVAILABLE_FRAMES = [
+    { key: 'silver-season1', label: 'Silver Season 1' },
+    { key: 'gold-season1', label: 'Gold Season 1' },
+    { key: 'diamond-season1', label: 'Diamond Season 1' },
+    { key: 'gold-phase1', label: 'Gold Phase 1' },
+    { key: 'gold-phase2', label: 'Gold Phase 2' },
+    { key: 'gold-phase3', label: 'Gold Phase 3' },
+  ];
+
   // Level reward helpers
   const updateLevelReward = (lvl, tier, field, value) => {
     setForm(prev => {
@@ -1246,9 +1256,21 @@ function SeasonPanel() {
                         <input className="rd-input rd-input--sm" placeholder="Label" maxLength={40}
                           value={getLevelReward(lvl, 'premium').label || ''}
                           onChange={e => updateLevelReward(lvl, 'premium', 'label', e.target.value)} />
-                        <input className="rd-input rd-input--sm" placeholder="Value (e.g. 50 for gold)"
-                          value={getLevelReward(lvl, 'premium').value || ''}
-                          onChange={e => updateLevelReward(lvl, 'premium', 'value', e.target.value)} />
+                        {getLevelReward(lvl, 'premium').type === 'frame' ? (
+                          <select className="rd-input rd-input--sm"
+                            value={getLevelReward(lvl, 'premium').value || ''}
+                            onChange={e => updateLevelReward(lvl, 'premium', 'value', e.target.value)}>
+                            <option value="">Select frame...</option>
+                            {AVAILABLE_FRAMES.map(f => (
+                              <option key={f.key} value={f.key}>{f.label}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input className="rd-input rd-input--sm" 
+                            placeholder={getLevelReward(lvl, 'premium').type === 'gold' ? 'Amount (e.g. 50)' : 'Value/ID'}
+                            value={getLevelReward(lvl, 'premium').value || ''}
+                            onChange={e => updateLevelReward(lvl, 'premium', 'value', e.target.value)} />
+                        )}
                       </>
                     )}
                   </div>
@@ -1268,9 +1290,21 @@ function SeasonPanel() {
                       <input className="rd-input rd-input--sm" placeholder="Label" maxLength={40}
                         value={getLevelReward(lvl, 'free').label || ''}
                         onChange={e => updateLevelReward(lvl, 'free', 'label', e.target.value)} />
-                      <input className="rd-input rd-input--sm" placeholder="Value (e.g. 50 for gold)"
-                        value={getLevelReward(lvl, 'free').value || ''}
-                        onChange={e => updateLevelReward(lvl, 'free', 'value', e.target.value)} />
+                      {getLevelReward(lvl, 'free').type === 'frame' ? (
+                        <select className="rd-input rd-input--sm"
+                          value={getLevelReward(lvl, 'free').value || ''}
+                          onChange={e => updateLevelReward(lvl, 'free', 'value', e.target.value)}>
+                          <option value="">Select frame...</option>
+                          {AVAILABLE_FRAMES.map(f => (
+                            <option key={f.key} value={f.key}>{f.label}</option>
+                          ))}
+                        </select>
+                      ) : (
+                        <input className="rd-input rd-input--sm" 
+                          placeholder={getLevelReward(lvl, 'free').type === 'gold' ? 'Amount (e.g. 50)' : 'Value/ID'}
+                          value={getLevelReward(lvl, 'free').value || ''}
+                          onChange={e => updateLevelReward(lvl, 'free', 'value', e.target.value)} />
+                      )}
                     </>
                   )}
                 </div>

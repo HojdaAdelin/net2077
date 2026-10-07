@@ -10,11 +10,22 @@ import '../styles/SeasonPassTrack.css';
 
 function RewardIcon({ reward, size = 15 }) {
   if (!reward || reward.type === 'none') return <span className="spt-dash">—</span>;
+  
+  if (reward.type === 'frame') {
+    return (
+      <div className="spt-reward-frame">
+        <div className="spt-frame-preview">
+          <img src={`/${reward.value}.png`} alt={reward.label} className="spt-frame-img" />
+        </div>
+        <span className="spt-frame-label">{reward.label}</span>
+      </div>
+    );
+  }
+  
   return (
     <div className="spt-reward-content">
       {reward.type === 'gold'       && <Coins  size={size} className="spt-icon-gold"   />}
       {reward.type === 'item'       && <Gift   size={size} className="spt-icon-item"   />}
-      {reward.type === 'frame'      && <Crown  size={size} className="spt-icon-frame"  />}
       {reward.type === 'nameEffect' && <Zap    size={size} className="spt-icon-effect" />}
       <span>{reward.label || reward.value || '?'}</span>
     </div>

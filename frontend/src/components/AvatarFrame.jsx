@@ -8,7 +8,14 @@ function frameSrc(frameKey) {
 }
 
 // Preload all known season frames at module import time
-const KNOWN_FRAMES = ['silver-season1', 'gold-season1', 'diamond-season1'];
+const KNOWN_FRAMES = [
+  'silver-season1', 
+  'gold-season1', 
+  'diamond-season1',
+  'gold-phase1',
+  'gold-phase2',
+  'gold-phase3'
+];
 KNOWN_FRAMES.forEach((key) => {
   const img = new Image();
   img.src = frameSrc(key);
