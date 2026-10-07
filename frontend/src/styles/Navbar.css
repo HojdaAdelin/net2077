@@ -287,34 +287,54 @@
 
 @media (max-width: 768px) {
   .nav-auth {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 8px;
+    align-items: center;
+    justify-content: center;
   }
-  
+
   .language-selector {
     order: -1;
-  }
-  
-  .profile-selector {
-    order: 1;
     width: 100%;
   }
-  
+
+  .profile-selector {
+    order: 2;
+    width: 100%;
+  }
+
   .profile-btn {
     width: 100%;
     justify-content: space-between;
   }
-  
+
   .inbox-container {
-    order: 2;
+    order: 3;
     width: 100%;
   }
-  
+
   .inbox-btn {
     width: 100%;
     justify-content: center;
   }
-  
+
+  .theme-btn {
+    order: 1;
+  }
+
+  .inventory-container {
+    order: 1;
+  }
+
+  .streak-indicator {
+    order: 1;
+  }
+
+  .build-note-indicator {
+    order: 1;
+  }
+
   .lang-dropdown,
   .profile-dropdown {
     position: static;
@@ -863,7 +883,7 @@
   }
 
   .inventory-container {
-    order: 3;
+    order: 1;
   }
 }
 
