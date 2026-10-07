@@ -73,6 +73,23 @@
   flex: 1;
 }
 
+.saved-modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.saved-modal-body::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+.saved-modal-body::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.saved-modal-body::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}
+
 .saved-empty {
   text-align: center;
   color: var(--text-muted);

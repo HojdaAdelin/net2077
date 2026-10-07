@@ -730,6 +730,23 @@
   overflow-y: auto;
 }
 
+.inventory-items::-webkit-scrollbar {
+  width: 6px;
+}
+
+.inventory-items::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+.inventory-items::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.inventory-items::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}
+
 .inventory-item {
   display: flex;
   align-items: center;

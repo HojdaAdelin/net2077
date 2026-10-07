@@ -51,6 +51,16 @@ export const markAsRead = async (req, res) => {
   }
 };
 
+export const deleteAllMessages = async (req, res) => {
+  try {
+    await InboxMessage.deleteMany({ recipientId: req.userId });
+    res.json({ message: 'All messages deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting all messages:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 export const deleteMessage = async (req, res) => {
   try {
     const { messageId } = req.params;

@@ -111,6 +111,31 @@ export default function InboxDropdown({ isOpen, onClose, onMessageClick }) {
     }
   };
 
+  const handleDeleteAll = async () => {
+    if (messages.length === 0) return;
+
+    const confirmed = await showConfirm({
+      title: "Delete All Messages",
+      message: "Are you sure you want to delete all messages? This action cannot be undone.",
+      confirmText: "Delete All",
+      cancelText: "Cancel",
+      type: "danger"
+    });
+
+    if (!confirmed) return;
+
+    try {
+      await fetch(`${API_URL}/inbox`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      setMessages([]);
+      refreshUnreadCount();
+    } catch (error) {
+      console.error('Error deleting all messages:', error);
+    }
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -131,7 +156,19 @@ export default function InboxDropdown({ isOpen, onClose, onMessageClick }) {
     <div className="inbox-dropdown" ref={dropdownRef}>
       <div className="inbox-header">
         <h3>Inbox</h3>
-        <span className="message-count">{messages.length} messages</span>
+        <div className="inbox-header-actions">
+          <span className="message-count">{messages.length} messages</span>
+          {messages.length > 0 && (
+            <button
+              className="inbox-delete-all-btn"
+              onClick={handleDeleteAll}
+              title="Delete all messages"
+            >
+              <Trash2 size={13} />
+              Delete all
+            </button>
+          )}
+        </div>
       </div>
       
       <div className="inbox-messages">
