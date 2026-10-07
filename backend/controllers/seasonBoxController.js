@@ -6,15 +6,14 @@ import RareDrop from '../models/RareDrop.js';
 // Distribution:
 //   10 gold           1-2000   (20%)
 //   reset_daily       2001-4200 (22%)
-//   20 gold           4201-5700 (15%)
-//   2x XP 10min       5701-6400 (7%)
-//   2x XP 20min       6401-6900 (5%)
-//   3x XP 10min       6901-7200 (3%)
-//   frame_silver      7201-8200 (10%)
-//   nameeffect_aw     8201-8400 (2%)
-//   nameeffect_flame  8401-8600 (2%)
-//   profileeffect_fl  8601-9100 (5%)
-//   frame_gold        9101-9600 (5%)
+//   20 gold           4201-5800 (16%)
+//   2x XP 10min       5801-6600 (8%)
+//   2x XP 20min       6601-7300 (7%)
+//   3x XP 10min       7301-7600 (3%)
+//   frame_silver      7601-8600 (10%)
+//   nameeffect_aw     8601-8800 (2%)
+//   nameeffect_flame  8801-9000 (2%)
+//   frame_gold        9001-9600 (6%)
 //   frame_diamond     9601-9900 (3%)
 //   500 gold          9901-10000(1%)
 
@@ -47,7 +46,7 @@ export const SEASON_BOX_PRIZES = [
     type: 'gold',
     amount: 20,
     min: 4201,
-    max: 5700,
+    max: 5800,
   },
   {
     id: '2x_xp_10min',
@@ -59,8 +58,8 @@ export const SEASON_BOX_PRIZES = [
     itemCategory: 'boost',
     itemDuration: 10,
     itemMultiplier: 2,
-    min: 5701,
-    max: 6400,
+    min: 5801,
+    max: 6600,
   },
   {
     id: '2x_xp_20min',
@@ -72,8 +71,8 @@ export const SEASON_BOX_PRIZES = [
     itemCategory: 'boost',
     itemDuration: 20,
     itemMultiplier: 2,
-    min: 6401,
-    max: 6900,
+    min: 6601,
+    max: 7300,
   },
   {
     id: '3x_xp_10min',
@@ -85,8 +84,8 @@ export const SEASON_BOX_PRIZES = [
     itemCategory: 'boost',
     itemDuration: 10,
     itemMultiplier: 3,
-    min: 6901,
-    max: 7200,
+    min: 7301,
+    max: 7600,
   },
   {
     id: 'frame_silver_s1',
@@ -95,8 +94,8 @@ export const SEASON_BOX_PRIZES = [
     type: 'frame',
     frameKey: 'silver-season1',
     rarity: 'silver',
-    min: 7201,
-    max: 8200,
+    min: 7601,
+    max: 8600,
   },
   {
     id: 'nameeffect_autumn_wave',
@@ -105,8 +104,8 @@ export const SEASON_BOX_PRIZES = [
     type: 'nameEffect',
     effectKey: 'autumn-wave',
     rarity: 'epic',
-    min: 8201,
-    max: 8400,
+    min: 8601,
+    max: 8800,
   },
   {
     id: 'nameeffect_flame',
@@ -115,18 +114,8 @@ export const SEASON_BOX_PRIZES = [
     type: 'nameEffect',
     effectKey: 'flame',
     rarity: 'epic',
-    min: 8401,
-    max: 8600,
-  },
-  {
-    id: 'profileeffect_flame',
-    label: 'Profile Flame',
-    icon: 'Sparkles',
-    type: 'profileEffect',
-    effectKey: 'flame',
-    rarity: 'legendary',
-    min: 8601,
-    max: 9100,
+    min: 8801,
+    max: 9000,
   },
   {
     id: 'frame_gold_s1',
@@ -135,7 +124,7 @@ export const SEASON_BOX_PRIZES = [
     type: 'frame',
     frameKey: 'gold-season1',
     rarity: 'gold',
-    min: 9101,
+    min: 9001,
     max: 9600,
   },
   {
