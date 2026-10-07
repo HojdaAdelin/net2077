@@ -249,12 +249,7 @@ export default function Register() {
                   {pwMatch    && <div className="register-match ok">✓ Passwords match</div>}
                   {pwMismatch && <div className="register-match no">✗ Passwords don't match</div>}
                 </div>
-
-                <button type="submit" className="register-submit" disabled={loading || !agreedToTerms}>
-                  {loading ? 'Creating account...' : t('register.createAccount')}
-                </button>
-
-                <div className="register-terms-row">
+                  <div className="register-terms-row">
                   <input
                     type="checkbox"
                     id="terms-check"
@@ -269,6 +264,10 @@ export default function Register() {
                     </Link>
                   </label>
                 </div>
+                <button type="submit" className="register-submit" disabled={loading || !agreedToTerms}>
+                  {loading ? 'Creating account...' : t('register.createAccount')}
+                </button>
+
               </form>
 
               <div className="register-divider">{t('register.or')}</div>
