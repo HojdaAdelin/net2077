@@ -446,7 +446,25 @@
 
 /* Responsive */
 @media (max-width:600px) {
-  .spt-card-top, .spt-card-middle, .spt-card-bottom { padding:14px 16px; }
+  .spt-card-top {
+    padding: 14px 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  /* Title block takes full width on its own row */
+  .spt-card-title-block {
+    flex: 1 1 100%;
+    order: -1;
+  }
+  /* Buttons share a row beneath the title */
+  .spt-btn-highlights,
+  .spt-btn-secondary {
+    flex: 1 1 0;
+    justify-content: center;
+    padding: 8px 10px;
+    font-size: 0.78rem;
+  }
+  .spt-card-middle, .spt-card-bottom { padding:14px 16px; }
   .spt-modal { max-height:95vh; border-radius:14px; }
   .spt-modal-header { padding:14px 14px 10px; }
   .spt-track { padding:12px 10px; }
@@ -454,6 +472,11 @@
   .spt-stats-row { gap:8px; }
   .spt-stat { padding:0 10px 0 0; }
   .spt-stat-sep { margin-right:10px; }
+}
+
+@media (max-width: 480px) {
+  /* Icon hides to save space */
+  .spt-card-icon { display: none; }
 }
 
 /* Frame reward preview */
@@ -523,7 +546,7 @@
 /* ── Best Rewards modal sizing ───────────────────────────────── */
 .spt-modal--best {
   max-width: 620px;
-  max-height: 70vh;
+  max-height: 80vh;
 }
 
 .spt-best-body {
@@ -571,6 +594,41 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
   flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .spt-modal--best {
+    max-height: 92vh;
+  }
+  .spt-best-section {
+    padding: 14px 14px;
+  }
+  .spt-best-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .spt-best-paged {
+    gap: 4px;
+  }
+  .spt-best-item {
+    min-height: 90px;
+    padding: 10px 6px;
+  }
+  .spt-best-label {
+    font-size: 0.72rem;
+    white-space: normal;
+    word-break: break-word;
+  }
+  .spt-best-frame-img {
+    width: 32px;
+    height: 32px;
+  }
+  .spt-modal-header {
+    flex-wrap: wrap;
+  }
+  .spt-modal-title {
+    font-size: 0.88rem;
+  }
 }
 
 .spt-best-page-info {
