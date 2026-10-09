@@ -4,7 +4,7 @@ import User from '../models/User.js';
 // ─── Admin: create a new season pass ─────────────────────────────────────────
 export const createSeasonPass = async (req, res) => {
   try {
-    const { name, hasPremium, premiumCost, totalLevels, xpPerLevel, levels } = req.body;
+    const { name, hasPremium, premiumCost, totalLevels, xpPerLevel, levels, bestRewards } = req.body;
     if (!name || !totalLevels) return res.status(400).json({ message: 'name and totalLevels required' });
 
     const last = await SeasonPass.findOne().sort({ number: -1 });
@@ -18,6 +18,7 @@ export const createSeasonPass = async (req, res) => {
       totalLevels: totalLevels ?? 10,
       xpPerLevel: xpPerLevel ?? 100,
       levels: levels || [],
+      bestRewards: bestRewards || [],
       isActive: false,
     });
 
@@ -33,7 +34,7 @@ export const createSeasonPass = async (req, res) => {
 export const updateSeasonPass = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, hasPremium, premiumCost, totalLevels, xpPerLevel, levels, isActive } = req.body;
+    const { name, hasPremium, premiumCost, totalLevels, xpPerLevel, levels, isActive, bestRewards } = req.body;
 
     const pass = await SeasonPass.findById(id);
     if (!pass) return res.status(404).json({ message: 'Pass not found' });
@@ -44,6 +45,7 @@ export const updateSeasonPass = async (req, res) => {
     if (totalLevels !== undefined)  pass.totalLevels = totalLevels;
     if (xpPerLevel !== undefined)   pass.xpPerLevel = xpPerLevel;
     if (levels !== undefined)       pass.levels = levels;
+    if (bestRewards !== undefined)  pass.bestRewards = bestRewards;
     if (isActive !== undefined) {
       // Only one pass can be active at a time
       if (isActive) await SeasonPass.updateMany({ _id: { $ne: id } }, { isActive: false });

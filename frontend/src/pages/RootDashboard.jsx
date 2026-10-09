@@ -1075,7 +1075,7 @@ function SeasonPanel() {
   const [editing, setEditing] = useState(null); // pass being edited, or 'new'
   const [form, setForm] = useState({
     name: '', hasPremium: true, premiumCost: 200,
-    totalLevels: 10, xpPerLevel: 100, isActive: false, levels: []
+    totalLevels: 10, xpPerLevel: 100, isActive: false, levels: [], bestRewards: []
   });
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
@@ -1092,7 +1092,7 @@ function SeasonPanel() {
   useEffect(() => { load(); }, [load]);
 
   const openNew = () => {
-    setForm({ name: '', hasPremium: true, premiumCost: 200, totalLevels: 10, xpPerLevel: 100, isActive: false, levels: [] });
+    setForm({ name: '', hasPremium: true, premiumCost: 200, totalLevels: 10, xpPerLevel: 100, isActive: false, levels: [], bestRewards: [] });
     setMsg('');
     setEditing('new');
   };
@@ -1106,6 +1106,7 @@ function SeasonPanel() {
       xpPerLevel: pass.xpPerLevel,
       isActive: pass.isActive,
       levels: pass.levels || [],
+      bestRewards: pass.bestRewards || [],
     });
     setMsg('');
     setEditing(pass._id);
@@ -1314,6 +1315,56 @@ function SeasonPanel() {
         )}
 
         {msg && <div className={`rd-msg ${msg.includes('!') ? 'success' : 'error'}`}>{msg}</div>}
+
+        {/* Best Rewards */}
+        <div className="rd-season-levels" style={{ marginTop: 8 }}>
+          <div className="rd-section-label" style={{ marginTop: 0, marginBottom: 8 }}>Best Rewards <span style={{ fontWeight: 400, opacity: 0.6, textTransform: 'none', fontSize: 11 }}>(shown in the highlights modal)</span></div>
+          {(form.bestRewards || []).map((r, i) => (
+            <div key={i} className="rd-feature-row" style={{ alignItems: 'center' }}>
+              <select className="rd-input rd-input--sm"
+                value={r.tier || 'free'}
+                onChange={e => setForm(p => { const br = [...p.bestRewards]; br[i] = { ...br[i], tier: e.target.value }; return { ...p, bestRewards: br }; })}>
+                <option value="free">Free</option>
+                <option value="premium">Premium</option>
+              </select>
+              <select className="rd-input rd-input--sm"
+                value={r.type || 'gold'}
+                onChange={e => setForm(p => { const br = [...p.bestRewards]; br[i] = { ...br[i], type: e.target.value, value: '' }; return { ...p, bestRewards: br }; })}>
+                <option value="gold">Gold</option>
+                <option value="frame">Frame</option>
+                <option value="nameEffect">Name Effect</option>
+                <option value="item">Item</option>
+              </select>
+              <input className="rd-input rd-input--sm" placeholder="Label (e.g. 500 Gold)" maxLength={40}
+                value={r.label || ''}
+                onChange={e => setForm(p => { const br = [...p.bestRewards]; br[i] = { ...br[i], label: e.target.value }; return { ...p, bestRewards: br }; })} />
+              {r.type === 'frame' ? (
+                <select className="rd-input rd-input--sm"
+                  value={r.value || ''}
+                  onChange={e => setForm(p => { const br = [...p.bestRewards]; br[i] = { ...br[i], value: e.target.value }; return { ...p, bestRewards: br }; })}>
+                  <option value="">Select frame...</option>
+                  {AVAILABLE_FRAMES.map(f => (
+                    <option key={f.key} value={f.key}>{f.label}</option>
+                  ))}
+                </select>
+              ) : (
+                <input className="rd-input rd-input--sm" placeholder="Value (e.g. 50)" maxLength={40}
+                  value={r.value || ''}
+                  onChange={e => setForm(p => { const br = [...p.bestRewards]; br[i] = { ...br[i], value: e.target.value }; return { ...p, bestRewards: br }; })} />
+              )}
+              <input className="rd-input rd-input--sm" placeholder="Level (e.g. 5)" type="number" min={1}
+                value={r.atLevel || ''}
+                onChange={e => setForm(p => { const br = [...p.bestRewards]; br[i] = { ...br[i], atLevel: Number(e.target.value) }; return { ...p, bestRewards: br }; })} />
+              <button className="rd-icon-btn danger" onClick={() => setForm(p => ({ ...p, bestRewards: p.bestRewards.filter((_, idx) => idx !== i) }))}>
+                <X size={13} />
+              </button>
+            </div>
+          ))}
+          <button className="rd-add-btn" onClick={() => setForm(p => ({ ...p, bestRewards: [...(p.bestRewards || []), { tier: 'free', type: 'gold', label: '', atLevel: 1 }] }))}>
+            <Plus size={12} /> Add Best Reward
+          </button>
+        </div>
+
         <button className="rd-primary-btn" onClick={handleSave} disabled={saving}>
           {saving ? 'Saving...' : (editing === 'new' ? 'Create Pass' : 'Save Changes')}
         </button>

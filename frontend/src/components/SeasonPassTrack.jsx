@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import {
   Zap, Lock, Crown, Coins, Gift, X,
-  ChevronLeft, ChevronRight, LogIn, Ticket, ShieldCheck,
+  ChevronLeft, ChevronRight, LogIn, Ticket, ShieldCheck, Star,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -42,6 +42,7 @@ export default function SeasonPassTrack() {
   const [collecting, setCollecting]     = useState(null);
   const [buying, setBuying]             = useState(false);
   const [buyErr, setBuyErr]             = useState('');
+  const [showBest, setShowBest]         = useState(false);
   const trackRef = useRef(null);
 
   const LEVELS_PER_PAGE = 5;
@@ -167,6 +168,12 @@ export default function SeasonPassTrack() {
               </span>
             )}
           </div>
+          {pass.bestRewards?.length > 0 && (
+            <button className="spt-btn-highlights" onClick={() => setShowBest(true)}>
+              <Star size={13} />
+              Top Rewards
+            </button>
+          )}
           <button
             className="spt-btn-secondary"
             onClick={() => { setOpen(true); setPage(currentPage); }}
@@ -418,6 +425,95 @@ export default function SeasonPassTrack() {
           </div>
         </div>
       )}
+      {/* ── Best Rewards Modal ─────────────────────────────── */}
+      {showBest && (() => {
+        const BEST_PER_PAGE = 4;
+        const premiumBest = (pass.bestRewards || [])
+          .filter(r => r.tier === 'premium')
+          .sort((a, b) => (a.atLevel || 0) - (b.atLevel || 0));
+        const freeBest = (pass.bestRewards || [])
+          .filter(r => r.tier !== 'premium')
+          .sort((a, b) => (a.atLevel || 0) - (b.atLevel || 0));
+
+        const RewardCard = ({ r, showLock }) => (
+          <div className={`spt-best-item ${r.tier === 'premium' ? 'premium' : 'free'}`}>
+            <div className="spt-best-reward">
+              {r.type === 'gold'       && <Coins size={26} className="spt-icon-gold" />}
+              {r.type === 'frame'      && <img src={`/${r.value}.png`} alt={r.label} className="spt-best-frame-img" />}
+              {r.type === 'nameEffect' && <Zap  size={26} className="spt-icon-effect" />}
+              {r.type === 'item'       && <Gift size={26} className="spt-icon-item" />}
+              <span className="spt-best-label">{r.label || r.value || '?'}</span>
+            </div>
+            <div className="spt-best-lvl">Lv {r.atLevel}</div>
+            {showLock && !isPremium && <Lock size={12} className="spt-best-lock" />}
+          </div>
+        );
+
+        const BestSection = ({ items, sectionClass, labelIcon, labelText, showLock }) => {
+          const [pg, setPg] = useState(0);
+          const totalPg = Math.ceil(items.length / BEST_PER_PAGE);
+          const visible = items.slice(pg * BEST_PER_PAGE, pg * BEST_PER_PAGE + BEST_PER_PAGE);
+          return (
+            <div className={`spt-best-section ${sectionClass}`}>
+              <div className="spt-best-section-label">{labelIcon}{labelText}</div>
+              <div className="spt-best-paged">
+                <button className="spt-page-btn" onClick={() => setPg(p => Math.max(0, p - 1))} disabled={pg === 0}>
+                  <ChevronLeft size={14} />
+                </button>
+                <div className="spt-best-list">
+                  {visible.map((r, i) => <RewardCard key={i} r={r} showLock={showLock} />)}
+                </div>
+                <button className="spt-page-btn" onClick={() => setPg(p => Math.min(totalPg - 1, p + 1))} disabled={pg === totalPg - 1 || totalPg === 0}>
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+              {totalPg > 1 && (
+                <div className="spt-best-page-info">{pg * BEST_PER_PAGE + 1}–{Math.min(pg * BEST_PER_PAGE + BEST_PER_PAGE, items.length)} / {items.length}</div>
+              )}
+            </div>
+          );
+        };
+
+        return (
+          <div className="spt-overlay" onClick={() => setShowBest(false)}>
+            <div className="spt-modal spt-modal--best" onClick={e => e.stopPropagation()}>
+              <div className="spt-modal-header">
+                <div className="spt-modal-header-left">
+                  <div className="spt-modal-icon"><Star size={15} /></div>
+                  <span className="spt-modal-title">Top Rewards — {pass.name}</span>
+                </div>
+                <div className="spt-modal-header-right">
+                  <button className="spt-close-btn" onClick={() => setShowBest(false)}><X size={16} /></button>
+                </div>
+              </div>
+
+              <div className="spt-best-body">
+                {premiumBest.length > 0 && (
+                  <BestSection
+                    items={premiumBest}
+                    sectionClass="premium"
+                    labelIcon={<Crown size={13} className="spt-lbl-crown" />}
+                    labelText="Premium Track"
+                    showLock={true}
+                  />
+                )}
+                {freeBest.length > 0 && (
+                  <BestSection
+                    items={freeBest}
+                    sectionClass="free"
+                    labelIcon={<Gift size={13} className="spt-lbl-gift" />}
+                    labelText="Free Track"
+                    showLock={false}
+                  />
+                )}
+                {premiumBest.length === 0 && freeBest.length === 0 && (
+                  <div className="spt-best-empty">No top rewards configured yet.</div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </>
   );
 }

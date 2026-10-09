@@ -503,3 +503,146 @@
 .spt-cell.collectable .spt-frame-label {
   color: var(--accent-primary);
 }
+
+/* ── Top Rewards button ──────────────────────────────────────── */
+.spt-btn-highlights {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  background: none;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  transition: all .18s; flex-shrink: 0; white-space: nowrap;
+}
+.spt-btn-highlights:hover {
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+}
+
+/* ── Best Rewards modal sizing ───────────────────────────────── */
+.spt-modal--best {
+  max-width: 620px;
+  max-height: 70vh;
+}
+
+.spt-best-body {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+}
+.spt-best-body::-webkit-scrollbar { width: 4px; }
+.spt-best-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* Section (premium / free) */
+.spt-best-section {
+  padding: 16px 22px;
+}
+.spt-best-section.premium {
+  background: linear-gradient(180deg, rgba(234,179,8,.05) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border);
+}
+.spt-best-section.free {
+  background: linear-gradient(180deg, rgba(99,102,241,.04) 0%, transparent 100%);
+}
+
+.spt-best-section-label {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .5px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+.spt-best-section.premium .spt-best-section-label { color: #b07d08; }
+[data-theme="dark"] .spt-best-section.premium .spt-best-section-label { color: #eab308; }
+
+/* List */
+.spt-best-paged {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spt-best-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  flex: 1;
+}
+
+.spt-best-page-info {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 8px;
+}
+
+.spt-best-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  transition: border-color .18s;
+  min-height: 110px;
+  text-align: center;
+}
+.spt-best-item:hover { border-color: var(--text-secondary); }
+
+.spt-best-item.premium {
+  border-color: rgba(234,179,8,.2);
+  background: rgba(234,179,8,.04);
+}
+.spt-best-item.free {
+  border-color: rgba(99,102,241,.15);
+  background: rgba(99,102,241,.03);
+}
+
+.spt-best-lvl {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.spt-best-reward {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.spt-best-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.spt-best-lock {
+  color: var(--text-secondary);
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+.spt-best-frame-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.spt-best-empty {
+  padding: 32px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
