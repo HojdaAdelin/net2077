@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Zap, Clock, ShoppingBag, Crown, Trophy, Medal, Coins } from 'lucide-react';
+import { Zap, Clock, ShoppingBag, Crown, Trophy, Medal } from 'lucide-react';
+import GoldIcon from '../components/GoldIcon';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
 import SeasonBox from '../components/SeasonBox';
@@ -137,7 +138,7 @@ export default function Season() {
                           <Zap size={13} /> {entry.xpEarned.toLocaleString()} XP
                         </span>
                         <span className="season-lb-gold">
-                          <Coins size={13} /> {entry.goldReward}
+                          <GoldIcon size={13} /> {entry.goldReward}
                         </span>
                       </div>
                     </div>

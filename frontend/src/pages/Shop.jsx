@@ -1,7 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { Zap, Sparkles, RotateCcw, ShoppingBag, Coins, ChevronLeft, ChevronRight, Send, X, Dices, TrendingUp, AlertTriangle, Package, PackagePlus } from 'lucide-react';
+import { Zap, Sparkles, RotateCcw, ShoppingBag, ChevronLeft, ChevronRight, Send, X, Dices, TrendingUp, AlertTriangle, Package, PackagePlus } from 'lucide-react';
+import GoldIcon from '../components/GoldIcon';
 import LoginRequired from '../components/LoginRequired';
 import '../styles/Shop.css';
 
@@ -100,7 +101,7 @@ function GoldGamble({ userGold, onGoldChange }) {
           </div>
         </div>
         <div className="gg-balance">
-          <Coins size={15} />
+          <GoldIcon size={15} />
           <span>{(userGold || 0).toLocaleString()}</span>
         </div>
       </div>
@@ -124,7 +125,7 @@ function GoldGamble({ userGold, onGoldChange }) {
         <div className="gg-section-label" style={{ marginTop: 20 }}>Amount to invest</div>
         <div className="gg-amount-row">
           <div className="gg-amount-wrap">
-            <Coins size={15} className="gg-amount-icon" />
+            <GoldIcon size={15} className="gg-amount-icon" />
             <input
               className={`gg-input ${error ? 'gg-input-error' : ''}`}
               placeholder="0"
@@ -150,7 +151,7 @@ function GoldGamble({ userGold, onGoldChange }) {
             className={`gg-coin ${spinning ? 'spinning' : ''} ${result ? (result.won ? 'win' : 'lose') : ''}`}
             style={{ '--spin-angle': `${spinAngle}deg` }}
           >
-            <div className="gg-coin-face front"><Coins size={28} /></div>
+            <div className="gg-coin-face front"><GoldIcon size={28} /></div>
             <div className="gg-coin-face back"><X size={28} /></div>
           </div>
           {result && !spinning && (
@@ -399,7 +400,7 @@ export default function Shop() {
             <p>Purchase boosts and items with your gold</p>
           </div>
           <div className="gold-balance">
-            <Coins size={24} />
+            <GoldIcon size={24} />
             <span>{user.gold || 0} Gold</span>
             <button className="gold-transfer-btn" onClick={() => setTransferModal(true)}>
               <Send size={14} /> Send Gold
@@ -413,7 +414,7 @@ export default function Shop() {
             <div className="transfer-modal" onClick={e => e.stopPropagation()}>
               <div className="transfer-modal-header">
                 <div className="transfer-modal-title">
-                  <Coins size={18} />
+                  <GoldIcon size={18} />
                   Send Gold
                 </div>
                 <button className="transfer-modal-close" onClick={closeTransferModal}><X size={18} /></button>
@@ -435,7 +436,7 @@ export default function Shop() {
                 <div className="transfer-field">
                   <label>Amount</label>
                   <div className="transfer-amount-wrap">
-                    <Coins size={15} className="transfer-amount-icon" />
+                    <GoldIcon size={15} className="transfer-amount-icon" />
                     <input
                       className="transfer-input transfer-input-amount"
                       placeholder="0"
@@ -543,7 +544,7 @@ export default function Shop() {
                               <span className="xp-privilege-tier-label">{lvl.multiplier}×</span>
                               {isOwned
                                 ? <span className="xp-privilege-tier-status owned">Owned</span>
-                                : <span className="xp-privilege-tier-price"><Coins size={11} />{lvl.price}</span>
+                                : <span className="xp-privilege-tier-price"><GoldIcon size={11} />{lvl.price}</span>
                               }
                             </div>
                           );
@@ -602,7 +603,7 @@ export default function Shop() {
                               <span className="old-price">{item.originalPrice}</span>
                             )}
                             <div className="new-price">
-                              <Coins size={16} />
+                              <GoldIcon size={16} />
                               <span>{item.price}</span>
                             </div>
                           </div>

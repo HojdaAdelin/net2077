@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import {
-  Zap, Lock, Crown, Coins, Gift, X,
+  Zap, Lock, Crown, Gift, X,
   ChevronLeft, ChevronRight, LogIn, Ticket, ShieldCheck, Star,
 } from 'lucide-react';
+import GoldIcon from './GoldIcon';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
@@ -24,7 +25,7 @@ function RewardIcon({ reward, size = 15 }) {
   
   return (
     <div className="spt-reward-content">
-      {reward.type === 'gold'       && <Coins  size={size} className="spt-icon-gold"   />}
+      {reward.type === 'gold'       && <GoldIcon size={size} className="spt-icon-gold"   />}
       {reward.type === 'item'       && <Gift   size={size} className="spt-icon-item"   />}
       {reward.type === 'nameEffect' && <Zap    size={size} className="spt-icon-effect" />}
       <span>{reward.label || reward.value || '?'}</span>
@@ -261,7 +262,7 @@ export default function SeasonPassTrack() {
             </div>
             <div className="spt-premium-buy">
               <span className={`spt-premium-cost ${!canAffordPremium ? 'insufficient' : ''}`}>
-                <Coins size={13} /> {pass.premiumCost} Gold
+                <GoldIcon size={13} /> {pass.premiumCost} Gold
               </span>
               <button
                 className={`spt-btn-premium ${!canAffordPremium ? 'disabled' : ''}`}
@@ -469,7 +470,7 @@ export default function SeasonPassTrack() {
         const RewardCard = ({ r, showLock }) => (
           <div className={`spt-best-item ${r.tier === 'premium' ? 'premium' : 'free'}`}>
             <div className="spt-best-reward">
-              {r.type === 'gold'       && <Coins size={26} className="spt-icon-gold" />}
+              {r.type === 'gold'       && <GoldIcon size={26} className="spt-icon-gold" />}
               {r.type === 'frame'      && <img src={`/${r.value}.png`} alt={r.label} className="spt-best-frame-img" />}
               {r.type === 'nameEffect' && <Zap  size={26} className="spt-icon-effect" />}
               {r.type === 'item'       && <Gift size={26} className="spt-icon-item" />}

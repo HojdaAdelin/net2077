@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { Trophy, Medal, Award, Crown, User, Coins, Clock, Zap, Shield, ShoppingBag } from 'lucide-react';
+import { Trophy, Medal, Award, Crown, User, Clock, Zap, Shield, ShoppingBag } from 'lucide-react';
+import GoldIcon from '../components/GoldIcon';
 import { getLeaderboard } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
 import { AuthContext } from '../context/AuthContext';
@@ -278,7 +279,7 @@ export default function Leaderboard() {
                       </div>
                       
                       <div className="competitive-reward">
-                        <Coins size={18} className="gold-icon" />
+                        <GoldIcon size={18} className="gold-icon" />
                         <span className="gold-amount">{user.goldReward}</span>
                       </div>
                     </div>

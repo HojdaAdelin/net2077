@@ -5,7 +5,8 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
 import { useInbox } from '../context/InboxContext';
-import { Languages, ChevronDown, LogIn, Swords, UserPlus, Star,RotateCcw, LogOut, User, Sun, Moon, Settings, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Coins, Package, Zap, Sparkles, FileTerminal, Users, Bookmark, Menu, X, Circle, CircleArrowDown, CircleArrowOutDownLeft, CircleArrowRight } from 'lucide-react';
+import { Languages, ChevronDown, LogIn, Swords, UserPlus, Star,RotateCcw, LogOut, User, Sun, Moon, Settings, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Package, Zap, Sparkles, FileTerminal, Users, Bookmark, Menu, X, Circle, CircleArrowDown, CircleArrowOutDownLeft, CircleArrowRight } from 'lucide-react';
+import GoldIcon from './GoldIcon';
 import StreakIndicator from './StreakIndicator';
 import InboxDropdown from './InboxDropdown';
 import SupportButton from './SupportButton';
@@ -411,7 +412,7 @@ export default function Navbar() {
                         Logout
                       </button>
                       <Link to="/shop" className="profile-dropdown-gold-item" onClick={() => setProfileDropdownOpen(false)}>
-                        <Coins size={16} className="gold-icon" />
+                        <GoldIcon size={16} className="gold-icon" />
                         <span>Gold: {user.gold || 0}</span>
                       </Link>
                     </div>
