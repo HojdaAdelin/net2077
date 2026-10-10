@@ -61,7 +61,38 @@ export default function SeasonPassTrack() {
     return () => { document.body.style.overflow = ''; };
   }, [open]);
 
-  if (loading) return null;
+  if (loading) return (
+    <div className="spt-card spt-skeleton-card">
+      <div className="spt-card-top">
+        <div className="spt-skeleton spt-skeleton-icon" />
+        <div className="spt-card-title-block">
+          <div className="spt-skeleton spt-skeleton-title" />
+          <div className="spt-skeleton spt-skeleton-pill" />
+        </div>
+        <div className="spt-skeleton spt-skeleton-btn" />
+        <div className="spt-skeleton spt-skeleton-btn" />
+      </div>
+      <div className="spt-card-middle">
+        <div className="spt-stats-row">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
+              <div className="spt-stat">
+                <div className="spt-skeleton spt-skeleton-stat-val" />
+                <div className="spt-skeleton spt-skeleton-stat-lbl" />
+              </div>
+              {i < 3 && <div className="spt-stat-sep" />}
+            </div>
+          ))}
+        </div>
+        <div className="spt-xp-block">
+          <div className="spt-xp-bar-wrap" style={{ flex: 1 }}>
+            <div className="spt-skeleton" style={{ width: '100%', height: '100%', borderRadius: 4 }} />
+          </div>
+          <div className="spt-skeleton spt-skeleton-xp-label" />
+        </div>
+      </div>
+    </div>
+  );
 
   /* ── Guest ─────────────────────────────────────────────────── */
   if (!user) {

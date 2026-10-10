@@ -704,3 +704,35 @@
   color: var(--text-secondary);
   font-size: 0.85rem;
 }
+
+/* ── Skeleton loading ────────────────────────────────────────── */
+@keyframes spt-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.spt-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-secondary) 25%,
+    var(--border) 50%,
+    var(--bg-secondary) 75%
+  );
+  background-size: 400px 100%;
+  animation: spt-shimmer 1.4s ease infinite;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.spt-skeleton-icon  { width: 38px; height: 38px; border-radius: 10px; }
+.spt-skeleton-title { width: 140px; height: 14px; }
+.spt-skeleton-pill  { width: 72px; height: 18px; border-radius: 20px; }
+.spt-skeleton-btn   { width: 100px; height: 34px; border-radius: 8px; }
+.spt-skeleton-stat-val { width: 36px; height: 14px; margin-bottom: 4px; }
+.spt-skeleton-stat-lbl { width: 52px; height: 9px; }
+.spt-skeleton-xp-label { width: 72px; height: 11px; }
+
+@media (max-width: 600px) {
+  .spt-skeleton-btn { width: 80px; }
+  .spt-skeleton-title { width: 100px; }
+}
