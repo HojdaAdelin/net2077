@@ -26,5 +26,8 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
+  },
+  "overrides": {
+    "proxy-addr": "2.0.8"
   }
 }
