@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { Trophy, Medal, Award, Crown, User, Clock, Zap, Shield, ShoppingBag } from 'lucide-react';
+import { Trophy, Medal, Award, Crown, User, Clock, Zap, Shield } from 'lucide-react';
 import GoldIcon from '../components/GoldIcon';
 import { getLeaderboard } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
@@ -228,10 +228,6 @@ export default function Leaderboard() {
                   <Clock size={15} />
                   <span className="timer-value">{timeRemaining}</span>
                 </div>
-                <Link to="/shop" className="competitive-shop-link">
-                  <ShoppingBag size={14} />
-                  View Shop
-                </Link>
               </div>
             </div>
 

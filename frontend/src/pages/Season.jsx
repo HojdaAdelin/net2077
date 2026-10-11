@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Zap, Clock, ShoppingBag, Crown, Trophy, Medal } from 'lucide-react';
+import { Zap, Clock, Crown, Trophy, Medal } from 'lucide-react';
 import GoldIcon from '../components/GoldIcon';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
@@ -73,10 +73,6 @@ export default function Season() {
               <Clock size={15} />
               <span>{loading ? '...' : timeRemaining}</span>
             </div>
-            <Link to="/shop" className="season-shop-link">
-              <ShoppingBag size={14} />
-              View Shop
-            </Link>
           </div>
         </div>
 

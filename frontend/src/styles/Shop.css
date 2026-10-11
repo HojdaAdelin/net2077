@@ -1268,3 +1268,32 @@
   color: #eab308;
   line-height: 1;
 }
+
+/* Shop Closed State */
+.shop-closed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 20px;
+  text-align: center;
+}
+
+.shop-closed-icon {
+  color: var(--text-muted);
+  opacity: 0.3;
+}
+
+.shop-closed h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.shop-closed p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0;
+}

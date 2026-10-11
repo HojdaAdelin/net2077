@@ -222,6 +222,7 @@ export default function Shop() {
   const [transferPreview, setTransferPreview] = useState(null);
   const [transferLoading, setTransferLoading] = useState(false);
   const [transferMsg, setTransferMsg] = useState({ text: '', ok: false });
+  const [accessDenied, setAccessDenied] = useState(false);
 
   useEffect(() => {
     fetchShopItems();
@@ -238,7 +239,12 @@ export default function Shop() {
 
   const fetchShopItems = async () => {
     try {
-      const response = await fetch(`${API_URL}/shop/items`);
+      const response = await fetch(`${API_URL}/shop/items`, { credentials: 'include' });
+      if (response.status === 403) {
+        setAccessDenied(true);
+        setLoading(false);
+        return;
+      }
       const data = await response.json();
       
       if (data.success) {
@@ -386,6 +392,18 @@ export default function Shop() {
         <div className="shop-loading">
           <div className="loading-spinner"></div>
           <p>Loading shop...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (accessDenied || (user && user.role !== 'root')) {
+    return (
+      <div className="container shop-page">
+        <div className="shop-closed">
+          <ShoppingBag size={80} className="shop-closed-icon" />
+          <h2>Shop Closed</h2>
+          <p>The shop is currently closed for maintenance.</p>
         </div>
       </div>
     );
