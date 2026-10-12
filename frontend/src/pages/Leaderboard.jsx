@@ -1,9 +1,7 @@
-import { useState, useEffect, useContext } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import { Trophy, Medal, Award, Crown, User, Shield } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Shield } from 'lucide-react';
 import { getLeaderboard } from '../services/api';
-import { useLanguage } from '../context/LanguageContext';
-import { AuthContext } from '../context/AuthContext';
 import AvatarFrame from '../components/AvatarFrame';
 import NameEffectRenderer from '../components/NameEffectRenderer';
 import '../styles/AvatarFrame.css';
@@ -19,6 +17,7 @@ const ROLE_CONFIG = {
   'root':       { color: '#ec4899', label: 'Root' },
 };
 
+
 function StaffBadge({ role }) {
   const [visible, setVisible] = useState(false);
   const config = ROLE_CONFIG[role];
@@ -30,7 +29,7 @@ function StaffBadge({ role }) {
       onMouseEnter={() => setVisible(true)}
       onMouseLeave={() => setVisible(false)}
     >
-      <Shield size={13} />
+      <Shield size={12} />
       {visible && (
         <div className="lb-staff-tooltip">
           <span className="lb-staff-tooltip-title">Staff</span>
@@ -41,74 +40,88 @@ function StaffBadge({ role }) {
   );
 }
 
+function PodiumCard({ entry, position }) {
+  if (!entry) return <div className="podium-card podium-empty" />;
+
+  return (
+    <div className={`podium-card podium-pos-${position}`}>
+      <div className="podium-avatar">
+        <AvatarFrame frame={entry.activeFrame} size={position === 1 ? 64 : 52} />
+      </div>
+      <div className="podium-username-wrap">
+        <NameEffectRenderer effect={entry.activeNameEffect}>
+          <Link to={`/profile/${entry.username}`} className="podium-username">
+            {entry.username}
+          </Link>
+        </NameEffectRenderer>
+        {entry.role && entry.role !== 'user' && <StaffBadge role={entry.role} />}
+      </div>
+      <div className="podium-level">Lv. {entry.level}</div>
+      <div className="podium-xp">{entry.xp.toLocaleString()} XP</div>
+      <div className="podium-base" />
+    </div>
+  );
+}
+
+function ListRow({ entry, index }) {
+  return (
+    <div className="lb-row" style={{ '--row-delay': `${index * 40}ms` }}>
+      <span className="lb-row-rank">#{entry.rank}</span>
+      <div className="lb-row-left">
+        <AvatarFrame frame={entry.activeFrame} size={36} />
+        <div className="lb-row-info">
+          <div className="lb-row-name-line">
+            <NameEffectRenderer effect={entry.activeNameEffect}>
+              <Link to={`/profile/${entry.username}`} className="lb-row-username">
+                {entry.username}
+              </Link>
+            </NameEffectRenderer>
+            {entry.role && entry.role !== 'user' && <StaffBadge role={entry.role} />}
+          </div>
+          <span className="lb-row-level">Level {entry.level}</span>
+        </div>
+      </div>
+      <div className="lb-row-xp">
+        <span className="lb-row-xp-val">{entry.xp.toLocaleString()}</span>
+        <span className="lb-row-xp-label">XP</span>
+      </div>
+    </div>
+  );
+}
+
 export default function Leaderboard() {
-  const { t } = useLanguage();
-  const { tab } = useParams();
-  const navigate = useNavigate();
-  const { user, updateUser } = useContext(AuthContext);
   const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [activeTab, setActiveTab] = useState('alltime');
 
   useEffect(() => {
     fetchLeaderboard();
   }, []);
 
-  useEffect(() => {
-    setActiveTab('alltime');
-  }, [tab]);
-
   const fetchLeaderboard = async () => {
     try {
       setLoading(true);
       const data = await getLeaderboard();
-      
       if (data.success) {
         setLeaderboard(data.leaderboard);
       } else {
         setError('Failed to load leaderboard');
       }
-    } catch (error) {
+    } catch {
       setError('Network error loading leaderboard');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleTabChange = (tabName) => {
-    setActiveTab(tabName);
-    navigate(`/leaderboard/alltime`, { replace: true });
-  };
-
-  const getRankIcon = (rank) => {
-    switch (rank) {
-      case 1:
-        return <Crown className="rank-icon gold" size={24} />;
-      case 2:
-        return <Trophy className="rank-icon silver" size={22} />;
-      case 3:
-        return <Medal className="rank-icon bronze" size={20} />;
-      default:
-        return <Award className="rank-icon default" size={18} />;
-    }
-  };
-
-  const getRankClass = (rank) => {
-    switch (rank) {
-      case 1: return 'rank-1';
-      case 2: return 'rank-2';
-      case 3: return 'rank-3';
-      default: return 'rank-default';
-    }
-  };
+  const top3 = leaderboard.slice(0, 3);
+  const rest = leaderboard.slice(3);
 
   if (loading) {
     return (
-      <div className="container leaderboard-page">
-        <div className="loading-state">
-          <div className="loading-spinner"></div>
-          <p>{t('leaderboard.loading')}</p>
+      <div className="lb-page">
+        <div className="lb-loading">
+          <div className="loading-spinner" />
         </div>
       </div>
     );
@@ -116,86 +129,47 @@ export default function Leaderboard() {
 
   if (error) {
     return (
-      <div className="container leaderboard-page">
-        <div className="error-state">
+      <div className="lb-page">
+        <div className="lb-error">
           <p>{error}</p>
-          <button onClick={fetchLeaderboard} className="btn btn-primary">
-            {t('leaderboard.tryAgain')}
-          </button>
+          <button onClick={fetchLeaderboard} className="btn btn-primary">Try again</button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="leaderboard-page">
+    <div className="lb-page">
       <div className="container">
-        <div className="leaderboard-header">
-          <h1>{t('leaderboard.title')}</h1>
-          <p>{t('leaderboard.subtitle')}</p>
+
+        <div className="lb-header">
+          <h1 className="lb-title">Leaderboard</h1>
         </div>
 
-        <div className="leaderboard-tabs">
-          <div 
-            className={`leaderboard-tab ${activeTab === 'alltime' ? 'active' : ''}`}
-            onClick={() => handleTabChange('alltime')}
-          >
-            <Trophy size={20} />
-            All-Time Rankings
+        {leaderboard.length === 0 ? (
+          <div className="lb-empty">
+            <p>No rankings yet. Start practicing to get on the board.</p>
           </div>
-        </div>
+        ) : (
+          <>
+            {/* Podium — top 3 */}
+            <div className="lb-podium">
+              <PodiumCard entry={top3[1]} position={2} />
+              <PodiumCard entry={top3[0]} position={1} />
+              <PodiumCard entry={top3[2]} position={3} />
+            </div>
 
-        {activeTab === 'alltime' && (
-        <div className="leaderboard-container">
-          {leaderboard.length === 0 ? (
-            <div className="empty-leaderboard">
-              <Trophy size={48} className="empty-icon" />
-              <h3>{t('leaderboard.noRankings')}</h3>
-              <p>{t('leaderboard.noRankingsDesc')}</p>
-            </div>
-          ) : (
-            <div className="leaderboard-list">
-              {leaderboard.map((user) => (
-                <div key={user.rank} className={`leaderboard-item ${getRankClass(user.rank)}`}>
-                  <div className="rank-section">
-                    <div className="rank-number">#{user.rank}</div>
-                    {getRankIcon(user.rank)}
-                  </div>
-                  
-                  <div className="user-info">
-                    <div className="username">
-                      <AvatarFrame frame={user.activeFrame} size={36} />
-                      <NameEffectRenderer effect={user.activeNameEffect}>
-                        <Link
-                          to={`/profile/${user.username}`}
-                          className="leaderboard-username-link"
-                          title={`View ${user.username}'s profile`}
-                        >
-                          {user.username}
-                        </Link>
-                      </NameEffectRenderer>
-                      <Link 
-                        to={`/profile/${user.username}`} 
-                        className="leaderboard-profile-link"
-                        title={`View ${user.username}'s profile`}
-                      >
-                        <User size={14} />
-                      </Link>
-                      {user.role && user.role !== 'user' && <StaffBadge role={user.role} />}
-                    </div>
-                    <div className="level">{t('leaderboard.level')} {user.level}</div>
-                  </div>
-                  
-                  <div className="xp-section">
-                    <div className="xp-amount">{user.xp.toLocaleString()}</div>
-                    <div className="xp-label">XP</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+            {/* Rest — 4 to 10 */}
+            {rest.length > 0 && (
+              <div className="lb-list">
+                {rest.map((entry, i) => (
+                  <ListRow key={entry.rank} entry={entry} index={i} />
+                ))}
+              </div>
+            )}
+          </>
         )}
+
       </div>
     </div>
   );
