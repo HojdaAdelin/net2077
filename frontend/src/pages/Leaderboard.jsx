@@ -1,12 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { Trophy, Medal, Award, Crown, User, Clock, Zap, Shield } from 'lucide-react';
-import GoldIcon from '../components/GoldIcon';
+import { Trophy, Medal, Award, Crown, User, Shield } from 'lucide-react';
 import { getLeaderboard } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
 import { AuthContext } from '../context/AuthContext';
-import { API_URL } from '../config';
-import SeasonBox from '../components/SeasonBox';
 import AvatarFrame from '../components/AvatarFrame';
 import NameEffectRenderer from '../components/NameEffectRenderer';
 import '../styles/AvatarFrame.css';
@@ -50,68 +47,17 @@ export default function Leaderboard() {
   const navigate = useNavigate();
   const { user, updateUser } = useContext(AuthContext);
   const [leaderboard, setLeaderboard] = useState([]);
-  const [competitiveData, setCompetitiveData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [competitiveLoading, setCompetitiveLoading] = useState(true);
   const [error, setError] = useState('');
-  const [timeRemaining, setTimeRemaining] = useState('');
-  const [activeTab, setActiveTab] = useState(tab === 'season' ? 'competitive' : 'alltime'); 
+  const [activeTab, setActiveTab] = useState('alltime');
 
   useEffect(() => {
     fetchLeaderboard();
-    fetchCompetitiveLeaderboard();
   }, []);
 
   useEffect(() => {
-    // Update activeTab when URL parameter changes
-    setActiveTab(tab === 'season' ? 'competitive' : 'alltime');
+    setActiveTab('alltime');
   }, [tab]);
-
-  useEffect(() => {
-    if (competitiveData) {
-      const interval = setInterval(() => {
-        updateTimeRemaining();
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [competitiveData]);
-
-  const updateTimeRemaining = () => {
-    if (!competitiveData) return;
-    
-    const now = new Date().getTime();
-    const end = new Date(competitiveData.endDate).getTime();
-    const remaining = end - now;
-    
-    if (remaining <= 0) {
-      setTimeRemaining('Resetting...');
-      fetchCompetitiveLeaderboard();
-      return;
-    }
-    
-    const hours = Math.floor(remaining / (1000 * 60 * 60));
-    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-    
-    setTimeRemaining(`${hours}h ${minutes}m ${seconds}s`);
-  };
-
-  const fetchCompetitiveLeaderboard = async (retries = 2) => {
-    try {
-      const response = await fetch(`${API_URL}/competitive/leaderboard`);
-      if (!response.ok) throw new Error(`Status ${response.status}`);
-      const data = await response.json();
-      setCompetitiveData(data);
-    } catch (error) {
-      if (retries > 0) {
-        setTimeout(() => fetchCompetitiveLeaderboard(retries - 1), 1500);
-      } else {
-        console.error('Error loading competitive leaderboard:', error);
-      }
-    } finally {
-      setCompetitiveLoading(false);
-    }
-  };
 
   const fetchLeaderboard = async () => {
     try {
@@ -132,8 +78,7 @@ export default function Leaderboard() {
 
   const handleTabChange = (tabName) => {
     setActiveTab(tabName);
-    const urlTab = tabName === 'competitive' ? 'season' : 'alltime';
-    navigate(`/leaderboard/${urlTab}`, { replace: true });
+    navigate(`/leaderboard/alltime`, { replace: true });
   };
 
   const getRankIcon = (rank) => {
@@ -198,94 +143,7 @@ export default function Leaderboard() {
             <Trophy size={20} />
             All-Time Rankings
           </div>
-          <div 
-            className={`leaderboard-tab ${activeTab === 'competitive' ? 'active' : ''}`}
-            onClick={() => handleTabChange('competitive')}
-          >
-            <Zap size={20} />
-            Competitive (24h)
-          </div>
         </div>
-
-      
-        {activeTab === 'competitive' && (
-          competitiveLoading ? (
-            <div className="competitive-leaderboard-section">
-              <div className="loading-state">
-                <div className="loading-spinner"></div>
-                <p>Loading season data...</p>
-              </div>
-            </div>
-          ) : competitiveData && (
-          <div className="competitive-leaderboard-section">
-            <div className="competitive-header">
-              <div className="competitive-title">
-                <Zap size={16} className="competitive-icon" />
-                <span>Competitive Season</span>
-              </div>
-              <div className="competitive-header-right">
-                <div className="competitive-timer">
-                  <Clock size={15} />
-                  <span className="timer-value">{timeRemaining}</span>
-                </div>
-              </div>
-            </div>
-
-            {user && (
-              <SeasonBox
-                userGold={user.gold ?? 0}
-                onGoldChange={(newGold) => updateUser({ gold: newGold })}
-                onInventoryChange={(inv) => updateUser({ inventory: inv })}
-              />
-            )}
-
-            <div className="competitive-leaderboard-list">              {competitiveData.leaderboard.length === 0 ? (
-                <div className="empty-competitive">
-                  <Zap size={48} />
-                  <p>No competitors yet. Be the first to earn XP!</p>
-                </div>
-              ) : (
-                competitiveData.leaderboard.map((user) => (
-                  <div key={user.rank} className={`competitive-item rank-${user.rank}`}>
-                    <div className="competitive-rank">
-                      <div className="rank-number">#{user.rank}</div>
-                      {user.rank === 1 && <Crown className="rank-icon gold" size={24} />}
-                      {user.rank === 2 && <Trophy className="rank-icon silver" size={22} />}
-                      {user.rank === 3 && <Medal className="rank-icon bronze" size={20} />}
-                    </div>
-                    
-                    <div className="competitive-user">
-                      <div className="competitive-user-inner">
-                        <AvatarFrame frame={user.activeFrame} size={36} />
-                        <div>
-                          <NameEffectRenderer effect={user.activeNameEffect}>
-                            <Link to={`/profile/${user.username}`} className="competitive-username">
-                              {user.username}
-                            </Link>
-                          </NameEffectRenderer>
-                          <div className="competitive-level">Level {user.level}</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="competitive-xp-reward-row">
-                      <div className="competitive-xp">
-                        <Zap size={16} />
-                        <span>{user.xpEarned.toLocaleString()} XP</span>
-                      </div>
-                      
-                      <div className="competitive-reward">
-                        <GoldIcon size={18} className="gold-icon" />
-                        <span className="gold-amount">{user.goldReward}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-          )
-        )}
 
         {activeTab === 'alltime' && (
         <div className="leaderboard-container">
