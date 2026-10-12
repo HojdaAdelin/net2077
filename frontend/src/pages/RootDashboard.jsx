@@ -4,7 +4,7 @@ import {
   Settings, Users, FileText, Megaphone, Upload,
   Trash2, Plus, X, RefreshCw, Send, Sparkles, Zap, Bug,
   ChevronDown, CheckCircle, XCircle, Clock, Download,
-  Search, Copy, Database, ListFilter, ClipboardList, BarChart2, ScrollText, Pencil
+  Search, Copy, Database, ListFilter, ClipboardList, BarChart2, ScrollText, Pencil, UserSearch
 } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
@@ -1545,6 +1545,122 @@ function SeasonPanel() {
   );
 }
 
+/* ─── User Management Panel ─── */
+function UserManagementPanel() {
+  const [query, setQuery] = useState('');
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState('');
+
+  const search = async () => {
+    const q = query.trim();
+    if (!q) return;
+    setLoading(true); setMsg(''); setUserData(null);
+    try {
+      const res = await fetch(`${API_URL}/admin/user/${encodeURIComponent(q)}`, { credentials: 'include' });
+      const data = await res.json();
+      if (res.ok && data.success) setUserData(data.user);
+      else setMsg(data.message || 'User not found');
+    } catch { setMsg('Network error'); }
+    finally { setLoading(false); }
+  };
+
+  const ROLE_COLORS = {
+    user: '#6b7280', helper: '#22c55e', mod: '#3b82f6',
+    'head-mod': '#8b5cf6', admin: '#f59e0b', 'head-admin': '#ef4444', root: '#ec4899'
+  };
+
+  return (
+    <div className="rd-qmgr">
+      <div className="rd-qmgr-header">
+        <div className="rd-section-label" style={{ margin: 0 }}>
+          <UserSearch size={13} /> User Management
+        </div>
+      </div>
+
+      <div className="rd-qmgr-search-row">
+        <div className="rd-qmgr-input-wrap">
+          <Search size={15} className="rd-qmgr-search-icon" />
+          <input
+            className="rd-input rd-qmgr-input"
+            placeholder="Search by username..."
+            value={query}
+            onChange={e => { setQuery(e.target.value); setMsg(''); }}
+            onKeyDown={e => e.key === 'Enter' && query.trim() && search()}
+            maxLength={100}
+          />
+        </div>
+        <button
+          className="rd-primary-btn"
+          style={{ marginTop: 0 }}
+          onClick={search}
+          disabled={loading || !query.trim()}
+        >
+          <Search size={14} /> {loading ? 'Searching...' : 'Search'}
+        </button>
+      </div>
+
+      {msg && <div className="rd-msg error">{msg}</div>}
+
+      {userData && (
+        <div className="rd-user-card">
+          <div className="rd-user-card-header">
+            <div className="rd-user-card-name">{userData.username}</div>
+            <span className="rd-stats-role" style={{ background: `${ROLE_COLORS[userData.role]}22`, color: ROLE_COLORS[userData.role], border: `1px solid ${ROLE_COLORS[userData.role]}55`, padding: '3px 10px', borderRadius: 6, fontSize: 12, fontWeight: 600 }}>
+              {userData.role}
+            </span>
+          </div>
+
+          <div className="rd-user-card-grid">
+            <div className="rd-user-card-field">
+              <span className="rd-user-card-label">Email</span>
+              <span className="rd-user-card-value">{userData.email}</span>
+            </div>
+            <div className="rd-user-card-field">
+              <span className="rd-user-card-label">XP</span>
+              <span className="rd-user-card-value">{(userData.xp || 0).toLocaleString()}</span>
+            </div>
+            <div className="rd-user-card-field">
+              <span className="rd-user-card-label">Level</span>
+              <span className="rd-user-card-value">{userData.level}</span>
+            </div>
+            <div className="rd-user-card-field">
+              <span className="rd-user-card-label">Gold</span>
+              <span className="rd-user-card-value">🪙 {(userData.gold || 0).toLocaleString()}</span>
+            </div>
+            <div className="rd-user-card-field">
+              <span className="rd-user-card-label">Streak</span>
+              <span className="rd-user-card-value">🔥 {userData.streak?.current ?? 0} (max {userData.streak?.max ?? 0})</span>
+            </div>
+            <div className="rd-user-card-field">
+              <span className="rd-user-card-label">Joined</span>
+              <span className="rd-user-card-value">{new Date(userData.createdAt).toLocaleDateString()}</span>
+            </div>
+            <div className="rd-user-card-field">
+              <span className="rd-user-card-label">Solved (Linux / Net / Arduino)</span>
+              <span className="rd-user-card-value">
+                {userData.solvedByTag?.LINUX ?? 0} / {userData.solvedByTag?.NETWORK ?? 0} / {userData.solvedByTag?.ARDUINO ?? 0}
+              </span>
+            </div>
+            <div className="rd-user-card-field">
+              <span className="rd-user-card-label">Arena W/L</span>
+              <span className="rd-user-card-value">{userData.arenaStats?.wins ?? 0}W / {userData.arenaStats?.losses ?? 0}L</span>
+            </div>
+            <div className="rd-user-card-field">
+              <span className="rd-user-card-label">Season XP (current)</span>
+              <span className="rd-user-card-value">{(userData.competitiveStats?.currentPeriodXP ?? 0).toLocaleString()}</span>
+            </div>
+            <div className="rd-user-card-field">
+              <span className="rd-user-card-label">Inventory items</span>
+              <span className="rd-user-card-value">{userData.inventory?.length ?? 0}</span>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ─── Main Dashboard ─── */
 const TABS = [
   { id: 'support',   label: 'Support',    icon: Users },
@@ -1556,6 +1672,7 @@ const TABS = [
   { id: 'stats',     label: 'Stats',      icon: BarChart2 },
   { id: 'terms',     label: 'Terms',      icon: ScrollText },
   { id: 'season',    label: 'Season',     icon: Zap },
+  { id: 'users',     label: 'Users',      icon: UserSearch },
 ];
 
 export default function RootDashboard() {
@@ -1600,6 +1717,7 @@ export default function RootDashboard() {
             {activeTab === 'stats'     && <StatsPanel />}
             {activeTab === 'terms'     && <TermsPanel />}
             {activeTab === 'season'    && <SeasonPanel />}
+            {activeTab === 'users'     && <UserManagementPanel />}
           </main>
         </div>
       </div>

@@ -169,3 +169,15 @@ export const getRecentUsers = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+export const getUserByUsername = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const user = await User.findOne({ username })
+      .select('username email role xp level gold createdAt streak competitiveStats arenaStats solvedByTag inventory frames nameEffects seasonPass');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};

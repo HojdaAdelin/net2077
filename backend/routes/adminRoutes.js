@@ -1,5 +1,5 @@
 import express from 'express';
-import { updateUserRole, getAllUsers, getRoleStats, getRecentUsers } from '../controllers/adminController.js';
+import { updateUserRole, getAllUsers, getRoleStats, getRecentUsers, getUserByUsername } from '../controllers/adminController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { isHeadAdmin, isModerator, isRoot } from '../middleware/checkRole.js';
 import rateLimit from 'express-rate-limit';
@@ -23,5 +23,6 @@ router.get('/users/stats', authMiddleware, isHeadAdmin, getRoleStats);
 // Admin and Moderator routes
 router.get('/users', authMiddleware, isModerator, getAllUsers);
 router.get('/recent-users', authMiddleware, isRoot, getRecentUsers);
+router.get('/user/:username', authMiddleware, isRoot, getUserByUsername);
 
 export default router;
