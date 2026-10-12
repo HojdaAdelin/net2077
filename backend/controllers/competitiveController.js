@@ -173,21 +173,34 @@ export const checkAndResetPeriod = async () => {
 
 export const getCompetitiveLeaderboard = async (req, res) => {
   try {
-    const activePeriod = await CompetitivePeriod.findOne({ isActive: true });
+    let activePeriod = await CompetitivePeriod.findOne({ isActive: true });
 
     if (!activePeriod) {
-      checkAndResetPeriod().catch(e => console.error('[Competitive] bg reset error:', e));
-      return res.json({
-        leaderboard: [],
-        periodNumber: 1,
-        endDate: getNextResetTime(),
-        timeRemaining: 0
-      });
+      await checkAndResetPeriod();
+      activePeriod = await CompetitivePeriod.findOne({ isActive: true });
+      if (!activePeriod) {
+        return res.json({
+          leaderboard: [],
+          periodNumber: 1,
+          endDate: getNextResetTime(),
+          timeRemaining: 0
+        });
+      }
     }
 
     const now = new Date();
     if (now >= activePeriod.endDate && !activePeriod.rewardsDistributed) {
-      checkAndResetPeriod().catch(e => console.error('[Competitive] bg reset error:', e));
+      // Await reset fully before returning — frontend gets fresh data directly
+      await checkAndResetPeriod();
+      activePeriod = await CompetitivePeriod.findOne({ isActive: true });
+      if (!activePeriod) {
+        return res.json({
+          leaderboard: [],
+          periodNumber: 1,
+          endDate: getNextResetTime(),
+          timeRemaining: 0
+        });
+      }
     }
 
     const topUsers = await User.find({ 'competitiveStats.currentPeriodXP': { $gt: 0 } })
@@ -219,7 +232,6 @@ export const getCompetitiveLeaderboard = async (req, res) => {
   }
 };
 
-// Root: get count of old competitive periods (all except active + last 2 inactive kept as backup)
 export const getOldPeriodsCount = async (req, res) => {
   try {
     const activePeriod = await CompetitivePeriod.findOne({ isActive: true });

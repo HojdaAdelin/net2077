@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Zap, Clock, Crown, Trophy, Medal } from 'lucide-react';
 import GoldIcon from '../components/GoldIcon';
@@ -17,6 +17,7 @@ export default function Season() {
   const [competitiveData, setCompetitiveData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [timeRemaining, setTimeRemaining] = useState('');
+  const fetchingRef = useRef(false);
 
   useEffect(() => {
     fetchCompetitiveLeaderboard();
@@ -33,7 +34,7 @@ export default function Season() {
     const remaining = new Date(competitiveData.endDate).getTime() - Date.now();
     if (remaining <= 0) {
       setTimeRemaining('Resetting...');
-      fetchCompetitiveLeaderboard();
+      if (!fetchingRef.current) fetchCompetitiveLeaderboard();
       return;
     }
     const h = Math.floor(remaining / 3600000);
@@ -43,14 +44,20 @@ export default function Season() {
   };
 
   const fetchCompetitiveLeaderboard = async (retries = 2) => {
+    if (fetchingRef.current) return;
+    fetchingRef.current = true;
     try {
       const res = await fetch(`${API_URL}/competitive/leaderboard`);
       if (!res.ok) throw new Error();
       const data = await res.json();
       setCompetitiveData(data);
     } catch {
-      if (retries > 0) setTimeout(() => fetchCompetitiveLeaderboard(retries - 1), 1500);
+      if (retries > 0) setTimeout(() => {
+        fetchingRef.current = false;
+        fetchCompetitiveLeaderboard(retries - 1);
+      }, 1500);
     } finally {
+      fetchingRef.current = false;
       setLoading(false);
     }
   };
