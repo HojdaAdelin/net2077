@@ -662,6 +662,23 @@
   overflow-y: auto;
 }
 
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}
+
 .modal-content h2 {
   font-size: 28px;
   margin-bottom: 12px;

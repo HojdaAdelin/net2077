@@ -1056,6 +1056,52 @@ function SeasonPanel() {
   const [testXpAmount, setTestXpAmount] = useState('');
   const [testXpMsg, setTestXpMsg] = useState('');
   const [testXpLoading, setTestXpLoading] = useState(false);
+  const [resetMsg, setResetMsg] = useState('');
+  const [resetLoading, setResetLoading] = useState(false);
+  const [currentPeriod, setCurrentPeriod] = useState(null);
+  const [oldPeriods, setOldPeriods] = useState(null); // { count, oldestPeriod, newestOldPeriod }
+  const [clearLoading, setClearLoading] = useState(false);
+  const [clearMsg, setClearMsg] = useState('');
+
+  const fetchPeriodInfo = () => {
+    fetch(`${API_URL}/competitive/leaderboard`)
+      .then(r => r.json())
+      .then(d => setCurrentPeriod(d.periodNumber ?? null))
+      .catch(() => {});
+    fetch(`${API_URL}/competitive/old-periods`, { credentials: 'include' })
+      .then(r => r.json())
+      .then(d => d.success && setOldPeriods(d))
+      .catch(() => {});
+  };
+
+  useEffect(() => { fetchPeriodInfo(); }, [resetMsg]);
+
+  const handleTriggerReset = async () => {
+    if (!confirm('Force-trigger competitive season reset now?')) return;
+    setResetLoading(true); setResetMsg('');
+    try {
+      const res = await fetch(`${API_URL}/competitive/trigger-reset`, {
+        method: 'POST', credentials: 'include',
+      });
+      const data = await res.json();
+      if (data.success) setResetMsg(`✓ ${data.message}`);
+      else setResetMsg(data.message || 'Error');
+    } catch { setResetMsg('Network error'); }
+    finally { setResetLoading(false); }
+  };
+
+  const handleClearOldPeriods = async () => {
+    if (!confirm(`Delete ${oldPeriods?.count} old periods (season #${oldPeriods?.oldestPeriod} → #${oldPeriods?.newestOldPeriod})? This cannot be undone.`)) return;    setClearLoading(true); setClearMsg('');
+    try {
+      const res = await fetch(`${API_URL}/competitive/old-periods`, {
+        method: 'DELETE', credentials: 'include',
+      });
+      const data = await res.json();
+      if (data.success) { setClearMsg(`✓ Deleted ${data.deleted} periods.`); fetchPeriodInfo(); }
+      else setClearMsg(data.message || 'Error');
+    } catch { setClearMsg('Network error'); }
+    finally { setClearLoading(false); }
+  };
 
   const handleAddTestXP = async () => {
     const amount = parseInt(testXpAmount);
@@ -1442,6 +1488,57 @@ function SeasonPanel() {
         </div>
         {testXpMsg && (
           <div className={`rd-msg ${testXpMsg.startsWith('✓') ? 'success' : 'error'}`}>{testXpMsg}</div>
+        )}
+      </div>
+
+      {/* Competitive Season Reset */}
+      <div className="rd-season-testxp">
+        <div className="rd-section-label" style={{ margin: '0 0 8px' }}>
+          Competitive Season — Force Reset
+          {currentPeriod != null && (
+            <span style={{ fontWeight: 400, opacity: 0.6, textTransform: 'none', fontSize: 11, marginLeft: 8 }}>
+              (Season #{currentPeriod} activ)
+            </span>
+          )}
+        </div>
+        <button
+          className="rd-primary-btn"
+          style={{ marginTop: 0, background: 'rgba(239,68,68,0.15)', borderColor: 'rgba(239,68,68,0.4)', color: '#ef4444' }}
+          onClick={handleTriggerReset}
+          disabled={resetLoading}
+        >
+          <RefreshCw size={14} /> {resetLoading ? 'Resetting...' : 'Trigger Season Reset'}
+        </button>
+        {resetMsg && (
+          <div className={`rd-msg ${resetMsg.startsWith('✓') ? 'success' : 'error'}`}>{resetMsg}</div>
+        )}
+      </div>
+
+      {/* Clear old periods */}
+      <div className="rd-season-testxp">
+        <div className="rd-section-label" style={{ margin: '0 0 8px' }}>
+          Clear Old Competitive Periods
+          {oldPeriods != null && oldPeriods.count > 0 && (
+            <span style={{ fontWeight: 400, opacity: 0.6, textTransform: 'none', fontSize: 11, marginLeft: 8 }}>
+              ({oldPeriods.count} to delete · #{oldPeriods.oldestPeriod} → #{oldPeriods.newestOldPeriod} · kept: #{(oldPeriods.keptPeriods || []).join(', #')})
+            </span>
+          )}
+          {oldPeriods != null && oldPeriods.count === 0 && (
+            <span style={{ fontWeight: 400, opacity: 0.5, textTransform: 'none', fontSize: 11, marginLeft: 8 }}>
+              (nothing to delete)
+            </span>
+          )}
+        </div>
+        <button
+          className="rd-primary-btn"
+          style={{ marginTop: 0, background: 'rgba(239,68,68,0.15)', borderColor: 'rgba(239,68,68,0.4)', color: '#ef4444' }}
+          onClick={handleClearOldPeriods}
+          disabled={clearLoading || !oldPeriods || oldPeriods.count === 0}
+        >
+          <Trash2 size={14} /> {clearLoading ? 'Deleting...' : `Clear ${oldPeriods?.count ?? '…'} old periods`}
+        </button>
+        {clearMsg && (
+          <div className={`rd-msg ${clearMsg.startsWith('✓') ? 'success' : 'error'}`}>{clearMsg}</div>
         )}
       </div>
     </div>

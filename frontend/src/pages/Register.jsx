@@ -34,7 +34,6 @@ const PERKS = [
   { icon: BookOpen,    title: 'Learn & Practice', desc: '2000+ questions on Linux, Networking & Debugging' },
   { icon: Trophy,      title: 'Leaderboards',     desc: 'Compete and climb the ranks' },
   { icon: Zap,         title: 'Arena Battles',    desc: 'Real-time 1v1 competitive mode' },
-  { icon: ShieldCheck, title: 'Free Forever',     desc: 'No paywalls, no hidden fees' },
 ];
 
 const getPasswordStrength = (pass) => {

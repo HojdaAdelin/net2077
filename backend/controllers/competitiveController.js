@@ -219,6 +219,81 @@ export const getCompetitiveLeaderboard = async (req, res) => {
   }
 };
 
+// Root: get count of old competitive periods (all except active + last 2 inactive kept as backup)
+export const getOldPeriodsCount = async (req, res) => {
+  try {
+    const activePeriod = await CompetitivePeriod.findOne({ isActive: true });
+    const excludeIds = activePeriod ? [activePeriod._id] : [];
+
+    // Keep the 2 most recent inactive periods — find their IDs to exclude
+    const recentInactive = await CompetitivePeriod.find({ _id: { $nin: excludeIds } })
+      .sort({ periodNumber: -1 })
+      .limit(2)
+      .select('_id periodNumber');
+    recentInactive.forEach(p => excludeIds.push(p._id));
+
+    const deletable = await CompetitivePeriod.find({ _id: { $nin: excludeIds } })
+      .sort({ periodNumber: 1 })
+      .select('periodNumber');
+
+    const count = deletable.length;
+    res.json({
+      success: true,
+      count,
+      oldestPeriod: count > 0 ? deletable[0].periodNumber : null,
+      newestOldPeriod: count > 0 ? deletable[count - 1].periodNumber : null,
+      keptPeriods: recentInactive.map(p => p.periodNumber),
+    });
+  } catch (error) {
+    console.error('[Competitive] Error counting old periods:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Root: delete old competitive periods, keeping the active + last 2 inactive
+export const clearOldPeriods = async (req, res) => {
+  try {
+    const activePeriod = await CompetitivePeriod.findOne({ isActive: true });
+    const excludeIds = activePeriod ? [activePeriod._id] : [];
+
+    const recentInactive = await CompetitivePeriod.find({ _id: { $nin: excludeIds } })
+      .sort({ periodNumber: -1 })
+      .limit(2)
+      .select('_id');
+    recentInactive.forEach(p => excludeIds.push(p._id));
+
+    const result = await CompetitivePeriod.deleteMany({ _id: { $nin: excludeIds } });
+    res.json({ success: true, deleted: result.deletedCount });
+  } catch (error) {
+    console.error('[Competitive] Error clearing old periods:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Root: manually trigger a competitive season reset (for testing)
+export const triggerCompetitiveReset = async (req, res) => {
+  try {
+    const activePeriod = await CompetitivePeriod.findOne({ isActive: true });
+    if (!activePeriod) {
+      return res.status(404).json({ message: 'No active competitive period found.' });
+    }
+    if (activePeriod.rewardsDistributed) {
+      return res.status(400).json({ message: 'Period already distributed. Waiting for next cycle.' });
+    }
+
+    // Force endDate to now so checkAndResetPeriod triggers immediately
+    activePeriod.endDate = new Date(Date.now() - 1000);
+    await activePeriod.save();
+
+    await checkAndResetPeriod();
+
+    res.json({ success: true, message: `Season #${activePeriod.periodNumber} reset triggered.` });
+  } catch (error) {
+    console.error('[Competitive] Error triggering reset:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 // Track XP gain for competitive
 export const trackCompetitiveXP = async (userId, xpGained) => {
   try {

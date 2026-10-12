@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { CircleAlert, Lock, X } from 'lucide-react';
+import { MessageCircleWarning, Lock, X } from 'lucide-react';
 import './SupportButton.css';
 
 const SupportButton = () => {
@@ -98,7 +98,7 @@ const SupportButton = () => {
         style={{ left: `${position.x}px`, top: `${position.y}px`, cursor: isDragging ? 'grabbing' : 'grab' }}
         title="Support (Drag to move)"
       >
-        <CircleAlert size={32} />
+        <MessageCircleWarning size={32} />
       </button>
 
       {showPopup && (
