@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import MagicBento from './MagicBento';
 import DarkVeil from './DarkVeil';
+import FeaturesSection from './FeaturesSection';
 import '../styles/Hero.css';
 
 const LINUX_CHAPTERS = [
@@ -27,32 +28,7 @@ const LINUX_CHAPTERS = [
   { id: 'CHAPTER15', name: 'Embedded Systems', icon: Cpu },
 ];
 
-const TRACKS = [
-{
-    icon: Terminal,
-    number: '01',
-    title: 'Linux & Terminal',
-    description: 'Learn to navigate the terminal with confidence. Files, permissions, processes, scripting, the stuff you actually use.',
-    tags: ['Commands', 'Scripting'],
-    hasOverview: true,
-  },
-  {
-    icon: Network,
-    number: '02',
-    title: 'Networking',
-    description: 'Understand how the internet works under the hood. IP, routing, protocols and why your packets end up where they do.',
-    tags: ['Protocols', 'Security'],
-    primary: { to: '/grile?filter=network', label: 'Get Started' },
-  },
-  {
-    icon: Code,
-    number: '03',
-    title: 'Programming & Debug',
-    description: 'Write, test and fix code under pressure. Real problems, real feedback, the kind you get in competitions.',
-    tags: ['C++', 'Debugging'],
-    primary: { to: '/is', label: 'Get Started' },
-  },
-];
+const TRACKS = [];
 
 const EXAMS = [
   { to: '/exam/acadnet2026local_11_12', meta: 'LOCAL · XI-XII', title: 'AcadNet Calculatoare 2026', info: '50 Questions · Medium' },
@@ -76,7 +52,7 @@ const FEATURES_COMPARISON = [
 export default function Hero() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [linuxOverviewOpen, setLinuxOverviewOpen] = useState(false);
+  const [linuxOverviewOpen] = useState(false);
   const [expandedDomain, setExpandedDomain] = useState(null);
   const [isDark, setIsDark] = useState(() => document.documentElement.getAttribute('data-theme') !== 'light');
   const [darkVeilFailed, setDarkVeilFailed] = useState(false);
@@ -187,149 +163,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <section className="h-section h-t2-section">
-        <div className="h-container">
-          <div className="h-t2-inner">
-            <div className="h-t2-text">
-              <h2 className="h-t2-title">Terminal 2.0</h2>
-              <p className="h-t2-desc">
-                A fresh start for the Terminal section. Terminal 2.0 is a much more comprehensive version than the Legacy one, offering a significantly better user experience.
-              </p>
-              <Link to="/terminal?v=2" className="h-t2-btn">
-                Try Terminal 2.0
-                <ArrowRight size={15} />
-              </Link>
-            </div>
-
-            <div className="h-t2-screens">
-            
-              <div className="h-t2-screen h-t2-screen-legacy">
-                <div className="h-t2-screen-bar">
-                  <span className="h-t2-dot h-t2-dot-r" />
-                  <span className="h-t2-dot h-t2-dot-y" />
-                  <span className="h-t2-dot h-t2-dot-g" />
-                  <span className="h-t2-screen-label">Legacy</span>
-                </div>
-                <div className="h-t2-screen-body">
-                  <div className="h-t2-mock-line h-t2-mock-prompt"><span className="h-t2-mock-ps">user@net2077:~$</span><span className="h-t2-mock-cursor" /></div>
-                  <div className="h-t2-mock-line h-t2-mock-dim">Filter: all  |  Easy  Medium  Hard</div>
-                  <div className="h-t2-mock-line">1. List files in directory</div>
-                  <div className="h-t2-mock-line h-t2-mock-solved">2. Show current shell ✓</div>
-                  <div className="h-t2-mock-line">3. Kill process by PID</div>
-                  <div className="h-t2-mock-line h-t2-mock-dim">Solved: 1 / 24</div>
-                </div>
-              </div>
-
-              <div className="h-t2-screen h-t2-screen-v2">
-                <div className="h-t2-screen-bar">
-                  <span className="h-t2-dot h-t2-dot-r" />
-                  <span className="h-t2-dot h-t2-dot-y" />
-                  <span className="h-t2-dot h-t2-dot-g" />
-                  <span className="h-t2-screen-label h-t2-screen-label-v2">Terminal 2.0</span>
-                </div>
-                <div className="h-t2-screen-body">
-                  <div className="h-t2-mock-line h-t2-mock-sys">net2077@terminal: <span className="h-t2-mock-white">Select a category</span></div>
-                  <div className="h-t2-mock-line h-t2-mock-red">  cd /easy</div>
-                  <div className="h-t2-mock-line h-t2-mock-red">  cd /medium</div>
-                  <div className="h-t2-mock-line h-t2-mock-red">  cd /hard</div>
-                  <div className="h-t2-mock-line h-t2-mock-prompt"><span className="h-t2-mock-ps">user@net2077:~$</span> <span className="h-t2-mock-typed">cd /easy</span><span className="h-t2-mock-cursor" /></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="h-section" id="tracks">
-        <div className="h-container">
-          <div className="h-section-header">
-            <h2 className="h-section-title">Pick your track</h2>
-            <p className="h-section-sub">Three paths, each with its own depth. Start anywhere.</p>
-          </div>
-
-          <div className="h-tracks">
-            {TRACKS.map((track) => {
-              const Icon = track.icon;
-              const isLinux = track.hasOverview;
-              return (
-                <div key={track.number} className="h-track-card">
-                  <div className="h-track-top">
-                    <div className="h-track-circle">
-                      <Icon size={22} />
-                    </div>
-                    <span className="h-track-num">{track.number}</span>
-                  </div>
-                  <h3 className="h-track-title">{track.title}</h3>
-                  <p className="h-track-desc">{track.description}</p>
-                  <div className="h-track-tags">
-                    {track.tags.map(t => <span key={t} className="h-tag">{t}</span>)}
-                  </div>
-                  <div className="h-track-actions">
-                    {isLinux ? (
-                      <button
-                        className="h-track-get-started"
-                        onClick={() => {
-                          const isOpening = !linuxOverviewOpen;
-                          setLinuxOverviewOpen(v => !v);
-                          if (isOpening) {
-                            setTimeout(() => {
-                              document.querySelector('.h-linux-overview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            }, 50);
-                          }
-                        }}
-                      >
-                        Get Started <ChevronDown size={14} className={`h-track-chevron ${linuxOverviewOpen ? 'open' : ''}`} />
-                      </button>
-                    ) : (
-                      <Link to={track.primary.to} className="h-track-get-started">
-                        Get Started <ArrowRight size={14} />
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className={`h-linux-overview ${linuxOverviewOpen ? 'open' : ''}`}>
-            <div className="h-linux-overview-inner">
-              <div className="h-linux-overview-header">
-                <h2 className="h-linux-overview-title">Linux Overview</h2>
-                <p className="h-linux-overview-sub">
-                  Put your Linux knowledge to the test. This assessment covers all core topics from the command line to system internals so you can see exactly where you stand.
-                </p>
-                <div className="h-linux-overview-meta">
-                  <span className="h-linux-meta-pill">12 chapters</span>
-                  <span className="h-linux-meta-pill">5 questions each</span>
-                  <span className="h-linux-meta-pill h-linux-meta-pill--accent">60 questions total</span>
-                </div>
-              </div>
-
-              <div className="h-linux-chapters">
-                {LINUX_CHAPTERS.map((ch, i) => {
-                  const ChIcon = ch.icon;
-                  return (
-                    <div key={ch.id} className="h-linux-chapter-item">
-                      <div className="h-linux-chapter-num">{String(i + 1).padStart(2, '0')}</div>
-                      <div className="h-linux-chapter-icon">
-                        <ChIcon size={15} />
-                      </div>
-                      <span className="h-linux-chapter-name">{ch.name}</span>
-                      <span className="h-linux-chapter-count">5 questions</span>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="h-linux-overview-footer">
-                <button className="h-linux-start-btn" onClick={handleStartTest}>
-                  Start Test <ArrowRight size={15} />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <FeaturesSection />
 
       <section className="h-section h-acadnet-section" id="prepare-acadnet">
         <div className="h-container">

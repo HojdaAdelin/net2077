@@ -1,0 +1,175 @@
+/* Features — isolated styles; does not change Hero, Stats or global theme. */
+.fs-section {
+  position: relative;
+  z-index: 1;
+  padding: 80px 0 96px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-primary);
+}
+.fs-container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.fs-title {
+  margin: 0 0 48px;
+  font-size: clamp(28px, 3.5vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.7px;
+  color: var(--text-primary);
+}
+.fs-cards { display: flex; flex-direction: column; align-items: flex-start; gap: 48px; }
+
+.fc-card {
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  width: min(100%, 420px);
+  min-height: 550px;
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid var(--border);
+  background: #0d0c11;
+  opacity: 0;
+  transition: opacity .55s ease, transform .55s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.fc-card--linux { width: min(100%, 450px); min-height: 490px; }
+.fc-card--network { width: min(100%, 400px); min-height: 430px; }
+.fc-card--embedded { width: min(100%, 420px); min-height: 400px; }
+.fc-card--left { align-self: flex-start; transform: translateX(-22px); }
+.fc-card--right { align-self: flex-end; transform: translateX(22px); }
+.fc-card.fc-visible { opacity: 1; transform: translateX(0); }
+
+@media (hover: hover) {
+  .fc-card:hover {
+    border-color: rgba(166, 102, 248, .52);
+    box-shadow: 0 0 0 1px rgba(146, 74, 233, .10), 0 18px 48px rgba(0, 0, 0, .23);
+  }
+}
+
+.fc-shader-wrap, .shader-bg-root, .shader-bg-canvas, .shader-bg-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.fc-shader-wrap { z-index: 0; overflow: hidden; border-radius: inherit; }
+.shader-bg-root { overflow: hidden; }
+.shader-bg-canvas { display: block; z-index: 1; }
+.shader-bg-fallback {
+  z-index: 0;
+  opacity: var(--sh-op, 1);
+  background: radial-gradient(ellipse 78% 54% at var(--sh-fx, 70%) var(--sh-fy, 70%),
+    rgba(163, 83, 248, .7) 0%, rgba(99, 32, 184, .38) 45%, transparent 85%);
+}
+/* Subtle scrim protects readability without hiding the lower fluid effect. */
+.fc-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(13, 12, 17, .88) 0%, rgba(13, 12, 17, .35) 30%, transparent 55%, rgba(13, 12, 17, .18) 72%, rgba(13, 12, 17, .78) 100%);
+}
+.fc-card-inner {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: inherit;
+  padding: 32px;
+}
+.fc-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.fc-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(130, 50, 210, .20);
+  border: 1px solid rgba(170, 90, 245, .30);
+  color: #d2a4ff;
+}
+.fc-card-title {
+  margin: 0;
+  font-size: clamp(23px, 2.5vw, 29px);
+  font-weight: 700;
+  letter-spacing: -.5px;
+  color: #f4f0fa;
+}
+.fc-card--linux .fc-card-title { font-size: clamp(27px, 3vw, 34px); }
+.fc-card-desc {
+  max-width: 350px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(238, 229, 248, .83);
+}
+.fc-entries {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 9px;
+  padding: 0;
+  margin: 28px 0 0;
+  list-style: none;
+}
+.fc-entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 43px;
+  box-sizing: border-box;
+  padding: 10px 13px;
+  border-radius: 11px;
+  background: rgba(24, 20, 34, .78);
+  border: 1px solid rgba(219, 188, 255, .19);
+  text-decoration: none;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+.fc-entry:hover { background: rgba(100, 45, 156, .62); border-color: rgba(207, 158, 255, .54); }
+.fc-entry:focus-visible { outline: 2px solid #c084fc; outline-offset: 3px; }
+.fc-entry-icon { color: #cba5f8; flex-shrink: 0; }
+.fc-entry-label { min-width: 0; flex: 1; color: #f4edfb; font-size: 13px; font-weight: 550; }
+.fc-entry-arrow { color: #cba5f8; flex-shrink: 0; transition: transform .2s ease; }
+.fc-entry:hover .fc-entry-arrow { transform: translateX(3px); }
+
+/* Preserve the existing light-theme selector and make the card readable. */
+[data-theme="light"] .fc-card { background: #f4f1fa; }
+[data-theme="light"] .fc-card::after {
+  background: linear-gradient(to bottom, rgba(249, 247, 253, .96), rgba(249, 247, 253, .48) 34%, rgba(249, 247, 253, .12) 55%, rgba(249, 247, 253, .90) 100%);
+}
+[data-theme="light"] .fc-card-title { color: var(--text-primary); }
+[data-theme="light"] .fc-card-desc { color: var(--text-secondary); }
+[data-theme="light"] .fc-icon-wrap { color: #7c3aed; background: rgba(110, 40, 180, .09); border-color: rgba(110, 40, 180, .20); }
+[data-theme="light"] .fc-entry { background: rgba(255, 255, 255, .86); border-color: rgba(100, 67, 145, .20); }
+[data-theme="light"] .fc-entry:hover { background: #f0e5ff; border-color: rgba(110, 40, 180, .38); }
+[data-theme="light"] .fc-entry-label { color: var(--text-primary); }
+[data-theme="light"] .fc-entry-icon, [data-theme="light"] .fc-entry-arrow { color: #7c3aed; }
+
+@media (max-width: 768px) {
+  .fs-section { padding: 56px 0 64px; }
+  .fs-title { margin-bottom: 32px; }
+  .fs-cards { align-items: stretch; gap: 24px; }
+  .fc-card--left, .fc-card--right { align-self: center; }
+  .fc-card, .fc-card--linux, .fc-card--network, .fc-card--embedded { width: min(100%, 460px); }
+}
+@media (max-width: 480px) {
+  .fs-section { padding: 42px 0 52px; }
+  .fs-container { padding: 0 16px; }
+  .fc-card { border-radius: 22px; }
+  .fc-card--linux { min-height: 460px; }
+  .fc-card--network { min-height: 400px; }
+  .fc-card--embedded { min-height: 390px; }
+  .fc-card-inner { padding: 24px 20px; }
+  .fc-card-title { font-size: 24px; }
+  .fc-card-desc { font-size: 13.5px; }
+  .fc-entry-label { font-size: 12.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fc-card { opacity: 1; transform: none !important; transition: border-color .2s, box-shadow .2s; }
+  .fc-entry, .fc-entry-arrow { transition: none; }
+}
