@@ -13,6 +13,9 @@ const CARDS = [
     description: 'Explore Linux questions, tests, terminal practice, and structured learning roadmaps.',
     Icon: Terminal,
     align: 'left',
+    headline: 'Get comfortable with the command line.',
+    summary: 'Build your foundation, put commands into practice, and connect what you learn through a guided roadmap.',
+    topics: ['File systems', 'Permissions', 'Processes', 'Shell commands'],
     shader: { intensity: 1, speed: 0.5, focusX: 0.70, focusY: 0.68 },
     entries: [
       { icon: BookOpen, label: '1500+ Questions', to: '/grile?filter=linux' },
@@ -27,6 +30,9 @@ const CARDS = [
     description: 'Networking questions and tests covering protocols, routing, security, and core concepts.',
     Icon: Network,
     align: 'right',
+    headline: 'Understand what connects everything.',
+    summary: 'Follow the path from a single packet to an entire network. Practice the concepts behind reliable connections.',
+    topics: ['Protocols', 'Routing', 'Addressing', 'Security'],
     shader: { intensity: 0.6, speed: 0.35, focusX: 0.75, focusY: 0.66 },
     entries: [
       { icon: BookOpen, label: '300+ Questions', to: '/grile?filter=network' },
@@ -39,6 +45,9 @@ const CARDS = [
     description: 'Questions on hardware, microcontrollers, and low-level programming.',
     Icon: Cpu,
     align: 'left',
+    headline: 'Explore where code meets hardware.',
+    summary: 'Look beneath the software and strengthen your understanding of microcontrollers, hardware, and low-level programming.',
+    topics: ['Microcontrollers', 'Hardware', 'Low-level programming'],
     shader: { intensity: 0.4, speed: 0.25, focusX: 0.53, focusY: 0.77 },
     entries: [
       { icon: BookOpen, label: '300+ Questions', to: '/grile?filter=all' },
@@ -120,7 +129,22 @@ export default function FeaturesSection() {
       <div className="fs-container">
         <h2 id="features-heading" className="fs-title">Features</h2>
         <div className="fs-cards">
-          {CARDS.map((card) => <FeatureCard key={card.id} card={card} reducedMotion={reducedMotion} />)}
+          {CARDS.map((card, index) => (
+            <div key={card.id} className={`fs-feature-row fs-feature-row--${card.align}`}>
+              <div className="fs-feature-copy">
+                <span className="fs-feature-eyebrow">
+                  <span className="fs-feature-number">{String(index + 1).padStart(2, '0')}</span>
+                  {card.title}
+                </span>
+                <h3 className="fs-feature-heading">{card.headline}</h3>
+                <p className="fs-feature-summary">{card.summary}</p>
+                <ul className="fs-feature-topics" aria-label={`${card.title} topics`}>
+                  {card.topics.map((topic) => <li key={topic}>{topic}</li>)}
+                </ul>
+              </div>
+              <FeatureCard card={card} reducedMotion={reducedMotion} />
+            </div>
+          ))}
         </div>
       </div>
     </section>
