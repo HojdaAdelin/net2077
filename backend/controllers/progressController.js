@@ -1,12 +1,10 @@
+import { finishQuizAttempt } from './quizAttemptController.js';
 import User from '../models/User.js';
-import { levelFromXp } from '../utils/xpUtils.js';
-import { updateUserStreak, getStreakInfo } from '../utils/streakUtils.js';
-import { calculateXPWithBoosts } from './shopController.js';
-import { trackCompetitiveXP } from './competitiveController.js';
+import { getStreakInfo } from '../utils/streakUtils.js';
 
 export const getUserProgress = async (req, res) => {
   try {
-    const user = await User.findById(req.userId).populate('solvedQuestions', '_id tags type');
+    const user = await User.findById(req.userId).populate('solvedQuestions', '_id tags type correctAnswers');
     
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -14,6 +12,7 @@ export const getUserProgress = async (req, res) => {
 
     const solvedQuestions = user.solvedQuestions.map(question => ({
       id: question._id.toString(),
+      correctAnswers: question.correctAnswers,
       tags: question.tags || [],
       type: question.type
     }));
@@ -61,50 +60,7 @@ export const getLevel = async (req, res) => {
   }
 };
 
-export const addSimulation = async (req, res) => {
-  try {
-    const { examId, examTitle, examTag, score, totalPoints, correctAnswers, totalQuestions } = req.body;
-    const user = await User.findById(req.userId);
-    
-    user.simulations.push({ 
-      examId,
-      examTitle,
-      examTag,
-      score, 
-      totalPoints,
-      correctAnswers,
-      totalQuestions,
-      date: new Date() 
-    });
-    
-    const percentage = totalPoints > 0 ? (score / totalPoints) * 100 : 0;
-    
-    const finalXP = await calculateXPWithBoosts(req.userId, score);
-    
-    user.xp += finalXP; 
-    user.level = levelFromXp(user.xp);
-    
-    await trackCompetitiveXP(req.userId, finalXP);
-    
-    if (correctAnswers > 0) {
-      await updateUserStreak(user);
-    }
-    
-    await user.save();
-    
-    const streakInfo = getStreakInfo(user);
-    
-    res.json({ 
-      xp: user.xp, 
-      level: user.level,
-      streak: streakInfo
-    });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
-
-
+export const addSimulation = finishQuizAttempt('exam');
 
 export const claimLevelRewards = async (req, res) => {
   try {

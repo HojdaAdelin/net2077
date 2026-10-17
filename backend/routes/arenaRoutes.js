@@ -1,8 +1,10 @@
 import express from 'express';
+import { hideArenaSolutions } from '../utils/questionValidation.js';
 import { createMatch, joinMatch, getMatch, submitAnswer, finishMatch, getAvailableMatches, cancelMatch, getMyWaitingMatch, getArenaLeaderboard, getMyArenaStats } from '../controllers/arenaController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
+router.use(hideArenaSolutions);
 
 router.post('/create', authMiddleware, createMatch);
 router.post('/join', authMiddleware, joinMatch);

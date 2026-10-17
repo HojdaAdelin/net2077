@@ -2,6 +2,7 @@ import ArenaMatch from '../models/ArenaMatch.js';
 import { levelFromXp, applyPrivilege } from '../utils/xpUtils.js';
 import Question from '../models/Question.js';
 import User from '../models/User.js';
+import { validateAnswers } from '../utils/questionValidation.js';
 import { updateUserStreak } from '../utils/streakUtils.js';
 
 const generateMatchId = () => {
@@ -134,17 +135,21 @@ export const submitAnswer = async (req, res) => {
       return res.status(403).json({ message: 'Not authorized' });
     }
 
-    if (isCreator) {
-      match.creatorAnswers.set(questionId, answers);
-    } else {
-      match.opponentAnswers.set(questionId, answers);
+    if (typeof questionId !== 'string' || !match.questions.some(id => String(id) === questionId)) {
+      return res.status(400).json({ message: 'Question is not part of this match' });
     }
-
-    await match.save();
-
-    res.json({ success: true });
+    const question = await Question.findById(questionId);
+    validateAnswers(question, answers);
+    const field = isCreator ? 'creatorAnswers' : 'opponentAnswers';
+    await ArenaMatch.updateOne({ _id: match._id, status: 'active', [`${field}.${questionId}`]: { $exists: false } },
+      { $set: { [`${field}.${questionId}`]: answers } });
+    const updated = await ArenaMatch.findById(match._id);
+    const selected = updated?.[field].get(questionId);
+    if (!selected) return res.status(400).json({ message: 'Match is no longer active' });
+    res.json({ success: true, correct: validateAnswers(question, selected),
+      correctAnswers: question.correctAnswers, selectedAnswers: selected });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(error.status || 500).json({ message: 'Server error', error: error.message });
   }
 };
 

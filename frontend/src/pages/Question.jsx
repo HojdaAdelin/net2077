@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
 import '../styles/SharedQuestion.css';
@@ -12,6 +12,8 @@ export default function Question() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const submittingRef = useRef(false);
+  const [submitError, setSubmitError] = useState(null);
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
@@ -50,13 +52,26 @@ export default function Question() {
     }
   };
 
-  const handleSubmit = () => {
-    setSubmitted(true);
+  const handleSubmit = async () => {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
+    setSubmitError(null);
+    try {
+      const response = await fetch(`${API_URL}/questions/attempts/check`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
+        body: JSON.stringify({ questionId, answers: selectedAnswers })
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || 'Unable to check answer');
+      setQuestion(previous => ({ ...previous, correctAnswers: result.correctAnswers }));
+      setSubmitted(true);
+    } catch (error) { setSubmitError(error.message); }
+    finally { submittingRef.current = false; }
   };
 
   const isCorrect = () => {
     if (!submitted) return null;
-    const correctAnswers = question.correctAnswers || [question.correctIndex];
+    const correctAnswers = question.correctAnswers || [];
     return selectedAnswers.length === correctAnswers.length &&
            selectedAnswers.every(ans => correctAnswers.includes(ans));
   };
@@ -83,7 +98,7 @@ export default function Question() {
     );
   }
 
-  const correctAnswers = question.correctAnswers || [question.correctIndex];
+  const correctAnswers = question.correctAnswers || [];
 
   return (
     <div className="sq-page">
@@ -137,6 +152,7 @@ export default function Question() {
             })}
           </div>
 
+          {submitError && <p role="alert">{submitError}</p>}
           {!submitted ? (
             <button 
               onClick={handleSubmit}

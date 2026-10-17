@@ -97,6 +97,7 @@ const userSchema = new mongoose.Schema({
   },
   lastBasicReset: { type: Date, default: null },
   xp: { type: Number, default: 0 },
+  rewardedQuizAttempts: [{ type: String }],
   level: { type: Number, default: 1 },
   gold: { type: Number, default: 0 },
   lastLevelRewarded: { type: Number, default: 1 },

@@ -1,3 +1,5 @@
+import { validateAnswers } from '../utils/questionValidation.js';
+import { finishQuizAttempt, syncQuizLevel } from './quizAttemptController.js';
 import Question from '../models/Question.js';
 import User from '../models/User.js';
 import { updateUserStreak } from '../utils/streakUtils.js';
@@ -84,7 +86,10 @@ export const getRandom50 = async (req, res) => {
 
 export const markSolved = async (req, res) => {
   try {
-    const { questionId } = req.body;
+    const { questionId, answers } = req.body;
+    if (typeof questionId !== 'string' || !/^[a-f\d]{24}$/i.test(questionId)) {
+      return res.status(400).json({ message: 'Invalid question' });
+    }
     const user = await User.findById(req.userId);
     const question = await Question.findById(questionId);
     
@@ -92,68 +97,38 @@ export const markSolved = async (req, res) => {
       return res.status(404).json({ message: 'Question not found' });
     }
 
-    const alreadySolved = user.solvedQuestions.some(
-      id => id.toString() === questionId.toString()
-    );
-
-    if (!alreadySolved) {
-      const xpGained = question.points || 1;
-      const finalXP = await calculateXPWithBoosts(user._id, xpGained);
-      user.solvedQuestions.push(questionId);
-      user.xp += finalXP;
-      user.level = levelFromXp(user.xp);
-      
-      await trackCompetitiveXP(user._id, finalXP);
-      
-      await updateUserStreak(user);
-      
-      if (question.tags && question.tags.length > 0) {
-        question.tags.forEach(tag => {
-          if (tag === 'LINUX' || tag === 'NETWORK' || tag === 'ARDUINO') {
-            if (!user.solvedByTag) {
-              user.solvedByTag = { LINUX: 0, NETWORK: 0 };
-            }
-            user.solvedByTag[tag] = (user.solvedByTag[tag] || 0) + 1;
-          }
-        });
-      }
-
-      // Track daily activity
-      const today = new Date().toISOString().split('T')[0];
-      if (!user.dailyActivity) user.dailyActivity = [];
-      const dayEntry = user.dailyActivity.find(d => d.date === today);
-      if (dayEntry) {
-        dayEntry.count += 1;
-      } else {
-        user.dailyActivity.push({ date: today, count: 1 });
-        // Keep only last 30 days
-        if (user.dailyActivity.length > 30) {
-          user.dailyActivity.sort((a, b) => a.date.localeCompare(b.date));
-          user.dailyActivity = user.dailyActivity.slice(-30);
-        }
-      }
-      user.markModified('dailyActivity');
-      
-      await user.save();
-      console.log(`[✔] Question ${questionId} marked as solved for user ${user.username}`);
-    } else {
-      console.log(`[✘]  Question ${questionId} already solved by user ${user.username}`);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    const correct = validateAnswers(question, answers);
+    if (!correct) return res.json({ correct: false, correctAnswers: question.correctAnswers });
+    const finalXP = await calculateXPWithBoosts(user._id, question.points || 1);
+    const increments = { xp: finalXP };
+    for (const tag of new Set(question.tags || [])) {
+      if (['LINUX', 'NETWORK', 'ARDUINO'].includes(tag)) increments[`solvedByTag.${tag}`] = 1;
     }
-    
-    res.json({ 
-      xp: user.xp, 
-      level: user.level,
-      solvedByTag: user.solvedByTag,
-      alreadySolved,
-      streak: {
-        current: user.streak?.current || 0,
-        max: user.streak?.max || 0,
-        isActive: true
-      }
-    });
+    await updateUserStreak(user);
+    const today = new Date().toISOString().split('T')[0];
+    const activity = (user.dailyActivity || []).map(entry => entry.toObject());
+    const day = activity.find(entry => entry.date === today);
+    if (day) day.count += 1;
+    else activity.push({ date: today, count: 1 });
+    const rewarded = await User.findOneAndUpdate({ _id: user._id, solvedQuestions: { $ne: question._id } }, {
+      $addToSet: { solvedQuestions: question._id }, $inc: increments,
+      $set: { streak: user.streak.toObject(), dailyActivity: activity.slice(-30) }
+    }, { new: true });
+    const alreadySolved = !rewarded;
+    if (rewarded) {
+      await syncQuizLevel(user._id);
+      await trackCompetitiveXP(user._id, finalXP);
+    }
+    const current = await User.findById(user._id);
+
+    res.json({ correct: true, correctAnswers: question.correctAnswers,
+      xp: current.xp, level: current.level, solvedByTag: current.solvedByTag,
+      alreadySolved, streak: { current: current.streak?.current || 0,
+        max: current.streak?.max || 0, isActive: true } });
   } catch (error) {
-    console.error('Error marking question as solved:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    if (!error.status) console.error('Error marking question as solved:', error);
+    res.status(error.status || 500).json({ message: error.status ? error.message : 'Server error', error: error.message });
   }
 };
 
@@ -221,50 +196,7 @@ export const getDailyChallengeStatus = async (req, res) => {
   }
 };
 
-export const completeDailyChallenge = async (req, res) => {
-  try {
-    const { score, totalPoints } = req.body;
-    const user = await User.findById(req.userId);
-    
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    const today = new Date().toISOString().split('T')[0]; 
-    
-    if (user.dailyChallenge && user.dailyChallenge.lastCompleted === today) {
-      return res.status(400).json({ message: 'Daily challenge already completed today' });
-    }
-
-    const doubleXP = score * 2;
-    const finalXP = applyPrivilege(doubleXP, user);
-    user.xp += finalXP;
-    user.level = levelFromXp(user.xp);
-
-    await trackCompetitiveXP(user._id, finalXP);
-    
-    if (!user.dailyChallenge) {
-      user.dailyChallenge = {};
-    }
-    user.dailyChallenge.lastCompleted = today;
-    user.dailyChallenge.lastScore = score;
-    user.dailyChallenge.lastTotalPoints = totalPoints;
-    
-    await user.save();
-    
-    console.log(`[✔] Daily challenge completed by user ${user.username}: ${score}/${totalPoints} points (${doubleXP} XP gained)`);
-    
-    res.json({ 
-      xp: user.xp, 
-      level: user.level,
-      pointsAdded: doubleXP,
-      challengeCompleted: true
-    });
-  } catch (error) {
-    console.error('Error completing daily challenge:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+export const completeDailyChallenge = finishQuizAttempt('daily');
 export const resetBasicStats = async (req, res) => {
   try {
     const user = await User.findById(req.userId);
@@ -533,35 +465,7 @@ export const resetNetworkStats = async (req, res) => {
   }
 };
 
-export const submitRandom50 = async (req, res) => {
-  try {
-    const { score, totalPoints } = req.body;
-    
-    if (typeof score !== 'number' || typeof totalPoints !== 'number') {
-      return res.status(400).json({ message: 'Invalid score data' });
-    }
-    
-    const user = await User.findById(req.userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    
-    const finalXP = applyPrivilege(score, user);
-    user.xp += finalXP;
-    user.level = levelFromXp(user.xp);
-    await trackCompetitiveXP(user._id, finalXP);
-    
-    await user.save();
-    
-    res.json({ 
-      success: true, 
-      scoreAdded: finalXP,
-      message: `Added ${finalXP} points to your account!`
-    });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+export const submitRandom50 = finishQuizAttempt('random');
 export const searchQuestions = async (req, res) => {
   try {
     const { q, all } = req.query;

@@ -1,16 +1,21 @@
+import { hideQuestionSolutions } from '../utils/questionValidation.js';
+import { optionalQuizAuth, startQuizAttempt, checkQuizAnswer, finishQuizAttempt } from '../controllers/quizAttemptController.js';
 import express from 'express';
 import { getQuestions, getQuestionById, getUnsolvedQuestions, getRandom50, markSolved, dailyLinux, getDailyChallengeStatus, completeDailyChallenge, resetBasicStats, dailyNetwork, resetLinuxStats, resetArduinoStats, resetNetworkStats, getLinuxOverviewTest, submitRandom50, exportAllQuestions, searchQuestions, deleteQuestion, updateQuestion } from '../controllers/questionController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { checkRole } from '../middleware/checkRole.js';
 
 const router = express.Router();
+router.post('/attempts/start', optionalQuizAuth, startQuizAttempt);
+router.post('/attempts/check', optionalQuizAuth, checkQuizAnswer);
+router.post('/attempts/finish', optionalQuizAuth, finishQuizAttempt());
 
-router.get('/unsolved', authMiddleware, getUnsolvedQuestions);
-router.get('/random50', getRandom50);
-router.get('/dailyLinux', dailyLinux);
-router.get('/dailyNetwork', dailyNetwork);
+router.get('/unsolved', hideQuestionSolutions, authMiddleware, getUnsolvedQuestions);
+router.get('/random50', hideQuestionSolutions, getRandom50);
+router.get('/dailyLinux', hideQuestionSolutions, dailyLinux);
+router.get('/dailyNetwork', hideQuestionSolutions, dailyNetwork);
 router.get('/dailyChallengeStatus', authMiddleware, getDailyChallengeStatus);
-router.get('/linux-overview-test', getLinuxOverviewTest);
+router.get('/linux-overview-test', hideQuestionSolutions, getLinuxOverviewTest);
 router.post('/markSolved', authMiddleware, markSolved);
 router.post('/examPoints', authMiddleware, markSolved);
 router.post('/completeDailyChallenge', authMiddleware, completeDailyChallenge);
@@ -22,8 +27,8 @@ router.get('/export', authMiddleware, checkRole('root'), exportAllQuestions);
 router.get('/search', authMiddleware, checkRole('root'), searchQuestions);
 router.delete('/:id', authMiddleware, checkRole('root'), deleteQuestion);
 router.put('/:id', authMiddleware, checkRole('root'), updateQuestion);
-router.get('/', getQuestions);
-router.get('/:id', getQuestionById);
+router.get('/', hideQuestionSolutions, getQuestions);
+router.get('/:id', hideQuestionSolutions, getQuestionById);
 router.post('/submitRandom50', authMiddleware, submitRandom50);
 
 export default router;

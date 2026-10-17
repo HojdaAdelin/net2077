@@ -178,14 +178,8 @@ export default function ArenaMatch() {
   const handleSubmitQuestion = async () => {
     const currentQuestion = match.questions[currentIndex];
     const userAnswers = selectedAnswers[currentQuestion._id] || [];
-    const correctAnswers = currentQuestion.correctAnswers || [currentQuestion.correctIndex];
-    
-    const isCorrect = 
-      userAnswers.length === correctAnswers.length &&
-      userAnswers.every(ans => correctAnswers.includes(ans));
-
     try {
-      await fetch(`${API_URL}/arena/answer`, {
+      const response = await fetch(`${API_URL}/arena/answer`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -196,6 +190,12 @@ export default function ArenaMatch() {
         })
       });
 
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || 'Unable to check answer');
+      const isCorrect = result.correct;
+      setMatch(previous => ({ ...previous, questions: previous.questions.map(q => q._id === currentQuestion._id ?
+        { ...q, correctAnswers: result.correctAnswers } : q) }));
+      setSelectedAnswers(previous => ({ ...previous, [currentQuestion._id]: result.selectedAnswers }));
       setSubmittedAnswers({
         ...submittedAnswers,
         [currentQuestion._id]: isCorrect
@@ -398,7 +398,7 @@ export default function ArenaMatch() {
                 const userAnswers = selectedAnswers[currentQuestion._id] || [];
                 const isSelected = userAnswers.includes(idx);
                 const isSubmitted = submittedAnswers[currentQuestion._id] !== undefined;
-                const correctAnswers = currentQuestion.correctAnswers || [currentQuestion.correctIndex];
+                const correctAnswers = currentQuestion.correctAnswers || [];
                 const isCorrectAnswer = correctAnswers.includes(idx);
                 
                 let answerClass = 'arena-answer-option';

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import LoginRequired from '../components/LoginRequired';
@@ -26,6 +26,8 @@ export default function LinuxStartTest() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
+  const checkingRef = useRef(false);
+  const [submitError, setSubmitError] = useState(null);
   const [phase, setPhase] = useState('loading'); // loading | quiz | results
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -66,7 +68,7 @@ export default function LinuxStartTest() {
 
   const currentQuestion = questions[currentIndex];
   const isMultiple = currentQuestion
-    ? (currentQuestion.correctAnswers?.length ?? 1) > 1
+    ? currentQuestion.multipleCorrect
     : false;
 
   const handleSelect = (idx) => {
@@ -83,19 +85,25 @@ export default function LinuxStartTest() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (checkingRef.current) return;
+    checkingRef.current = true;
+    setSubmitError(null);
     const qid = currentQuestion._id;
-    const userAns = selectedAnswers[qid] || [];
-    const correct = currentQuestion.correctAnswers || [currentQuestion.correctIndex];
-    const isCorrect =
-      userAns.length === correct.length && userAns.every(a => correct.includes(a));
-    setSubmittedAnswers(prev => ({ ...prev, [qid]: isCorrect }));
-    // Auto-advance after short delay
-    setTimeout(() => {
-      if (currentIndex < questions.length - 1) {
-        setCurrentIndex(i => i + 1);
-      }
-    }, 600);
+    try {
+      const response = await fetch(`${API_URL}/questions/attempts/check`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
+        body: JSON.stringify({ questionId: qid, answers: selectedAnswers[qid] || [] })
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || 'Unable to check answer');
+      setQuestions(previous => previous.map(q => q._id === qid ? { ...q, correctAnswers: result.correctAnswers } : q));
+      setSubmittedAnswers(previous => ({ ...previous, [qid]: result.correct }));
+      setTimeout(() => {
+        if (currentIndex < questions.length - 1) setCurrentIndex(i => i + 1);
+      }, 600);
+    } catch (error) { setSubmitError(error.message); }
+    finally { checkingRef.current = false; }
   };
 
   const handleFinish = async () => {
@@ -246,13 +254,14 @@ export default function LinuxStartTest() {
   const progressPct = Math.round(((currentIndex + 1) / questions.length) * 100);
   const userAns = selectedAnswers[currentQuestion._id] || [];
   const submitted = submittedAnswers[currentQuestion._id];
-  const correctAns = currentQuestion.correctAnswers || [currentQuestion.correctIndex];
+  const correctAns = currentQuestion.correctAnswers || [];
   const chapterTag = currentQuestion._chapterTag;
   const chapterName = CHAPTER_META[chapterTag]?.name || chapterTag;
   const allAnswered = questions.every(q => submittedAnswers[q._id] !== undefined);
 
   return (
     <div className="lst-page">
+      {submitError && <p role="alert">{submitError}</p>}
       <div className="lst-quiz-wrap">
 
         {/* Sidebar */}

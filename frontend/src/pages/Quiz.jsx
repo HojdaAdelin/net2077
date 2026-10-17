@@ -16,6 +16,12 @@ export default function Quiz({ isExam = false }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, updateUser } = useContext(AuthContext);
+  const attemptRef = useRef(null);
+  const loadRequestRef = useRef(0);
+  const finishingRef = useRef(false);
+  const checkingRef = useRef(false);
+  const [verifiedResult, setVerifiedResult] = useState(null);
+  const [submissionError, setSubmissionError] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({}); 
@@ -126,136 +132,38 @@ export default function Quiz({ isExam = false }) {
   }, [isExam, examMeta, examDurationSeconds, timeLeft, examStarted]);
 
   const handleFinishExam = useCallback(async (reason = 'manual') => {
-    if (showResults) return;
-
-    if (isExam) {
-      
-
-        let score = 0;
-        let totalPoints = 0;
-        let correctAnswers = 0;
-        
-        questions.forEach((q) => {
-          totalPoints += q.points || 1;
-          const qUserAnswers = selectedAnswers[q._id] || [];
-          const qCorrectAnswers = q.correctAnswers || [q.correctIndex];
-          
-          if (
-            qUserAnswers.length === qCorrectAnswers.length &&
-            qUserAnswers.every(ans => qCorrectAnswers.includes(ans))
-          ) {
-            score += q.points || 1;
-            correctAnswers += 1;
-          }
+    if (loading || showResults || finishingRef.current || checkingRef.current) return;
+    finishingRef.current = true;
+    setSubmissionError(null);
+    try {
+      if (attemptRef.current && !retryMode) {
+        const endpoint = !user ? '/questions/attempts/finish' : isExam ? '/progress/addSimulation' :
+          type === 'daily' ? '/questions/completeDailyChallenge' : '/questions/submitRandom50';
+        const response = await fetch(`${API_BASE}${endpoint}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
+          body: JSON.stringify({ attemptId: attemptRef.current, answers: selectedAnswers })
         });
-
-        fetch(`${API_BASE}/progress/addSimulation`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          body: JSON.stringify({ 
-            examId: examId,
-            examTitle: examMeta?.title || 'Unknown Exam',
-            examTag: examMeta?.tag || '',
-            score, 
-            totalPoints,
-            correctAnswers,
-            totalQuestions: questions.length
-          })
-        })
-        .then(response => response.json())
-        .then(data => {
-          
-          if (data.streak && correctAnswers > 0) {
-            updateUser({ streak: data.streak });
-          }
-        })
-        .catch(error => console.error('Error saving simulation:', error));
-
-      const response = await fetch(`${API_BASE}/exams/${examId}/stats`, {
-          method: 'POST',
-          credentials: 'include',
-      });
-      if (!response.ok) {
-          console.error('Failed to update exam stats');
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Unable to save quiz results. Please try again.');
+        const corrections = new Map(result.corrections.map(q => [String(q._id), q.correctAnswers]));
+        setQuestions(previous => previous.map(q => ({ ...q, correctAnswers: corrections.get(q._id) || q.correctAnswers })));
+        setSelectedAnswers(result.selectedAnswers);
+        setVerifiedResult(result);
+        if (user && result.streak) updateUser({ streak: result.streak });
       }
-      setFinishReason(reason);
-      setExamStarted(false);
-      const duration = examDurationSeconds ?? 0;
-      const elapsed = duration - (timeLeft ?? duration);
-      setTimeSpent(Math.max(0, elapsed));
-    } else if ((mode === 'challenge' || mode === 'network') && type === 'daily') {
-      
-      let score = 0;
-      let totalPoints = 0;
-      
-      questions.forEach((q) => {
-        totalPoints += q.points || 1;
-        const qUserAnswers = selectedAnswers[q._id] || [];
-        const qCorrectAnswers = q.correctAnswers || [q.correctIndex];
-        
-        if (
-          qUserAnswers.length === qCorrectAnswers.length &&
-          qUserAnswers.every(ans => qCorrectAnswers.includes(ans))
-        ) {
-          score += q.points || 1;
-        }
-      });
-
-      fetch(`${API_BASE}/questions/completeDailyChallenge`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({ score, totalPoints })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.streak && score > 0) {
-          updateUser({ streak: data.streak });
-        }
-      })
-      .catch(error => console.error('Error saving daily challenge:', error));
-    } else if (mode === 'random' && user) {
-      let score = 0;
-      let totalPoints = 0;
-      
-      questions.forEach((q) => {
-        totalPoints += q.points || 1;
-        const qUserAnswers = selectedAnswers[q._id] || [];
-        const qCorrectAnswers = q.correctAnswers || [q.correctIndex];
-        
-        if (
-          qUserAnswers.length === qCorrectAnswers.length &&
-          qUserAnswers.every(ans => qCorrectAnswers.includes(ans))
-        ) {
-          score += q.points || 1;
-        }
-      });
-
-      fetch(`${API_BASE}/questions/submitRandom50`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({ score, totalPoints })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          updateUser({ gold: data.newGold });
-          console.log(data.message);
-        }
-      })
-      .catch(error => console.error('Error saving random50 score:', error));
+      if (isExam) {
+        setFinishReason(reason);
+        setExamStarted(false);
+        const duration = examDurationSeconds ?? 0;
+        setTimeSpent(Math.max(0, duration - (timeLeft ?? duration)));
+      }
+      setShowResults(true);
+    } catch (error) {
+      setSubmissionError(error.message);
+    } finally {
+      finishingRef.current = false;
     }
-
-    setShowResults(true);
-  }, [examDurationSeconds, isExam, showResults, timeLeft, mode, type, questions, selectedAnswers, user, updateUser]);
+  }, [examDurationSeconds, isExam, showResults, timeLeft, type, selectedAnswers, user, updateUser, retryMode, loading]);
 
   useEffect(() => {
     if (!isExam || !examStarted || showResults) return;
@@ -281,8 +189,9 @@ export default function Quiz({ isExam = false }) {
   }, [handleFinishExam, isExam, examStarted, showResults, timeLeft]);
 
   useEffect(() => {
-    if (!isExam || !examId || !questions.length) return;
+    if (loading || !isExam || !examId || !questions.length || !attemptRef.current) return;
     const payload = {
+      attemptId: attemptRef.current,
       examStarted,
       timeLeft,
       selectedAnswers,
@@ -299,6 +208,7 @@ export default function Quiz({ isExam = false }) {
     isExam,
     examId,
     questions.length,
+    loading,
     examStarted,
     timeLeft,
     selectedAnswers,
@@ -311,8 +221,16 @@ export default function Quiz({ isExam = false }) {
   ]);
 
   const loadQuestions = async () => {
+    const requestId = ++loadRequestRef.current;
     setLoading(true);
     setError(null);
+    setSubmissionError(null);
+    setVerifiedResult(null);
+    setRetryMode(false);
+    setCurrentIndex(0);
+    setSidebarPage(0);
+    setShowResults(false);
+    attemptRef.current = null;
     setSelectedAnswers({});
     setSubmittedAnswers({});
     let fetchedExamMeta = null;
@@ -322,6 +240,8 @@ export default function Quiz({ isExam = false }) {
       const chaptersParam = urlParams.get('chapters');
       const queryType = urlParams.get('type') || type;
 
+      const sessionKind = isExam ? 'exam' : type === 'daily' && ['challenge', 'network'].includes(mode) ? 'daily' :
+        mode === 'random' ? 'random' : null;
       let data = [];
       let tagsFilter = tagsParam;
 
@@ -336,6 +256,7 @@ export default function Quiz({ isExam = false }) {
         }
 
         const examData = await examResponse.json();
+        if (requestId !== loadRequestRef.current) return;
         fetchedExamMeta = examData;
         setExamMeta(examData);
 
@@ -343,54 +264,12 @@ export default function Quiz({ isExam = false }) {
           tagsFilter = examData.tag;
         }
 
-        const questionsResponse = await fetch(
-          `${API_BASE}/questions${tagsFilter ? `?tags=${encodeURIComponent(tagsFilter)}` : ''}`
-        );
-
-        if (!questionsResponse.ok) {
-          throw new Error('Unable to load exam questions');
-        }
-
-        data = await questionsResponse.json();
       } else {
         setExamMeta(null);
-
-        if (mode === 'challenge' && type === 'daily') {
-          const target = 20;
-          const response = await fetch(`${API_BASE}/questions/dailyLinux`);
-          data = await response.json();
-          if (urlParams.get('acadnet') !== '1') {
-            data = data.filter(q => q.type !== 'acadnet');
-            // If filtering removed some, fill up with more non-acadnet Linux questions
-            if (data.length < target) {
-              const needed = target - data.length;
-              const existingIds = new Set(data.map(q => q._id));
-              const extraRes = await fetch(`${API_BASE}/questions?tags=LINUX`);
-              const extraPool = await extraRes.json();
-              const extras = extraPool
-                .filter(q => q.type !== 'acadnet' && !existingIds.has(q._id))
-                .sort(() => Math.random() - 0.5)
-                .slice(0, needed);
-              data = [...data, ...extras];
-            }
-          }
-        } else if (mode === 'network' && type === 'daily') {
-          const response = await fetch(`${API_BASE}/questions/dailyNetwork`);
-          data = await response.json();
-        } else if (mode === 'random') {
-          const params = new URLSearchParams();
-          if (queryType) params.append('type', queryType);
-          if (tagsParam) params.append('tags', tagsParam);
-          const queryString = params.toString() ? `?${params.toString()}` : '';
-          const response = await fetch(`${API_BASE}/questions/random50${queryString}`);
-          data = await response.json();
-        } else if (mode === 'unsolved') {
-          const response = await fetch(`${API_BASE}/questions/unsolved`, {
-            credentials: 'include'
-          });
-          data = await response.json();
-        } else {
-          const response = await fetch(`${API_BASE}/questions`);
+        if (!sessionKind) {
+          const endpoint = mode === 'unsolved' ? '/questions/unsolved' : '/questions';
+          const response = await fetch(`${API_BASE}${endpoint}`, { credentials: 'include' });
+          if (!response.ok) throw new Error('Unable to load questions');
           data = await response.json();
         }
       }
@@ -422,12 +301,57 @@ export default function Quiz({ isExam = false }) {
         );
       }
 
+      let sessionData = null;
+      let savedSession = null;
+      if (isExam) {
+        try { savedSession = JSON.parse(localStorage.getItem(getExamStorageKey(examId)) || 'null'); } catch { /* discard invalid state */ }
+      }
+      if (sessionKind) {
+        const start = async (attemptId) => {
+          const response = await fetch(`${API_BASE}/questions/attempts/start`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
+            body: JSON.stringify({ kind: sessionKind, examId, attemptId,
+              category: mode === 'network' ? 'NETWORK' : 'LINUX', includeAcadnet: urlParams.get('acadnet') === '1',
+              type: queryType, tags: tagsParam, chapters: chaptersParam })
+          });
+          const result = await response.json();
+          if (!response.ok) throw Object.assign(new Error(result.message || 'Unable to start quiz'), { status: response.status });
+          return result;
+        };
+        try { sessionData = await start(savedSession?.attemptId); }
+        catch (error) {
+          if (!savedSession?.attemptId || error.status !== 404) throw error;
+          savedSession = null;
+          localStorage.removeItem(getExamStorageKey(examId));
+          sessionData = await start();
+        }
+        if (requestId !== loadRequestRef.current) return;
+        // A finish request may have saved the result before its response was received.
+        // Replaying it safely recovers a pending reward and the authoritative result.
+        if (sessionData.result) {
+          const response = await fetch(`${API_BASE}${user ? '/progress/addSimulation' : '/questions/attempts/finish'}`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
+            body: JSON.stringify({ attemptId: sessionData.attemptId, answers: {} })
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.message || 'Unable to restore exam results');
+          sessionData.result = result;
+          sessionData.checked = result.selectedAnswers;
+          sessionData.corrections = result.corrections;
+          if (user && result.streak) updateUser({ streak: result.streak });
+        }
+        if (requestId !== loadRequestRef.current) return;
+        attemptRef.current = sessionData.attemptId;
+        filtered = sessionData.questions;
+      }
+
+      if (requestId !== loadRequestRef.current) return;
       let restoredState = null;
       if (isExam && examId) {
         const stored = localStorage.getItem(getExamStorageKey(examId));
         if (stored) {
           try {
-            restoredState = JSON.parse(stored);
+            restoredState = savedSession?.attemptId === sessionData?.attemptId ? savedSession : null;
           } catch (err) {
             console.warn('Unable to parse stored exam state', err);
           }
@@ -447,6 +371,18 @@ export default function Quiz({ isExam = false }) {
         let initialSelected = sanitizeMap(restoredState?.selectedAnswers || {});
         let initialSubmitted = sanitizeMap(restoredState?.submittedAnswers || {});
         let initialLocked = sanitizeMap(restoredState?.lockedQuestions || {});
+        for (const correction of sessionData?.corrections || []) {
+          const question = filtered.find(q => q._id === correction._id);
+          if (question) question.correctAnswers = correction.correctAnswers;
+        }
+        for (const [id, answers] of Object.entries(sessionData?.checked || {})) {
+          const question = filtered.find(q => q._id === id);
+          if (!question) continue;
+          initialSelected[id] = answers;
+          initialSubmitted[id] = answers.length === question.correctAnswers?.length && answers.every(a => question.correctAnswers.includes(a));
+          initialLocked[id] = !initialSubmitted[id];
+        }
+        if (sessionData?.result) setVerifiedResult(sessionData.result);
         let initialCurrentIndex = restoredState?.currentIndex || 0;
         if (!filtered[initialCurrentIndex]) {
           initialCurrentIndex = 0;
@@ -465,7 +401,7 @@ export default function Quiz({ isExam = false }) {
         const autoFinished = restoredState?.examStarted && !restoredState?.showResults && adjustedTimeLeft === 0;
         const wasExamStarted = restoredState?.examStarted || false;
 
-        setExamStarted(autoFinished ? false : wasExamStarted);
+        setExamStarted(sessionData?.result ? false : wasExamStarted);
         setSelectedAnswers(initialSelected);
         setSubmittedAnswers(initialSubmitted);
         setLockedQuestions(initialLocked);
@@ -474,7 +410,7 @@ export default function Quiz({ isExam = false }) {
         if (wasExamStarted || autoFinished) {
           setTimeLeft(adjustedTimeLeft);
         }
-        setShowResults(autoFinished ? true : (restoredState?.showResults || false));
+        setShowResults(Boolean(sessionData?.result));
         setFinishReason(autoFinished ? 'time' : (restoredState?.finishReason || null));
         setTimeSpent(autoFinished ? durationSeconds : (restoredState?.timeSpent || 0));
 
@@ -482,7 +418,7 @@ export default function Quiz({ isExam = false }) {
           const base = prev || currentMeta || {};
           return { ...base, questionCount: filtered.length };
         });
-      } else if (mode !== 'random' && !(mode === 'challenge' && type === 'daily')) {
+      } else if (mode !== 'random' && type !== 'daily') {
       
         let prefilledSelected = {};
         let prefilledSubmitted = {};
@@ -499,8 +435,10 @@ export default function Quiz({ isExam = false }) {
               )
             );
 
+            const solvedDetails = new Map((progressData.solvedQuestions || []).map(entry => [entry.id, entry]));
             filtered.forEach(question => {
               if (solvedSet.has(question._id)) {
+                question.correctAnswers = solvedDetails.get(question._id)?.correctAnswers || [];
                 prefilledSubmitted[question._id] = true;
                 const correctAnswers = question.correctAnswers && question.correctAnswers.length > 0
                   ? [...question.correctAnswers]
@@ -516,6 +454,7 @@ export default function Quiz({ isExam = false }) {
           console.warn('Unable to preload solved questions:', progressError);
         }
 
+        if (requestId !== loadRequestRef.current) return;
         setSelectedAnswers(prefilledSelected);
         setSubmittedAnswers(prefilledSubmitted);
       }
@@ -527,12 +466,14 @@ export default function Quiz({ isExam = false }) {
         tags: tagsFilter
       });
 
+      if (requestId !== loadRequestRef.current) return;
       setQuestions(filtered);
     } catch (error) {
+      if (requestId !== loadRequestRef.current) return;
       console.error('Error loading questions:', error);
       setError(error.message || 'An unexpected error occurred while loading questions.');
     }
-    setLoading(false);
+    if (requestId === loadRequestRef.current) setLoading(false);
   };
 
   const clearStoredExamState = useCallback(() => {
@@ -638,70 +579,49 @@ export default function Quiz({ isExam = false }) {
   };
 
   const handleSubmitQuestion = async () => {
+    if (checkingRef.current || finishingRef.current || (isExam && !examStarted)) return;
     const currentQuestion = displayedQuestions[currentIndex];
-    const userAnswers = selectedAnswers[currentQuestion._id] || [];
-    const correctAnswers = currentQuestion.correctAnswers || [currentQuestion.correctIndex];
-
-
-    const isCorrect = 
-      userAnswers.length === correctAnswers.length &&
-      userAnswers.every(ans => correctAnswers.includes(ans));
-
-    setSubmittedAnswers(prev => {
-      const updated = {
-        ...prev,
-        [currentQuestion._id]: isCorrect
-      };
-      
-      return updated;
-    });
-
-    if (isExam && !isCorrect) {
-      setLockedQuestions(prev => ({
-        ...prev,
-        [currentQuestion._id]: true
-      }));
-    }
-    if (!isExam && isCorrect && !((mode === 'challenge' || mode === 'network') && type === 'daily')) {
-      
-      try {
-        const response = await fetch(`${API_BASE}/questions/markSolved`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          body: JSON.stringify({ questionId: currentQuestion._id })
+    if (!currentQuestion) return;
+    checkingRef.current = true;
+    setSubmissionError(null);
+    try {
+      const answers = selectedAnswers[currentQuestion._id] || [];
+      const sessionId = retryMode ? null : attemptRef.current;
+      const practiceReward = user && !isExam && type !== 'daily';
+      const endpoint = practiceReward && !sessionId ? '/questions/markSolved' : '/questions/attempts/check';
+      const response = await fetch(`${API_BASE}${endpoint}`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
+        body: JSON.stringify({ questionId: currentQuestion._id, answers, attemptId: sessionId })
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || 'Unable to check answer. Please try again.');
+      const isCorrect = result.correct;
+      setQuestions(previous => previous.map(q => q._id === currentQuestion._id ? { ...q, correctAnswers: result.correctAnswers } : q));
+      setSelectedAnswers(previous => ({ ...previous, [currentQuestion._id]: result.selectedAnswers || answers }));
+      setSubmittedAnswers(previous => ({ ...previous, [currentQuestion._id]: isCorrect }));
+      if (isExam && !isCorrect) setLockedQuestions(previous => ({ ...previous, [currentQuestion._id]: true }));
+      if (result.streak) updateUser({ streak: result.streak });
+      // Random mode already awarded first-time question solves before this change.
+      if (practiceReward && sessionId && isCorrect) {
+        const rewardResponse = await fetch(`${API_BASE}/questions/markSolved`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
+          body: JSON.stringify({ questionId: currentQuestion._id, answers: result.selectedAnswers || answers })
         });
-        
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Progress saved for question:', currentQuestion._id);
-          
-          if (data.streak) {
-            updateUser({ streak: data.streak });
-          }
-        }
-      } catch (error) {
-        console.error('Error saving progress:', error);
+        const reward = await rewardResponse.json();
+        if (!rewardResponse.ok) throw new Error(reward.message || 'Unable to save progress');
+        if (reward.streak) updateUser({ streak: reward.streak });
       }
-      setTimeout(() => {
-        if (currentIndex < displayedQuestions.length - 1) {
-          const next = currentIndex + 1;
-          setCurrentIndex(next);
-          setSidebarPage(Math.floor(next / SIDEBAR_PAGE_SIZE));
-        }
-      }, 500);
-    }
-    if (isExam && isCorrect) {
-      setTimeout(() => {
-        if (currentIndex < displayedQuestions.length - 1) {
-          const next = currentIndex + 1;
-          setCurrentIndex(next);
-          setSidebarPage(Math.floor(next / SIDEBAR_PAGE_SIZE));
-        }
-      }, 500);
-    }
+      if (isCorrect && (isExam || type !== 'daily')) {
+        setTimeout(() => {
+          if (currentIndex < displayedQuestions.length - 1) {
+            const next = currentIndex + 1;
+            setCurrentIndex(next);
+            setSidebarPage(Math.floor(next / SIDEBAR_PAGE_SIZE));
+          }
+        }, 500);
+      }
+    } catch (error) { setSubmissionError(error.message); }
+    finally { checkingRef.current = false; }
   };
 
   // Keyboard navigation
@@ -746,17 +666,18 @@ export default function Quiz({ isExam = false }) {
   };
 
   const calculateScore = () => {
+    if (verifiedResult && !retryMode) return { totalPoints: verifiedResult.score, maxPoints: verifiedResult.totalPoints };
     let totalPoints = 0;
     let maxPoints = 0;
 
     questions.forEach((q) => {
       maxPoints += q.points || 1;
       const userAnswers = selectedAnswers[q._id] || [];
-      const correctAnswers = q.correctAnswers || [q.correctIndex];
+      const correctAnswers = q.correctAnswers || [];
 
 
       if (
-        userAnswers.length === correctAnswers.length &&
+        correctAnswers.length > 0 && userAnswers.length === correctAnswers.length &&
         userAnswers.every(ans => correctAnswers.includes(ans))
       ) {
         totalPoints += q.points || 1;
@@ -1056,6 +977,7 @@ export default function Quiz({ isExam = false }) {
         </div>
 
         <div className="quiz-content">
+          {submissionError && <p role="alert" className="answer-feedback incorrect">{submissionError}</p>}
           {isExam && examMeta && (
             <div className="exam-banner">
               <div className="exam-banner-header">
@@ -1187,7 +1109,7 @@ export default function Quiz({ isExam = false }) {
                   const userAnswers = selectedAnswers[currentQuestion._id] || [];
                   const isSelected = userAnswers.includes(idx);
                   const isSubmitted = submittedAnswers[currentQuestion._id] !== undefined;
-                  const correctAnswers = currentQuestion.correctAnswers || [currentQuestion.correctIndex];
+                  const correctAnswers = currentQuestion.correctAnswers || [];
                   const isCorrectAnswer = correctAnswers.includes(idx);
                   
                   let answerClass = 'answer-option';
@@ -1223,7 +1145,7 @@ export default function Quiz({ isExam = false }) {
                 })}
               </div>
 
-              {!submittedAnswers[currentQuestion._id] && (
+              {submittedAnswers[currentQuestion._id] === undefined && (
                 <button 
                   onClick={handleSubmitQuestion}
                   className="btn btn-primary"
@@ -1252,7 +1174,7 @@ export default function Quiz({ isExam = false }) {
               </div>
 
               {submittedAnswers[currentQuestion._id] !== undefined && (() => {
-                const correctAnswers = currentQuestion.correctAnswers || [currentQuestion.correctIndex];
+                const correctAnswers = currentQuestion.correctAnswers || [];
                 const correctTexts = correctAnswers.map(i => currentQuestion.answers[i]).filter(Boolean).join(', ');
                 const query = encodeURIComponent(`${currentQuestion.title} (${correctTexts})`);
                 const isCorrect = submittedAnswers[currentQuestion._id];
