@@ -1,5 +1,6 @@
 import ShopItem from '../models/ShopItem.js';
 import User from '../models/User.js';
+import { xpWithBoosts } from '../utils/boostUtils.js';
 
 export const getShopItems = async (req, res) => {
   try {
@@ -242,15 +243,7 @@ export const calculateXPWithBoosts = async (userId, baseXP) => {
       await user.save();
     }
 
-    const privilege = (user.xpPrivilege && user.xpPrivilege > 1.0) ? user.xpPrivilege : 1.0;
-    let xp = privilege > 1.0 ? Math.ceil(baseXP * privilege) : baseXP;
-
-    const xpBoost = activeBoosts.find(boost => boost.type === 'xp_multiplier');
-    if (xpBoost) {
-      xp = Math.ceil(xp * xpBoost.multiplier);
-    }
-
-    return xp;
+    return xpWithBoosts(user, baseXP, now);
   } catch (error) {
     console.error('Error calculating XP with boosts:', error);
     return baseXP;

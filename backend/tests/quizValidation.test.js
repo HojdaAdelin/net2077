@@ -52,6 +52,11 @@ function setup(t, kind = 'random') {
     return { matchedCount: 1 };
   });
   t.mock.method(User, 'findOneAndUpdate', async (filter, update) => {
+    if (filter.$expr && !filter.$expr.$and.every(({ $eq: [field, expected] }) => {
+      const [path, fallback] = field.$ifNull;
+      const value = user.get(path.slice(1)) ?? fallback.$literal;
+      return JSON.stringify(value) === JSON.stringify(expected.$literal);
+    })) return null;
     if (filter.rewardedQuizAttempts && user.rewardedQuizAttempts.includes(filter.rewardedQuizAttempts.$ne)) return null;
     if (filter['dailyChallenge.lastCompleted'] && user.dailyChallenge.lastCompleted === filter['dailyChallenge.lastCompleted'].$ne) return null;
     if (filter.solvedQuestions && user.solvedQuestions.some(id => String(id) === String(filter.solvedQuestions.$ne))) return null;
@@ -76,7 +81,7 @@ function setup(t, kind = 'random') {
   });
   const answers = Object.fromEntries(questions.map(q => [String(q._id), q.correctAnswers]));
   const req = { userId: String(user._id), body: { attemptId: attempt.token, answers, score: 999999, totalPoints: 999999 } };
-  return { user, attempt, questions, req };
+  return { user, attempt, questions, req, pass };
 }
 
 test('Random 50 ignores claimed score, pays once, and tracks competitive and season XP', async t => {
@@ -256,4 +261,151 @@ test('arena hides unsubmitted solutions and keeps checked question feedback', ()
     creatorAnswers: { [String(first._id)]: [1] } } });
   assert.deepEqual(res.body.match.questions[0].correctAnswers, [1]);
   assert.equal('correctAnswers' in res.body.match.questions[1], false);
+});
+
+// Independent hydrated snapshots reproduce reads from separate MongoDB requests.
+function practiceSetup(t) {
+  const fixture = setup(t);
+  t.mock.method(User, 'findById', async () => new User(fixture.user.toObject()));
+  t.mock.method(Question, 'findById', async id => fixture.questions.find(q => String(q._id) === String(id)));
+  const request = (q = fixture.questions[0]) => ({ userId: String(fixture.user._id),
+    body: { questionId: String(q._id), answers: q.correctAnswers } });
+  return { ...fixture, request };
+}
+
+test('practice combines all rewards in one write and performs five DB operations', async t => {
+  const { user, request } = practiceSetup(t);
+  const res = response();
+  await markSolved(request(), res);
+  assert.equal(res.statusCode, 200);
+  assert.equal(user.xp, 96);
+  assert.equal(user.competitiveStats.currentPeriodXP, 6);
+  assert.equal(user.seasonPass.xp, 6);
+  assert.equal(User.findById.mock.callCount(), 1);
+  assert.equal(Question.findById.mock.callCount(), 1);
+  assert.equal(CompetitivePeriod.findOne.mock.callCount(), 1);
+  assert.equal(SeasonPass.findOne.mock.callCount(), 1);
+  assert.equal(User.findOneAndUpdate.mock.callCount(), 1);
+  assert.equal(User.updateOne.mock.callCount(), 0);
+  const [filter, update] = User.findOneAndUpdate.mock.calls[0].arguments;
+  // Validate the actual Mongoose filter/update casting without connecting to DB.
+  const query = mongoose.Model.findOneAndUpdate.call(User, filter, update);
+  assert.doesNotThrow(() => query.cast(User));
+  assert.equal(update.$inc['competitiveStats.currentPeriodXP'], 6);
+  assert.equal(update.$set.level, 1);
+});
+
+test('parallel practice requests for one question award every reward only once', async t => {
+  const { user, request } = practiceSetup(t);
+  const results = [response(), response()];
+  await Promise.all(results.map(res => markSolved(request(), res)));
+  assert.ok(results.every(res => res.statusCode === 200));
+  assert.equal(user.xp, 96);
+  assert.equal(user.competitiveStats.currentPeriodXP, 6);
+  assert.equal(user.seasonPass.xp, 6);
+  assert.equal(user.dailyActivity[0].count, 1);
+  assert.equal(user.solvedQuestions.length, 1);
+  assert.equal(results.filter(res => res.body.alreadySolved).length, 1);
+});
+
+test('parallel practice solves retry stale snapshots and retain both rewards and activity', async t => {
+  const { user, questions, request } = practiceSetup(t);
+  const results = questions.map(() => response());
+  await Promise.all(questions.map((q, i) => markSolved(request(q), results[i])));
+  assert.ok(results.every(res => res.statusCode === 200));
+  assert.equal(user.xp, 106);
+  assert.equal(user.level, 2);
+  assert.equal(user.competitiveStats.currentPeriodXP, 16);
+  assert.equal(user.seasonPass.xp, 16);
+  assert.equal(user.dailyActivity[0].count, 2);
+  assert.equal(user.solvedByTag.LINUX, 2);
+  assert.equal(user.solvedQuestions.length, 2);
+});
+
+test('practice preserves premium, claimed rewards and season XP cap with active boosts', async t => {
+  const { user, pass, request } = practiceSetup(t);
+  user.activeBoosts.push({ type: 'xp_multiplier', multiplier: 3, expiresAt: new Date(Date.now() + 60000) });
+  user.seasonPass = { passId: pass._id, xp: 995, level: 9, isPremium: true,
+    claimedLevels: { free: [1], premium: [1] } };
+  const res = response();
+  await markSolved(request(), res);
+  assert.equal(res.statusCode, 200);
+  assert.equal(user.xp, 108);
+  assert.equal(user.level, 2);
+  assert.equal(user.competitiveStats.currentPeriodXP, 18);
+  assert.equal(user.seasonPass.xp, 1000);
+  assert.equal(user.seasonPass.level, 10);
+  assert.equal(user.seasonPass.isPremium, true);
+  assert.deepEqual([...user.seasonPass.claimedLevels.free], [1]);
+  assert.deepEqual([...user.seasonPass.claimedLevels.premium], [1]);
+});
+
+test('practice ignores and removes expired boosts and supports no active season', async t => {
+  const { user, request } = practiceSetup(t);
+  user.activeBoosts.push({ type: 'xp_multiplier', multiplier: 3, expiresAt: new Date(0) });
+  t.mock.method(SeasonPass, 'findOne', async () => null);
+  const res = response();
+  await markSolved(request(), res);
+  assert.equal(res.statusCode, 200);
+  assert.equal(user.xp, 96);
+  assert.equal(user.competitiveStats.currentPeriodXP, 6);
+  assert.equal(user.activeBoosts.length, 0);
+  assert.equal(user.seasonPass.xp, 0);
+});
+
+test('practice resets rewards only on entering a different season', async t => {
+  const { user, pass, request } = practiceSetup(t);
+  user.seasonPass = { passId: new mongoose.Types.ObjectId(), xp: 500, level: 5,
+    isPremium: true, claimedLevels: { free: [1], premium: [1] } };
+  const res = response();
+  await markSolved(request(), res);
+  assert.equal(res.statusCode, 200);
+  assert.equal(String(user.seasonPass.passId), String(pass._id));
+  assert.equal(user.seasonPass.xp, 6);
+  assert.equal(user.seasonPass.level, 0);
+  assert.equal(user.seasonPass.isPremium, false);
+  assert.equal(user.seasonPass.claimedLevels.free.length, 0);
+});
+
+test('wrong and already solved practice answers skip reward queries and writes', async t => {
+  const { user, request } = practiceSetup(t);
+  const wrong = request();
+  wrong.body.answers = [0];
+  const res = response();
+  await markSolved(wrong, res);
+  assert.equal(res.body.correct, false);
+  assert.equal(user.xp, 90);
+  assert.equal(CompetitivePeriod.findOne.mock.callCount(), 0);
+  assert.equal(SeasonPass.findOne.mock.callCount(), 0);
+  assert.equal(User.findOneAndUpdate.mock.callCount(), 0);
+  await markSolved(request(), response());
+  const replay = response();
+  await markSolved(request(), replay);
+  assert.equal(replay.body.alreadySolved, true);
+  assert.equal(CompetitivePeriod.findOne.mock.callCount(), 1);
+  assert.equal(SeasonPass.findOne.mock.callCount(), 1);
+  assert.equal(User.findOneAndUpdate.mock.callCount(), 1);
+});
+
+test('a season purchase between read and write is preserved after retry', async t => {
+  const { user, pass, request } = practiceSetup(t);
+  user.seasonPass.passId = pass._id;
+  const write = User.findOneAndUpdate;
+  let first = true;
+  t.mock.method(User, 'findOneAndUpdate', async (...args) => {
+    if (first) {
+      first = false;
+      user.seasonPass.isPremium = true;
+      user.seasonPass.claimedLevels.premium.push(1);
+    }
+    return write(...args);
+  });
+  const res = response();
+  await markSolved(request(), res);
+  assert.equal(res.statusCode, 200);
+  assert.equal(user.xp, 96);
+  assert.equal(user.seasonPass.isPremium, true);
+  assert.deepEqual([...user.seasonPass.claimedLevels.premium], [1]);
+  assert.equal(user.seasonPass.xp, 6);
+  assert.equal(User.findOneAndUpdate.mock.callCount(), 2);
 });

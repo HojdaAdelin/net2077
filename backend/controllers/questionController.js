@@ -1,11 +1,13 @@
 import { validateAnswers } from '../utils/questionValidation.js';
-import { finishQuizAttempt, syncQuizLevel } from './quizAttemptController.js';
+import { finishQuizAttempt } from './quizAttemptController.js';
 import Question from '../models/Question.js';
 import User from '../models/User.js';
 import { updateUserStreak } from '../utils/streakUtils.js';
-import { trackCompetitiveXP } from './competitiveController.js';
-import { calculateXPWithBoosts } from './shopController.js';
+import { trackCompetitiveXP, checkAndResetPeriod } from './competitiveController.js';
 import { levelFromXp, applyPrivilege } from '../utils/xpUtils.js';
+import CompetitivePeriod from '../models/CompetitivePeriod.js';
+import SeasonPass from '../models/SeasonPass.js';
+import { xpWithBoosts } from '../utils/boostUtils.js';
 
 export const getQuestions = async (req, res) => {
   try {
@@ -90,8 +92,9 @@ export const markSolved = async (req, res) => {
     if (typeof questionId !== 'string' || !/^[a-f\d]{24}$/i.test(questionId)) {
       return res.status(400).json({ message: 'Invalid question' });
     }
-    const user = await User.findById(req.userId);
-    const question = await Question.findById(questionId);
+    let [user, question] = await Promise.all([
+      User.findById(req.userId), Question.findById(questionId)
+    ]);
     
     if (!question) {
       return res.status(404).json({ message: 'Question not found' });
@@ -100,37 +103,79 @@ export const markSolved = async (req, res) => {
     if (!user) return res.status(404).json({ message: 'User not found' });
     const correct = validateAnswers(question, answers);
     if (!correct) return res.json({ correct: false, correctAnswers: question.correctAnswers });
-    const finalXP = await calculateXPWithBoosts(user._id, question.points || 1);
-    const increments = { xp: finalXP };
-    for (const tag of new Set(question.tags || [])) {
-      if (['LINUX', 'NETWORK', 'ARDUINO'].includes(tag)) increments[`solvedByTag.${tag}`] = 1;
+    if (user.solvedQuestions.some(id => String(id) === questionId)) {
+      return res.json(practiceResult(user, question, true));
     }
-    await updateUserStreak(user);
-    const today = new Date().toISOString().split('T')[0];
-    const activity = (user.dailyActivity || []).map(entry => entry.toObject());
-    const day = activity.find(entry => entry.date === today);
-    if (day) day.count += 1;
-    else activity.push({ date: today, count: 1 });
-    const rewarded = await User.findOneAndUpdate({ _id: user._id, solvedQuestions: { $ne: question._id } }, {
-      $addToSet: { solvedQuestions: question._id }, $inc: increments,
-      $set: { streak: user.streak.toObject(), dailyActivity: activity.slice(-30) }
-    }, { new: true });
-    const alreadySolved = !rewarded;
-    if (rewarded) {
-      await syncQuizLevel(user._id);
-      await trackCompetitiveXP(user._id, finalXP);
+    const [period, pass] = await Promise.all([
+      CompetitivePeriod.findOne({ isActive: true }), SeasonPass.findOne({ isActive: true })
+    ]);
+    if (!period || (new Date() >= period.endDate && !period.rewardsDistributed)) {
+      await checkAndResetPeriod();
+      // A reset can change this user's competitive progress and rewards.
+      user = await User.findById(req.userId);
     }
-    const current = await User.findById(user._id);
-
-    res.json({ correct: true, correctAnswers: question.correctAnswers,
-      xp: current.xp, level: current.level, solvedByTag: current.solvedByTag,
-      alreadySolved, streak: { current: current.streak?.current || 0,
-        max: current.streak?.max || 0, isActive: true } });
+    for (;;) {
+      if (!user) return res.status(404).json({ message: 'User not found' });
+      if (user.solvedQuestions.some(id => String(id) === questionId)) {
+        return res.json(practiceResult(user, question, true));
+      }
+      const finalXP = xpWithBoosts(user, question.points || 1);
+      const increments = { xp: finalXP };
+      for (const tag of new Set(question.tags || [])) {
+        if (['LINUX', 'NETWORK', 'ARDUINO'].includes(tag)) increments[`solvedByTag.${tag}`] = 1;
+      }
+      await updateUserStreak(user);
+      const today = new Date().toISOString().split('T')[0];
+      const activity = (user.dailyActivity || []).map(entry => entry.toObject());
+      const day = activity.find(entry => entry.date === today);
+      if (day) day.count += 1;
+      else activity.push({ date: today, count: 1 });
+      const changes = { streak: user.streak.toObject(), dailyActivity: activity.slice(-30),
+        level: levelFromXp(user.xp + finalXP) };
+      increments['competitiveStats.currentPeriodXP'] = finalXP;
+      const now = new Date();
+      const activeBoosts = user.activeBoosts.filter(boost => boost.expiresAt > now);
+      if (activeBoosts.length !== user.activeBoosts.length) changes.activeBoosts = activeBoosts;
+      if (pass) {
+        const samePass = String(user.seasonPass?.passId) === String(pass._id);
+        const seasonXP = Math.min((samePass ? user.seasonPass.xp || 0 : 0) + finalXP,
+          pass.totalLevels * pass.xpPerLevel);
+        if (!samePass) {
+          changes.seasonPass = { passId: pass._id, xp: seasonXP,
+            level: Math.min(Math.floor(seasonXP / pass.xpPerLevel), pass.totalLevels),
+            isPremium: false, claimedLevels: { free: [], premium: [] } };
+        } else {
+          changes['seasonPass.xp'] = seasonXP;
+          changes['seasonPass.level'] = Math.min(Math.floor(seasonXP / pass.xpPerLevel), pass.totalLevels);
+        }
+      }
+      // Compare snapshots before writing: another solve or season purchase must
+      // never be overwritten. Reload and recalculate if a concurrent write wins.
+      const defaults = { xp: 0, xpPrivilege: 1, activeBoosts: [],
+        'seasonPass.passId': null, 'seasonPass.xp': 0, 'seasonPass.isPremium': false,
+        'seasonPass.claimedLevels.free': [], 'seasonPass.claimedLevels.premium': [] };
+      const rewarded = await User.findOneAndUpdate({ _id: user._id,
+        $expr: { $and: Object.entries(defaults).map(([path, fallback]) => ({
+          $eq: [{ $ifNull: [`$${path}`, { $literal: fallback }] },
+            { $literal: user.get(path)?.toObject?.() ?? user.get(path) ?? fallback }]
+        })) }, solvedQuestions: { $ne: question._id } }, {
+        $addToSet: { solvedQuestions: question._id }, $inc: increments,
+        $set: changes
+      }, { new: true });
+      if (rewarded) return res.json(practiceResult(rewarded, question, false));
+      user = await User.findById(req.userId);
+    }
   } catch (error) {
     if (!error.status) console.error('Error marking question as solved:', error);
     res.status(error.status || 500).json({ message: error.status ? error.message : 'Server error', error: error.message });
   }
 };
+
+const practiceResult = (user, question, alreadySolved) => ({
+  correct: true, correctAnswers: question.correctAnswers,
+  xp: user.xp, level: user.level, solvedByTag: user.solvedByTag, alreadySolved,
+  streak: { current: user.streak?.current || 0, max: user.streak?.max || 0, isActive: true }
+});
 
 
 export const dailyLinux = async (req, res) => {
