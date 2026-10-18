@@ -1,6 +1,6 @@
 .progress-page {
   --progress-nav-height: 60px;
-  padding: 80px 0;
+  padding: 24px 0 80px;
   min-height: calc(100vh - 200px);
 }
 
@@ -75,23 +75,6 @@
 @media (max-width: 600px) {
   .progress-section-nav { top: 72px; padding: 6px; gap: 4px; border-radius: 12px; margin-bottom: 20px; }
   .progress-section-link { padding: 10px 12px; font-size: 12px; }
-}
-
-.progress-header {
-  margin-top: 20px;
-  margin-bottom: 48px;
-}
-
-.progress-header h1 {
-  font-size: 36px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  letter-spacing: -0.5px;
-}
-
-.progress-header p {
-  font-size: 17px;
-  color: var(--text-secondary);
 }
 
 .progress-grid {
@@ -526,7 +509,7 @@
 
 @media (max-width: 768px) {
   .progress-page {
-    padding: 60px 0;
+    padding: 16px 0 60px;
   }
 
   .progress-grid {

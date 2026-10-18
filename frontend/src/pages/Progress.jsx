@@ -12,6 +12,7 @@ import ProgressNavigation from '../components/ProgressNavigation';
 import '../styles/AvatarFrame.css';
 import '../styles/NameEffects.css';
 import '../styles/Progress.css';
+import '../styles/ProgressOverview.css';
 
 // ── Daily Activity Chart ──
 function DailyActivityChart({ data }) {
@@ -329,30 +330,21 @@ export default function Progress() {
   const networkSolved = progress.solvedByTag?.NETWORK || 0;
   const terminalSolved = progress.terminalStats?.solved || 0;
   
-  const linuxBadgeUnlocked = linuxSolved >= linuxBadgeRequired;
-  const networkBadgeUnlocked = networkSolved >= networkBadgeRequired;
-  const terminalBadgeUnlocked = terminalSolved >= terminalBadgeRequired;
   const levelBadgeUnlocked = progress.level >= levelBadgeRequired;
   
-  const linuxRemaining = Math.max(0, linuxBadgeRequired - linuxSolved);
-  const networkRemaining = Math.max(0, networkBadgeRequired - networkSolved);
-  const terminalRemaining = Math.max(0, terminalBadgeRequired - terminalSolved);
   const levelRemaining = Math.max(0, levelBadgeRequired - progress.level);
   
-  const linuxLegendaryRemaining = Math.max(0, linuxLegendaryRequired - linuxSolved);
-  const networkLegendaryRemaining = Math.max(0, networkLegendaryRequired - networkSolved);
-  const terminalLegendaryRemaining = Math.max(0, terminalLegendaryRequired - terminalSolved);
   const levelLegendaryRemaining = Math.max(0, levelLegendaryRequired - progress.level);
 
   return (
     <div className="container progress-page">
-      <div className="progress-header">
-        <h1>{t('progress.title')}</h1>
-      </div>
-
       <ProgressNavigation hasProfile={hasProfile} hasLinuxOverview={hasLinuxOverview} hasSimulations={hasSimulations} />
 
       <section id="progress-general" className="progress-anchor-section" aria-label="General" tabIndex={-1}>
+      <div className="progress-section-heading">
+        <h2>General</h2>
+        <p>Your learning at a glance.</p>
+      </div>
       {progress && !progress.onboarding?.completed && (
         <div className="progress-onboarding-banner">
           <div className="progress-onboarding-icon"><Sparkles size={20} /></div>
@@ -440,11 +432,13 @@ export default function Progress() {
         </div>
 
         <div className="stat-card-progress">
+          <span className="overview-stat-icon"><CheckCircle size={20} aria-hidden="true" /></span>
           <div className="stat-label-small">{t('progress.questionsSolved')}</div>
           <div className="stat-value">{progress.solvedCount}</div>
         </div>
 
         <div className="stat-card-progress">
+          <span className="overview-stat-icon"><Award size={20} aria-hidden="true" /></span>
           <div className="stat-label-small">{t('progress.simulations')}</div>
           <div className="stat-value">{progress.simulations?.length || 0}</div>
         </div>
@@ -551,105 +545,45 @@ export default function Progress() {
       )}
 
       <div id="progress-categories" className="category-progress-section progress-anchor-section" aria-label="Progress by Category" tabIndex={-1}>
-        <h2>{t('progress.progressByCategory')}</h2>        <div className="category-cards">
-          <div className="category-progress-card">
-            <div className="category-header">
-              <h3>Linux</h3>
-              <span className="category-badge linux">LINUX</span>
-            </div>
-            <div className="category-stat-large">
-              <div className="stat-number">{linuxSolved}</div>
-              <div className="stat-text">{t('progress.questionsSolved')}</div>
-            </div>
-            
-            {/* Badge Progress */}
-            <div className={`badge-progress ${linuxBadgeUnlocked ? 'unlocked' : ''}`}>
-              <div className="badge-progress-icon">
-                {linuxBadgeUnlocked ? <Award size={16} /> : <Monitor size={16} />}
-              </div>
-              <div className="badge-progress-content">
-                <div className="badge-progress-text">
-                  {linuxBadgeUnlocked ? (
-                    <span className="badge-unlocked-text">Linux Master Badge Unlocked!</span>
-                  ) : (
-                    <span className="badge-locked-text">{linuxRemaining} more to unlock badge</span>
-                  )}
+        <div className="progress-section-heading">
+          <h2>{t('progress.progressByCategory')}</h2>
+          <p>Build your skills and work toward your next badge.</p>
+        </div>
+        <div className="category-cards">
+          {[
+            { name: 'Linux', theme: 'linux', Icon: Monitor, solved: linuxSolved,
+              first: linuxBadgeRequired, legendary: linuxLegendaryRequired, badge: 'Linux Master' },
+            { name: 'Network', theme: 'network', Icon: Globe, solved: networkSolved,
+              first: networkBadgeRequired, legendary: networkLegendaryRequired, badge: 'Network Expert' },
+            { name: 'Terminal', theme: 'terminal', Icon: Terminal, solved: terminalSolved,
+              first: terminalBadgeRequired, legendary: terminalLegendaryRequired, badge: 'Terminal Pro' },
+          ].map(({ name, theme, Icon, solved, first, legendary, badge }) => {
+            const unlocked = solved >= first;
+            const complete = solved >= legendary;
+            const target = unlocked ? legendary : first;
+            const badgeLabel = complete ? 'Legendary badge unlocked' : unlocked ? 'Next: Legendary badge' : `Next: ${badge}`;
+            return (
+              <div key={theme} className={`category-progress-card category-progress-card--${theme}`}>
+                <div className="category-header">
+                  <span className="category-heading-icon"><Icon size={20} aria-hidden="true" /></span>
+                  <h3>{name}</h3>
+                  {unlocked && <Award size={18} className="category-earned-icon" aria-label={`${badge} badge unlocked`} />}
                 </div>
-                {linuxBadgeUnlocked && (
-                  <div className="badge-next-tier">
-                    <Info size={14} />
-                    <span className="next-tier-tooltip">{linuxLegendaryRemaining} more for Legendary</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="category-progress-card">
-            <div className="category-header">
-              <h3>Network</h3>
-              <span className="category-badge network">NETWORK</span>
-            </div>
-            <div className="category-stat-large">
-              <div className="stat-number">{networkSolved}</div>
-              <div className="stat-text">{t('progress.questionsSolved')}</div>
-            </div>
-            
-            {/* Badge Progress */}
-            <div className={`badge-progress ${networkBadgeUnlocked ? 'unlocked' : ''}`}>
-              <div className="badge-progress-icon">
-                {networkBadgeUnlocked ? <Award size={16} /> : <Globe size={16} />}
-              </div>
-              <div className="badge-progress-content">
-                <div className="badge-progress-text">
-                  {networkBadgeUnlocked ? (
-                    <span className="badge-unlocked-text">Network Expert Badge Unlocked!</span>
-                  ) : (
-                    <span className="badge-locked-text">{networkRemaining} more to unlock badge</span>
-                  )}
+                <div className="category-stat-large">
+                  <div className="stat-number">{solved.toLocaleString()}</div>
+                  <div className="stat-text">{theme === 'terminal' ? 'Terminal commands' : t('progress.questionsSolved')}</div>
                 </div>
-                {networkBadgeUnlocked && (
-                  <div className="badge-next-tier">
-                    <Info size={14} />
-                    <span className="next-tier-tooltip">{networkLegendaryRemaining} more for Legendary</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="category-progress-card">
-            <div className="category-header">
-              <h3>Terminal</h3>
-              <span className="category-badge terminal">TERMINAL</span>
-            </div>
-            <div className="category-stat-large">
-              <div className="stat-number">{terminalSolved}</div>
-              <div className="stat-text">Terminal Commands</div>
-            </div>
-            
-            {/* Badge Progress */}
-            <div className={`badge-progress ${terminalBadgeUnlocked ? 'unlocked' : ''}`}>
-              <div className="badge-progress-icon">
-                {terminalBadgeUnlocked ? <Award size={16} /> : <Terminal size={16} />}
-              </div>
-              <div className="badge-progress-content">
-                <div className="badge-progress-text">
-                  {terminalBadgeUnlocked ? (
-                    <span className="badge-unlocked-text">Terminal Pro Badge Unlocked!</span>
-                  ) : (
-                    <span className="badge-locked-text">{terminalRemaining} more to unlock badge</span>
-                  )}
+                <div className="category-milestone">
+                  <div className="category-milestone-label"><span>{badgeLabel}</span><span>{Math.min(solved, target)} / {target}</span></div>
+                  <progress className="category-milestone-bar" value={Math.min(solved, target)} max={target}
+                    aria-label={`${name}: ${badgeLabel}`} />
+                  <p className={complete ? 'category-milestone-complete' : undefined}>
+                    {complete ? 'All badge milestones reached' : `${target - solved} more to unlock${unlocked ? ' Legendary' : ' your badge'}`}
+                  </p>
                 </div>
-                {terminalBadgeUnlocked && (
-                  <div className="badge-next-tier">
-                    <Info size={14} />
-                    <span className="next-tier-tooltip">{terminalLegendaryRemaining} more for Legendary</span>
-                  </div>
-                )}
               </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
 
@@ -794,7 +728,10 @@ export default function Progress() {
 
       {hasSimulations && (
         <div id="progress-simulations" className="simulations-section progress-anchor-section" aria-label="Simulations" tabIndex={-1}>
-          <h2>{t('progress.recentSimulations')}</h2>
+          <div className="progress-section-heading">
+            <h2>{t('progress.recentSimulations')}</h2>
+            <p>Your latest results, from most recent to oldest.</p>
+          </div>
           <div className="simulations-grid">
             {progress.simulations.slice(-6).reverse().map((sim, i) => {
               const percentage = sim.totalPoints > 0 ? Math.round((sim.score / sim.totalPoints) * 100) : 0;
@@ -803,27 +740,28 @@ export default function Progress() {
               return (
                 <div key={i} className="simulation-card">
                   <div className="simulation-header">
+                    <div className="simulation-heading">
+                      <h3 className="simulation-title">{sim.examTitle || 'Exam simulation'}</h3>
+                      <time className="simulation-date" dateTime={sim.date}>
+                        {new Date(sim.date).toLocaleDateString()}
+                      </time>
+                    </div>
                     <span className={`simulation-badge ${isPassed ? 'passed' : 'failed'}`}>
+                      {isPassed ? <CheckCircle size={12} aria-hidden="true" /> : <XCircle size={12} aria-hidden="true" />}
                       {isPassed ? t('progress.passed') : t('progress.failed')}
                     </span>
-                    <span className="simulation-date">
-                      {new Date(sim.date).toLocaleDateString()}
-                    </span>
                   </div>
-                  
-                  {sim.examTitle && (
-                    <div className="simulation-title">
-                      {sim.examTitle}
+                  <div className={`simulation-result ${isPassed ? 'is-passed' : 'is-failed'}`}>
+                    <div className="simulation-score">
+                      <div className="score-display">{percentage}<span>%</span></div>
+                      <span className="simulation-score-label">Score</span>
                     </div>
-                  )}
-                  
-                  <div className="simulation-score">
-                    <div className="score-display">{percentage}%</div>
+                    <progress className="simulation-result-bar" value={Math.max(0, Math.min(100, percentage))} max={100}
+                      aria-label={`Simulation score: ${percentage}%`} />
                   </div>
-                  
                   <div className="simulation-details">
-                    <div>{sim.score} / {sim.totalPoints} {t('progress.points')}</div>
-                    <div>{sim.correctAnswers} / {sim.totalQuestions} {t('progress.correctAnswers')}</div>
+                    <div><span>{t('progress.points')}</span><strong>{sim.score} <span>/ {sim.totalPoints}</span></strong></div>
+                    <div><span>{t('progress.correctAnswers')}</span><strong>{sim.correctAnswers} <span>/ {sim.totalQuestions}</span></strong></div>
                   </div>
                 </div>
               );
