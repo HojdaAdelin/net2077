@@ -1721,6 +1721,27 @@
 .progress-profile-panel[open] > .progress-profile-toggle .progress-profile-chevron { transform: rotate(180deg); }
 .progress-profile-content { border-top: 1px solid var(--border); padding: 20px; }
 .progress-profile-content > .frame-selector-card:last-child { margin-bottom: 0; }
+.progress-profile-collapse {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 16px 16px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.progress-profile-collapse svg { transform: rotate(180deg); }
+.progress-profile-collapse:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.progress-profile-collapse:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 3px; }
 .progress-profile-empty { font-size: 13px; line-height: 1.6; color: var(--text-muted); margin: 16px 0 0; }
 .progress-achievements-heading { margin-bottom: 20px; }
 .progress-achievements-heading h3 { font-size: 15px; color: var(--text-primary); margin: 0 0 8px; }

@@ -424,7 +424,7 @@ export default function Progress() {
       </section>
 
       <section id="progress-profile" className="progress-anchor-section" aria-label="Profile" tabIndex={-1}>
-      <details className="progress-profile-panel">
+      <details id="progress-profile-panel" className="progress-profile-panel">
         <summary className="progress-profile-toggle">
           <span className="progress-profile-icon"><Palette size={22} aria-hidden="true" /></span>
           <span className="progress-profile-heading">
@@ -529,13 +529,27 @@ export default function Progress() {
         </div>
         <ProgressAchievements username={user.username} onSummaryChange={setAchievementSummary} />
         </div>
+        <button
+          type="button"
+          className="progress-profile-collapse"
+          aria-controls="progress-profile-panel"
+          onClick={(event) => {
+            const panel = event.currentTarget.closest('details');
+            panel.open = false;
+            panel.querySelector('summary').focus({ preventScroll: true });
+            panel.closest('section').scrollIntoView({ block: 'start', behavior:
+              window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+          }}
+        >
+          <ChevronDown size={18} aria-hidden="true" />
+          Collapse Profile
+        </button>
       </details>
       </section>
 
       <div id="progress-categories" className="category-progress-section progress-anchor-section" aria-label="Progress by Category" tabIndex={-1}>
         <div className="progress-section-heading">
           <h2>{t('progress.progressByCategory')}</h2>
-          <p>Build your skills and work toward your next badge.</p>
         </div>
         <div className="category-cards">
           {[
