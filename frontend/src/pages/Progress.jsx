@@ -1,10 +1,11 @@
+import ProgressAchievements from '../components/ProgressAchievements';
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { getUserProgress, checkPendingRewards, claimLevelRewards } from '../services/api';
 import { API_URL } from '../config';
 import { useLanguage } from '../context/LanguageContext';
-import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp, Gift, X, Coins, CheckCircle, XCircle, Activity, Sparkles, Flame, Target, Pencil, Clock } from 'lucide-react';
+import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp, Gift, X, Coins, CheckCircle, XCircle, Activity, Sparkles, Flame, Target, Pencil, Clock, ChevronDown, Palette } from 'lucide-react';
 import { xpProgressInLevel } from '../utils/xpUtils.js';
 import AvatarFrame from '../components/AvatarFrame';
 import LevelXpDialog from '../components/LevelXpDialog';
@@ -145,6 +146,7 @@ export default function Progress() {
   const [activeFrame, setActiveFrame]   = useState(null);
   const [frameChanging, setFrameChanging] = useState(false);
   const [activeNameEffect, setActiveNameEffect] = useState(null);
+  const [achievementSummary, setAchievementSummary] = useState(null);
   const [effectChanging, setEffectChanging] = useState(false);
   const { t } = useLanguage();
 
@@ -309,7 +311,6 @@ export default function Progress() {
   const STREAK_GOLD = { 7: 40, 14: 100, 30: 225 };
 
   const onboarding = progress.onboarding;
-  const hasProfile = Boolean(progress.frames?.owned?.length || progress.nameEffects?.owned?.length);
   const hasLinuxOverview = Boolean(progress.linuxChapterStats?.chapters &&
     Object.keys(progress.linuxChapterStats.chapters).length);
   const hasSimulations = Boolean(progress.simulations?.length);
@@ -323,22 +324,17 @@ export default function Progress() {
   const networkLegendaryRequired = 300;
   const terminalBadgeRequired = 50;
   const terminalLegendaryRequired = 150;
-  const levelBadgeRequired = 50;
-  const levelLegendaryRequired = 100;
   
   const linuxSolved = progress.solvedByTag?.LINUX || 0;
   const networkSolved = progress.solvedByTag?.NETWORK || 0;
   const terminalSolved = progress.terminalStats?.solved || 0;
   
-  const levelBadgeUnlocked = progress.level >= levelBadgeRequired;
   
-  const levelRemaining = Math.max(0, levelBadgeRequired - progress.level);
   
-  const levelLegendaryRemaining = Math.max(0, levelLegendaryRequired - progress.level);
 
   return (
     <div className="container progress-page">
-      <ProgressNavigation hasProfile={hasProfile} hasLinuxOverview={hasLinuxOverview} hasSimulations={hasSimulations} />
+      <ProgressNavigation hasProfile hasLinuxOverview={hasLinuxOverview} hasSimulations={hasSimulations} />
 
       <section id="progress-general" className="progress-anchor-section" aria-label="General" tabIndex={-1}>
       <div className="progress-section-heading">
@@ -409,26 +405,7 @@ export default function Progress() {
             </div>
           </div>
 
-          <div className={`badge-progress ${levelBadgeUnlocked ? 'unlocked' : ''}`} style={{ marginTop: '24px' }}>
-            <div className="badge-progress-icon">
-              {levelBadgeUnlocked ? <Award size={16} /> : <Zap size={16} />}
-            </div>
-            <div className="badge-progress-content">
-              <div className="badge-progress-text">
-                {levelBadgeUnlocked ? (
-                  <span className="badge-unlocked-text">Master User Badge Unlocked!</span>
-                ) : (
-                  <span className="badge-locked-text">{levelRemaining} more levels to unlock badge</span>
-                )}
-              </div>
-              {levelBadgeUnlocked && (
-                <div className="badge-next-tier">
-                  <Info size={14} />
-                  <span className="next-tier-tooltip">{levelLegendaryRemaining} more levels for Legendary</span>
-                </div>
-              )}
-            </div>
-          </div>
+
         </div>
 
         <div className="stat-card-progress">
@@ -446,10 +423,21 @@ export default function Progress() {
 
       </section>
 
-      {hasProfile && (
       <section id="progress-profile" className="progress-anchor-section" aria-label="Profile" tabIndex={-1}>
+      <details className="progress-profile-panel">
+        <summary className="progress-profile-toggle">
+          <span className="progress-profile-icon"><Palette size={22} aria-hidden="true" /></span>
+          <span className="progress-profile-heading">
+            <span className="progress-profile-title">Profile</span>
+            <span className="progress-profile-subtitle">Avatar Frame, Name Effect &amp; Achievements</span>
+          </span>
+          {achievementSummary && (
+            <span className="progress-profile-count">{achievementSummary.unlocked}/{achievementSummary.total} unlocked</span>
+          )}
+          <ChevronDown className="progress-profile-chevron" size={20} aria-hidden="true" />
+        </summary>
+        <div className="progress-profile-content">
       {/* ── Frame Selector ── */}
-      {progress.frames?.owned?.length > 0 && (
         <div className="frame-selector-card">
           <div className="frame-selector-header">
             <span className="frame-selector-title">Avatar Frame</span>
@@ -475,7 +463,7 @@ export default function Progress() {
               <span className="frame-selector-label">None</span>
             </button>
 
-            {progress.frames.owned.map((fk) => (
+            {(progress.frames?.owned || []).map((fk) => (
               <button
                 key={fk}
                 className={`frame-selector-item ${activeFrame === fk ? 'active' : ''}`}
@@ -490,11 +478,10 @@ export default function Progress() {
               </button>
             ))}
           </div>
+          {!progress.frames?.owned?.length && <p className="progress-profile-empty">Your unlocked avatar frames will appear here.</p>}
         </div>
-      )}
 
       {/* ── Name Effect Selector ── */}
-      {progress.nameEffects?.owned?.length > 0 && (
         <div className="frame-selector-card">
           <div className="frame-selector-header">
             <span className="frame-selector-title">Name Effect</span>
@@ -521,7 +508,7 @@ export default function Progress() {
               <span className="frame-selector-label">None</span>
             </button>
 
-            {progress.nameEffects.owned.map((ek) => (
+            {(progress.nameEffects?.owned || []).map((ek) => (
               <button
                 key={ek}
                 className={`frame-selector-item ${activeNameEffect === ek ? 'active' : ''}`}
@@ -538,11 +525,12 @@ export default function Progress() {
               </button>
             ))}
           </div>
+          {!progress.nameEffects?.owned?.length && <p className="progress-profile-empty">Your unlocked name effects will appear here.</p>}
         </div>
-      )}
-
+        <ProgressAchievements username={user.username} onSummaryChange={setAchievementSummary} />
+        </div>
+      </details>
       </section>
-      )}
 
       <div id="progress-categories" className="category-progress-section progress-anchor-section" aria-label="Progress by Category" tabIndex={-1}>
         <div className="progress-section-heading">

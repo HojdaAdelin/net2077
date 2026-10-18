@@ -54,6 +54,8 @@ export default function ProgressNavigation({ hasProfile, hasLinuxOverview, hasSi
     const target = document.getElementById(id);
     if (!target) return;
     event.preventDefault();
+    const profilePanel = target.querySelector('.progress-profile-panel');
+    if (profilePanel) profilePanel.open = true;
     target.focus({ preventScroll: true });
     target.scrollIntoView({ block: 'start', behavior:
       window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });

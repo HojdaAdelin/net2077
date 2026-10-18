@@ -1,127 +1,16 @@
+import Badge from '../components/ProfileBadge';
+import { getProfileAchievements } from '../utils/achievements';
 import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { User, Trophy, Zap,Microchip, Target, Calendar, Activity, Award, Monitor, Globe, Terminal, Wrench, Crown, Medal, BadgeQuestionMark, Cpu } from 'lucide-react';
+import { Trophy, Zap, Microchip, Target, Calendar, Activity, Award, Monitor, Globe, Terminal, Wrench } from 'lucide-react';
 import AvatarFrame from '../components/AvatarFrame';
 import NameEffectRenderer from '../components/NameEffectRenderer';
 import '../styles/AvatarFrame.css';
 import '../styles/NameEffects.css';
 import '../styles/Profile.css';
 
-
-function Badge({ type, unlocked, rank, count, level }) {
-  const [showTooltip, setShowTooltip] = useState(false);
-  
-  const badges = {
-    linux: {
-      icon: <Monitor size={20} />,
-      name: count >= 1000 ? 'Legendary Linux' : 'Linux Master',
-      description: count >= 1000 ? '1000+ Linux questions solved' : '500+ Linux questions solved',
-      color: count >= 1000 ? '#60a5fa' : '#f97316',
-      isLegendary: count >= 1000
-    },
-    network: {
-      icon: <Globe size={20} />,
-      name: count >= 300 ? 'Legendary Network' : 'Network Expert',
-      description: count >= 300 ? '300+ Network questions solved' : '50+ Network questions solved',
-      color: count >= 300 ? '#60a5fa' : '#3b82f6',
-      isLegendary: count >= 300
-    },
-    terminal: {
-      icon: <Terminal size={20} />,
-      name: count >= 150 ? 'Legendary Terminal' : 'Terminal Pro',
-      description: count >= 150 ? '150+ Terminal commands solved' : '50+ Terminal commands solved',
-      color: count >= 150 ? '#60a5fa' : '#22c55e',
-      isLegendary: count >= 150
-    },
-    level: {
-      icon: <Zap size={20} />,
-      name: level >= 100 ? 'Legendary User' : 'Master User',
-      description: level >= 100 ? 'Reached Level 100' : 'Reached Level 50',
-      color: level >= 100 ? '#60a5fa' : '#a855f7',
-      isLegendary: level >= 100
-    },
-    top1: {
-      icon: <Crown size={20} />,
-      name: 'Champion',
-      description: 'Rank #1 on Leaderboard',
-      color: '#fbbf24',
-      isLegendary: false
-    },
-    top2: {
-      icon: <Medal size={20} />,
-      name: 'Runner-up',
-      description: 'Rank #2 on Leaderboard',
-      color: '#94a3b8',
-      isLegendary: false
-    },
-    top3: {
-      icon: <Trophy size={20} />,
-      name: 'Top 3',
-      description: 'Rank #3 on Leaderboard',
-      color: '#cd7f32',
-      isLegendary: false
-    },
-    questions: {
-      icon: <BadgeQuestionMark size={20} />,
-      name: count >= 2500 ? 'Question Master' : 'Question Solver',
-      description: count >= 2500 ? '2500+ questions solved in total' : '1000+ questions solved in total',
-      color: count >= 2500 ? '#60a5fa' : '#f43f5e',
-      isLegendary: count >= 2500
-    },
-    arduino: {
-      icon: <Cpu size={20} />,
-      name: count >= 150 ? 'Arduino Master' : 'Arduino Builder',
-      description: count >= 150 ? '150+ Arduino questions solved' : '100+ Arduino questions solved',
-      color: count >= 150 ? '#60a5fa' : '#8b5cf6',
-      isLegendary: count >= 150
-    }
-  };
-
-  const badge = badges[type];
-  if (!badge) return null;
-
-  return (
-    <div 
-      className={`profile-badge ${unlocked ? 'unlocked' : 'locked'} ${badge.isLegendary ? 'legendary' : ''}`}
-      style={{ '--badge-color': badge.color }}
-      onMouseEnter={() => setShowTooltip(true)}
-      onMouseLeave={() => setShowTooltip(false)}
-    >
-      <div className="badge-icon">
-        {badge.icon}
-      </div>
-      {unlocked && rank && (
-        <div className="badge-rank">#{rank}</div>
-      )}
-      
-      {showTooltip && (
-        <div className="badge-tooltip">
-          <div className="badge-tooltip-header">
-            <div className="badge-tooltip-icon" style={{ color: badge.color }}>
-              {badge.icon}
-            </div>
-            <div className="badge-tooltip-title">{badge.name}</div>
-          </div>
-          <div className="badge-tooltip-description">
-            {unlocked ? badge.description : `🔒 ${badge.description}`}
-          </div>
-          {unlocked && (
-            <div className="badge-tooltip-status unlocked-status">
-              ✓ Unlocked
-            </div>
-          )}
-          {!unlocked && (
-            <div className="badge-tooltip-status locked-status">
-              Locked
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
 
 export default function Profile() {
   const { username } = useParams();
@@ -198,17 +87,7 @@ export default function Profile() {
   const isOwnProfile = currentUser && currentUser.username === username;
 
 
-  const badges = {
-    linux: profileData.categoryStats.linux >= 500,
-    network: profileData.categoryStats.network >= 50,
-    terminal: profileData.categoryStats.terminal >= 50,
-    level: profileData.level >= 50,
-    top1: profileData.leaderboardRank === 1,
-    top2: profileData.leaderboardRank === 2,
-    top3: profileData.leaderboardRank === 3,
-    questions: profileData.totalQuestionsSolved >= 1000,
-    arduino: (profileData.categoryStats.arduino || 0) >= 100
-  };
+  const achievements = getProfileAchievements(profileData);
 
   return (
     <div className="user-profile-page">
@@ -235,19 +114,9 @@ export default function Profile() {
           </div>
           
           <div className="user-profile-achievements">
-            <Badge type="linux" unlocked={badges.linux} count={profileData.categoryStats.linux} />
-            <Badge type="network" unlocked={badges.network} count={profileData.categoryStats.network} />
-            <Badge type="terminal" unlocked={badges.terminal} count={profileData.categoryStats.terminal} />
-            <Badge type="level" unlocked={badges.level} level={profileData.level} />
-            <Badge type="questions" unlocked={badges.questions} count={profileData.totalQuestionsSolved} />
-            <Badge type="arduino" unlocked={badges.arduino} count={profileData.categoryStats.arduino || 0} />
-            {profileData.leaderboardRank <= 3 && (
-              <Badge 
-                type={`top${profileData.leaderboardRank}`} 
-                unlocked={true}
-                rank={profileData.leaderboardRank}
-              />
-            )}
+            {achievements.filter(achievement => !achievement.rank || achievement.unlocked).map(achievement => (
+              <Badge key={achievement.type} {...achievement} />
+            ))}
           </div>
         </div>
 

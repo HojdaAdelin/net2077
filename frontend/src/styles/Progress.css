@@ -1685,6 +1685,77 @@
 }
 
 /* ── Frame Selector Card ─────────────────────────────────────────────────── */
+.progress-profile-panel {
+  margin-bottom: 28px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg-card);
+  min-width: 0;
+}
+.progress-profile-toggle {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  cursor: pointer;
+  list-style: none;
+}
+.progress-profile-toggle::-webkit-details-marker { display: none; }
+.progress-profile-toggle:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 4px; border-radius: 16px; }
+.progress-profile-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  color: var(--accent-primary);
+}
+.progress-profile-heading { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 0; }
+.progress-profile-title { font-size: 18px; font-weight: 650; color: var(--text-primary); }
+.progress-profile-subtitle, .progress-profile-count { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.progress-profile-count { flex-shrink: 0; }
+.progress-profile-chevron { flex-shrink: 0; color: var(--text-muted); transition: transform .2s ease; }
+.progress-profile-panel[open] > .progress-profile-toggle .progress-profile-chevron { transform: rotate(180deg); }
+.progress-profile-content { border-top: 1px solid var(--border); padding: 20px; }
+.progress-profile-content > .frame-selector-card:last-child { margin-bottom: 0; }
+.progress-profile-empty { font-size: 13px; line-height: 1.6; color: var(--text-muted); margin: 16px 0 0; }
+.progress-achievements-heading { margin-bottom: 20px; }
+.progress-achievements-heading h3 { font-size: 15px; color: var(--text-primary); margin: 0 0 8px; }
+.progress-achievements-heading p, .progress-achievements > p { color: var(--text-secondary); font-size: 13px; line-height: 1.6; margin: 0; }
+.progress-achievements-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 0; margin: 0; list-style: none; }
+.progress-achievement { display: flex; align-items: flex-start; gap: 16px; padding: 16px; border: 1px solid var(--border); background: var(--bg-secondary); border-radius: 12px; min-width: 0; }
+.progress-achievement .profile-badge { flex-shrink: 0; width: 60px; height: 60px; box-sizing: border-box; cursor: default; }
+.progress-achievement-details { min-width: 0; flex: 1; }
+.progress-achievement-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; margin-bottom: 8px; }
+.progress-achievement-heading h4 { margin: 0; font-size: 14px; line-height: 1.5; color: var(--text-primary); }
+.progress-achievement-status { border: 1px solid var(--border); padding: 2px 7px; border-radius: 6px; font-size: 10px; font-weight: 650; color: var(--text-muted); }
+.progress-achievement-status.is-unlocked { color: var(--success); border-color: color-mix(in srgb, var(--success) 30%, transparent); background: color-mix(in srgb, var(--success) 8%, transparent); }
+.progress-achievement-details p { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 8px; }
+.progress-achievement-progress { font-size: 12px; color: var(--text-muted); line-height: 1.6; overflow-wrap: anywhere; }
+.progress-achievements-error { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font-size: 14px; color: var(--text-secondary); }
+.progress-achievements-error button { padding: 10px 14px; color: var(--text-primary); background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
+@media (max-width: 900px) {
+  .progress-achievements-list { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .progress-profile-toggle { display: grid; grid-template-columns: 36px minmax(0, 1fr) 20px; gap: 8px 12px; padding: 16px; }
+  .progress-profile-icon { width: 36px; height: 36px; }
+  .progress-profile-count { grid-column: 2; grid-row: 2; font-size: 12px; }
+  .progress-profile-chevron { grid-column: 3; grid-row: 1; }
+  .progress-profile-subtitle { font-size: 12px; }
+  .progress-profile-content { padding: 12px; }
+  .progress-profile-content .frame-selector-card { padding: 14px; }
+  .progress-achievement { padding: 12px; gap: 12px; }
+  .progress-achievement .profile-badge { width: 48px; height: 48px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .progress-profile-chevron { transition: none; }
+  .progress-achievement .profile-badge, .progress-achievement .badge-icon { animation: none; transition: none; }
+}
+
 .frame-selector-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -1793,4 +1864,47 @@
   font-weight: 800;
   line-height: 1;
   display: inline-block;
+}
+
+@media (max-width: 600px) {
+  .frame-selector-card {
+    box-sizing: border-box;
+    min-width: 0;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .frame-selector-header {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin-bottom: 12px;
+  }
+
+  .frame-selector-remove {
+    min-height: 44px;
+    padding: 8px;
+  }
+
+  .frame-selector-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .frame-selector-item {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 10px 12px;
+  }
+
+  .frame-selector-label {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
+    line-height: 1.4;
+  }
 }
