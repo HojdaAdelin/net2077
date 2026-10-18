@@ -510,6 +510,43 @@ export const resetNetworkStats = async (req, res) => {
   }
 };
 
+export const resetAcadnetStats = async (req, res) => {
+  try {
+    const questions = await Question.find({ type: 'acadnet' });
+    const byId = new Map(questions.map(question => [String(question._id), question]));
+    for (;;) {
+      const user = await User.findById(req.userId);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+      const solved = user.solvedQuestions.filter(id => byId.has(String(id)));
+      if (solved.length < 50) {
+        return res.status(400).json({ message: 'You need at least 50 solved AcadNet questions to reset stats',
+          currentSolved: solved.length });
+      }
+      const xpAdded = applyPrivilege(solved.length, user);
+      const changes = { level: levelFromXp(user.xp + xpAdded) };
+      // Remove only the contribution of these questions from category counters.
+      for (const tag of ['LINUX', 'NETWORK', 'ARDUINO']) {
+        const removed = solved.filter(id => byId.get(String(id)).tags?.includes(tag)).length;
+        if (removed) changes[`solvedByTag.${tag}`] = Math.max(0, (user.solvedByTag?.[tag] || 0) - removed);
+      }
+      // Snapshot checks prevent concurrent solves/resets from being overwritten,
+      // and prevent two reset requests from rewarding the same solved questions.
+      const updated = await User.findOneAndUpdate({ _id: user._id, xp: user.xp,
+        solvedQuestions: user.solvedQuestions }, {
+        $pull: { solvedQuestions: { $in: solved } },
+        $inc: { xp: xpAdded }, $set: changes
+      }, { new: true });
+      if (!updated) continue;
+      await trackCompetitiveXP(user._id, xpAdded);
+      return res.json({ message: 'AcadNet stats reset successfully', questionsReset: solved.length,
+        xpAdded, newXp: updated.xp, newLevel: updated.level });
+    }
+  } catch (error) {
+    console.error('Error resetting AcadNet stats:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 export const submitRandom50 = finishQuizAttempt('random');
 export const searchQuestions = async (req, res) => {
   try {

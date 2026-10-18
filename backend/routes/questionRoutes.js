@@ -1,7 +1,7 @@
 import { hideQuestionSolutions } from '../utils/questionValidation.js';
 import { optionalQuizAuth, startQuizAttempt, checkQuizAnswer, finishQuizAttempt } from '../controllers/quizAttemptController.js';
 import express from 'express';
-import { getQuestions, getQuestionById, getUnsolvedQuestions, getRandom50, markSolved, dailyLinux, getDailyChallengeStatus, completeDailyChallenge, resetBasicStats, dailyNetwork, resetLinuxStats, resetArduinoStats, resetNetworkStats, getLinuxOverviewTest, submitRandom50, exportAllQuestions, searchQuestions, deleteQuestion, updateQuestion } from '../controllers/questionController.js';
+import { getQuestions, getQuestionById, getUnsolvedQuestions, getRandom50, markSolved, dailyLinux, getDailyChallengeStatus, completeDailyChallenge, resetBasicStats, dailyNetwork, resetLinuxStats, resetArduinoStats, resetNetworkStats, resetAcadnetStats, getLinuxOverviewTest, submitRandom50, exportAllQuestions, searchQuestions, deleteQuestion, updateQuestion } from '../controllers/questionController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { checkRole } from '../middleware/checkRole.js';
 
@@ -23,6 +23,7 @@ router.post('/resetBasicStats', authMiddleware, resetBasicStats);
 router.post('/resetLinuxStats', authMiddleware, resetLinuxStats);
 router.post('/resetArduinoStats', authMiddleware, resetArduinoStats);
 router.post('/resetNetworkStats', authMiddleware, resetNetworkStats);
+router.post('/resetAcadnetStats', authMiddleware, resetAcadnetStats);
 router.get('/export', authMiddleware, checkRole('root'), exportAllQuestions);
 router.get('/search', authMiddleware, checkRole('root'), searchQuestions);
 router.delete('/:id', authMiddleware, checkRole('root'), deleteQuestion);

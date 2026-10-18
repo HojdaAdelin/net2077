@@ -67,7 +67,7 @@ function CategoryLeaderboardModal({ tag, label, color, onClose }) {
 
 function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
   const [selectedMode, setSelectedMode] = useState('');
-  const [selectedTag, setSelectedTag] = useState(preSelectedCategory || ((type === 'basic' || type === 'daily') ? 'LINUX' : ''));
+  const [selectedTag, setSelectedTag] = useState(preSelectedCategory || (type === 'acadnet' ? 'ACADNET' : '') || ((type === 'basic' || type === 'daily') ? 'LINUX' : ''));
   const [selectedChapters, setSelectedChapters] = useState([]);
   const [includeAcadnet, setIncludeAcadnet] = useState(false);
   const navigate = useNavigate();
@@ -75,7 +75,8 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
   const availableTags = [
     { id: 'LINUX', label: 'Linux', color: '#f59e0b', icon: '🐧', desc: 'System administration & commands' },
     { id: 'NETWORK', label: 'Network', color: '#3b82f6', icon: '🌐', desc: 'Networking protocols & security' },
-    { id: 'ARDUINO', label: 'Arduino', color: '#8b5cf6', icon: '💻', desc: 'Arduino & embedded systems' }
+    { id: 'ARDUINO', label: 'Arduino', color: '#ec4899', icon: '💻', desc: 'Arduino & embedded systems' },
+    { id: 'ACADNET', label: 'AcadNet', color: '#8b5cf6', desc: 'All AcadNet competition questions' }
   ];
 
   const chapterTags = [
@@ -129,13 +130,14 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
     let finalTag = '';
     if (type === 'basic') {
       finalTag = 'LINUX';
-    } else if (selectedTag) {
+    } else if (selectedTag && selectedTag !== 'ACADNET') {
       // If a tag is selected, always use it (even for "all" mode)
       finalTag = selectedTag;
     }
 
     const params = new URLSearchParams();
-    params.set('type', type);
+    const quizType = selectedTag === 'ACADNET' ? 'acadnet' : type;
+    params.set('type', quizType);
     if (finalTag) {
       params.set('tags', finalTag);
     }
@@ -143,7 +145,7 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
       params.set('chapters', selectedChapters.join(','));
     }
 
-    navigate(`/grile/${type}/${selectedMode}?${params.toString()}`);
+    navigate(`/grile/${quizType}/${selectedMode}?${params.toString()}`);
   };
 
   const canStart = type === 'daily' ? selectedTag : (selectedMode && (!isTagRequired || selectedTag) && !needsAuth);
@@ -199,11 +201,11 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
               Select Category {isTagRequired ? '*' : <span className="optional-label">(optional)</span>}
             </h3>
             <div className="tags-grid">
-              {availableTags.map(tag => (
+              {availableTags.filter(tag => type !== 'acadnet' || tag.id !== 'ARDUINO').map(tag => (
                 <button
                   key={tag.id}
                   className={`tag-option ${selectedTag === tag.id ? 'selected' : ''}`}
-                  onClick={() => setSelectedTag(tag.id)}
+                  onClick={() => { setSelectedTag(tag.id); setSelectedChapters([]); }}
                   style={{
                     '--tag-color': tag.color
                   }}
@@ -328,12 +330,12 @@ export default function Grile() {
   const [stats, setStats] = useState({ 
     basic: 0, 
     all: { linux: 0, network: 0, arduino: 0 }, 
-    acadnet: { linux: 0, network: 0 } 
+    acadnet: { total: 0, linux: 0, network: 0 }
   });
   const [solved, setSolved] = useState({ 
     basic: 0, 
     all: { linux: 0, network: 0, arduino: 0 }, 
-    acadnet: { linux: 0, network: 0 } 
+    acadnet: { total: 0, linux: 0, network: 0 }
   });
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -344,6 +346,7 @@ export default function Grile() {
   const [showResetModal, setShowResetModal] = useState(false);
   const [showLinuxResetModal, setShowLinuxResetModal] = useState(false);
   const [showArduinoResetModal, setShowArduinoResetModal] = useState(false);
+  const [showAcadnetResetModal, setShowAcadnetResetModal] = useState(false);
   const [showNetworkResetModal, setShowNetworkResetModal] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
@@ -413,7 +416,7 @@ export default function Grile() {
       setStats({
         basic: basic.length,
         all: { linux: allLinux.length, network: allNetwork.length, arduino: allArduino.length },
-        acadnet: { linux: acadnetLinux.length, network: acadnetNetwork.length }
+        acadnet: { total: acadnet.length, linux: acadnetLinux.length, network: acadnetNetwork.length }
       });
 
       if (user) {
@@ -439,6 +442,7 @@ export default function Grile() {
             arduino: allArduinoSolved
           },
           acadnet: { 
+            total: acadnet.filter(q => solvedSet.has(q._id)).length,
             linux: acadnetLinuxSolved, 
             network: acadnetNetworkSolved 
           }
@@ -638,6 +642,30 @@ export default function Grile() {
     } finally { setIsResetting(false); }
   };
 
+  const handleAcadnetResetStats = async () => {
+    if (!user || solved.acadnet.total < 50 || isResetting) return;
+    setIsResetting(true);
+    try {
+      const response = await fetch(`${API_URL}/questions/resetAcadnetStats`, {
+        method: 'POST', credentials: 'include'
+      });
+      const data = await response.json();
+      if (response.ok) {
+        updateUser({ xp: data.newXp, level: data.newLevel });
+        await loadData();
+        setShowAcadnetResetModal(false);
+        setResultMessage({ type: 'success', title: 'Stats Reset Successfully!',
+          message: `${data.questionsReset} questions reset, ${data.xpAdded} XP added.` });
+      } else {
+        setResultMessage({ type: 'error', title: 'Reset Failed', message: data.message || 'Failed to reset stats' });
+      }
+      setShowResultModal(true);
+    } catch {
+      setResultMessage({ type: 'error', title: 'Error', message: 'Failed to reset stats. Please try again.' });
+      setShowResultModal(true);
+    } finally { setIsResetting(false); }
+  };
+
   const cards = [
     {       title: 'Linux Questions', 
       desc: 'System administration, commands & concepts',
@@ -671,11 +699,23 @@ export default function Grile() {
       category: 'Arduino',
       total: stats.all.arduino,
       solved: solved.all.arduino,
-      color: '#8b5cf6',
+      color: '#ec4899',
       icon: <Cpu size={24} />,
       filter: 'all',
       preSelectedTag: 'ARDUINO',
       leaderboardTag: 'ARDUINO',
+    },
+    {
+      title: 'AcadNet Questions',
+      desc: 'Competition questions from AcadNet exams',
+      type: 'acadnet',
+      category: 'AcadNet',
+      total: stats.acadnet.total,
+      solved: solved.acadnet.total,
+      color: '#8b5cf6',
+      icon: <Trophy size={24} />,
+      filter: 'all',
+      preSelectedTag: 'ACADNET',
     },
     { 
       title: 'Basic Commands', 
@@ -863,6 +903,17 @@ export default function Grile() {
                   title={solved.all.arduino < 50 ? `Need ${50 - solved.all.arduino} more solved questions` : 'Reset stats for XP'}
                 >
                   Reset for XP ({solved.all.arduino}/50)
+                </button>
+              )}
+
+              {card.type === 'acadnet' && user && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); setShowAcadnetResetModal(true); }}
+                  className="compact-reset-btn"
+                  disabled={solved.acadnet.total < 50 || isResetting}
+                  title={solved.acadnet.total < 50 ? `Need ${50 - solved.acadnet.total} more solved questions` : 'Reset stats for XP'}
+                >
+                  Reset for XP ({solved.acadnet.total}/50)
                 </button>
               )}
 
@@ -1117,6 +1168,48 @@ export default function Grile() {
             <div className="modal-footer">
               <button onClick={() => setShowNetworkResetModal(false)} className="btn btn-secondary">Cancel</button>
               <button onClick={handleNetworkResetStats} className="btn btn-primary" disabled={solved.all.network < 50 || isResetting}>
+                {isResetting ? 'Resetting...' : 'Confirm Reset'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAcadnetResetModal && (
+        <div className="modal-overlay" onClick={() => !isResetting && setShowAcadnetResetModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Reset AcadNet Questions Stats</h3>
+              <button className="modal-close" onClick={() => setShowAcadnetResetModal(false)} disabled={isResetting}>
+                <X size={20} />
+              </button>
+            </div>
+            <div className="reset-modal-body">
+              <div className="reset-info">
+                <p><strong>Total user XP won't be reset</strong>, only AcadNet questions stats will be reset.</p>
+                <p>You will get <strong>1 point for every question solved</strong>.</p>
+                <p>You need at least <strong>50 solved AcadNet questions</strong>.</p>
+              </div>
+              <div className="reset-stats">
+                <div className="stat-item">
+                  <span className="stat-label">Currently solved:</span>
+                  <span className="stat-value">{solved.acadnet.total}</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">XP you'll gain:</span>
+                  <span className="stat-value">{solved.acadnet.total} XP</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">Status:</span>
+                  <span className={`stat-status ${solved.acadnet.total >= 50 ? 'eligible' : 'not-eligible'}`}>
+                    {solved.acadnet.total >= 50 ? 'Eligible' : `Need ${50 - solved.acadnet.total} more`}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button onClick={() => setShowAcadnetResetModal(false)} className="btn btn-secondary" disabled={isResetting}>Cancel</button>
+              <button onClick={handleAcadnetResetStats} className="btn btn-primary" disabled={solved.acadnet.total < 50 || isResetting}>
                 {isResetting ? 'Resetting...' : 'Confirm Reset'}
               </button>
             </div>
