@@ -7,6 +7,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp, Gift, X, Coins, CheckCircle, XCircle, Activity, Sparkles, Flame, Target, Pencil, Clock } from 'lucide-react';
 import { xpProgressInLevel } from '../utils/xpUtils.js';
 import AvatarFrame from '../components/AvatarFrame';
+import LevelXpDialog from '../components/LevelXpDialog';
 import '../styles/AvatarFrame.css';
 import '../styles/NameEffects.css';
 import '../styles/Progress.css';
@@ -388,30 +389,17 @@ export default function Progress() {
                   <button
                     className="xp-info-btn"
                     onClick={() => setShowXpInfo(v => !v)}
+                    type="button"
+                    aria-label="View level XP requirements"
+                    aria-haspopup="dialog"
+                    aria-expanded={showXpInfo}
+                    aria-controls={showXpInfo ? 'level-xp-dialog' : undefined}
                     title="How levels work"
                   >
                     <Info size={13} />
                   </button>
                   {showXpInfo && (
-                    <div className="xp-info-popover">
-                      <button className="xp-info-close" onClick={() => setShowXpInfo(false)}>×</button>
-                      <p className="xp-info-title">Level XP Requirements</p>
-                      <table className="xp-info-table">
-                        <thead>
-                          <tr><th>Levels</th><th>XP / level</th></tr>
-                        </thead>
-                        <tbody>
-                          <tr><td>1 – 50</td><td>100 XP</td></tr>
-                          <tr><td>51 – 80</td><td>150 XP</td></tr>
-                          <tr><td>81 – 100</td><td>200 XP</td></tr>
-                          <tr><td>101 – 150</td><td>300 XP</td></tr>
-                          <tr><td>151+</td><td>500 XP</td></tr>
-                        </tbody>
-                      </table>
-                      <p className="xp-info-current">
-                        You are level <strong>{progress.level}</strong> — next level needs <strong>{xpForNextLevel} XP</strong>
-                      </p>
-                    </div>
+                    <LevelXpDialog level={progress.level} onClose={() => setShowXpInfo(false)} />
                   )}
                 </div>
               </div>
