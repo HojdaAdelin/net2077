@@ -8,6 +8,7 @@ import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp, Gift, X, Coins,
 import { xpProgressInLevel } from '../utils/xpUtils.js';
 import AvatarFrame from '../components/AvatarFrame';
 import LevelXpDialog from '../components/LevelXpDialog';
+import ProgressNavigation from '../components/ProgressNavigation';
 import '../styles/AvatarFrame.css';
 import '../styles/NameEffects.css';
 import '../styles/Progress.css';
@@ -307,6 +308,10 @@ export default function Progress() {
   const STREAK_GOLD = { 7: 40, 14: 100, 30: 225 };
 
   const onboarding = progress.onboarding;
+  const hasProfile = Boolean(progress.frames?.owned?.length || progress.nameEffects?.owned?.length);
+  const hasLinuxOverview = Boolean(progress.linuxChapterStats?.chapters &&
+    Object.keys(progress.linuxChapterStats.chapters).length);
+  const hasSimulations = Boolean(progress.simulations?.length);
   const currentStreak = progress.streak?.current || 0;
   const streakGoal = onboarding?.streakGoal;
   const streakReached = streakGoal && currentStreak >= streakGoal;
@@ -345,6 +350,9 @@ export default function Progress() {
         <h1>{t('progress.title')}</h1>
       </div>
 
+      <ProgressNavigation hasProfile={hasProfile} hasLinuxOverview={hasLinuxOverview} hasSimulations={hasSimulations} />
+
+      <section id="progress-general" className="progress-anchor-section" aria-label="General" tabIndex={-1}>
       {progress && !progress.onboarding?.completed && (
         <div className="progress-onboarding-banner">
           <div className="progress-onboarding-icon"><Sparkles size={20} /></div>
@@ -442,6 +450,10 @@ export default function Progress() {
         </div>
       </div>
 
+      </section>
+
+      {hasProfile && (
+      <section id="progress-profile" className="progress-anchor-section" aria-label="Profile" tabIndex={-1}>
       {/* ── Frame Selector ── */}
       {progress.frames?.owned?.length > 0 && (
         <div className="frame-selector-card">
@@ -535,7 +547,10 @@ export default function Progress() {
         </div>
       )}
 
-      <div className="category-progress-section">
+      </section>
+      )}
+
+      <div id="progress-categories" className="category-progress-section progress-anchor-section" aria-label="Progress by Category" tabIndex={-1}>
         <h2>{t('progress.progressByCategory')}</h2>        <div className="category-cards">
           <div className="category-progress-card">
             <div className="category-header">
@@ -726,12 +741,13 @@ export default function Progress() {
         </div>
       )}
 
-      <div className="category-progress-section">
+      <div id="progress-activity" className="category-progress-section progress-anchor-section" aria-label="Daily Activity" tabIndex={-1}>
         <h2><Activity size={20} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 8 }} />Daily Activity</h2>        <p className="dac-subtitle">Questions solved per day over the last 30 days</p>
         <DailyActivityChart data={progress.dailyActivity} />
       </div>
 
-      {progress.linuxChapterStats?.chapters && Object.keys(progress.linuxChapterStats.chapters).length > 0 && (        <div className="category-progress-section">
+      {hasLinuxOverview && (
+        <div id="progress-linux" className="category-progress-section progress-anchor-section" aria-label="Linux Overview" tabIndex={-1}>
           <h2>Linux Overview — Chapter Results</h2>
           {progress.linuxChapterStats.lastTaken && (
             <p className="linux-chapter-last-taken">
@@ -776,8 +792,8 @@ export default function Progress() {
         </div>
       )}
 
-      {progress.simulations?.length > 0 && (
-        <div className="simulations-section">
+      {hasSimulations && (
+        <div id="progress-simulations" className="simulations-section progress-anchor-section" aria-label="Simulations" tabIndex={-1}>
           <h2>{t('progress.recentSimulations')}</h2>
           <div className="simulations-grid">
             {progress.simulations.slice(-6).reverse().map((sim, i) => {

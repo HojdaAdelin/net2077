@@ -1,6 +1,80 @@
 .progress-page {
+  --progress-nav-height: 60px;
   padding: 80px 0;
   min-height: calc(100vh - 200px);
+}
+
+.progress-section-nav {
+  position: sticky;
+  top: 78px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px;
+  margin-bottom: 28px;
+  overflow-x: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.progress-section-nav::-webkit-scrollbar {
+  height: 6px;
+}
+
+.progress-section-nav::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+.progress-section-nav::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.progress-section-nav::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .progress-section-nav {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) var(--bg-secondary);
+  }
+}
+
+.progress-section-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 0 auto;
+  gap: 8px;
+  min-height: 42px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s, background 0.15s;
+}
+
+.progress-section-link:hover { color: var(--text-primary); background: var(--bg-secondary); }
+.progress-section-link[aria-current="location"] {
+  background: var(--bg-secondary);
+  color: var(--accent-primary);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.progress-section-link:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: -2px; }
+.progress-anchor-section { scroll-margin-top: calc(94px + var(--progress-nav-height)); }
+.progress-anchor-section:focus { outline: none; }
+
+@media (max-width: 600px) {
+  .progress-section-nav { top: 72px; padding: 6px; gap: 4px; border-radius: 12px; margin-bottom: 20px; }
+  .progress-section-link { padding: 10px 12px; font-size: 12px; }
 }
 
 .progress-header {
