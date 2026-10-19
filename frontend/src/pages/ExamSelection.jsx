@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
 import { AuthContext } from '../context/AuthContext';
 import '../styles/ExamSelection.css';
-import { Clock3, Tally5, Plus, X, ChevronRight, ChevronLeft, Trash2, Users } from 'lucide-react';
+import { Clock3, Tally5, Plus, X, ChevronRight, ChevronLeft, Trash2, Users, Pencil } from 'lucide-react';
 
 const EMPTY_META = {
   id: '', title: '', description: '',
@@ -21,6 +21,8 @@ export default function ExamSelection() {
   const isRoot = user?.role === 'root';
 
   // modal state
+  const [editingExam, setEditingExam] = useState(null);
+  const [savingDetails, setSavingDetails] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [step, setStep] = useState(1);           // 1 = meta, 2 = questions
   const [meta, setMeta] = useState(EMPTY_META);
@@ -121,7 +123,45 @@ export default function ExamSelection() {
     }
   };
 
+  const handleEditExam = (exam) => {
+    setEditingExam(exam);
+    setMeta(Object.fromEntries(Object.keys(EMPTY_META).map(key => [key, exam[key] ?? EMPTY_META[key]])));
+    setMetaError('');
+    setStep(1);
+    setShowModal(true);
+  };
+
+  const handleSaveDetails = async () => {
+    if (!isRoot || !editingExam || savingDetails) return;
+    setMetaError('');
+    if (Object.entries(meta).some(([key, value]) => key !== 'new_test_badge' && !String(value).trim())) {
+      setMetaError('All fields are required.');
+      return;
+    }
+    setSavingDetails(true);
+    try {
+      const response = await fetch(`${API_URL}/exams/${encodeURIComponent(editingExam.id)}`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
+        body: JSON.stringify({ ...meta, duration: Number(meta.duration), totalPoints: Number(meta.totalPoints), year: Number(meta.year) })
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        setMetaError(data.message || 'Failed to update exam.');
+        return;
+      }
+      setExams(previous => previous.map(exam => exam._id === data.exam._id ? data.exam : exam));
+      // Reset persisted state when the edited exam is next opened.
+      try { localStorage.removeItem(`exam_state_${editingExam.id}`); } catch { /* Storage can be unavailable. */ }
+      setShowModal(false);
+      setEditingExam(null);
+      setMeta(EMPTY_META);
+    } catch { setMetaError('Unable to save changes. Please try again.'); }
+    finally { setSavingDetails(false); }
+  };
+
   const handleCloseModal = () => {
+    if (savingDetails) return;
+    setEditingExam(null);
     setShowModal(false);
     setStep(1);
     setMeta(EMPTY_META);
@@ -173,7 +213,7 @@ export default function ExamSelection() {
       <div className="exam-header">
         <h1>Examination Subjects</h1>
         {isRoot && (
-          <button className="btn btn-primary exam-create-btn" onClick={() => { setShowModal(true); setStep(1); }}>
+          <button className="btn btn-primary exam-create-btn" onClick={() => { setEditingExam(null); setMeta(EMPTY_META); setMetaError(''); setShowModal(true); setStep(1); }}>
             <Plus size={16} /> Create New Test
           </button>
         )}
@@ -227,6 +267,11 @@ export default function ExamSelection() {
                   <span className="detail-text">{exam.totalPoints} points</span>
                 </div>
               </div>
+              {isRoot && (
+                <button className="btn btn-secondary btn-full exam-edit-btn" onClick={() => handleEditExam(exam)}>
+                  <Pencil size={15} /> Edit Exam Details
+                </button>
+              )}
               <button onClick={() => navigate(`/exam/${exam.id}`)} className="btn btn-primary btn-full">
                 Start Examination
               </button>
@@ -240,21 +285,22 @@ export default function ExamSelection() {
       </button>
 
       {/* ── Create Exam Modal ── */}
-      {showModal && (
+      {showModal && isRoot && (
         <div className="exam-modal-overlay" onClick={handleCloseModal}>
           <div className="exam-modal" onClick={e => e.stopPropagation()}>
 
             <div className="exam-modal-header">
-              <div className="exam-modal-steps">
+              {editingExam ? <span className="exam-edit-title">Edit Exam Details</span> : <div className="exam-modal-steps">
                 <span className={`exam-modal-step ${step === 1 ? 'active' : 'done'}`}>1. Exam Details</span>
                 <ChevronRight size={14} className="exam-modal-step-sep" />
                 <span className={`exam-modal-step ${step === 2 ? 'active' : ''}`}>2. Import Questions</span>
-              </div>
-              <button className="exam-modal-close" onClick={handleCloseModal}><X size={18} /></button>
+              </div>}
+              <button className="exam-modal-close" onClick={handleCloseModal} disabled={savingDetails}><X size={18} /></button>
             </div>
 
             {step === 1 && (
               <div className="exam-modal-body">
+                <fieldset className="exam-details-fields" disabled={savingDetails}>
                 <div className="exam-form-grid">
                   {[
                     { key: 'id',          label: 'ID',           placeholder: 'acadnet2026local_11_12' },
@@ -267,9 +313,10 @@ export default function ExamSelection() {
                     { key: 'totalPoints', label: 'Total Points', placeholder: '100', type: 'number' },
                   ].map(({ key, label, placeholder, type }) => (
                     <div key={key} className="exam-form-row">
-                      <label>{label}</label>
+                      <label htmlFor={`exam-detail-${key}`}>{label}</label>
                       {key === 'description' ? (
                         <textarea
+                          id={`exam-detail-${key}`}
                           rows={2}
                           placeholder={placeholder}
                           value={meta[key]}
@@ -277,6 +324,7 @@ export default function ExamSelection() {
                         />
                       ) : (
                         <input
+                          id={`exam-detail-${key}`}
                           type={type || 'text'}
                           placeholder={placeholder}
                           value={meta[key]}
@@ -303,13 +351,26 @@ export default function ExamSelection() {
                   </label>
                 </div>
 
-                {metaError && <p className="exam-form-error">{metaError}</p>}
+                </fieldset>
+                {editingExam && meta.tag !== editingExam.tag && (
+                  <p className="exam-form-note">Changing the tag changes which questions are included in this test.</p>
+                )}
+                {editingExam && meta.id !== editingExam.id && (
+                  <p className="exam-form-note">Changing the ID also changes the examination link.</p>
+                )}
+                {metaError && <p className="exam-form-error" role="alert">{metaError}</p>}
 
                 <div className="exam-modal-footer">
-                  <button className="btn btn-secondary" onClick={handleCloseModal}>Cancel</button>
-                  <button className="btn btn-primary" onClick={handleNext}>
-                    Next <ChevronRight size={15} />
-                  </button>
+                  <button className="btn btn-secondary" onClick={handleCloseModal} disabled={savingDetails}>Cancel</button>
+                  {editingExam ? (
+                    <button className="btn btn-primary" onClick={handleSaveDetails} disabled={savingDetails}>
+                      {savingDetails ? 'Saving...' : 'Save Changes'}
+                    </button>
+                  ) : (
+                    <button className="btn btn-primary" onClick={handleNext}>
+                      Next <ChevronRight size={15} />
+                    </button>
+                  )}
                 </div>
               </div>
             )}

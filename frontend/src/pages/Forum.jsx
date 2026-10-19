@@ -34,6 +34,32 @@ const getIconComponent = (iconName) => {
 
 export default function Forum() {
   const { user } = useContext(AuthContext);
+  if (!user) {
+    return (
+      <LoginRequired
+        icon={Users}
+        title="Forum Required"
+        description="Please login to view forums and to collaborate with your friends."
+      />
+    );
+  }
+
+  if (user.role !== 'root') {
+    return (
+      <div className="container">
+        <div className="forum-closed">
+          <MessageSquare size={80} className="forum-closed-icon" aria-hidden="true" />
+          <h2>Forum Closed</h2>
+          <p>The forum is currently closed for maintenance.</p>
+        </div>
+      </div>
+    );
+  }
+  return <ForumContent />;
+}
+
+function ForumContent() {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const { zoneId, itemId, topicId } = useParams();
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -64,16 +90,6 @@ export default function Forum() {
   const [loadingItem, setLoadingItem] = useState(false);
   const [editingZone, setEditingZone] = useState(null);
   const [editingItem, setEditingItem] = useState(null);
-
-  if (!user) {
-    return (
-      <LoginRequired 
-        icon={Users}
-        title="Forum Required"
-        description="Please login to view forums and to collaborate with your friends."
-      />
-    );
-  }
 
   useEffect(() => {
     if (user) {

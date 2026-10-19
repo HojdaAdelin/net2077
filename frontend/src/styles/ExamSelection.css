@@ -258,6 +258,18 @@
   font-size: 14px;
 }
 
+.exam-edit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-bottom: 10px;
+}
+.exam-edit-title { color: var(--text-primary); font-weight: 600; }
+.exam-details-fields { min-width: 0; margin: 0; padding: 0; border: 0; }
+.exam-form-note { margin: 0 0 16px; color: var(--text-secondary); font-size: 13px; line-height: 1.6; }
+
 /* ── Delete button on card ── */
 .exam-card {
   position: relative;

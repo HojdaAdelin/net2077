@@ -200,6 +200,15 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
             <h3 className="section-title">
               Select Category {isTagRequired ? '*' : <span className="optional-label">(optional)</span>}
             </h3>
+            {isTagRequired ? (
+              <p className={`tag-helper ${needsTagAttention ? 'error' : ''}`}>
+                Choose a category to continue.
+              </p>
+            ) : (
+              <p className="tag-helper">
+                Optional: narrow down to Linux or Network questions.
+              </p>
+            )}
             <div className="tags-grid">
               {availableTags.filter(tag => type !== 'acadnet' || tag.id !== 'ARDUINO').map(tag => (
                 <button
@@ -214,13 +223,12 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
                 </button>
               ))}
             </div>
-            {isTagRequired ? (
-              <p className={`tag-helper ${needsTagAttention ? 'error' : ''}`}>
-                Choose a category to continue.
-              </p>
-            ) : (
+            {selectedTag === 'ACADNET' && (
               <p className="tag-helper">
-                Optional: narrow down to Linux or Network questions.
+                Questions from the{' '}
+                <a href="https://acadnet.ro/" target="_blank" rel="noopener noreferrer" className="uso-link">
+                  AcadNet Official Website
+                </a>.
               </p>
             )}
           </div>

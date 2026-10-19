@@ -75,6 +75,45 @@ export const createExam = async (req, res) => {
   }
 };
 
+export const updateExam = async (req, res) => {
+  try {
+    const details = {};
+    for (const field of ['id', 'title', 'description', 'tag', 'phase']) {
+      if (typeof req.body[field] !== 'string' || !req.body[field].trim()) {
+        return res.status(400).json({ message: 'All exam details are required.' });
+      }
+      details[field] = req.body[field].trim();
+    }
+    if (/[/?#]/.test(details.id)) {
+      return res.status(400).json({ message: 'Exam ID cannot contain /, ? or #.' });
+    }
+    for (const field of ['duration', 'totalPoints', 'year']) {
+      const value = req.body[field];
+      const number = Number(value);
+      if (!['number', 'string'].includes(typeof value) || !Number.isFinite(number) || number <= 0 ||
+          (field === 'year' && !Number.isInteger(number))) {
+        return res.status(400).json({ message: 'Duration, total points and year must be positive numbers; year must be an integer.' });
+      }
+      details[field] = number;
+    }
+    if (typeof req.body.new_test_badge !== 'boolean') {
+      return res.status(400).json({ message: 'Invalid new test badge setting.' });
+    }
+    details.new_test_badge = req.body.new_test_badge;
+
+    const existing = await Exam.findOne({ id: req.params.id });
+    if (!existing) return res.status(404).json({ message: 'Exam not found' });
+    const duplicate = await Exam.findOne({ id: details.id, _id: { $ne: existing._id } });
+    if (duplicate) return res.status(409).json({ message: 'An exam with this ID already exists.' });
+    const exam = await Exam.findOneAndUpdate({ _id: existing._id }, { $set: details }, { new: true, runValidators: true });
+    if (!exam) return res.status(404).json({ message: 'Exam not found' });
+    res.json({ success: true, exam });
+  } catch (error) {
+    if (error.code === 11000) return res.status(409).json({ message: 'An exam with this ID already exists.' });
+    res.status(error.name === 'ValidationError' ? 400 : 500).json({ message: 'Unable to update exam.', error: error.message });
+  }
+};
+
 export const bulkAddQuestions = async (req, res) => {
   try {
     const { questions } = req.body;

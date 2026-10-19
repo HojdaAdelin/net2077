@@ -1,3 +1,17 @@
+.forum-closed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 20px;
+  padding: 24px 0;
+  text-align: center;
+}
+.forum-closed-icon { color: var(--text-muted); opacity: 0.3; }
+.forum-closed h2 { font-size: 2rem; font-weight: 700; color: var(--text-primary); margin: 0; }
+.forum-closed p { font-size: 1rem; color: var(--text-secondary); margin: 0; line-height: 1.6; }
+
 .forum-page {
   display: flex;
   height: calc(100vh - 80px);
