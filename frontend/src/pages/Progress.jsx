@@ -1,3 +1,4 @@
+import DailyActivityChart from '../components/DailyActivityChart';
 import ProgressAchievements from '../components/ProgressAchievements';
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -5,7 +6,7 @@ import { AuthContext } from '../context/AuthContext';
 import { getUserProgress, checkPendingRewards, claimLevelRewards } from '../services/api';
 import { API_URL } from '../config';
 import { useLanguage } from '../context/LanguageContext';
-import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp, Gift, X, Coins, CheckCircle, XCircle, Activity, Sparkles, Flame, Target, Pencil, Clock, ChevronDown, Palette } from 'lucide-react';
+import { Monitor, Globe, Award, Terminal, Info, Zap, TrendingUp, Gift, X, Coins, CheckCircle, XCircle, Sparkles, Flame, Target, Pencil, Clock, ChevronDown, Palette, Cpu } from 'lucide-react';
 import { xpProgressInLevel } from '../utils/xpUtils.js';
 import AvatarFrame from '../components/AvatarFrame';
 import LevelXpDialog from '../components/LevelXpDialog';
@@ -14,123 +15,6 @@ import '../styles/AvatarFrame.css';
 import '../styles/NameEffects.css';
 import '../styles/Progress.css';
 import '../styles/ProgressOverview.css';
-
-// ── Daily Activity Chart ──
-function DailyActivityChart({ data }) {
-  const DAYS = 30;
-  const W = 600, H = 140, PAD = { top: 16, right: 16, bottom: 28, left: 36 };
-  const innerW = W - PAD.left - PAD.right;
-  const innerH = H - PAD.top - PAD.bottom;
-
-  // Build last 30 days array (fill missing days with 0)
-  const today = new Date();
-  const days = Array.from({ length: DAYS }, (_, i) => {
-    const d = new Date(today);
-    d.setDate(today.getDate() - (DAYS - 1 - i));
-    const dateStr = d.toISOString().split('T')[0];
-    const entry = (data || []).find(e => e.date === dateStr);
-    return { date: dateStr, count: entry ? entry.count : 0, label: d.getDate() };
-  });
-
-  const maxCount = Math.max(...days.map(d => d.count), 1);
-
-  // SVG points for the line
-  const points = days.map((d, i) => {
-    const x = PAD.left + (i / (DAYS - 1)) * innerW;
-    const y = PAD.top + innerH - (d.count / maxCount) * innerH;
-    return { x, y, ...d };
-  });
-
-  const polyline = points.map(p => `${p.x},${p.y}`).join(' ');
-
-  // Area fill path
-  const area = [
-    `M ${points[0].x},${PAD.top + innerH}`,
-    ...points.map(p => `L ${p.x},${p.y}`),
-    `L ${points[points.length - 1].x},${PAD.top + innerH}`,
-    'Z'
-  ].join(' ');
-
-  // Y-axis labels
-  const yLabels = [0, Math.round(maxCount / 2), maxCount];
-
-  // X-axis: show label every 5 days
-  const xLabels = points.filter((_, i) => i % 5 === 0 || i === DAYS - 1);
-
-  const [tooltip, setTooltip] = useState(null);
-
-  return (
-    <div className="dac-wrap">
-      <svg
-        viewBox={`0 0 ${W} ${H}`}
-        className="dac-svg"
-        onMouseLeave={() => setTooltip(null)}
-      >
-        <defs>
-          <linearGradient id="dacGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--accent-primary)" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="var(--accent-primary)" stopOpacity="0.02" />
-          </linearGradient>
-        </defs>
-
-        {/* Horizontal grid lines */}
-        {yLabels.map((v, i) => {
-          const y = PAD.top + innerH - (v / maxCount) * innerH;
-          return (
-            <g key={i}>
-              <line x1={PAD.left} y1={y} x2={PAD.left + innerW} y2={y}
-                stroke="var(--border)" strokeWidth="0.5" strokeDasharray="4 3" />
-              <text x={PAD.left - 6} y={y + 4} fontSize="10" fill="var(--text-muted)"
-                textAnchor="end">{v}</text>
-            </g>
-          );
-        })}
-
-        {/* Area fill */}
-        <path d={area} fill="url(#dacGrad)" />
-
-        {/* Line */}
-        <polyline points={polyline}
-          fill="none" stroke="var(--accent-primary)" strokeWidth="2"
-          strokeLinejoin="round" strokeLinecap="round" />
-
-        {/* X-axis labels */}
-        {xLabels.map((p, i) => (
-          <text key={i} x={p.x} y={H - 4} fontSize="10"
-            fill="var(--text-muted)" textAnchor="middle">{p.label}</text>
-        ))}
-
-        {/* Hover targets */}
-        {points.map((p, i) => (
-          <rect key={i}
-            x={p.x - (innerW / DAYS) / 2} y={PAD.top}
-            width={innerW / DAYS} height={innerH}
-            fill="transparent"
-            onMouseEnter={() => setTooltip(p)}
-            style={{ cursor: 'crosshair' }}
-          />
-        ))}
-
-        {/* Tooltip dot */}
-        {tooltip && (
-          <>
-            <line x1={tooltip.x} y1={PAD.top} x2={tooltip.x} y2={PAD.top + innerH}
-              stroke="var(--accent-primary)" strokeWidth="1" strokeDasharray="3 2" opacity="0.6" />
-            <circle cx={tooltip.x} cy={tooltip.y} r="4"
-              fill="var(--accent-primary)" stroke="var(--bg-card)" strokeWidth="2" />
-          </>
-        )}
-      </svg>
-
-      {tooltip && (
-        <div className="dac-tooltip">
-          <span className="dac-tooltip-date">{tooltip.date}</span>
-          <span className="dac-tooltip-count">{tooltip.count} questions</span>
-        </div>
-      )}
-    </div>
-  );
-}
 
 export default function Progress() {
   const { user } = useContext(AuthContext);
@@ -201,22 +85,13 @@ export default function Progress() {
 
           <div className="skeleton-category-section">
             <div className="skeleton-section-title"></div>
-            <div className="skeleton-category-grid">
-              <div className="skeleton-category-card">
-                <div className="skeleton-category-header"></div>
-                <div className="skeleton-category-stat"></div>
-                <div className="skeleton-badge-progress"></div>
-              </div>
-              <div className="skeleton-category-card">
-                <div className="skeleton-category-header"></div>
-                <div className="skeleton-category-stat"></div>
-                <div className="skeleton-badge-progress"></div>
-              </div>
-              <div className="skeleton-category-card">
-                <div className="skeleton-category-header"></div>
-                <div className="skeleton-category-stat"></div>
-                <div className="skeleton-badge-progress"></div>
-              </div>
+            <div className="category-stats-panel" aria-hidden="true">
+              {[0, 1, 2, 3].map(row => (
+                <div className="category-stats-row category-stats-row--loading" key={row}>
+                  <div className="skeleton-category-header" />
+                  <div className="skeleton-category-stat" />
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -318,16 +193,10 @@ export default function Progress() {
   const streakGoal = onboarding?.streakGoal;
   const streakReached = streakGoal && currentStreak >= streakGoal;
   const streakClaimed = onboarding?.streakRewardClaimed || streakRewardDone;
-  const linuxBadgeRequired = 500;
-  const linuxLegendaryRequired = 1000;
-  const networkBadgeRequired = 50;
-  const networkLegendaryRequired = 300;
-  const terminalBadgeRequired = 50;
-  const terminalLegendaryRequired = 150;
-  
   const linuxSolved = progress.solvedByTag?.LINUX || 0;
   const networkSolved = progress.solvedByTag?.NETWORK || 0;
   const terminalSolved = progress.terminalStats?.solved || 0;
+  const arduinoSolved = progress.solvedByTag?.ARDUINO || 0;
   
   
   
@@ -551,41 +420,30 @@ export default function Progress() {
         <div className="progress-section-heading">
           <h2>{t('progress.progressByCategory')}</h2>
         </div>
-        <div className="category-cards">
-          {[
-            { name: 'Linux', theme: 'linux', Icon: Monitor, solved: linuxSolved,
-              first: linuxBadgeRequired, legendary: linuxLegendaryRequired, badge: 'Linux Master' },
-            { name: 'Network', theme: 'network', Icon: Globe, solved: networkSolved,
-              first: networkBadgeRequired, legendary: networkLegendaryRequired, badge: 'Network Expert' },
-            { name: 'Terminal', theme: 'terminal', Icon: Terminal, solved: terminalSolved,
-              first: terminalBadgeRequired, legendary: terminalLegendaryRequired, badge: 'Terminal Pro' },
-          ].map(({ name, theme, Icon, solved, first, legendary, badge }) => {
-            const unlocked = solved >= first;
-            const complete = solved >= legendary;
-            const target = unlocked ? legendary : first;
-            const badgeLabel = complete ? 'Legendary badge unlocked' : unlocked ? 'Next: Legendary badge' : `Next: ${badge}`;
-            return (
-              <div key={theme} className={`category-progress-card category-progress-card--${theme}`}>
-                <div className="category-header">
-                  <span className="category-heading-icon"><Icon size={20} aria-hidden="true" /></span>
-                  <h3>{name}</h3>
-                  {unlocked && <Award size={18} className="category-earned-icon" aria-label={`${badge} badge unlocked`} />}
-                </div>
-                <div className="category-stat-large">
-                  <div className="stat-number">{solved.toLocaleString()}</div>
-                  <div className="stat-text">{theme === 'terminal' ? 'Terminal commands' : t('progress.questionsSolved')}</div>
-                </div>
-                <div className="category-milestone">
-                  <div className="category-milestone-label"><span>{badgeLabel}</span><span>{Math.min(solved, target)} / {target}</span></div>
-                  <progress className="category-milestone-bar" value={Math.min(solved, target)} max={target}
-                    aria-label={`${name}: ${badgeLabel}`} />
-                  <p className={complete ? 'category-milestone-complete' : undefined}>
-                    {complete ? 'All badge milestones reached' : `${target - solved} more to unlock${unlocked ? ' Legendary' : ' your badge'}`}
-                  </p>
-                </div>
+        <div className="category-stats-panel">
+          <div className="category-stats-columns" aria-hidden="true">
+            <span>Category</span>
+            <span>Solved</span>
+          </div>
+          <dl className="category-stats-list">
+            {[
+              { name: 'Linux', Icon: Monitor, solved: linuxSolved, color: '#d99119' },
+              { name: 'Network', Icon: Globe, solved: networkSolved, color: '#3b82f6' },
+              { name: 'Terminal', Icon: Terminal, solved: terminalSolved, color: '#22a66c' },
+              { name: 'Arduino', Icon: Cpu, solved: arduinoSolved, color: '#ec4899' },
+            ].map(({ name, Icon, solved, color }) => (
+              <div key={name} className="category-stats-row">
+                <dt className="category-stats-name">
+                  <Icon size={20} style={{ color }} aria-hidden="true" />
+                  <span>{name}</span>
+                </dt>
+                <dd className="category-stats-value">
+                  <strong>{solved.toLocaleString()}</strong>
+                  <span>{name === 'Terminal' ? 'commands solved' : 'questions solved'}</span>
+                </dd>
               </div>
-            );
-          })}
+            ))}
+          </dl>
         </div>
       </div>
 
@@ -678,7 +536,9 @@ export default function Progress() {
       )}
 
       <div id="progress-activity" className="category-progress-section progress-anchor-section" aria-label="Daily Activity" tabIndex={-1}>
-        <h2><Activity size={20} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 8 }} />Daily Activity</h2>        <p className="dac-subtitle">Questions solved per day over the last 30 days</p>
+        <div className="progress-section-heading">
+          <h2>Daily Activity</h2>
+        </div>
         <DailyActivityChart data={progress.dailyActivity} />
       </div>
 

@@ -1,4 +1,4 @@
-/* Overview, category milestones and recent results share a compact card layout. */
+/* Overview, category statistics and recent results share a compact card layout. */
 .progress-page .progress-section-heading { margin-bottom: 22px; }
 .progress-page .progress-section-heading h2 {
   margin: 0 0 6px;
@@ -31,27 +31,41 @@
 .progress-page .stat-label-small { margin: 0; text-transform: none; font-size: 13px; letter-spacing: 0; overflow-wrap: anywhere; }
 .progress-page .stat-value { margin: 0; font-size: 32px; letter-spacing: -1px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .progress-page .category-progress-section { margin-bottom: 48px; }
-.progress-page .category-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-.progress-page .category-progress-card { display: flex; flex-direction: column; min-width: 0; padding: 24px; border-radius: 16px; }
-.category-progress-card--linux { --category-accent: #d99119; }
-.category-progress-card--network { --category-accent: #3b82f6; }
-.category-progress-card--terminal { --category-accent: #22a66c; }
-.progress-page .category-header { justify-content: flex-start; gap: 12px; margin-bottom: 24px; }
-.progress-page .category-header h3 { flex: 1; font-size: 16px; min-width: 0; }
-.category-heading-icon { width: 40px; height: 40px; display: grid; place-items: center; flex-shrink: 0; color: var(--category-accent); background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 11px; }
-.category-earned-icon { color: var(--category-accent); flex-shrink: 0; }
-.progress-page .category-stat-large { text-align: left; margin-bottom: 26px; }
-.progress-page .category-stat-large .stat-number { font-size: 42px; letter-spacing: -1.5px; margin-bottom: 8px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.progress-page .category-stat-large .stat-text { font-size: 13px; font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--text-muted); }
-.category-milestone { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--border); }
-.category-milestone-label { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 12px; margin-bottom: 10px; color: var(--text-secondary); font-size: 11px; line-height: 1.5; }
-.category-milestone-label span:last-child { color: var(--text-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.category-milestone p { margin: 10px 0 0; font-size: 12px; line-height: 1.5; color: var(--text-muted); }
-.category-milestone .category-milestone-complete { color: var(--success); }
-.category-milestone-bar, .simulation-result-bar { display: block; appearance: none; width: 100%; height: 6px; border: 0; border-radius: 6px; overflow: hidden; background: var(--bg-secondary); }
-.category-milestone-bar::-webkit-progress-bar, .simulation-result-bar::-webkit-progress-bar { background: var(--bg-secondary); border-radius: 6px; }
-.category-milestone-bar::-webkit-progress-value { background: var(--category-accent); border-radius: 6px; }
-.category-milestone-bar::-moz-progress-bar { background: var(--category-accent); border-radius: 6px; }
+/* A single category ledger, with spacing and rules instead of individual tiles. */
+.category-stats-panel {
+  min-width: 0;
+  padding: 0 24px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-card);
+}
+.category-stats-columns {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.category-stats-list { margin: 0; }
+.category-stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 0;
+}
+.category-stats-row + .category-stats-row { border-top: 1px solid var(--border); }
+.category-stats-name { display: flex; align-items: center; gap: 14px; min-width: 0; color: var(--text-primary); font-size: 15px; font-weight: 500; }
+.category-stats-name svg { flex-shrink: 0; }
+.category-stats-value { display: flex; align-items: baseline; justify-content: flex-end; flex-wrap: wrap; gap: 6px 12px; margin: 0; text-align: right; }
+.category-stats-value strong { color: var(--text-primary); font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -.5px; }
+.category-stats-value span { width: 110px; font-size: 12px; color: var(--text-muted); }
+.category-stats-row--loading .skeleton-category-header { margin: 0; width: 110px; height: 20px; }
+.category-stats-row--loading .skeleton-category-stat { margin: 0; width: 64px; height: 28px; }
+.simulation-result-bar { display: block; appearance: none; width: 100%; height: 6px; border: 0; border-radius: 6px; overflow: hidden; background: var(--bg-secondary); }
+.simulation-result-bar::-webkit-progress-bar { background: var(--bg-secondary); border-radius: 6px; }
 .progress-page .simulations-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .progress-page .simulation-card { display: flex; flex-direction: column; min-width: 0; padding: 24px; border-radius: 16px; }
 .progress-page .simulation-header { align-items: flex-start; gap: 12px; margin-bottom: 28px; }
@@ -74,7 +88,7 @@
 .simulation-details strong span { font-weight: 400; color: var(--text-muted); }
 
 @media (max-width: 1024px) {
-  .progress-page .category-cards, .progress-page .simulations-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .progress-page .simulations-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 768px) {
   .progress-page .progress-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 36px; }
@@ -82,16 +96,25 @@
   .progress-page .stat-card-progress { grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 20px; }
   .overview-stat-icon { grid-row: auto; width: 36px; height: 36px; }
   .progress-page .category-progress-section { margin-bottom: 36px; }
-  .progress-page .category-progress-card, .progress-page .simulation-card { padding: 20px; }
+  .progress-page .simulation-card { padding: 20px; }
   .progress-page .level-card .badge-progress { flex-direction: row; text-align: left; }
   .progress-page .level-card .badge-next-tier { width: auto; justify-content: flex-start; }
   .progress-page .progress-bar-label { flex-wrap: wrap; gap: 8px; }
 }
 @media (max-width: 580px) {
-  .progress-page .category-cards, .progress-page .simulations-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .progress-page .simulations-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .progress-page .level-card { padding: 20px; }
   .progress-page .stat-label-small { font-size: 12px; }
   .progress-page .stat-value { font-size: 28px; }
   .progress-page .level-number { font-size: 46px; }
   .progress-page .progress-section-heading { margin-bottom: 18px; }
+}
+
+@media (max-width: 580px) {
+  .category-stats-panel { padding: 0 16px; }
+  .category-stats-row { gap: 12px; padding: 16px 0; }
+  .category-stats-name { gap: 10px; font-size: 14px; }
+  .category-stats-value { flex-direction: column; align-items: flex-end; gap: 4px; }
+  .category-stats-value strong { font-size: 22px; }
+  .category-stats-value span { width: auto; font-size: 11px; }
 }
