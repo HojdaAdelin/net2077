@@ -181,7 +181,6 @@ export default function Progress() {
   };
 
   const GOAL_LABELS = { acadnet: 'Acadnet Prep', linux: 'Linux', networking: 'Networking', all: 'All Categories' };
-  const GOAL_COLORS = { acadnet: '#8b5cf6', linux: '#f59e0b', networking: '#3b82f6', all: '#06b6d4' };
   const LEVEL_LABELS = { beginner: 'Beginner', intermediate: 'Intermediate', expert: 'Expert' };
   const STREAK_GOLD = { 7: 40, 14: 100, 30: 225 };
 
@@ -449,90 +448,74 @@ export default function Progress() {
 
       {/* ── Onboarding cards ── */}
       {onboarding?.completed && (
-        <div className="category-progress-section">
-          <h2>Your Learning Profile</h2>
-          <div className="ob-cards-grid">
-
-            {/* Streak Goal card */}
-            <div className="ob-card">
-              <div className="ob-card-header">
-                <div className="ob-card-icon" style={{ background: 'rgba(245,158,11,0.1)', color: '#f59e0b' }}>
-                  <Flame size={18} />
+        <section className="category-progress-section" aria-labelledby="learning-profile-heading">
+          <div className="progress-section-heading">
+            <h2 id="learning-profile-heading">Your Learning Profile</h2>
+          </div>
+          <div className="learning-profile-card">
+            <div className="learning-profile-overview">
+              <dl className="learning-profile-meta">
+                <div>
+                  <dt>Learning goal</dt>
+                  <dd>
+                    <Target size={18} aria-hidden="true" />
+                    {GOAL_LABELS[onboarding.goal] || 'Not set'}
+                  </dd>
                 </div>
-                <span className="ob-card-title">Streak Goal</span>
+                <div>
+                  <dt>Experience</dt>
+                  <dd>{LEVEL_LABELS[onboarding.level] || 'Not set'}</dd>
+                </div>
+              </dl>
+              <button className="learning-profile-edit" onClick={() => navigate('/onboarding')}>
+                <Pencil size={14} aria-hidden="true" /> Edit profile
+              </button>
+            </div>
+
+            <div className="learning-profile-streak">
+              <div className="learning-profile-streak-heading">
+                <h3><Flame size={18} aria-hidden="true" /> Streak goal</h3>
+                {streakGoal && <span><strong>{currentStreak}</strong> / {streakGoal} days</span>}
               </div>
               {streakGoal ? (
                 <>
-                  <div className="ob-streak-display">
-                    <span className="ob-streak-days">{streakGoal}</span>
-                    <span className="ob-streak-label">days</span>
-                  </div>
-                  <div className="ob-streak-progress">
-                    <div className="ob-streak-bar">
-                      <div className="ob-streak-fill" style={{ width: `${Math.min(100, (currentStreak / streakGoal) * 100)}%` }} />
-                    </div>
-                    <span className="ob-streak-count">{currentStreak} / {streakGoal}</span>
-                  </div>
-                  {!streakClaimed ? (
-                    streakReached ? (
-                      <button className="ob-claim-btn" onClick={handleClaimStreakReward} disabled={claimingStreak}>
-                        <Gift size={14} /> {claimingStreak ? 'Claiming...' : `Claim 🪙 ${STREAK_GOLD[streakGoal]} gold`}
-                      </button>
+                  <progress className="learning-profile-streak-bar"
+                    value={Math.min(currentStreak, streakGoal)} max={streakGoal}
+                    aria-label={`Streak goal: ${currentStreak} of ${streakGoal} days`} />
+                  <div className="learning-profile-reward-row">
+                    {streakClaimed ? (
+                      <span className="learning-profile-claimed"><CheckCircle size={15} aria-hidden="true" /> Reward claimed</span>
                     ) : (
-                      <div className="ob-streak-hint">{streakGoal - currentStreak} days to go · 🪙 {STREAK_GOLD[streakGoal]} gold reward</div>
-                    )
-                  ) : (
-                    <div className="ob-claimed-badge"><CheckCircle size={13} /> Reward claimed</div>
-                  )}
-                </>
-              ) : (
-                <div className="ob-card-empty">No streak goal set. <button onClick={() => navigate('/onboarding')}>Set one</button></div>
-              )}
-            </div>
-
-            {/* Goal card */}
-            <div className="ob-card">
-              <div className="ob-card-header">
-                <div className="ob-card-icon" style={{ background: 'rgba(99,102,241,0.1)', color: '#6366f1' }}>
-                  <Target size={18} />
-                </div>
-                <span className="ob-card-title">Goal</span>
-                <button className="ob-edit-btn" onClick={() => navigate('/onboarding')} title="Change goal & level">
-                  <Pencil size={13} />
-                </button>
-              </div>
-              {onboarding?.goal ? (
-                <>
-                  <div className="ob-goal-name" style={{ color: GOAL_COLORS[onboarding.goal] }}>
-                    {GOAL_LABELS[onboarding.goal]}
-                  </div>
-                  <div className="ob-goal-level">
-                    <span className={`ob-level-badge ob-level-${onboarding.level}`}>
-                      {LEVEL_LABELS[onboarding.level]}
-                    </span>
+                      <>
+                        <span className="learning-profile-streak-note">
+                          {streakReached ? 'Streak goal reached' : `${streakGoal - currentStreak} days to go`}
+                        </span>
+                        {streakReached ? (
+                          <button className="learning-profile-claim" onClick={handleClaimStreakReward} disabled={claimingStreak}>
+                            <Gift size={15} aria-hidden="true" />
+                            {claimingStreak ? 'Claiming...' : `Claim ${STREAK_GOLD[streakGoal]} gold`}
+                          </button>
+                        ) : (
+                          <span className="learning-profile-reward"><Coins size={15} aria-hidden="true" /> {STREAK_GOLD[streakGoal]} gold reward</span>
+                        )}
+                      </>
+                    )}
                   </div>
                 </>
               ) : (
-                <div className="ob-card-empty">No goal set. <button onClick={() => navigate('/onboarding')}>Set one</button></div>
+                <p className="learning-profile-streak-note">No streak goal set. <button className="learning-profile-inline-link" onClick={() => navigate('/onboarding')}>Set one</button></p>
               )}
             </div>
 
-            {/* Personalized Plan card */}
-            <div className="ob-card ob-card-coming-soon">
-              <div className="ob-card-header">
-                <div className="ob-card-icon" style={{ background: 'rgba(148,163,184,0.1)', color: 'var(--text-muted)' }}>
-                  <Clock size={18} />
-                </div>
-                <span className="ob-card-title">Personalized Plan</span>
-              </div>
-              <div className="ob-coming-soon">
-                <span>Coming soon</span>
-                <p>A custom study plan based on your goal and level is in the works.</p>
+            <div className="learning-profile-plan">
+              <Clock size={18} aria-hidden="true" />
+              <div>
+                <h3>Personalized plan <span>Coming soon</span></h3>
+                <p>A study plan based on your goal and experience level.</p>
               </div>
             </div>
-
           </div>
-        </div>
+        </section>
       )}
 
       <div id="progress-activity" className="category-progress-section progress-anchor-section" aria-label="Daily Activity" tabIndex={-1}>
