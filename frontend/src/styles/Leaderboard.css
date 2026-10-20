@@ -150,6 +150,19 @@
 
 /* ── List (rank 4–10) ───────────────────────────────────────────────────── */
 
+.lb-my-position {
+  max-width: 680px;
+  margin: 24px auto 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-card);
+}
+.lb-my-position h2 { margin: 0; padding: 14px 20px; border-bottom: 1px solid var(--border); color: var(--text-secondary); font-size: 13px; font-weight: 500; }
+.lb-my-position .lb-row { border-radius: 0 0 10px 10px; }
+.lb-my-position .lb-row-rank { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.lb-position-message { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 0; padding: 16px 20px; font-size: 13px; color: var(--text-secondary); }
+.lb-position-message button { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-secondary); color: var(--text-primary); font: inherit; cursor: pointer; }
+
 .lb-list {
   max-width: 680px;
   margin: 0 auto;

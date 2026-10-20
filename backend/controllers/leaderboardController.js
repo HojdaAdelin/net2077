@@ -4,7 +4,7 @@ export const getLeaderboard = async (req, res) => {
   try {
     const topUsers = await User.find({})
       .select('username xp level role frames nameEffects')
-      .sort({ xp: -1 })
+      .sort({ xp: -1, _id: 1 })
       .limit(10)
       .lean();
 
@@ -22,6 +22,23 @@ export const getLeaderboard = async (req, res) => {
   } catch (error) {
     console.error('Leaderboard error:', error);
     res.status(500).json({ success: false, message: 'Failed to fetch leaderboard' });
+  }
+};
+
+export const getMyLeaderboardPosition = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('username xp level role frames nameEffects');
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    const xp = user.xp || 0;
+    // Use the same tie order as the public Top 10.
+    const above = await User.countDocuments({ $or: [
+      { xp: { $gt: xp } }, { xp, _id: { $lt: user._id } }
+    ] });
+    res.json({ success: true, entry: { rank: above + 1, username: user.username,
+      xp, level: user.level || 1, role: user.role || 'user',
+      activeFrame: user.frames?.active ?? null, activeNameEffect: user.nameEffects?.active ?? null } });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch your position' });
   }
 };
 

@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Shield } from 'lucide-react';
 import { getLeaderboard } from '../services/api';
+import { AuthContext } from '../context/AuthContext';
+import { API_URL } from '../config';
 import AvatarFrame from '../components/AvatarFrame';
 import NameEffectRenderer from '../components/NameEffectRenderer';
 import '../styles/AvatarFrame.css';
@@ -89,7 +91,36 @@ function ListRow({ entry, index }) {
   );
 }
 
+function MyLeaderboardPosition() {
+  const [entry, setEntry] = useState(null);
+  const [error, setError] = useState(false);
+  const [retry, setRetry] = useState(0);
+  useEffect(() => {
+    const controller = new AbortController();
+    setError(false);
+    fetch(`${API_URL}/leaderboard/me`, { credentials: 'include', signal: controller.signal })
+      .then(async response => {
+        const data = await response.json();
+        if (!response.ok || !data.success) throw new Error('Unable to load position');
+        if (!controller.signal.aborted) setEntry(data.entry);
+      })
+      .catch(error => { if (error.name !== 'AbortError') setError(true); });
+    return () => controller.abort();
+  }, [retry]);
+  return (
+    <section className="lb-my-position" aria-labelledby="lb-my-position-heading">
+      <h2 id="lb-my-position-heading">Your position</h2>
+      {error ? <div className="lb-position-message" role="alert">
+        Could not load your position.
+        <button type="button" onClick={() => setRetry(value => value + 1)}>Try again</button>
+      </div> : entry ? <ListRow entry={entry} index={0} /> :
+        <p className="lb-position-message" role="status">Loading your position...</p>}
+    </section>
+  );
+}
+
 export default function Leaderboard() {
+  const { user } = useContext(AuthContext);
   const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -170,6 +201,7 @@ export default function Leaderboard() {
           </>
         )}
 
+        {user && <MyLeaderboardPosition key={user.id || user.username} />}
       </div>
     </div>
   );
