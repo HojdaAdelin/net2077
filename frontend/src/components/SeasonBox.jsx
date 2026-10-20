@@ -29,11 +29,15 @@ function PrizeIcon({ prize, size = 26 }) {
       </span>
     );
   }
+  if (prize.type === 'profileEffect') return <Sparkles size={size} />;
   const Icon = ICON_MAP[prize.icon] || Coins;
   return <Icon size={size} />;
 }
 
-function rarityClass(id) {
+function rarityClass(prize) {
+  const rarity = prize?.rarity;
+  if (['common', 'uncommon', 'rare', 'epic', 'legendary'].includes(rarity)) return `rarity-${rarity}`;
+  const id = prize?.id || prize?.prizeId;
   if (id === 'frame_diamond_s1')       return 'rarity-legendary';
   if (id === 'gold_500')               return 'rarity-legendary';
   if (id === 'frame_gold_s1')          return 'rarity-epic';
@@ -53,7 +57,7 @@ const COUNTS  = [1, 2, 3, 5];
 
 // Sorted from most common to rarest (by chance descending)
 function chancePercent(prize) {
-  return ((prize.max - prize.min + 1) / 10000 * 100).toFixed(1);
+  return Number((prize.chance ?? (prize.max - prize.min + 1) / 100).toFixed(2));
 }
 
 function formatTimeAgo(dateStr) {
@@ -68,6 +72,7 @@ function formatTimeAgo(dateStr) {
 
 export default function SeasonBox({ userGold, onGoldChange, onInventoryChange }) {
   const [prizes, setPrizes]       = useState([]);
+  const [boxRevision, setBoxRevision] = useState(0);
   const [cost, setCost]           = useState(20);
   const [openCount, setOpenCount] = useState(1);
   const [showContents, setShowContents] = useState(false);
@@ -100,7 +105,7 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
     fetch(`${API_URL}/season-box/prizes`)
       .then(r => r.json())
       .then(d => {
-        if (d.success) { setPrizes(d.prizes); setCost(d.cost); }
+        if (d.success) { setPrizes(d.prizes); setCost(d.cost); setBoxRevision(d.revision); }
         else { setPrizesError('Failed to load prizes. Try refreshing.'); }
       })
       .catch(() => setPrizesError('Failed to load prizes. Try refreshing.'))
@@ -215,11 +220,14 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ count: openCount }),
+        body: JSON.stringify({ count: openCount, revision: boxRevision }),
       });
       const data = await resp.json();
 
       if (!resp.ok) {
+        if (resp.status === 409 && data.prizes) {
+          setPrizes(data.prizes); setCost(data.cost); setBoxRevision(data.revision);
+        }
         const msg = resp.status === 401
           ? 'Session expired — please log in again.'
           : data.message || 'Failed to open box';
@@ -325,7 +333,7 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
             <div className="sb-reel-mask">
               <div className="sb-strip" ref={stripRef}>
                 {strip.map((prize, idx) => (
-                  <div key={idx} className={`sb-tile ${rarityClass(prize.id)}`}>
+                  <div key={idx} className={`sb-tile ${rarityClass(prize)}`}>
                     <div className="sb-tile-inner">
                       <PrizeIcon prize={prize} size={24} />
                       <span className="sb-tile-label">{prize.label}</span>
@@ -370,7 +378,7 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
 
               <>
                 <p className="sb-result-label">You got</p>
-                <div className={`sb-result-icon-wrap ${rarityClass(allResults[0].id)}`}>
+                <div className={`sb-result-icon-wrap ${rarityClass(allResults[0])}`}>
                   <PrizeIcon prize={allResults[0]} size={48} />
                 </div>
                 <h3 className="sb-result-name">{allResults[0].label}</h3>
@@ -381,7 +389,7 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
                 <p className="sb-result-label">You got {allResults.length} prizes</p>
                 <div className="sb-multi-grid">
                   {allResults.map((r, i) => (
-                    <div key={i} className={`sb-multi-item ${rarityClass(r.id)}`}>
+                    <div key={i} className={`sb-multi-item ${rarityClass(r)}`}>
                       <div className="sb-multi-icon">
                         <PrizeIcon prize={r} size={32} />
                       </div>
@@ -409,7 +417,7 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
               {[...prizes]
                 .sort((a, b) => (b.max - b.min) - (a.max - a.min))
                 .map(prize => (
-                  <div key={prize.id} className={`sb-contents-row ${rarityClass(prize.id)}`}>
+                  <div key={prize.id} className={`sb-contents-row ${rarityClass(prize)}`}>
                     <div className="sb-contents-icon">
                       <PrizeIcon prize={prize} size={22} />
                     </div>
@@ -435,7 +443,7 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
               ) : (
                 <div className="sb-rare-list">
                   {recentRare.map((drop, i) => (
-                    <div key={i} className={`sb-rare-row ${rarityClass(drop.prizeId)}`}>
+                    <div key={i} className={`sb-rare-row ${rarityClass(drop)}`}>
                       <div className="sb-rare-icon">
                         <PrizeIcon prize={{ id: drop.prizeId, icon: drop.icon, type: drop.type, frameKey: drop.frameKey, effectKey: drop.effectKey }} size={18} />
                       </div>

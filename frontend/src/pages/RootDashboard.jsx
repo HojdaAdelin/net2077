@@ -1,3 +1,4 @@
+import SeasonBoxEditor from '../components/SeasonBoxEditor';
 import { useState, useEffect, useCallback, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -1420,6 +1421,7 @@ function SeasonPanel() {
 
   return (
     <div className="rd-season">
+      <SeasonBoxEditor />
       <div className="rd-toolbar">
         <div className="rd-section-label" style={{ margin: 0 }}><Zap size={13} /> Season Passes</div>
         <button className="rd-primary-btn" style={{ marginTop: 0 }} onClick={openNew}>

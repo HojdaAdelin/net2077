@@ -1,306 +1,123 @@
+import { randomInt } from 'crypto';
 import User from '../models/User.js';
 import RareDrop from '../models/RareDrop.js';
-
-// Token range: 1-10000
-//
-// Distribution:
-//   10 gold           1-2000   (20%)
-//   reset_daily       2001-4200 (22%)
-//   20 gold           4201-5800 (16%)
-//   2x XP 10min       5801-6600 (8%)
-//   2x XP 20min       6601-7300 (7%)
-//   3x XP 10min       7301-7600 (3%)
-//   frame_silver      7601-8600 (10%)
-//   nameeffect_aw     8601-8800 (2%)
-//   nameeffect_flame  8801-9000 (2%)
-//   frame_gold        9001-9600 (6%)
-//   frame_diamond     9601-9900 (3%)
-//   500 gold          9901-10000(1%)
-
-export const SEASON_BOX_PRIZES = [
-  {
-    id: 'gold_10',
-    label: '10 Gold',
-    icon: 'Coins',
-    type: 'gold',
-    amount: 10,
-    min: 1,
-    max: 2000,
-  },
-  {
-    id: 'reset_daily',
-    label: 'Reset Daily Challenge',
-    icon: 'RotateCcw',
-    type: 'item',
-    itemId: 'reset_daily',
-    itemName: 'Reset Daily Challenge',
-    itemCategory: 'reset',
-    itemDuration: null,
-    min: 2001,
-    max: 4200,
-  },
-  {
-    id: 'gold_20',
-    label: '20 Gold',
-    icon: 'Coins',
-    type: 'gold',
-    amount: 20,
-    min: 4201,
-    max: 5800,
-  },
-  {
-    id: '2x_xp_10min',
-    label: '2× XP Boost 10min',
-    icon: 'Zap',
-    type: 'item',
-    itemId: '2x_xp_5min',
-    itemName: '2x XP Boost',
-    itemCategory: 'boost',
-    itemDuration: 10,
-    itemMultiplier: 2,
-    min: 5801,
-    max: 6600,
-  },
-  {
-    id: '2x_xp_20min',
-    label: '2× XP Boost 20min',
-    icon: 'Zap',
-    type: 'item',
-    itemId: '2x_xp_10min',
-    itemName: '2x XP Boost',
-    itemCategory: 'boost',
-    itemDuration: 20,
-    itemMultiplier: 2,
-    min: 6601,
-    max: 7300,
-  },
-  {
-    id: '3x_xp_10min',
-    label: '3× XP Boost 10min',
-    icon: 'Sparkles',
-    type: 'item',
-    itemId: '3x_xp_5min',
-    itemName: '3x XP Boost',
-    itemCategory: 'boost',
-    itemDuration: 10,
-    itemMultiplier: 3,
-    min: 7301,
-    max: 7600,
-  },
-  {
-    id: 'frame_silver_s1',
-    label: 'Silver Frame',
-    icon: 'Frame',
-    type: 'frame',
-    frameKey: 'silver-season1',
-    rarity: 'silver',
-    min: 7601,
-    max: 8600,
-  },
-  {
-    id: 'nameeffect_autumn_wave',
-    label: 'Autumn Wave',
-    icon: 'Sparkles',
-    type: 'nameEffect',
-    effectKey: 'autumn-wave',
-    rarity: 'epic',
-    min: 8601,
-    max: 8800,
-  },
-  {
-    id: 'nameeffect_flame',
-    label: 'Flame Effect',
-    icon: 'Sparkles',
-    type: 'nameEffect',
-    effectKey: 'flame',
-    rarity: 'epic',
-    min: 8801,
-    max: 9000,
-  },
-  {
-    id: 'frame_gold_s1',
-    label: 'Gold Frame',
-    icon: 'Frame',
-    type: 'frame',
-    frameKey: 'gold-season1',
-    rarity: 'gold',
-    min: 9001,
-    max: 9600,
-  },
-  {
-    id: 'frame_diamond_s1',
-    label: 'Diamond Frame',
-    icon: 'Frame',
-    type: 'frame',
-    frameKey: 'diamond-season1',
-    rarity: 'diamond',
-    min: 9601,
-    max: 9900,
-  },
-  {
-    id: 'gold_500',
-    label: '500 Gold',
-    icon: 'Coins',
-    type: 'gold',
-    amount: 500,
-    min: 9901,
-    max: 10000,
-  },
-];
-
-export const FRAME_IMAGE_MAP = {
-  'silver-season1':  '/silver-season1.png',
-  'gold-season1':    '/gold-season1.png',
-  'diamond-season1': '/diamond-season1.png',
-};
-
-const OPEN_COST = 20;
-const FRAME_DUPLICATE_GOLD = 20;
-
-function getPrizeForToken(token) {
-  return SEASON_BOX_PRIZES.find(p => token >= p.min && token <= p.max);
-}
+import SeasonBoxConfig from '../models/SeasonBoxConfig.js';
+import { loadSeasonBox, publicSeasonBox, seasonBoxCatalog, buildSeasonBox, prizeForTicket, TICKET_TOTAL } from '../utils/seasonBoxConfig.js';
 
 export const getSeasonBoxPrizes = async (req, res) => {
-  const prizes = SEASON_BOX_PRIZES.map(({ id, label, icon, type, amount, frameKey, effectKey, rarity, min, max }) => ({
-    id, label, icon, type,
-    amount: amount ?? null,
-    frameKey: frameKey ?? null,
-    effectKey: effectKey ?? null,
-    rarity: rarity ?? null,
-    min, max,
-  }));
-  res.json({ success: true, prizes, cost: OPEN_COST, frameImageMap: FRAME_IMAGE_MAP });
+  try { res.json(publicSeasonBox(await loadSeasonBox())); }
+  catch { res.status(500).json({ message: 'Unable to load Season Box.' }); }
+};
+
+export const getSeasonBoxConfig = async (req, res) => {
+  try {
+    const config = await loadSeasonBox();
+    const catalog = await seasonBoxCatalog(config);
+    res.json({ success: true, config, catalog });
+  } catch (error) { res.status(500).json({ message: 'Unable to load Season Box editor.' }); }
+};
+
+export const saveSeasonBoxConfig = async (req, res) => {
+  try {
+    if (!Number.isSafeInteger(req.body.revision) || req.body.revision < 0) {
+      return res.status(400).json({ message: 'Invalid configuration revision. Reload the editor.' });
+    }
+    const current = await loadSeasonBox();
+    if (current.revision !== req.body.revision) return res.status(409).json({ message: 'Season Box was changed elsewhere. Reload the editor before saving.' });
+    const catalog = await seasonBoxCatalog(current);
+    const changes = buildSeasonBox(req.body, catalog);
+    const config = await SeasonBoxConfig.findOneAndUpdate({ _id: 'season-box', revision: req.body.revision },
+      { $set: changes, $inc: { revision: 1 } }, { new: true, upsert: true, runValidators: true }).lean();
+    res.json({ success: true, config, catalog });
+  } catch (error) {
+    if (error.code === 11000) return res.status(409).json({ message: 'Season Box was changed elsewhere. Reload the editor before saving.' });
+    res.status(error.status || 500).json({ message: error.status ? error.message : 'Unable to save Season Box.' });
+  }
+};
+
+const snapshotFilter = user => {
+  const fields = { gold: 0, inventory: [], 'frames.owned': [], 'frames.active': null,
+    'nameEffects.owned': [], 'nameEffects.active': null, 'profileEffects.owned': [], 'profileEffects.active': null };
+  return { _id: user._id, $expr: { $and: Object.entries(fields).map(([path, fallback]) => ({
+    $eq: [{ $ifNull: [`$${path}`, { $literal: fallback }] },
+      { $literal: user.get(path)?.toObject?.() ?? user.get(path) ?? fallback }]
+  })) } };
 };
 
 export const openSeasonBox = async (req, res) => {
   try {
-    const count = Math.min(5, Math.max(1, parseInt(req.body?.count) || 1));
-
-    const user = await User.findById(req.userId);
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
-    // Normalize fields that may be missing on old accounts
-    if (!user.frames)      user.frames      = { owned: [], active: null };
-    if (!user.frames.owned) user.frames.owned = [];
-    if (!user.nameEffects)       user.nameEffects       = { owned: [], active: null };
-    if (!user.nameEffects.owned) user.nameEffects.owned = [];
-    if (!user.profileEffects)        user.profileEffects        = { owned: [], active: null };
-    if (!user.profileEffects.owned)  user.profileEffects.owned  = [];
-    if (user.gold === undefined || user.gold === null) user.gold = 0;
-
-    const totalCost = OPEN_COST * count;
-    if (user.gold < totalCost) {
-      return res.status(400).json({
-        message: `Insufficient gold. Need ${totalCost}, have ${user.gold}.`,
-      });
+    const count = Number(req.body?.count ?? 1);
+    if (!Number.isInteger(count) || count < 1 || count > 5) return res.status(400).json({ message: 'Choose between 1 and 5 boxes.' });
+    const config = await loadSeasonBox();
+    if (req.body.revision !== config.revision) {
+      return res.status(409).json({ ...publicSeasonBox(config), success: false,
+        message: 'Season Box rewards or price changed. The contents have been refreshed; please review them and try again.' });
     }
-
-    user.gold -= totalCost;
-
-    const results = [];
-
-    for (let i = 0; i < count; i++) {
-      const token = Math.floor(Math.random() * 10000) + 1;
-      const prize = getPrizeForToken(token);
-      if (!prize) continue;
-
-      let duplicate = false;
-
-      if (prize.type === 'gold') {
-        user.gold += prize.amount;
-      } else if (prize.type === 'item') {
-        if (!user.inventory) user.inventory = [];
-        const existing = user.inventory.find(inv => inv.itemId === prize.itemId);
-        if (existing) {
-          existing.quantity += 1;
-        } else {
-          user.inventory.push({
-            itemId: prize.itemId,
-            name: prize.itemName,
-            icon: prize.icon,
-            duration: prize.itemDuration ?? undefined,
-            category: prize.itemCategory,
-            quantity: 1,
-          });
-        }
-      } else if (prize.type === 'frame') {
-        if (user.frames.owned.includes(prize.frameKey)) {
-          user.gold += FRAME_DUPLICATE_GOLD;
-          duplicate = true;
-        } else {
-          user.frames.owned.push(prize.frameKey);
-          if (!user.frames.active) user.frames.active = prize.frameKey;
-        }
-      } else if (prize.type === 'nameEffect') {
-        if (user.nameEffects.owned.includes(prize.effectKey)) {
-          user.gold += FRAME_DUPLICATE_GOLD;
-          duplicate = true;
-        } else {
-          user.nameEffects.owned.push(prize.effectKey);
-          if (!user.nameEffects.active) user.nameEffects.active = prize.effectKey;
-        }
-      } else if (prize.type === 'profileEffect') {
-        if (user.profileEffects.owned.includes(prize.effectKey)) {
-          user.gold += FRAME_DUPLICATE_GOLD;
-          duplicate = true;
-        } else {
-          user.profileEffects.owned.push(prize.effectKey);
-          if (!user.profileEffects.active) user.profileEffects.active = prize.effectKey;
-        }
-      }
-
-      results.push({
-        token,
-        id: prize.id,
-        label: duplicate ? `${prize.label} → ${FRAME_DUPLICATE_GOLD} Gold` : prize.label,
-        icon: prize.icon,
-        type: prize.type,
-        amount: prize.amount ?? null,
-        frameKey: prize.frameKey ?? null,
-        effectKey: prize.effectKey ?? null,
-        rarity: prize.rarity ?? null,
-        duplicate,
-        duplicateGold: duplicate ? FRAME_DUPLICATE_GOLD : null,
-      });
-
-      // Log rare drops (≤5% chance) — collect for bulk trim after loop
-      const chance = ((prize.max - prize.min + 1) / 10000) * 100;
-      if (chance <= 5 && !duplicate) {
-        await RareDrop.create({
-          username: user.username,
-          prizeId:  prize.id,
-          label:    prize.label,
-          icon:     prize.icon,
-          type:     prize.type,
-          frameKey: prize.frameKey ?? null,
-          effectKey:prize.effectKey ?? null,
-          rarity:   prize.rarity ?? null,
-          chance:   parseFloat(chance.toFixed(1)),
-        });
-      }
-    }
-
-    // Trim rare drops to last 5 globally (done once after all inserts)
-    const oldDrops = await RareDrop.find().sort({ droppedAt: -1 }).skip(5);
-    if (oldDrops.length) {
-      await RareDrop.deleteMany({ _id: { $in: oldDrops.map(d => d._id) } });
-    }
-
-    await user.save();
-
-    res.json({
-      success: true,
-      results,
-      remainingGold: user.gold,
-      inventory: user.inventory,
-      frames: user.frames,
-      nameEffects: user.nameEffects,
-      profileEffects: user.profileEffects,
+    const totalCost = config.cost * count;
+    // Keep one configuration and one draw per box throughout retries.
+    const drawn = Array.from({ length: count }, () => {
+      const token = randomInt(1, TICKET_TOTAL + 1);
+      const prize = prizeForTicket(config.prizes, token);
+      return { token, prize };
     });
+    for (;;) {
+      const user = await User.findById(req.userId);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+      if ((user.gold || 0) < totalCost) return res.status(400).json({ message: `Insufficient gold. Need ${totalCost}, have ${user.gold || 0}.` });
+      const filter = snapshotFilter(user);
+      user.gold = (user.gold || 0) - totalCost;
+      if (!user.inventory) user.inventory = [];
+      for (const field of ['frames', 'nameEffects', 'profileEffects']) {
+        if (!user[field]) user[field] = { owned: [], active: null };
+        if (!user[field].owned) user[field].owned = [];
+      }
+      const results = [];
+      const rareDrops = [];
+      for (const { token, prize } of drawn) {
+        let duplicate = false;
+        if (prize.type === 'gold') user.gold += prize.amount;
+        else if (prize.type === 'item') {
+          const quantity = prize.quantity || 1;
+          const existing = user.inventory.find(item => item.itemId === prize.itemId);
+          if (existing) existing.quantity += quantity;
+          else user.inventory.push({ itemId: prize.itemId, name: prize.itemName,
+            icon: prize.icon, duration: prize.itemDuration, category: prize.itemCategory, quantity });
+        } else {
+          const field = { frame: 'frames', nameEffect: 'nameEffects', profileEffect: 'profileEffects' }[prize.type];
+          if (!field) throw new Error('Unsupported Season Box reward.');
+          const key = prize.frameKey || prize.effectKey;
+          if (user[field].owned.includes(key)) {
+            user.gold += config.duplicateGold;
+            duplicate = true;
+          } else {
+            user[field].owned.push(key);
+            if (!user[field].active) user[field].active = key;
+          }
+        }
+        const chance = (prize.max - prize.min + 1) / 100;
+        results.push({ token, id: prize.id, label: duplicate ? `${prize.label} -> ${config.duplicateGold} Gold` : prize.label,
+          icon: prize.icon, type: prize.type, amount: prize.amount ?? null, quantity: prize.quantity || 1,
+          frameKey: prize.frameKey ?? null, effectKey: prize.effectKey ?? null, rarity: prize.rarity,
+          duplicate, duplicateGold: duplicate ? config.duplicateGold : null });
+        if (chance <= 5 && !duplicate) rareDrops.push({ username: user.username, prizeId: prize.id,
+          label: prize.label, icon: prize.icon, type: prize.type, frameKey: prize.frameKey ?? null,
+          effectKey: prize.effectKey ?? null, rarity: prize.rarity, chance });
+      }
+      // Charge and grant rewards together, without overwriting another purchase/open.
+      const updated = await User.findOneAndUpdate(filter, { $set: { gold: user.gold, inventory: user.inventory,
+        frames: user.frames, nameEffects: user.nameEffects, profileEffects: user.profileEffects } }, { new: true });
+      if (!updated) continue;
+      try {
+        if (rareDrops.length) await RareDrop.insertMany(rareDrops);
+        const old = await RareDrop.find().sort({ droppedAt: -1 }).skip(5);
+        if (old.length) await RareDrop.deleteMany({ _id: { $in: old.map(drop => drop._id) } });
+      } catch (error) { console.error('[SeasonBox] Rare drop log:', error.message); }
+      return res.json({ success: true, results, remainingGold: updated.gold, inventory: updated.inventory,
+        frames: updated.frames, nameEffects: updated.nameEffects, profileEffects: updated.profileEffects });
+    }
   } catch (error) {
     console.error('[SeasonBox] Error:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Unable to open Season Box.' });
   }
 };
 

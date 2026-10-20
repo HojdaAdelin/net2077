@@ -1,0 +1,54 @@
+.rd-box-editor { min-width: 0; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card); }
+.rd-box-summary { display: flex; align-items: center; gap: 12px; padding: 18px 20px; cursor: pointer; list-style: none; color: var(--text-primary); font-size: 14px; font-weight: 600; }
+.rd-box-summary::-webkit-details-marker { display: none; }
+.rd-box-summary > span { flex: 1; min-width: 0; }
+.rd-box-summary small { display: block; margin-top: 5px; color: var(--text-muted); font-size: 12px; font-weight: 400; line-height: 1.5; }
+.rd-box-chevron { flex-shrink: 0; color: var(--text-muted); }
+.rd-box-editor[open] > summary .rd-box-chevron { transform: rotate(180deg); }
+.rd-box-body { padding: 20px; border-top: 1px solid var(--border); }
+.rd-box-fields { min-width: 0; margin: 0; padding: 0; border: 0; }
+.rd-box-settings { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 16px; margin-bottom: 20px; }
+.rd-box-editor label, .rd-box-ticket-field { display: flex; flex-direction: column; gap: 7px; min-width: 0; color: var(--text-secondary); font-size: 12px; }
+.rd-box-image-note { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text-muted); }
+.rd-box-image-note img { width: 56px; height: 44px; object-fit: contain; }
+.rd-box-calculator { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 18px; margin-bottom: 20px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 9px; background: var(--bg-secondary); color: var(--text-secondary); font-size: 12px; }
+.rd-box-calculator strong { font-size: 18px; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.rd-box-calculator.is-valid strong { color: var(--success); }
+.rd-box-calculator small { flex-basis: 100%; color: var(--text-muted); line-height: 1.6; }
+.rd-box-rewards { display: flex; flex-direction: column; gap: 12px; }
+.rd-box-reward { --box-rarity: var(--border-light); padding: 16px; border: 1px solid var(--border); border-left: 3px solid var(--box-rarity); border-radius: 9px; }
+.rd-box-rarity-uncommon { --box-rarity: #4ade80; }
+.rd-box-rarity-rare { --box-rarity: #60a5fa; }
+.rd-box-rarity-epic { --box-rarity: #a78bfa; }
+.rd-box-rarity-legendary { --box-rarity: #fbbf24; }
+.rd-box-reward-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; min-width: 0; }
+.rd-box-reward-heading > strong { flex: 1; min-width: 0; color: var(--text-primary); font-size: 13px; font-weight: 500; overflow-wrap: anywhere; }
+.rd-box-reward-preview { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; flex-shrink: 0; color: var(--box-rarity); font-size: 22px; font-weight: 700; }
+.rd-box-row-actions { display: flex; gap: 4px; }
+.rd-box-row-actions button { display: grid; place-items: center; min-width: 34px; min-height: 34px; padding: 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer; }
+.rd-box-row-actions button:hover:not(:disabled) { color: var(--text-primary); border-color: var(--accent-primary); }
+.rd-box-row-actions button:disabled { opacity: .3; cursor: not-allowed; }
+.rd-box-reward-fields { display: grid; grid-template-columns: minmax(100px, 1fr) minmax(150px, 2fr) minmax(95px, 1fr) minmax(78px, .8fr) minmax(110px, 1fr); gap: 12px; }
+.rd-box-reward-extra { display: grid; grid-template-columns: minmax(0, 2fr) minmax(100px, 1fr); gap: 12px; margin-top: 12px; }
+.rd-box-ticket-field output { display: flex; align-items: center; min-height: 36px; color: var(--text-primary); font-size: 12px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.rd-box-add, .rd-box-reload { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 9px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary); font: inherit; font-size: 12px; cursor: pointer; }
+.rd-box-add { margin-top: 16px; }
+.rd-box-note { color: var(--text-muted); font-size: 12px; line-height: 1.7; }
+.rd-box-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+.rd-box-footer .rd-primary-btn { margin-top: 0; }
+.rd-box-draft-status { color: var(--text-muted); font-size: 11px; }
+.rd-box-editor button:disabled { cursor: not-allowed; }
+.rd-box-editor button:focus-visible, .rd-box-summary:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 3px; }
+@media (max-width: 1200px) {
+  .rd-box-reward-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rd-box-ticket-field { grid-column: 1 / -1; }
+}
+@media (max-width: 600px) {
+  .rd-box-summary, .rd-box-body { padding: 16px; }
+  .rd-box-settings, .rd-box-reward-extra { grid-template-columns: minmax(0, 1fr); }
+  .rd-box-reward { padding: 12px; }
+  .rd-box-reward-heading { flex-wrap: wrap; }
+  .rd-box-row-actions button { min-height: 44px; min-width: 36px; }
+  .rd-box-reward-fields { grid-template-columns: minmax(0, 1fr); }
+  .rd-box-footer > button { width: 100%; }
+}

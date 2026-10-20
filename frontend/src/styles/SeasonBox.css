@@ -52,23 +52,26 @@
   align-items: center;
   gap: 8px;
   padding: 10px 26px;
-  background: linear-gradient(135deg, rgba(234,179,8,0.18), rgba(234,179,8,0.08));
-  border: 2px solid rgba(234,179,8,0.45);
-  color: #eab308;
+  background: var(--accent-primary);
+  border: 2px solid var(--accent-primary);
+  color: var(--bg-primary);
   font-size: 0.95rem;
   font-weight: 700;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.22s ease;
+  transition: background 0.22s ease, border-color 0.22s ease;
   letter-spacing: 0.3px;
   white-space: nowrap;
 }
 
 .season-box-btn:hover:not(.disabled) {
-  background: linear-gradient(135deg, rgba(234,179,8,0.28), rgba(234,179,8,0.15));
-  border-color: rgba(234,179,8,0.7);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(234,179,8,0.25);
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary);
+}
+
+.season-box-btn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 4px;
 }
 
 .season-box-btn.disabled {
@@ -80,8 +83,8 @@
   display: inline-block;
   width: 13px;
   height: 13px;
-  border: 2px solid rgba(234,179,8,0.35);
-  border-top-color: #eab308;
+  border: 2px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-top-color: currentColor;
   border-radius: 50%;
   animation: sb-spin 0.7s linear infinite;
 }
@@ -389,14 +392,25 @@
 }
 
 .sb-count-btn:hover:not(:disabled) {
-  border-color: rgba(234,179,8,0.5);
-  color: #eab308;
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
 }
 
 .sb-count-btn.active {
-  border-color: rgba(234,179,8,0.7);
-  background: rgba(234,179,8,0.12);
-  color: #eab308;
+  border-color: var(--accent-primary);
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+}
+
+.sb-count-btn.active:hover:not(:disabled) {
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary);
+  color: var(--bg-primary);
+}
+
+.sb-count-btn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
 }
 
 .sb-count-btn:disabled {
