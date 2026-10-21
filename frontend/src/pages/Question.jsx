@@ -1,3 +1,4 @@
+import ExplanationViewer from '../components/ExplanationViewer';
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
@@ -63,7 +64,7 @@ export default function Question() {
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Unable to check answer');
-      setQuestion(previous => ({ ...previous, correctAnswers: result.correctAnswers }));
+      setQuestion(previous => ({ ...previous, correctAnswers: result.correctAnswers, ...(result.explanation ? { explanation: result.explanation } : {}) }));
       setSubmitted(true);
     } catch (error) { setSubmitError(error.message); }
     finally { submittingRef.current = false; }
@@ -151,6 +152,7 @@ export default function Question() {
               );
             })}
           </div>
+          {submitted && <ExplanationViewer content={question.explanation} />}
 
           {submitError && <p role="alert">{submitError}</p>}
           {!submitted ? (

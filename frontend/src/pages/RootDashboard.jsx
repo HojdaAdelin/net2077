@@ -1,3 +1,4 @@
+import ExplanationEditor from '../components/ExplanationEditor';
 import SeasonBoxEditor from '../components/SeasonBoxEditor';
 import { useState, useEffect, useCallback, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -357,10 +358,14 @@ function QuestionManagerPanel() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(null);
+  const [copyingFiltered, setCopyingFiltered] = useState(false);
+  const [filteredCopyMessage, setFilteredCopyMessage] = useState('');
+  const [filteredCopyError, setFilteredCopyError] = useState('');
+  const filteredCopyRequest = useRef(null);
   const [deleted, setDeleted] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [appliedQuery, setAppliedQuery] = useState('');
-  const [filters, setFilters] = useState({ category: '', tag: '', difficulty: '', type: '' });
+  const [filters, setFilters] = useState({ category: '', tag: '', difficulty: '', type: '', hasExplanation: '' });
   const [tags, setTags] = useState([]);
   const [tagsError, setTagsError] = useState('');
   const [listError, setListError] = useState('');
@@ -371,6 +376,7 @@ function QuestionManagerPanel() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [editTarget, setEditTarget] = useState(null);   // question being edited
   const [editJson, setEditJson] = useState('');
+  const [editExplanation, setEditExplanation] = useState('');
   const [editError, setEditError] = useState('');
   const [editSaving, setEditSaving] = useState(false);
 
@@ -431,8 +437,45 @@ function QuestionManagerPanel() {
   };
   const showAll = () => {
     setQuery(''); setAppliedQuery('');
-    setFilters({ category: '', tag: '', difficulty: '', type: '' });
+    setFilters({ category: '', tag: '', difficulty: '', type: '', hasExplanation: '' });
     setPage(1);
+  };
+
+  useEffect(() => {
+    setFilteredCopyMessage(''); setFilteredCopyError('');
+    return () => { filteredCopyRequest.current?.abort(); };
+  }, [filters, appliedQuery, refreshKey]);
+
+  const copyFiltered = async () => {
+    if (filteredCopyRequest.current || loading || !total) return;
+    const controller = new AbortController();
+    filteredCopyRequest.current = controller;
+    setCopyingFiltered(true); setFilteredCopyMessage(''); setFilteredCopyError('');
+    try {
+      const params = new URLSearchParams();
+      if (appliedQuery) params.set('q', appliedQuery);
+      Object.entries(filters).forEach(([key, value]) => { if (value) params.set(key, value); });
+      const response = await fetch(`${API_URL}/questions/search/export?${params}`, { credentials: 'include', signal: controller.signal });
+      const data = await response.json();
+      if (!response.ok || !Array.isArray(data)) throw new Error(data.message || 'Unable to export filtered questions.');
+      if (controller.signal.aborted) return;
+      const text = JSON.stringify(data, null, 2);
+      let copiedSuccessfully = false;
+      if (navigator.clipboard && window.isSecureContext) {
+        try { await navigator.clipboard.writeText(text); copiedSuccessfully = true; } catch { /* Try the fallback below. */ }
+      }
+      if (!copiedSuccessfully && !controller.signal.aborted) copiedSuccessfully = fallbackCopy(text);
+      if (controller.signal.aborted) return;
+      if (!copiedSuccessfully) throw new Error('Clipboard access was denied. Allow clipboard access and try again.');
+      setFilteredCopyMessage(`${data.length} questions copied as a JSON array.`);
+    } catch (error) {
+      if (!controller.signal.aborted) setFilteredCopyError(error.message || 'Unable to copy questions.');
+    } finally {
+      if (filteredCopyRequest.current === controller) {
+        filteredCopyRequest.current = null;
+        setCopyingFiltered(false);
+      }
+    }
   };
 
   const handleCopy = (q) => {
@@ -447,15 +490,19 @@ function QuestionManagerPanel() {
     setTimeout(() => setCopied(null), 1800);
   };
 
-  const fallbackCopy = (text) => {
+  const fallbackCopy = text => {
+    const previousFocus = document.activeElement;
     const ta = document.createElement('textarea');
     ta.value = text;
     ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+    ta.readOnly = true;
     document.body.appendChild(ta);
-    ta.focus();
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
+    ta.focus(); ta.select(); ta.setSelectionRange(0, text.length);
+    let success = false;
+    try { success = document.execCommand('copy'); }
+    catch { success = false; }
+    finally { ta.remove(); if (previousFocus?.isConnected) previousFocus.focus(); }
+    return success;
   };
 
   const handleDelete = async id => {
@@ -475,16 +522,40 @@ function QuestionManagerPanel() {
   const openEdit = (q) => {
     const { _id, __v, createdAt, updatedAt, ...clean } = q;
     setEditTarget(q);
+    setEditExplanation(typeof q.explanation === 'string' ? q.explanation : '');
     setEditJson(JSON.stringify(clean, null, 2));
     setEditError('');
+  };
+
+  const changeEditJson = value => {
+    setEditJson(value);
+    setEditError('');
+    try {
+      const parsed = JSON.parse(value);
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        setEditExplanation(typeof parsed.explanation === 'string' ? parsed.explanation : '');
+      }
+    } catch { /* Keep the explanation draft while the JSON is incomplete. */ }
+  };
+  const changeExplanation = value => {
+    setEditExplanation(value);
+    try {
+      const parsed = JSON.parse(editJson);
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) setEditJson(JSON.stringify({ ...parsed, explanation: value }, null, 2));
+    } catch { /* Saving still requires valid question JSON. */ }
   };
 
   const handleEditSave = async () => {
     let parsed;
     try {
       parsed = JSON.parse(editJson);
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('Invalid question JSON');
     } catch {
       setEditError('JSON invalid. Verifică sintaxa.');
+      return;
+    }
+    if ((parsed.explanation !== undefined && typeof parsed.explanation !== 'string') || editExplanation.length > 20000) {
+      setEditError('Explanation must be text with at most 20,000 characters.');
       return;
     }
     setEditSaving(true);
@@ -494,7 +565,7 @@ function QuestionManagerPanel() {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify(parsed),
+        body: JSON.stringify({ ...parsed, explanation: editExplanation }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -519,7 +590,7 @@ function QuestionManagerPanel() {
         try { preview = JSON.parse(editJson); } catch { preview = null; }
         return (
           <div className="rd-modal-overlay" onClick={() => setEditTarget(null)}>
-            <div className="rd-modal rd-modal-wide" onClick={e => e.stopPropagation()}>
+            <div className="rd-modal rd-modal-wide rd-question-edit-modal" onClick={e => e.stopPropagation()}>
               <div className="rd-modal-header">
                 <span className="rd-modal-title"><Pencil size={14} /> Edit Question</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -535,7 +606,7 @@ function QuestionManagerPanel() {
                   <textarea
                     className="rd-modal-textarea"
                     value={editJson}
-                    onChange={e => { setEditJson(e.target.value); setEditError(''); }}
+                    onChange={e => changeEditJson(e.target.value)}
                     spellCheck={false}
                   />
                   {editError && <div className="rd-msg error" style={{ marginTop: 6 }}>{editError}</div>}
@@ -579,6 +650,8 @@ function QuestionManagerPanel() {
                   )}
                 </div>
               </div>
+
+              <ExplanationEditor value={editExplanation} onChange={changeExplanation} disabled={editSaving} />
 
               <div className="rd-modal-footer">
                 <button className="rd-add-btn" onClick={() => setEditTarget(null)}>Dismiss</button>
@@ -626,7 +699,19 @@ function QuestionManagerPanel() {
         <label>Question type<select className="rd-input" value={filters.type} onChange={event => changeFilter('type', event.target.value)}>
           <option value="">All types</option><option value="all">Standard</option><option value="basic">Basic commands</option><option value="acadnet">AcadNet</option>
         </select></label>
+        <label>Explanation<select className="rd-input" value={filters.hasExplanation} onChange={event => changeFilter('hasExplanation', event.target.value)}>
+          <option value="">All questions</option><option value="yes">With explanation</option><option value="no">Without explanation</option>
+        </select></label>
       </div>
+      <div className="rd-qmgr-copy-filtered">
+        <button type="button" className="rd-export-btn" onClick={copyFiltered}
+          disabled={loading || copyingFiltered || total === 0 || Boolean(listError)}>
+          <Copy size={14} /> {copyingFiltered ? 'Copying...' : 'Copy filtered JSON'}
+        </button>
+        <span>All matching questions, across every page.</span>
+      </div>
+      {filteredCopyMessage && <div className="rd-msg" role="status">{filteredCopyMessage}</div>}
+      {filteredCopyError && <div className="rd-msg error" role="alert">{filteredCopyError}</div>}
       {tagsError && <div className="rd-msg error" role="alert">{tagsError}</div>}
       {appliedQuery && <div className="rd-qmgr-search-summary">Searching for: <strong>{appliedQuery}</strong>
         <button type="button" onClick={() => { setQuery(''); setAppliedQuery(''); setPage(1); }} aria-label="Clear title search"><X size={13} /></button>

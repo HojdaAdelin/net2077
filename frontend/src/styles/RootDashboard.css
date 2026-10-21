@@ -1623,7 +1623,7 @@
 }
 
 /* Question Manager browsing controls */
-.rd-qmgr-filters { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+.rd-qmgr-filters { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; }
 .rd-qmgr-filters>label { display:flex; flex-direction:column; gap:7px; min-width:0; font-size:11px; font-weight:500; color:var(--text-secondary); }
 .rd-qmgr-filters select { font-size:12px; text-overflow:ellipsis; }
 .rd-qmgr-search-summary { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:12px; color:var(--text-secondary); }
@@ -1645,3 +1645,13 @@
   .rd-qmgr .rd-qmgr-item-top { align-items:flex-start; flex-wrap:wrap; }
   .rd-qmgr-pagination>div { width:100%; justify-content:space-between; gap:6px; }
 }
+
+.rd-question-edit-modal { overflow-y:auto; overscroll-behavior:contain; }
+.rd-question-edit-modal .rd-modal-split { flex:none; overflow:visible; }
+.rd-question-edit-modal .rd-modal-textarea { flex:none; height:320px; min-height:240px; }
+.rd-question-edit-modal .rd-qpreview { max-height:400px; overflow:auto; }
+.rd-question-edit-modal .rd-modal-header,.rd-question-edit-modal .rd-modal-footer,.rd-question-edit-modal .explanation-editor { flex-shrink:0; }
+
+.rd-qmgr-copy-filtered { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.rd-qmgr-copy-filtered>span { color:var(--text-secondary); font-size:11px; }
+.rd-qmgr-copy-filtered button:disabled { opacity:.45; cursor:default; }

@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const questionSchema = new mongoose.Schema({
   title: { type: String, required: true },
+  explanation: { type: String, maxlength: 20000, default: undefined },
   type: { type: String, enum: ['basic', 'all', 'acadnet'], required: true },
   answers: [{ type: String, required: true }],
   correctAnswers: [{ type: Number, required: true }],

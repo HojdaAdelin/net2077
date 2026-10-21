@@ -1,8 +1,11 @@
+export const explanationAfterAnswer = question => typeof question.explanation === 'string' && question.explanation.trim() ? { explanation: question.explanation } : {};
+
 export const publicQuestion = (question) => {
   const object = question.toObject ? question.toObject() : { ...question };
   if (object.correctAnswers?.length) object.multipleCorrect = object.correctAnswers.length > 1;
   delete object.correctAnswers;
   delete object.correctIndex;
+  delete object.explanation;
   return object;
 };
 

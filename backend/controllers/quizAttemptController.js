@@ -5,7 +5,7 @@ import QuizAttempt from '../models/QuizAttempt.js';
 import Question from '../models/Question.js';
 import Exam from '../models/Exam.js';
 import User from '../models/User.js';
-import { publicQuestion, validateAnswers } from '../utils/questionValidation.js';
+import { publicQuestion, validateAnswers, explanationAfterAnswer } from '../utils/questionValidation.js';
 import { levelFromXp, applyPrivilege } from '../utils/xpUtils.js';
 import { calculateXPWithBoosts } from './shopController.js';
 import { trackCompetitiveXP } from './competitiveController.js';
@@ -30,7 +30,7 @@ const ownedAttempt = async (req) => {
   if (!attempt || String(attempt.userId || '') !== String(req.userId || '')) throw fail('Quiz session not found', 404);
   return attempt;
 };
-const corrections = (attempt) => attempt.questions.map(q => ({ _id: q._id, correctAnswers: q.correctAnswers }));
+const corrections = (attempt) => attempt.questions.map(q => ({ _id: q._id, correctAnswers: q.correctAnswers, ...(attempt.kind === 'random' ? explanationAfterAnswer(q) : {}) }));
 
 export const startQuizAttempt = async (req, res) => {
   try {
@@ -81,8 +81,10 @@ export const checkQuizAnswer = async (req, res) => {
     const { questionId, answers, attemptId } = req.body;
     let question;
     let selected = answers;
+    let allowExplanation = true;
     if (attemptId) {
       let attempt = await ownedAttempt(req);
+      allowExplanation = attempt.kind === 'random';
       question = attempt.questions.find(q => String(q._id) === questionId);
       if (!question) throw fail('Question is not part of this quiz');
       validateAnswers(question, answers);
@@ -99,7 +101,7 @@ export const checkQuizAnswer = async (req, res) => {
       if (!question) throw fail('Question not found', 404);
     }
     const correct = validateAnswers(question, selected);
-    res.json({ correct, correctAnswers: question.correctAnswers, selectedAnswers: selected });
+    res.json({ correct, correctAnswers: question.correctAnswers, selectedAnswers: selected, ...(allowExplanation ? explanationAfterAnswer(question) : {}) });
   } catch (error) { res.status(error.status || 500).json({ message: error.message }); }
 };
 

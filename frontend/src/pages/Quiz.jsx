@@ -1,3 +1,4 @@
+import ExplanationViewer from '../components/ExplanationViewer';
 import { useState, useEffect, useCallback, useContext, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import '../styles/Quiz.css';
@@ -145,8 +146,8 @@ export default function Quiz({ isExam = false }) {
         });
         const result = await response.json();
         if (!response.ok) throw new Error(result.message || 'Unable to save quiz results. Please try again.');
-        const corrections = new Map(result.corrections.map(q => [String(q._id), q.correctAnswers]));
-        setQuestions(previous => previous.map(q => ({ ...q, correctAnswers: corrections.get(q._id) || q.correctAnswers })));
+        const corrections = new Map(result.corrections.map(q => [String(q._id), q]));
+        setQuestions(previous => previous.map(q => ({ ...q, ...(corrections.get(q._id) || {}) })));
         setSelectedAnswers(result.selectedAnswers);
         setVerifiedResult(result);
         if (user && result.streak) updateUser({ streak: result.streak });
@@ -373,7 +374,7 @@ export default function Quiz({ isExam = false }) {
         let initialLocked = sanitizeMap(restoredState?.lockedQuestions || {});
         for (const correction of sessionData?.corrections || []) {
           const question = filtered.find(q => q._id === correction._id);
-          if (question) question.correctAnswers = correction.correctAnswers;
+          if (question) { question.correctAnswers = correction.correctAnswers; if (correction.explanation) question.explanation = correction.explanation; }
         }
         for (const [id, answers] of Object.entries(sessionData?.checked || {})) {
           const question = filtered.find(q => q._id === id);
@@ -596,7 +597,7 @@ export default function Quiz({ isExam = false }) {
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Unable to check answer. Please try again.');
       const isCorrect = result.correct;
-      setQuestions(previous => previous.map(q => q._id === currentQuestion._id ? { ...q, correctAnswers: result.correctAnswers } : q));
+      setQuestions(previous => previous.map(q => q._id === currentQuestion._id ? { ...q, correctAnswers: result.correctAnswers, ...(result.explanation ? { explanation: result.explanation } : {}) } : q));
       setSelectedAnswers(previous => ({ ...previous, [currentQuestion._id]: result.selectedAnswers || answers }));
       setSubmittedAnswers(previous => ({ ...previous, [currentQuestion._id]: isCorrect }));
       if (isExam && !isCorrect) setLockedQuestions(previous => ({ ...previous, [currentQuestion._id]: true }));
@@ -611,7 +612,7 @@ export default function Quiz({ isExam = false }) {
         if (!rewardResponse.ok) throw new Error(reward.message || 'Unable to save progress');
         if (reward.streak) updateUser({ streak: reward.streak });
       }
-      if (isCorrect && (isExam || type !== 'daily')) {
+      if (isCorrect && (isExam || type !== 'daily') && !result.explanation?.trim()) {
         setTimeout(() => {
           if (currentIndex < displayedQuestions.length - 1) {
             const next = currentIndex + 1;
@@ -1160,6 +1161,9 @@ export default function Quiz({ isExam = false }) {
                 </button>
               )}
 
+              {!isExam && type !== 'daily' && submittedAnswers[currentQuestion._id] !== undefined &&
+                <ExplanationViewer content={currentQuestion.explanation} />}
+
               <div className="quiz-actions">
                 <button 
                   onClick={handlePrevious} 
@@ -1187,7 +1191,7 @@ export default function Quiz({ isExam = false }) {
                         <><span className="feedback-icon">✗</span><span className="feedback-text">Incorrect. Try the next question!</span></>
                       )}
                     </div>
-                    {!isExam && !(type === 'daily') && (
+                    {!isExam && !(type === 'daily') && !currentQuestion.explanation?.trim() && (
                       <a
                         href={`https://www.google.com/search?q=${query}`}
                         target="_blank"

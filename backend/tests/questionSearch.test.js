@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import Question from '../models/Question.js';
 import { questionSearchFilter, questionSearchPagination } from '../utils/questionSearch.js';
-import { searchQuestions, getQuestionFilters } from '../controllers/questionController.js';
+import { searchQuestions, getQuestionFilters, exportFilteredQuestions } from '../controllers/questionController.js';
 
 const response = () => ({ statusCode: 200, status(code) { this.statusCode = code; return this; }, json(body) { this.body = body; return this; } });
 
@@ -124,4 +124,72 @@ test('question search and tag options remain restricted to root', () => {
   const routes = readFileSync(new URL('../routes/questionRoutes.js', import.meta.url), 'utf8');
   assert.match(routes, /router\.get\('\/search', authMiddleware, checkRole\('root'\), searchQuestions\)/);
   assert.match(routes, /router\.get\('\/search\/filters', authMiddleware, checkRole\('root'\), getQuestionFilters\)/);
+});
+
+
+test('filtered JSON export includes every matching row with the same search filters and order', async t => {
+  const questions = Array.from({ length: 235 }, (_, index) => ({ _id: String(index), __v: 1,
+    createdAt: 'date', updatedAt: 'date', title: `Question ${index}`, answers: ['A', 'B'],
+    correctAnswers: [0], type: 'all', tags: ['LINUX'], difficulty: 'hard', explanation: '**Reason**' }));
+  const query = { q: 'Question', category: 'LINUX', tag: 'LINUX', type: 'all', difficulty: 'hard' };
+  t.mock.method(Question, 'find', filter => {
+    assert.deepEqual(filter, questionSearchFilter(query));
+    return { sort(value) {
+      assert.deepEqual(value, { createdAt: -1, _id: -1 });
+      return { lean: async () => questions };
+    } };
+  });
+  const res = response(); await exportFilteredQuestions({ query }, res);
+  assert.equal(res.statusCode, 200);
+  assert.equal(res.body.length, 235);
+  const copied = JSON.parse(JSON.stringify(res.body, null, 2));
+  assert.equal(Array.isArray(copied), true);
+  assert.equal(copied[234].title, 'Question 234');
+  assert.equal(copied[0].explanation, '**Reason**');
+  assert.deepEqual(copied[0].correctAnswers, [0]);
+  for (const field of ['_id', '__v', 'createdAt', 'updatedAt']) assert.equal(field in copied[0], false);
+});
+
+test('filtered JSON export returns an empty array for no matches and rejects invalid filters', async t => {
+  t.mock.method(Question, 'find', () => ({ sort: () => ({ lean: async () => [] }) }));
+  const empty = response(); await exportFilteredQuestions({ query: {} }, empty);
+  assert.deepEqual(empty.body, []);
+  const invalid = response(); await exportFilteredQuestions({ query: { difficulty: 'invalid' } }, invalid);
+  assert.equal(invalid.statusCode, 400);
+});
+
+test('filtered JSON export is restricted to root', () => {
+  const routes = readFileSync(new URL('../routes/questionRoutes.js', import.meta.url), 'utf8');
+  assert.ok(routes.includes("router.get('/search/export', authMiddleware, checkRole('root'), exportFilteredQuestions)"));
+});
+
+
+test('explanation presence ignores missing, null, empty and whitespace-only text', () => {
+  const withExplanation = questionSearchFilter({ hasExplanation: 'yes' });
+  const withoutExplanation = questionSearchFilter({ hasExplanation: 'no' });
+  assert.deepEqual(withExplanation, { explanation: { $regex: '\\S' } });
+  assert.deepEqual(withoutExplanation, { explanation: { $not: { $regex: '\\S' } } });
+  const regex = new RegExp(withExplanation.explanation.$regex);
+  for (const value of ['', ' ', '\n\t  ']) assert.equal(regex.test(value), false);
+  for (const value of ['Explanation', '**bold**', '  reason  ']) assert.equal(regex.test(value), true);
+  assert.doesNotThrow(() => Question.find(withExplanation).cast(Question));
+  assert.doesNotThrow(() => Question.find(withoutExplanation).cast(Question));
+});
+
+test('explanation filter combines with every other filter and reaches filtered export', async t => {
+  const query = { category: 'LINUX', difficulty: 'hard', q: 'chmod', hasExplanation: 'no' };
+  const filter = questionSearchFilter(query);
+  assert.deepEqual(filter.$and.at(-1), { explanation: { $not: { $regex: '\\S' } } });
+  t.mock.method(Question, 'find', received => {
+    assert.deepEqual(received, filter);
+    return { sort: () => ({ lean: async () => [] }) };
+  });
+  const res = response(); await exportFilteredQuestions({ query }, res);
+  assert.equal(res.statusCode, 200);
+  assert.deepEqual(res.body, []);
+});
+
+test('invalid explanation selectors are rejected', () => {
+  for (const value of ['true', 'invalid', {}, ['yes']]) assert.throws(() => questionSearchFilter({ hasExplanation: value }), { status: 400 });
+  assert.deepEqual(questionSearchFilter({ hasExplanation: '' }), {});
 });

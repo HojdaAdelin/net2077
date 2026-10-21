@@ -1,6 +1,6 @@
 import { questionSearchFilter, questionSearchPagination } from '../utils/questionSearch.js';
 import { dailyChallengeStatus } from '../utils/dailyChallenge.js';
-import { validateAnswers } from '../utils/questionValidation.js';
+import { validateAnswers, explanationAfterAnswer } from '../utils/questionValidation.js';
 import { finishQuizAttempt } from './quizAttemptController.js';
 import Question from '../models/Question.js';
 import User from '../models/User.js';
@@ -104,7 +104,7 @@ export const markSolved = async (req, res) => {
 
     if (!user) return res.status(404).json({ message: 'User not found' });
     const correct = validateAnswers(question, answers);
-    if (!correct) return res.json({ correct: false, correctAnswers: question.correctAnswers });
+    if (!correct) return res.json({ correct: false, correctAnswers: question.correctAnswers, ...explanationAfterAnswer(question) });
     if (user.solvedQuestions.some(id => String(id) === questionId)) {
       return res.json(practiceResult(user, question, true));
     }
@@ -174,7 +174,7 @@ export const markSolved = async (req, res) => {
 };
 
 const practiceResult = (user, question, alreadySolved) => ({
-  correct: true, correctAnswers: question.correctAnswers,
+  correct: true, correctAnswers: question.correctAnswers, ...explanationAfterAnswer(question),
   xp: user.xp, level: user.level, solvedByTag: user.solvedByTag, alreadySolved,
   streak: { current: user.streak?.current || 0, max: user.streak?.max || 0, isActive: true }
 });
@@ -556,6 +556,16 @@ export const searchQuestions = async (req, res) => {
   }
 };
 
+export const exportFilteredQuestions = async (req, res) => {
+  try {
+    const filter = questionSearchFilter(req.query);
+    const questions = await Question.find(filter).sort({ createdAt: -1, _id: -1 }).lean();
+    res.json(questions.map(({ _id, __v, createdAt, updatedAt, ...question }) => question));
+  } catch (error) {
+    res.status(error.status || 500).json({ message: error.status ? error.message : 'Unable to export filtered questions.' });
+  }
+};
+
 export const deleteQuestion = async (req, res) => {
   try {
     const { id } = req.params;
@@ -569,6 +579,10 @@ export const deleteQuestion = async (req, res) => {
 
 export const updateQuestion = async (req, res) => {
   try {
+    if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body) ||
+        (req.body.explanation !== undefined && (typeof req.body.explanation !== 'string' || req.body.explanation.length > 20000))) {
+      return res.status(400).json({ message: 'Explanation must be text with at most 20,000 characters.' });
+    }
     const { id } = req.params;
     const { _id, __v, createdAt, updatedAt, ...updates } = req.body;
     const q = await Question.findByIdAndUpdate(id, updates, { new: true, runValidators: true });

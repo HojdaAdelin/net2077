@@ -519,3 +519,63 @@ test('using reset_daily clears the cooldown, consumes one item and allows anothe
   await finishQuizAttempt('daily')(req, reward);
   assert.equal(reward.body.xpGained, 32);
 });
+
+
+test('explanations stay private in public questions without changing stored data', () => {
+  const q = { ...question(), explanation: '**Reason** /* echo test */' };
+  const safe = publicQuestion(q);
+  assert.equal(safe.explanation, undefined);
+  assert.equal(q.explanation, '**Reason** /* echo test */');
+});
+
+test('practice explanations are returned after correct, wrong and already-solved answers', async t => {
+  const { questions, user, request } = practiceSetup(t);
+  questions[0].explanation = '**B** is correct.';
+  const wrongReq = request(); wrongReq.body.answers = [0];
+  const wrong = response(); await markSolved(wrongReq, wrong);
+  assert.equal(wrong.body.explanation, questions[0].explanation);
+  assert.equal(wrong.body.correct, false);
+  const correct = response(); await markSolved(request(), correct);
+  const repeat = response(); await markSolved(request(), repeat);
+  assert.equal(correct.body.explanation, questions[0].explanation);
+  assert.equal(repeat.body.explanation, questions[0].explanation);
+  assert.equal(user.xp, 96);
+});
+
+for (const kind of ['exam', 'daily', 'random']) {
+  test(`${kind} answer checks only include explanations in random practice`, async t => {
+    const { attempt, req, questions } = setup(t, kind);
+    attempt.questions[0].explanation = 'Private explanation.';
+    req.body.questionId = String(questions[0]._id); req.body.answers = [1];
+    const res = response(); await checkQuizAnswer(req, res);
+    assert.equal(res.statusCode, 200);
+    assert.equal(res.body.explanation, kind === 'random' ? 'Private explanation.' : undefined);
+  });
+}
+
+test('standalone question checks return explanations only after a valid answer payload', async t => {
+  const q = { ...question(), explanation: 'The explanation.' };
+  t.mock.method(Question, 'findById', async () => q);
+  const bad = response(); await checkQuizAnswer({ body: { questionId: String(q._id) } }, bad);
+  assert.equal(bad.statusCode, 400); assert.equal(bad.body.explanation, undefined);
+  const valid = response(); await checkQuizAnswer({ body: { questionId: String(q._id), answers: [0] } }, valid);
+  assert.equal(valid.body.explanation, q.explanation);
+});
+
+test('restoring random practice reveals explanations for checked questions only', async t => {
+  const { req, attempt, questions } = setup(t, 'random');
+  attempt.questions.forEach(q => { q.explanation = 'Do not leak before checking.'; });
+  attempt.checked.set(String(questions[0]._id), [0]); req.body.kind = 'random';
+  const res = response(); await startQuizAttempt(req, res);
+  assert.equal(res.body.questions.every(q => q.explanation === undefined), true);
+  assert.equal(res.body.corrections.length, 1);
+  assert.equal(res.body.corrections[0].explanation, 'Do not leak before checking.');
+});
+
+test('explanations do not change scores, rewards or exam corrections', async t => {
+  const { req, attempt } = setup(t, 'exam');
+  attempt.questions.forEach(q => { q.explanation = 'Explanation for practice only.'; });
+  const res = response(); await finishQuizAttempt('exam')(req, res);
+  assert.equal(res.statusCode, 200); assert.equal(res.body.score, 8); assert.equal(res.body.xpGained, 16);
+  assert.equal(res.body.corrections.every(q => q.explanation === undefined), true);
+});

@@ -11,9 +11,11 @@ export function questionSearchFilter(query) {
   const type = scalar(query.type, 'question type');
   const tag = scalar(query.tag, 'tag');
   const difficulty = scalar(query.difficulty, 'difficulty');
+  const hasExplanation = scalar(query.hasExplanation, 'explanation filter');
   if (category && !['LINUX', 'NETWORK', 'ARDUINO', 'ACADNET'].includes(category)) throw invalid('Invalid category');
   if (type && !['basic', 'all', 'acadnet'].includes(type)) throw invalid('Invalid question type');
   if (difficulty && !['easy', 'medium', 'hard'].includes(difficulty)) throw invalid('Invalid difficulty');
+  if (hasExplanation && !['yes', 'no'].includes(hasExplanation)) throw invalid('Invalid explanation filter');
   const conditions = [];
   // Treat search text literally, including code punctuation and regex characters.
   if (q) conditions.push({ title: { $regex: q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' } });
@@ -21,6 +23,8 @@ export function questionSearchFilter(query) {
   if (type) conditions.push({ type });
   if (tag) conditions.push({ tags: tag });
   if (difficulty) conditions.push({ difficulty });
+  if (hasExplanation === 'yes') conditions.push({ explanation: { $regex: '\\S' } });
+  if (hasExplanation === 'no') conditions.push({ explanation: { $not: { $regex: '\\S' } } });
   return conditions.length > 1 ? { $and: conditions } : conditions[0] || {};
 }
 
