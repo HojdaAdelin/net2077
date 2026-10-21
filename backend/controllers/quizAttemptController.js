@@ -1,3 +1,4 @@
+import { dailyChallengeStatus, dailyRewardFilter } from '../utils/dailyChallenge.js';
 import { randomBytes } from 'crypto';
 import jwt from 'jsonwebtoken';
 import QuizAttempt from '../models/QuizAttempt.js';
@@ -49,8 +50,13 @@ export const startQuizAttempt = async (req, res) => {
       if (!exam) throw fail('Exam not found', 404);
       filter.tags = exam.tag;
     } else if (kind === 'daily') {
-      filter.tags = category === 'NETWORK' ? 'NETWORK' : 'LINUX';
-      if (category !== 'NETWORK' && !includeAcadnet) filter.type = { $ne: 'acadnet' };
+      if (!req.userId) throw fail('Please sign in to start a daily challenge.', 401);
+      const user = await User.findById(req.userId);
+      if (!user) throw fail('User not found', 404);
+      if (dailyChallengeStatus(user.dailyChallenge).completed) throw fail('Your next daily challenge is not available yet.', 409);
+      if (!['LINUX', 'NETWORK', 'ARDUINO'].includes(category)) throw fail('Invalid daily challenge category');
+      filter.tags = category;
+      if (category === 'LINUX' && !includeAcadnet) filter.type = { $ne: 'acadnet' };
     } else {
       if (['basic', 'all', 'acadnet'].includes(type)) filter.type = type;
       const conditions = [];
@@ -100,7 +106,7 @@ export const finishQuizAttempt = (expectedKind) => async (req, res) => {
   try {
     let attempt = await ownedAttempt(req);
     if (expectedKind && attempt.kind !== expectedKind) throw fail('Quiz session mismatch');
-    if (attempt.kind === 'daily' && attempt.day !== new Date().toISOString().slice(0, 10)) {
+    if (attempt.kind === 'daily' && Date.now() - new Date(attempt.createdAt || `${attempt.day}T00:00:00.000Z`).getTime() >= 86400000) {
       throw fail('This daily challenge has expired. Please start today\'s challenge.');
     }
     while (!attempt.result) {
@@ -137,8 +143,9 @@ export const finishQuizAttempt = (expectedKind) => async (req, res) => {
       const filter = { _id: user._id, rewardedQuizAttempts: { $ne: attempt.token } };
       const update = { $inc: { xp: xpGained }, $addToSet: { rewardedQuizAttempts: attempt.token } };
       if (attempt.kind === 'daily') {
-        filter['dailyChallenge.lastCompleted'] = { $ne: attempt.day };
-        update.$set = { 'dailyChallenge.lastCompleted': attempt.day,
+        Object.assign(filter, dailyRewardFilter());
+        update.$set = { 'dailyChallenge.completedAt': new Date(),
+          'dailyChallenge.lastCompleted': new Date().toISOString().slice(0, 10),
           'dailyChallenge.lastScore': result.score, 'dailyChallenge.lastTotalPoints': result.totalPoints };
       }
       if (attempt.kind === 'exam') {

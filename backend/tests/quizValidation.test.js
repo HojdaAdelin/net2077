@@ -1,3 +1,6 @@
+import { useItem } from '../controllers/shopController.js';
+import ShopItem from '../models/ShopItem.js';
+import { dailyChallengeStatus } from '../utils/dailyChallenge.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import mongoose from 'mongoose';
@@ -58,6 +61,12 @@ function setup(t, kind = 'random') {
       return JSON.stringify(value) === JSON.stringify(expected.$literal);
     })) return null;
     if (filter.rewardedQuizAttempts && user.rewardedQuizAttempts.includes(filter.rewardedQuizAttempts.$ne)) return null;
+    if (filter.$or && !filter.$or.some(condition => Object.entries(condition).every(([path, expected]) => {
+      const value = user.get(path);
+      if (expected === null) return value == null;
+      if ('$lte' in expected) return value != null && new Date(value) <= expected.$lte;
+      return value !== expected.$ne;
+    }))) return null;
     if (filter['dailyChallenge.lastCompleted'] && user.dailyChallenge.lastCompleted === filter['dailyChallenge.lastCompleted'].$ne) return null;
     if (filter.solvedQuestions && user.solvedQuestions.some(id => String(id) === String(filter.solvedQuestions.$ne))) return null;
     for (const [key, value] of Object.entries(update.$inc || {})) user.set(key, (user.get(key) || 0) + value);
@@ -111,7 +120,7 @@ test('parallel finish requests cannot pay the same attempt twice', async t => {
   assert.equal(user.rewardedQuizAttempts.length, 1);
 });
 
-test('Daily Challenge preserves double XP and privilege, and only pays once per day', async t => {
+test('Daily Challenge preserves double XP and privilege, and only pays once within 24 hours', async t => {
   const { user, req, attempt } = setup(t, 'daily');
   const first = response();
   await finishQuizAttempt('daily')(req, first);
@@ -408,4 +417,105 @@ test('a season purchase between read and write is preserved after retry', async 
   assert.deepEqual([...user.seasonPass.claimedLevels.premium], [1]);
   assert.equal(user.seasonPass.xp, 6);
   assert.equal(User.findOneAndUpdate.mock.callCount(), 2);
+});
+
+
+test('daily Arduino uses its category and never exposes solutions', async t => {
+  const { req, questions } = setup(t, 'daily');
+  req.body = { kind: 'daily', category: 'ARDUINO' };
+  const aggregate = t.mock.method(Question, 'aggregate', async () => questions);
+  t.mock.method(QuizAttempt, 'create', async data => new QuizAttempt(data));
+  const res = response();
+  await startQuizAttempt(req, res);
+  assert.equal(res.statusCode, 200);
+  assert.deepEqual(aggregate.mock.calls[0].arguments[0][0], { $match: { tags: 'ARDUINO' } });
+  assert.equal('correctAnswers' in res.body.questions[0], false);
+});
+
+test('daily start is blocked across midnight until 24 hours have elapsed', async t => {
+  const { user, req } = setup(t, 'daily');
+  user.dailyChallenge.completedAt = new Date(Date.now() - 23 * 3600000);
+  user.dailyChallenge.lastCompleted = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  req.body = { kind: 'daily', category: 'LINUX' };
+  const res = response();
+  await startQuizAttempt(req, res);
+  assert.equal(res.statusCode, 409);
+});
+
+test('daily completion can award again after 24 hours', async t => {
+  const { user, req } = setup(t, 'daily');
+  user.dailyChallenge.completedAt = new Date(Date.now() - 25 * 3600000);
+  const res = response();
+  await finishQuizAttempt('daily')(req, res);
+  assert.equal(res.body.xpGained, 32);
+  assert.ok(Date.now() - user.dailyChallenge.completedAt.getTime() < 5000);
+});
+
+test('distinct daily sessions grant double XP only once', async t => {
+  const { user, req, attempt } = setup(t, 'daily');
+  // Distinct sessions bypass the receipt guard; the cooldown is still atomic.
+  user.rewardedQuizAttempts = ['another-session'];
+  const first = response();
+  await finishQuizAttempt('daily')(req, first);
+  attempt.token = 'parallel-session';
+  req.body.attemptId = attempt.token;
+  const second = response();
+  await finishQuizAttempt('daily')(req, second);
+  assert.equal(first.body.xpGained, 32);
+  assert.equal(second.body.xpGained, 0);
+  assert.equal(user.xp, 122);
+});
+
+
+test('daily status uses a rolling 24-hour timer and unlocks at its exact boundary', () => {
+  const completedAt = new Date('2026-10-20T23:30:00.000Z');
+  const locked = dailyChallengeStatus({ completedAt, lastScore: 12 }, new Date('2026-10-21T01:30:00.000Z'));
+  assert.equal(locked.completed, true);
+  assert.equal(locked.nextAvailableAt, '2026-10-21T23:30:00.000Z');
+  assert.equal(locked.timeUntilNext, '22h 0m');
+  assert.equal(locked.lastScore, 12);
+  assert.equal(dailyChallengeStatus({ completedAt }, new Date('2026-10-21T23:30:00.000Z')).completed, false);
+});
+
+test('daily status supports legacy completions and the reset item', () => {
+  const now = new Date('2026-10-21T12:00:00.000Z');
+  assert.equal(dailyChallengeStatus({ lastCompleted: '2026-10-21' }, now).nextAvailableAt, '2026-10-22T00:00:00.000Z');
+  assert.equal(dailyChallengeStatus({ lastCompleted: '2026-10-20' }, now).completed, false);
+  assert.equal(dailyChallengeStatus({ lastCompleted: null, completedAt: null }, now).completed, false);
+});
+
+for (const includeAcadnet of [false, true]) {
+  test(`Linux daily respects includeAcadnet=${includeAcadnet}`, async t => {
+    const { req, questions } = setup(t, 'daily');
+    req.body = { kind: 'daily', category: 'LINUX', includeAcadnet };
+    const aggregate = t.mock.method(Question, 'aggregate', async () => questions);
+    t.mock.method(QuizAttempt, 'create', async data => new QuizAttempt(data));
+    const res = response();
+    await startQuizAttempt(req, res);
+    assert.equal(res.statusCode, 200);
+    assert.deepEqual(aggregate.mock.calls[0].arguments[0][0].$match,
+      includeAcadnet ? { tags: 'LINUX' } : { tags: 'LINUX', type: { $ne: 'acadnet' } });
+  });
+}
+
+
+test('using reset_daily clears the cooldown, consumes one item and allows another reward', async t => {
+  const { user, req, attempt } = setup(t, 'daily');
+  await finishQuizAttempt('daily')(req, response());
+  assert.equal(dailyChallengeStatus(user.dailyChallenge).completed, true);
+  user.inventory.push({ itemId: 'reset_daily', quantity: 2 });
+  t.mock.method(ShopItem, 'findOne', async () => ({ itemId: 'reset_daily' }));
+  const reset = response();
+  await useItem({ userId: req.userId, params: { itemId: 'reset_daily' } }, reset);
+  assert.equal(reset.statusCode, 200);
+  assert.equal(reset.body.success, true);
+  assert.equal(user.dailyChallenge.completedAt, null);
+  assert.equal(user.dailyChallenge.lastCompleted, null);
+  assert.equal(dailyChallengeStatus(user.dailyChallenge).completed, false);
+  assert.equal(user.inventory.find(item => item.itemId === 'reset_daily').quantity, 1);
+  attempt.token = 'after-reset';
+  req.body.attemptId = attempt.token;
+  const reward = response();
+  await finishQuizAttempt('daily')(req, reward);
+  assert.equal(reward.body.xpGained, 32);
 });

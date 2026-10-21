@@ -1,5 +1,6 @@
+import DailyChallengesCard from '../components/DailyChallengesCard';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { getUserProgress, getDailyChallengeStatus } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
@@ -118,6 +119,8 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
         navigate(includeAcadnet ? '/grile/daily/challenge?acadnet=1' : '/grile/daily/challenge');
       } else if (selectedTag === 'NETWORK') {
         navigate('/grile/daily/network');
+      } else if (selectedTag === 'ARDUINO') {
+        navigate('/grile/daily/arduino');
       }
       return;
     }
@@ -154,7 +157,7 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content modal-large" onClick={(e) => e.stopPropagation()}>
         <h2>{type === 'daily' ? 'Choose Daily Challenge Category' : 'Choose Quiz Mode'}</h2>
-        <p>{type === 'daily' ? 'Select Linux or Network for your daily challenge' : 'Select mode and optionally filter by tags'}</p>
+        <p>{type === 'daily' ? 'Select Linux, Network or Arduino for your daily challenge' : 'Select mode and optionally filter by tags'}</p>
         
         {type !== 'daily' && (
           <div className="modal-section">
@@ -271,7 +274,7 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
           <div className="modal-section">
             <h3 className="section-title">Select Category *</h3>
             <div className="tags-grid">
-              {availableTags.slice(0, 2).map(tag => (
+              {availableTags.slice(0, 3).map(tag => (
                 <button
                   key={tag.id}
                   className={`tag-option ${selectedTag === tag.id ? 'selected' : ''}`}
@@ -288,7 +291,7 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
               ))}
             </div>
             <p className="tag-helper">
-              Choose Linux or Network for your daily challenge.
+              Choose Linux, Network or Arduino for your daily challenge.
             </p>
             {selectedTag === 'LINUX' && (
               <div className="acadnet-option">
@@ -380,7 +383,7 @@ export default function Grile() {
     }
   }, [user, searchParams]);
 
-  const loadDailyChallengeStatus = async () => {
+  const loadDailyChallengeStatus = useCallback(async () => {
     try {
       setDailyChallengeLoading(true);
       const status = await getDailyChallengeStatus();
@@ -390,7 +393,7 @@ export default function Grile() {
     } finally {
       setDailyChallengeLoading(false);
     }
-  };
+  }, []);
 
   const loadData = async () => {
     try {
@@ -736,18 +739,7 @@ export default function Grile() {
       icon: <Monitor size={24} />,
       filter: 'linux'
     },
-    ...(user ? [{
-      title: 'Daily Challenge',
-      desc: '20 questions with 2x XP bonus',
-      type: 'daily',
-      isDaily: true,
-      completed: dailyChallenge?.completed || false,
-      timeUntilNext: dailyChallenge?.timeUntilNext || '',
-      loading: dailyChallengeLoading,
-      color: '#f59e0b',
-      icon: <Trophy size={24} />,
-      filter: 'all'
-    }] : []),
+    ...(user ? [{ type: 'daily', isDaily: true, filter: 'all' }] : []),
     { 
       title: 'Tests', 
       desc: 'Practice with timer and scoring',
@@ -828,7 +820,10 @@ export default function Grile() {
               ))}
             </>
           ) : (
-            filteredCards.map((card, idx) => (
+            filteredCards.map((card, idx) => card.isDaily ? (
+              <DailyChallengesCard key="daily" status={dailyChallenge} loading={dailyChallengeLoading}
+                onRefresh={loadDailyChallengeStatus} />
+            ) : (
             <div 
               key={idx} 
               className={`compact-card ${card.completed ? 'daily-completed' : ''} ${card.isExam ? 'exam-card' : ''}`}

@@ -74,6 +74,7 @@ const userSchema = new mongoose.Schema({
     lastActivityDate: { type: String, default: null } 
   },
   dailyChallenge: {
+    completedAt: { type: Date, default: null },
     lastCompleted: { type: String, default: null },
     lastScore: { type: Number, default: 0 },
     lastTotalPoints: { type: Number, default: 0 }

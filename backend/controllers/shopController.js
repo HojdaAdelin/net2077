@@ -138,6 +138,7 @@ export const useItem = async (req, res) => {
 
     if (itemId === 'reset_daily') {
       user.dailyChallenge.lastCompleted = null;
+      user.dailyChallenge.completedAt = null;
       user.dailyChallenge.lastScore = 0;
       user.dailyChallenge.lastTotalPoints = 0;
       

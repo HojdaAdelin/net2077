@@ -240,7 +240,7 @@ export default function Quiz({ isExam = false }) {
       const chaptersParam = urlParams.get('chapters');
       const queryType = urlParams.get('type') || type;
 
-      const sessionKind = isExam ? 'exam' : type === 'daily' && ['challenge', 'network'].includes(mode) ? 'daily' :
+      const sessionKind = isExam ? 'exam' : type === 'daily' && ['challenge', 'network', 'arduino'].includes(mode) ? 'daily' :
         mode === 'random' ? 'random' : null;
       let data = [];
       let tagsFilter = tagsParam;
@@ -311,7 +311,7 @@ export default function Quiz({ isExam = false }) {
           const response = await fetch(`${API_BASE}/questions/attempts/start`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
             body: JSON.stringify({ kind: sessionKind, examId, attemptId,
-              category: mode === 'network' ? 'NETWORK' : 'LINUX', includeAcadnet: urlParams.get('acadnet') === '1',
+              category: mode === 'network' ? 'NETWORK' : mode === 'arduino' ? 'ARDUINO' : 'LINUX', includeAcadnet: urlParams.get('acadnet') === '1',
               type: queryType, tags: tagsParam, chapters: chaptersParam })
           });
           const result = await response.json();

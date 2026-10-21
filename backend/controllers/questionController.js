@@ -1,3 +1,4 @@
+import { dailyChallengeStatus } from '../utils/dailyChallenge.js';
 import { validateAnswers } from '../utils/questionValidation.js';
 import { finishQuizAttempt } from './quizAttemptController.js';
 import Question from '../models/Question.js';
@@ -210,32 +211,7 @@ export const getDailyChallengeStatus = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const today = new Date().toISOString().split('T')[0]; 
-    const isCompleted = user.dailyChallenge && user.dailyChallenge.lastCompleted === today;
-    
-    const now = new Date();
-    const today13 = new Date();
-    today13.setHours(13, 0, 0, 0);
-    
-    let next13;
-    if (now >= today13) {
-      next13 = new Date(today13);
-      next13.setDate(next13.getDate() + 1);
-    } else {
-
-      next13 = today13;
-    }
-    
-    const diff = next13 - now;
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    
-    res.json({
-      completed: isCompleted,
-      timeUntilNext: `${hours}h ${minutes}m`,
-      lastScore: user.dailyChallenge?.lastScore || 0,
-      lastTotalPoints: user.dailyChallenge?.lastTotalPoints || 0
-    });
+    res.json(dailyChallengeStatus(user.dailyChallenge));
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
