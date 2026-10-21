@@ -1,3 +1,5 @@
+import '../styles/QuestionTitle.css';
+
 export default function QuestionTitle({ title, className }) {
   if (!title) return null;
 

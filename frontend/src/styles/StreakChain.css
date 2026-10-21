@@ -1,0 +1,62 @@
+.container.chain-page { max-width:900px; padding-top:64px; padding-bottom:60px; color:var(--text-primary); }
+.chain-back { display:inline-flex; align-items:center; gap:8px; color:var(--text-secondary); text-decoration:none; font-size:12px; }
+.chain-header { display:flex; align-items:center; justify-content:space-between; gap:20px; margin:28px 0; }
+.chain-category { color:var(--text-secondary); font-size:11px; letter-spacing:1px; text-transform:uppercase; }
+.chain-header h1 { display:flex; align-items:center; gap:12px; margin:8px 0 0; font-size:28px; letter-spacing:-.8px; font-weight:600; }
+.chain-end { border:0; border-bottom:1px solid var(--border); background:transparent; color:var(--text-secondary); padding:6px 0; font-size:12px; cursor:pointer; }
+.chain-scoreboard { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border:1px solid var(--border); border-radius:12px; background:var(--bg-card); padding:22px 0; }
+.chain-scoreboard>div { display:flex; flex-direction:column; gap:8px; padding:0 24px; }
+.chain-scoreboard>div+div { border-left:1px solid var(--border); }
+.chain-scoreboard span { font-size:11px; color:var(--text-secondary); }
+.chain-scoreboard strong { font-size:30px; font-weight:500; font-variant-numeric:tabular-nums; line-height:1.2; letter-spacing:-1px; }
+.chain-scoreboard small { color:var(--text-secondary); font-size:13px; font-weight:400; letter-spacing:0; }
+.chain-links { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:18px 0 28px; }
+.chain-links>span { display:grid; place-items:center; flex:1; min-width:23px; height:26px; border:1px solid var(--border); border-radius:5px; color:var(--text-muted); font-size:9px; }
+.chain-links .complete { border-color:var(--success); color:var(--success); background:color-mix(in srgb,var(--success) 8%,transparent); }
+.chain-links .current { border-color:var(--text-primary); color:var(--text-primary); }
+.chain-links .broken { border-color:var(--error); color:var(--error); }
+.chain-question,.chain-result { padding:28px; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; }
+.chain-question-meta { display:flex; justify-content:space-between; gap:12px; color:var(--text-secondary); font-size:11px; }
+.chain-question h2 { margin:20px 0; font-size:19px; font-weight:500; line-height:1.65; overflow-wrap:anywhere; }
+.chain-multiple-notice { display:flex; align-items:center; gap:10px; padding:12px 16px; margin:0 0 24px; background:rgba(255,184,0,.1); border:1px solid rgba(255,184,0,.2); border-radius:6px; color:var(--warning); font-size:14px; font-weight:500; line-height:1.5; }
+.chain-multiple-notice svg { flex-shrink:0; }
+.chain-answers { display:flex; flex-direction:column; gap:10px; margin-top:20px; }
+.chain-answer { width:100%; display:flex; align-items:center; gap:14px; text-align:left; background:transparent; color:var(--text-primary); border:1px solid var(--border); border-radius:8px; padding:14px; font:inherit; font-size:13px; line-height:1.6; cursor:pointer; }
+.chain-answer>span:nth-child(2) { flex:1; min-width:0; white-space:pre-wrap; overflow-wrap:anywhere; }
+.chain-answer-letter { display:grid; place-items:center; flex-shrink:0; width:26px; height:26px; border:1px solid var(--border); border-radius:5px; font-size:11px; color:var(--text-secondary); }
+.chain-answer.selected { border-color:var(--text-primary); background:var(--bg-primary); }
+.chain-answer.correct { border-color:var(--success); }
+.chain-answer.wrong { border-color:var(--error); }
+.chain-answer:disabled { cursor:default; opacity:1; }
+.chain-question-footer { margin-top:24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+.chain-hint { margin:0; font-size:12px; color:var(--text-secondary); }
+.chain-primary { display:inline-flex; align-items:center; justify-content:center; gap:14px; padding:12px 18px; font:inherit; font-size:12px; font-weight:600; background:var(--accent-primary); color:var(--bg-primary); border:1px solid var(--accent-primary); border-radius:7px; text-decoration:none; cursor:pointer; }
+.chain-primary:disabled { cursor:default; opacity:.4; }
+.chain-correct-note { display:flex; align-items:center; gap:7px; color:var(--success); font-size:12px; }
+.chain-result { text-align:center; }
+.chain-result-icon { display:inline-grid; place-items:center; width:64px; height:64px; border:1px solid var(--border); border-radius:16px; margin:6px 0 12px; }
+.chain-result h2 { font-size:25px; letter-spacing:-.6px; margin:8px 0; }
+.chain-result p { margin:12px 0 24px; font-size:13px; line-height:1.6; color:var(--text-secondary); }
+.chain-correction { display:flex; flex-direction:column; text-align:left; gap:10px; margin:24px 0; padding:20px; background:var(--bg-primary); border:1px solid var(--border); border-radius:8px; font-size:13px; line-height:1.7; overflow-wrap:anywhere; }
+.chain-correction>span:nth-child(2) { color:var(--text-secondary); font-size:11px; }
+.chain-correction strong { font-weight:500; }
+.chain-error,.chain-end-confirm { margin:18px 0; padding:16px; border:1px solid var(--border); border-radius:8px; background:var(--bg-card); font-size:13px; line-height:1.6; }
+.chain-error { color:var(--error); }
+.chain-end-confirm p { margin:0 0 12px; }
+.chain-end-confirm>div { display:flex; gap:12px; flex-wrap:wrap; }
+.chain-end-confirm button { padding:8px 12px; border:1px solid var(--border); border-radius:5px; background:var(--bg-primary); color:var(--text-primary); cursor:pointer; }
+.chain-page button:focus-visible,.chain-page a:focus-visible { outline:2px solid var(--accent-primary); outline-offset:3px; }
+@media(max-width:600px) {
+  .container.chain-page { padding-top:48px; }
+  .chain-header h1 { font-size:23px; }
+  .chain-scoreboard { padding:18px 0; }
+  .chain-scoreboard>div { padding:0 12px; }
+  .chain-scoreboard strong { font-size:23px; }
+  .chain-scoreboard span { font-size:10px; }
+  .chain-scoreboard small { font-size:11px; }
+  .chain-question,.chain-result { padding:20px 16px; }
+  .chain-question h2 { font-size:17px; }
+  .chain-question-footer { align-items:stretch; flex-direction:column; }
+  .chain-links { gap:4px; }
+  .chain-links>span { flex:0 0 calc((100% - 36px)/10); min-width:0; }
+}

@@ -26,6 +26,7 @@ const fail = (message, status = 400) => Object.assign(new Error(message), { stat
 const ownedAttempt = async (req) => {
   if (typeof req.body.attemptId !== 'string') throw fail('Missing quiz session. Please reload the quiz.');
   const attempt = await QuizAttempt.findOne({ token: req.body.attemptId, expiresAt: { $gt: new Date() } });
+  if (['chain', 'uncover'].includes(attempt?.kind)) throw fail('Use the daily game session endpoints.');
   if (!attempt || String(attempt.userId || '') !== String(req.userId || '')) throw fail('Quiz session not found', 404);
   return attempt;
 };

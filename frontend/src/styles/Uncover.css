@@ -1,0 +1,23 @@
+.uncover-option { margin-top:24px; padding:20px; border:1px solid var(--text-secondary); border-radius:10px; background:var(--bg-primary); }
+.uncover-option-count { display:block; margin-bottom:14px; color:var(--text-secondary); font-size:11px; }
+.uncover-option>div { display:flex; align-items:flex-start; gap:14px; font-size:15px; line-height:1.7; }
+.uncover-option>div>span:last-child { min-width:0; white-space:pre-wrap; overflow-wrap:anywhere; }
+.uncover-prompt { margin:24px 0 14px; font-size:13px; font-weight:500; }
+.uncover-decisions { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.uncover-decisions button { display:flex; align-items:center; justify-content:center; gap:10px; padding:15px 12px; border:1px solid var(--border); border-radius:8px; color:var(--text-primary); background:transparent; font:inherit; font-size:13px; cursor:pointer; }
+.uncover-decisions button:last-child { background:var(--accent-primary); color:var(--bg-primary); border-color:var(--accent-primary); }
+.uncover-decisions button:hover:not(:disabled) { border-color:var(--text-secondary); }
+.uncover-decisions button:disabled { opacity:.5; cursor:default; }
+.uncover-rule { margin:14px 0 0; font-size:11px; line-height:1.6; color:var(--text-secondary); }
+.uncover-revealed { list-style:none; display:flex; flex-direction:column; gap:10px; margin:24px 0; padding:0; }
+.uncover-revealed li { display:flex; align-items:baseline; gap:12px; padding-bottom:10px; border-bottom:1px solid var(--border); color:var(--text-secondary); font-size:12px; line-height:1.6; }
+.uncover-revealed li>span:first-child { flex-shrink:0; font-size:10px; }
+.uncover-revealed li>span:nth-child(2) { flex:1; white-space:pre-wrap; overflow-wrap:anywhere; min-width:0; }
+.uncover-revealed small { flex-shrink:0; font-size:10px; }
+@media(max-width:600px) {
+  .uncover-option { padding:16px 12px; }
+  .uncover-option>div { gap:10px; font-size:13px; }
+  .uncover-decisions { grid-template-columns:1fr; gap:10px; }
+  .uncover-revealed li { flex-wrap:wrap; }
+  .uncover-revealed small { width:100%; padding-left:18px; }
+}

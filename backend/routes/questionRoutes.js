@@ -1,3 +1,5 @@
+import { startUncover, answerUncover, finishUncover } from '../controllers/uncoverController.js';
+import { startStreakChain, answerStreakChain, finishStreakChain } from '../controllers/streakChainController.js';
 import { hideQuestionSolutions } from '../utils/questionValidation.js';
 import { optionalQuizAuth, startQuizAttempt, checkQuizAnswer, finishQuizAttempt } from '../controllers/quizAttemptController.js';
 import express from 'express';
@@ -6,6 +8,12 @@ import { authMiddleware } from '../middleware/authMiddleware.js';
 import { checkRole } from '../middleware/checkRole.js';
 
 const router = express.Router();
+router.post('/uncover/start', authMiddleware, startUncover);
+router.post('/uncover/answer', authMiddleware, answerUncover);
+router.post('/uncover/finish', authMiddleware, finishUncover);
+router.post('/chain/start', authMiddleware, startStreakChain);
+router.post('/chain/answer', authMiddleware, answerStreakChain);
+router.post('/chain/finish', authMiddleware, finishStreakChain);
 router.post('/attempts/start', optionalQuizAuth, startQuizAttempt);
 router.post('/attempts/check', optionalQuizAuth, checkQuizAnswer);
 router.post('/attempts/finish', optionalQuizAuth, finishQuizAttempt());

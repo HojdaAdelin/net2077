@@ -67,6 +67,10 @@ export default function DailyChallengesCard({ status, loading, onRefresh }) {
 
   const start = () => {
     if (!selected || locked || loading) return;
+    if (selected === 'chain' || selected === 'uncover') {
+      navigate(`/grile/${selected === 'chain' ? 'streak-chain' : 'uncover'}/${category.toLowerCase()}${category === 'LINUX' && includeAcadnet ? '?acadnet=1' : ''}`);
+      return;
+    }
     const mode = category === 'NETWORK' ? 'network' : category === 'ARDUINO' ? 'arduino' : 'challenge';
     navigate(`/grile/daily/${mode}${category === 'LINUX' && includeAcadnet ? '?acadnet=1' : ''}`);
   };
@@ -103,17 +107,31 @@ export default function DailyChallengesCard({ status, loading, onRefresh }) {
             <div className="daily-picker-content">
               <div className="daily-picker-grid">
                 <button className={`daily-picker-challenge ${selected === 'twenty' ? 'is-selected' : ''}`}
-                  type="button" aria-pressed={selected === 'twenty'} onClick={() => setSelected('twenty')}>
+                  type="button" aria-pressed={selected === 'twenty'} onClick={() => { setSelected('twenty'); if (category === 'ACADNET') setCategory('LINUX'); }}>
                   <span className="daily-picker-challenge-heading"><span>Daily quiz</span><span className="daily-picker-radio">{selected === 'twenty' && <Check size={12} />}</span></span>
                   <span className="daily-picker-number">20<span>questions</span></span>
                   <span className="daily-picker-challenge-meta"><span>Linux / Network / Arduino</span><strong>2&times; XP</strong></span>
                 </button>
+                <button className={`daily-picker-challenge ${selected === 'chain' ? 'is-selected' : ''}`}
+                  type="button" aria-pressed={selected === 'chain'} onClick={() => setSelected('chain')}>
+                  <span className="daily-picker-challenge-heading"><span>Streak Chain</span><span className="daily-picker-radio">{selected === 'chain' && <Check size={12} />}</span></span>
+                  <span className="daily-picker-number">20<span>in a row</span></span>
+                  <span className="daily-picker-challenge-meta"><span>One mistake ends the chain</span><strong>&times;1.1 &rarr; &times;3</strong></span>
+                </button>
+                <button className={`daily-picker-challenge ${selected === 'uncover' ? 'is-selected' : ''}`}
+                  type="button" aria-pressed={selected === 'uncover'} onClick={() => setSelected('uncover')}>
+                  <span className="daily-picker-challenge-heading"><span>Uncover</span><span className="daily-picker-radio">{selected === 'uncover' && <Check size={12} />}</span></span>
+                  <span className="daily-picker-number">10<span>questions</span></span>
+                  <span className="daily-picker-challenge-meta"><span>One answer at a time</span><strong>3&times; XP</strong></span>
+                </button>
               </div>
 
               {selected && <div className="daily-picker-options">
+                {selected === 'chain' && <p className="daily-picker-chain-note">Answer correctly to grow your multiplier. Each question earns more XP, rounded up. The chain ends on your first mistake or after 20 questions.</p>}
+                {selected === 'uncover' && <p className="daily-picker-chain-note">Decide whether each answer is correct as it is revealed. Complete every answer in a question to earn 3&times; XP. One wrong decision ends the challenge.</p>}
                 <fieldset><legend>Question category</legend>
                   <div className="daily-picker-categories">
-                    {[{ id: 'LINUX', label: 'Linux', Icon: Monitor }, { id: 'NETWORK', label: 'Network', Icon: Wifi }, { id: 'ARDUINO', label: 'Arduino', Icon: Cpu }].map(({ id, label, Icon }) => (
+                    {[{ id: 'LINUX', label: 'Linux', Icon: Monitor }, { id: 'NETWORK', label: 'Network', Icon: Wifi }, { id: 'ARDUINO', label: 'Arduino', Icon: Cpu }, ...(['chain', 'uncover'].includes(selected) ? [{ id: 'ACADNET', label: 'AcadNet', Icon: Trophy }] : [])].map(({ id, label, Icon }) => (
                       <label key={id} className={`daily-picker-category ${category === id ? 'is-selected' : ''}`}>
                         <input type="radio" name={`${panelId}-category`} value={id} checked={category === id}
                           onChange={() => { setCategory(id); setIncludeAcadnet(false); }} />

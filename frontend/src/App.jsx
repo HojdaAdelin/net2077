@@ -1,3 +1,5 @@
+import Uncover from './pages/Uncover';
+import StreakChain from './pages/StreakChain';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
@@ -54,6 +56,8 @@ export default function App() {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/grile" element={<Grile />} />
+                  <Route path="/grile/uncover/:category" element={<Uncover />} />
+                  <Route path="/grile/streak-chain/:category" element={<StreakChain />} />
                   <Route path="/grile/:type/:mode" element={<Quiz />} />
                   <Route path="/question/:questionId" element={<Question />} />
                   <Route path="/exam-selection" element={<ExamSelection />} />
