@@ -78,3 +78,13 @@
 }
 
 .daily-picker-chain-note { margin:0 0 18px; font-size:12px; line-height:1.7; color:var(--text-secondary); }
+
+.daily-hub-reset { padding:0 24px 20px; }
+.daily-hub-reset>button { display:flex; align-items:center; gap:8px; width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:7px; background:var(--bg-primary); color:var(--text-primary); font:inherit; font-size:12px; cursor:pointer; }
+.daily-hub-reset>button>span:first-of-type { flex:1; text-align:left; }
+.daily-hub-token-count { min-width:22px; padding:2px 5px; border:1px solid var(--border); border-radius:4px; font-size:10px; text-align:center; font-variant-numeric:tabular-nums; }
+.daily-hub-reset>button:hover:not(:disabled) { border-color:var(--text-secondary); }
+.daily-hub-reset>button:disabled { opacity:.5; cursor:default; }
+.daily-hub-reset>button:focus-visible { outline:2px solid var(--accent-primary); outline-offset:3px; }
+.daily-hub-reset-error { margin:0 24px 16px; color:var(--error); font-size:12px; line-height:1.5; }
+@media(max-width:768px) { .daily-hub-reset { padding:0 20px 20px; } }

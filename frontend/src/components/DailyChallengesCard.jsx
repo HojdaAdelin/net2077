@@ -1,10 +1,17 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useContext, useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Check, Cpu, LockKeyhole, Monitor, Trophy, Wifi, X } from 'lucide-react';
+import { ArrowRight, Check, Cpu, LockKeyhole, Monitor, RotateCcw, Trophy, Wifi, X } from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';
+import { API_URL } from '../config';
 import '../styles/DailyChallengesCard.css';
 
 export default function DailyChallengesCard({ status, loading, onRefresh }) {
+  const { user, updateUser } = useContext(AuthContext);
+  const [resetting, setResetting] = useState(false);
+  const [resetError, setResetError] = useState('');
+  const resetInFlight = useRef(false);
+  const resetTokens = (user?.inventory || []).reduce((total, item) => item.itemId === 'reset_daily' ? total + (item.quantity || 0) : total, 0);
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const [category, setCategory] = useState('LINUX');
@@ -61,6 +68,25 @@ export default function DailyChallengesCard({ status, loading, onRefresh }) {
     };
   }, [open, locked]);
 
+  const useResetToken = async () => {
+    if (resetInFlight.current || loading || !locked || resetTokens < 1) return;
+    resetInFlight.current = true;
+    setResetting(true);
+    setResetError('');
+    try {
+      const response = await fetch(`${API_URL}/shop/use/reset_daily`, { method: 'POST', credentials: 'include' });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.message || 'Unable to use reset token.');
+      updateUser({ inventory: data.inventory, activeBoosts: data.activeBoosts });
+      await onRefresh();
+    } catch (error) {
+      setResetError(error.message || 'Unable to use reset token. Please try again.');
+    } finally {
+      resetInFlight.current = false;
+      setResetting(false);
+    }
+  };
+
   const seconds = Math.ceil(remaining / 1000);
   const countdown = [Math.floor(seconds / 3600), Math.floor(seconds % 3600 / 60), seconds % 60]
     .map(value => String(value).padStart(2, '0')).join(':');
@@ -78,7 +104,7 @@ export default function DailyChallengesCard({ status, loading, onRefresh }) {
   return (
     <>
       <article className={`daily-hub ${locked ? 'daily-hub-locked' : ''}`}>
-        <button ref={triggerRef} className="daily-hub-toggle" type="button" disabled={loading || !status || locked}
+        <button ref={triggerRef} className="daily-hub-toggle" type="button" disabled={loading || resetting || !status || locked}
           aria-haspopup="dialog" onClick={() => { setSelected(null); setOpen(true); }}>
           <span className="daily-hub-top">
             <span className="daily-hub-heading"><strong>Daily Challenges</strong>
@@ -93,6 +119,14 @@ export default function DailyChallengesCard({ status, loading, onRefresh }) {
             <time className="daily-hub-countdown">{countdown}</time></span>
             : <span className="daily-hub-bottom"><span>{loading ? 'Loading' : 'Explore challenges'}</span><span className="daily-hub-arrow"><ArrowRight size={17} /></span></span>}
         </button>
+        {resetTokens > 0 && <div className="daily-hub-reset">
+          <button type="button" onClick={useResetToken} disabled={resetting || loading || !locked}
+            title={locked ? 'Use one token to unlock Daily Challenges now' : 'No reset needed. Daily Challenges are already available.'}>
+            <RotateCcw size={15} aria-hidden="true" /><span>{resetting ? 'Resetting...' : 'Use reset token'}</span>
+            <span className="daily-hub-token-count" aria-label={`${resetTokens} reset tokens available`}>{resetTokens}</span>
+          </button>
+        </div>}
+        {resetError && <p className="daily-hub-reset-error" role="alert">{resetError}</p>}
         {!loading && !status && <button className="daily-hub-retry" type="button" onClick={onRefresh}>Retry availability</button>}
       </article>
 

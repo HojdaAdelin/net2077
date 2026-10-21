@@ -355,33 +355,84 @@ function UpdatesPanel() {
 function QuestionManagerPanel() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(null);
   const [deleted, setDeleted] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [appliedQuery, setAppliedQuery] = useState('');
+  const [filters, setFilters] = useState({ category: '', tag: '', difficulty: '', type: '' });
+  const [tags, setTags] = useState([]);
+  const [tagsError, setTagsError] = useState('');
+  const [listError, setListError] = useState('');
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [refreshKey, setRefreshKey] = useState(0);
   const [editTarget, setEditTarget] = useState(null);   // question being edited
   const [editJson, setEditJson] = useState('');
   const [editError, setEditError] = useState('');
   const [editSaving, setEditSaving] = useState(false);
 
-  const search = async (all = false) => {
-    setLoading(true);
-    setHasSearched(true);
-    try {
-      const url = all
-        ? `${API_URL}/questions/search?all=1`
-        : `${API_URL}/questions/search?q=${encodeURIComponent(query.trim())}`;
-      const res = await fetch(url, { credentials: 'include' });
-      const data = await res.json();
-      setResults(data);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const controller = new AbortController();
+    const loadTags = async () => {
+      setTagsError('');
+      try {
+        const response = await fetch(`${API_URL}/questions/search/filters`, { credentials: 'include', signal: controller.signal });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || 'Unable to load tags.');
+        if (!controller.signal.aborted) setTags(data.tags);
+      } catch (error) {
+        if (!controller.signal.aborted) setTagsError(error.message);
+      }
+    };
+    loadTags();
+    return () => controller.abort();
+  }, [refreshKey]);
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && query.trim().length >= 2) search(false);
+  useEffect(() => {
+    const controller = new AbortController();
+    const loadQuestions = async () => {
+      setLoading(true);
+      setListError('');
+      try {
+        const params = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
+        if (appliedQuery) params.set('q', appliedQuery);
+        Object.entries(filters).forEach(([key, value]) => { if (value) params.set(key, value); });
+        const response = await fetch(`${API_URL}/questions/search?${params}`, { credentials: 'include', signal: controller.signal });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || 'Unable to load questions.');
+        if (controller.signal.aborted) return;
+        setResults(data.questions);
+        setTotal(data.total);
+        setTotalPages(data.totalPages);
+        setPage(data.page);
+      } catch (error) {
+        if (!controller.signal.aborted) setListError(error.message);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    };
+    loadQuestions();
+    return () => controller.abort();
+  }, [appliedQuery, filters, page, pageSize, refreshKey]);
+
+  const search = event => {
+    event.preventDefault();
+    if (query.trim().length === 1) return;
+    setAppliedQuery(query.trim());
+    setPage(1);
+    setRefreshKey(key => key + 1);
+  };
+  const changeFilter = (name, value) => {
+    setFilters(current => ({ ...current, [name]: value }));
+    setPage(1);
+  };
+  const showAll = () => {
+    setQuery(''); setAppliedQuery('');
+    setFilters({ category: '', tag: '', difficulty: '', type: '' });
+    setPage(1);
   };
 
   const handleCopy = (q) => {
@@ -407,17 +458,18 @@ function QuestionManagerPanel() {
     document.body.removeChild(ta);
   };
 
-  const handleDelete = async (id) => {
-    const res = await fetch(`${API_URL}/questions/${id}`, {
-      method: 'DELETE',
-      credentials: 'include',
-    });
-    if (res.ok) {
-      setResults(prev => prev.filter(q => q._id !== id));
+  const handleDelete = async id => {
+    try {
+      const response = await fetch(`${API_URL}/questions/${id}`, { method: 'DELETE', credentials: 'include' });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Unable to delete question.');
+      }
+      setRefreshKey(key => key + 1);
       setDeleted(id);
       setTimeout(() => setDeleted(null), 2000);
-    }
-    setConfirmDelete(null);
+    } catch (error) { setListError(error.message); }
+    finally { setConfirmDelete(null); }
   };
 
   const openEdit = (q) => {
@@ -448,6 +500,7 @@ function QuestionManagerPanel() {
       if (res.ok) {
         setResults(prev => prev.map(q => q._id === editTarget._id ? data.question : q));
         setEditTarget(null);
+        setRefreshKey(key => key + 1);
       } else {
         setEditError(data.message || 'Eroare la salvare.');
       }
@@ -544,46 +597,49 @@ function QuestionManagerPanel() {
         </div>
       </div>
 
-      <div className="rd-qmgr-search-row">
+      <form className="rd-qmgr-search-row" onSubmit={search}>
         <div className="rd-qmgr-input-wrap">
           <Search size={15} className="rd-qmgr-search-icon" />
-          <input
-            className="rd-input rd-qmgr-input"
-            placeholder="Search by title... (min 2 chars)"
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            maxLength={200}
-          />
+          <input className="rd-input rd-qmgr-input" placeholder="Search by title... (min 2 chars)"
+            aria-label="Search questions by title" value={query} onChange={event => setQuery(event.target.value)} maxLength={200} />
         </div>
-        <button
-          className="rd-primary-btn"
-          style={{ marginTop: 0 }}
-          onClick={() => search(false)}
-          disabled={loading || query.trim().length < 2}
-        >
+        <button type="submit" className="rd-primary-btn" style={{ marginTop: 0 }} disabled={loading || query.trim().length === 1}>
           <Search size={14} /> Search
         </button>
-        <button
-          className="rd-export-btn"
-          onClick={() => search(true)}
-          disabled={loading}
-        >
+        <button type="button" className="rd-export-btn" onClick={showAll} disabled={loading}>
           <ListFilter size={14} /> All Questions
         </button>
+      </form>
+
+      <div className="rd-qmgr-filters">
+        <label>Category<select className="rd-input" value={filters.category} onChange={event => changeFilter('category', event.target.value)}>
+          <option value="">All categories</option><option value="LINUX">Linux</option><option value="NETWORK">Network</option>
+          <option value="ARDUINO">Arduino</option><option value="ACADNET">AcadNet</option>
+        </select></label>
+        <label>Tag<select className="rd-input" value={filters.tag} onChange={event => changeFilter('tag', event.target.value)}>
+          <option value="">All tags</option>
+          {(filters.tag && !tags.includes(filters.tag) ? [filters.tag, ...tags] : tags).map(tag => <option key={tag} value={tag}>{tag}</option>)}
+        </select></label>
+        <label>Difficulty<select className="rd-input" value={filters.difficulty} onChange={event => changeFilter('difficulty', event.target.value)}>
+          <option value="">All difficulties</option><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option>
+        </select></label>
+        <label>Question type<select className="rd-input" value={filters.type} onChange={event => changeFilter('type', event.target.value)}>
+          <option value="">All types</option><option value="all">Standard</option><option value="basic">Basic commands</option><option value="acadnet">AcadNet</option>
+        </select></label>
       </div>
+      {tagsError && <div className="rd-msg error" role="alert">{tagsError}</div>}
+      {appliedQuery && <div className="rd-qmgr-search-summary">Searching for: <strong>{appliedQuery}</strong>
+        <button type="button" onClick={() => { setQuery(''); setAppliedQuery(''); setPage(1); }} aria-label="Clear title search"><X size={13} /></button>
+      </div>}
+      {listError && <div className="rd-msg error" role="alert">{listError} <button type="button" className="rd-add-btn" onClick={() => setRefreshKey(key => key + 1)}>Retry</button></div>}
+      {loading && <div className="rd-loading" role="status">Loading questions...</div>}
+      {!loading && !listError && results.length === 0 && <div className="rd-empty">No questions match these filters.</div>}
+      {!loading && !listError && total > 0 && <div className="rd-qmgr-count" role="status">
+        {(page - 1) * pageSize + 1}&ndash;{Math.min(page * pageSize, total)} of {total} questions
+      </div>}
 
-      {loading && <div className="rd-loading">Searching...</div>}
-
-      {!loading && hasSearched && results.length === 0 && (
-        <div className="rd-empty">No questions found.</div>
-      )}
-
-      {!loading && results.length > 0 && (
+      {!loading && !listError && results.length > 0 && (
         <div className="rd-qmgr-results">
-          <div className="rd-qmgr-count">
-            {results.length} question{results.length !== 1 ? 's' : ''} found
-          </div>
           {results.map(q => (
             <div key={q._id} className="rd-qmgr-item">
               <div className="rd-qmgr-item-top">
@@ -626,11 +682,12 @@ function QuestionManagerPanel() {
                   )}
                 </div>
               </div>
-              <div className="rd-qmgr-title">{q.title}</div>
+              <div className="rd-qmgr-title"><QuestionTitle title={q.title} /></div>
               <div className="rd-qmgr-answers">
                 {q.answers?.map((ans, i) => (
                   <span key={i} className={`rd-qmgr-ans ${q.correctAnswers?.includes(i) ? 'correct' : ''}`}>
-                    {ans}
+                    <span className="rd-qmgr-answer-letter">{String.fromCharCode(65 + i)}</span><span>{ans}</span>
+                    {q.correctAnswers?.includes(i) && <CheckCircle size={13} aria-label="Correct answer" />}
                   </span>
                 ))}
               </div>
@@ -638,6 +695,15 @@ function QuestionManagerPanel() {
           ))}
         </div>
       )}
+      {total > 0 && <div className="rd-qmgr-pagination">
+        <label>Per page <select className="rd-input" value={pageSize} onChange={event => { setPageSize(Number(event.target.value)); setPage(1); }}>
+          <option value={25}>25</option><option value={50}>50</option><option value={100}>100</option>
+        </select></label>
+        <div><button type="button" className="rd-add-btn" onClick={() => setPage(current => current - 1)} disabled={loading || page <= 1}>Previous</button>
+          <span>Page {page} of {totalPages}</span>
+          <button type="button" className="rd-add-btn" onClick={() => setPage(current => current + 1)} disabled={loading || page >= totalPages}>Next</button>
+        </div>
+      </div>}
     </div>
   );
 }

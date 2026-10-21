@@ -1621,3 +1621,27 @@
   font-weight: 500;
   word-break: break-all;
 }
+
+/* Question Manager browsing controls */
+.rd-qmgr-filters { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+.rd-qmgr-filters>label { display:flex; flex-direction:column; gap:7px; min-width:0; font-size:11px; font-weight:500; color:var(--text-secondary); }
+.rd-qmgr-filters select { font-size:12px; text-overflow:ellipsis; }
+.rd-qmgr-search-summary { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:12px; color:var(--text-secondary); }
+.rd-qmgr-search-summary button { display:grid; place-items:center; border:0; border-radius:4px; padding:3px; color:inherit; background:var(--bg-secondary); cursor:pointer; }
+.rd-qmgr .rd-qmgr-results { max-height:70vh; overscroll-behavior:contain; }
+.rd-qmgr .rd-qmgr-title { line-height:1.7; overflow-wrap:anywhere; }
+.rd-qmgr .rd-qmgr-answers { display:flex; flex-direction:column; gap:6px; }
+.rd-qmgr .rd-qmgr-ans { display:flex; align-items:baseline; gap:10px; max-width:none; white-space:pre-wrap; overflow:visible; text-overflow:clip; padding:8px 10px; line-height:1.6; }
+.rd-qmgr-ans>span:nth-child(2) { flex:1; min-width:0; overflow-wrap:anywhere; }
+.rd-qmgr-ans>svg { flex-shrink:0; align-self:center; }
+.rd-qmgr-answer-letter { font-size:10px; opacity:.7; }
+.rd-qmgr-pagination { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:14px; font-size:12px; color:var(--text-secondary); }
+.rd-qmgr-pagination>label { display:flex; align-items:center; gap:8px; }
+.rd-qmgr-pagination select { width:72px; font-size:12px; }
+.rd-qmgr-pagination>div { display:flex; align-items:center; gap:12px; }
+.rd-qmgr-pagination button:disabled { opacity:.4; cursor:default; }
+@media(max-width:800px) { .rd-qmgr-filters { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:480px) {
+  .rd-qmgr .rd-qmgr-item-top { align-items:flex-start; flex-wrap:wrap; }
+  .rd-qmgr-pagination>div { width:100%; justify-content:space-between; gap:6px; }
+}

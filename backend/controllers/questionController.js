@@ -1,3 +1,4 @@
+import { questionSearchFilter, questionSearchPagination } from '../utils/questionSearch.js';
 import { dailyChallengeStatus } from '../utils/dailyChallenge.js';
 import { validateAnswers } from '../utils/questionValidation.js';
 import { finishQuizAttempt } from './quizAttemptController.js';
@@ -524,21 +525,34 @@ export const resetAcadnetStats = async (req, res) => {
 };
 
 export const submitRandom50 = finishQuizAttempt('random');
+export const getQuestionFilters = async (req, res) => {
+  try {
+    const tags = (await Question.distinct('tags')).filter(tag => typeof tag === 'string' && tag.trim())
+      .sort((a, b) => a.localeCompare(b, 'en', { numeric: true }));
+    res.json({ tags });
+  } catch (error) { res.status(500).json({ message: 'Unable to load question tags.' }); }
+};
+
 export const searchQuestions = async (req, res) => {
   try {
-    const { q, all } = req.query;
-    let questions;
-    if (all === '1') {
-      questions = await Question.find({}).sort({ createdAt: -1 }).limit(200).lean();
-    } else {
-      if (!q || q.trim().length < 2) return res.json([]);
-      questions = await Question.find({
-        title: { $regex: q.trim(), $options: 'i' }
-      }).limit(30).lean();
+    const filter = questionSearchFilter(req.query);
+    if (req.query.page !== undefined) {
+      const requested = questionSearchPagination(req.query);
+      const total = await Question.countDocuments(filter);
+      const totalPages = Math.max(1, Math.ceil(total / requested.pageSize));
+      const page = Math.min(requested.page, totalPages);
+      const questions = await Question.find(filter).sort({ createdAt: -1, _id: -1 })
+        .skip((page - 1) * requested.pageSize).limit(requested.pageSize).lean();
+      return res.json({ questions, total, page, pageSize: requested.pageSize, totalPages });
     }
-    res.json(questions);
+    // Keep the existing array response for older callers.
+    if (req.query.all === '1') {
+      return res.json(await Question.find(filter).sort({ createdAt: -1, _id: -1 }).limit(200).lean());
+    }
+    if (!req.query.q || req.query.q.trim().length < 2) return res.json([]);
+    res.json(await Question.find(filter).limit(30).lean());
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(error.status || 500).json({ message: error.status ? error.message : 'Unable to load questions.' });
   }
 };
 
