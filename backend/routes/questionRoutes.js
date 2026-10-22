@@ -1,3 +1,4 @@
+import { prepareExplanationBatch, previewExplanationBatch, applyExplanationBatch } from '../controllers/explanationBatchController.js';
 import { startUncover, answerUncover, finishUncover } from '../controllers/uncoverController.js';
 import { startStreakChain, answerStreakChain, finishStreakChain } from '../controllers/streakChainController.js';
 import { hideQuestionSolutions } from '../utils/questionValidation.js';
@@ -8,6 +9,9 @@ import { authMiddleware } from '../middleware/authMiddleware.js';
 import { checkRole } from '../middleware/checkRole.js';
 
 const router = express.Router();
+router.get('/explanations/batch', authMiddleware, checkRole('root'), prepareExplanationBatch);
+router.post('/explanations/preview', authMiddleware, checkRole('root'), previewExplanationBatch);
+router.post('/explanations/batch', authMiddleware, checkRole('root'), applyExplanationBatch);
 router.post('/uncover/start', authMiddleware, startUncover);
 router.post('/uncover/answer', authMiddleware, answerUncover);
 router.post('/uncover/finish', authMiddleware, finishUncover);

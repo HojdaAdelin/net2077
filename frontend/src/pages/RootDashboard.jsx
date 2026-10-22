@@ -1,3 +1,4 @@
+import BulkExplanationImport from '../components/BulkExplanationImport';
 import ExplanationEditor from '../components/ExplanationEditor';
 import SeasonBoxEditor from '../components/SeasonBoxEditor';
 import { useState, useEffect, useCallback, useContext, useRef } from 'react';
@@ -709,6 +710,9 @@ function QuestionManagerPanel() {
           <Copy size={14} /> {copyingFiltered ? 'Copying...' : 'Copy filtered JSON'}
         </button>
         <span>All matching questions, across every page.</span>
+        <BulkExplanationImport filters={filters} query={appliedQuery}
+          disabled={loading || Boolean(listError) || total === 0 || filters.hasExplanation === 'yes'}
+          onSaved={() => setRefreshKey(key => key + 1)} />
       </div>
       {filteredCopyMessage && <div className="rd-msg" role="status">{filteredCopyMessage}</div>}
       {filteredCopyError && <div className="rd-msg error" role="alert">{filteredCopyError}</div>}
@@ -725,10 +729,11 @@ function QuestionManagerPanel() {
 
       {!loading && !listError && results.length > 0 && (
         <div className="rd-qmgr-results">
-          {results.map(q => (
+          {results.map((q, index) => (
             <div key={q._id} className="rd-qmgr-item">
               <div className="rd-qmgr-item-top">
                 <div className="rd-qmgr-badges">
+                  <span className="rd-qmgr-badge tag">#{(page - 1) * pageSize + index + 1}</span>
                   <span className="rd-qmgr-badge type">{q.type}</span>
                   <span className="rd-qmgr-badge diff" data-diff={q.difficulty}>{q.difficulty}</span>
                   {q.tags?.map(tag => (

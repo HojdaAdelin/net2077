@@ -612,7 +612,7 @@ export default function Quiz({ isExam = false }) {
         if (!rewardResponse.ok) throw new Error(reward.message || 'Unable to save progress');
         if (reward.streak) updateUser({ streak: reward.streak });
       }
-      if (isCorrect && (isExam || type !== 'daily') && !result.explanation?.trim()) {
+      if (isCorrect && (isExam || type !== 'daily')) {
         setTimeout(() => {
           if (currentIndex < displayedQuestions.length - 1) {
             const next = currentIndex + 1;

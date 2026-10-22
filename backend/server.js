@@ -63,6 +63,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
+app.use('/api/questions/explanations', express.json({ limit: '16mb' }));
 app.use(express.json());
 
 
