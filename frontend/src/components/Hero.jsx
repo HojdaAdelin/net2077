@@ -5,10 +5,10 @@ import { AuthContext } from '../context/AuthContext';
 import {
   ArrowRight, Terminal, Network, Code,
   Check, X, UserPlus,
-  ChevronDown, Package, Cpu, HardDrive, Shield, Server, Box,
+  Package, Cpu, HardDrive, Shield, Server, Box,
   HelpCircle, Users, Map
 } from 'lucide-react';
-import MagicBento from './MagicBento';
+import AcadnetPreparation from './AcadnetPreparation';
 import DarkVeil from './DarkVeil';
 import FeaturesSection from './FeaturesSection';
 import '../styles/Hero.css';
@@ -30,12 +30,7 @@ const LINUX_CHAPTERS = [
 
 const TRACKS = [];
 
-const EXAMS = [
-  { to: '/exam/acadnet2026local_11_12', meta: 'LOCAL · XI-XII', title: 'AcadNet Calculatoare 2026', info: '50 Questions · Medium' },
-  { to: '/exam/acadnet2026county_11_12', meta: 'COUNTY · XI-XII', title: 'AcadNet Calculatoare 2026', info: '50 Questions · Medium' },
-  { to: '/exam/acadnet2023national_11_12', meta: 'NATIONAL · XI-XII', title: 'AcadNet Calculatoare 2023', info: '50 Questions · Hard' },
-  { to: '/exam/acadnet2026national_11_12', meta: 'NATIONAL · XI-XII', title: 'AcadNet Calculatoare 2026', info: '30 Questions · Hard' },
-];
+
 
 const FEATURES_COMPARISON = [
   { label: 'Access to all questions',  guest: true,  account: true },
@@ -53,7 +48,6 @@ export default function Hero() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [linuxOverviewOpen] = useState(false);
-  const [expandedDomain, setExpandedDomain] = useState(null);
   const [isDark, setIsDark] = useState(() => document.documentElement.getAttribute('data-theme') !== 'light');
   const [darkVeilFailed, setDarkVeilFailed] = useState(false);
 
@@ -165,127 +159,7 @@ export default function Hero() {
 
       <FeaturesSection />
 
-      <section className="h-section h-acadnet-section" id="prepare-acadnet">
-        <div className="h-container">
-          <div className="h-section-header">
-            <h2 className="h-section-title">Prepare for AcadNet</h2>
-            <p className="h-section-sub h-acadnet-subtitle">
-              Net2077 offers a variety of questions from all possible chapters in Linux (AcadNet - Calculatoare), Network (AcadNet - Rețelistică) and Debugging (AcadNet - IS)
-            </p>
-          </div>
-
-          <MagicBento spotlightRadius={400} glowColor="99, 102, 241">
-           
-            <div className="h-acadnet-exams">
-              {EXAMS.map((exam) => (
-                <Link key={exam.to} to={exam.to} className="h-acadnet-exam-card magic-card">
-                  <div className="h-acadnet-exam-meta">{exam.meta}</div>
-                  <h3 className="h-acadnet-exam-title">{exam.title}</h3>
-                  <div className="h-acadnet-exam-info">{exam.info}</div>
-                  <div className="h-acadnet-exam-arrow"><ArrowRight size={16} /></div>
-                </Link>
-              ))}
-            </div>
-
-            
-            <div className="h-acadnet-domains">
-             
-              <div className={`h-acadnet-domain-card magic-card ${expandedDomain === 'linux' ? 'expanded' : ''}`}
-                   onClick={() => setExpandedDomain(expandedDomain === 'linux' ? null : 'linux')}>
-                <div className="h-acadnet-domain-header">
-                  <div className="h-acadnet-domain-icon h-acadnet-domain-icon--linux">
-                    <Terminal size={24} />
-                  </div>
-                  <div className="h-acadnet-domain-info">
-                    <h3 className="h-acadnet-domain-title">Linux (Calculatoare)</h3>
-                    <p className="h-acadnet-domain-subtitle">CLI & GUI</p>
-                  </div>
-                  <div className="h-acadnet-expand-icon">
-                    <ChevronDown size={20} />
-                  </div>
-                </div>
-
-                <div className="h-acadnet-domain-details">
-                  <Link to="/learn/roadmap/69bff0909aa18fbfacf3a844" className="h-acadnet-step" onClick={(e) => e.stopPropagation()}>
-                    <div className="h-acadnet-step-content">
-                      <h4 className="h-acadnet-step-title">Learn Linux Basics</h4>
-                      <p className="h-acadnet-step-desc">Master file systems, permissions, and core commands</p>
-                    </div>
-                    <div className="h-acadnet-step-link">
-                      <ArrowRight size={14} />
-                    </div>
-                  </Link>
-                  <Link to="/grile?filter=linux" className="h-acadnet-step" onClick={(e) => e.stopPropagation()}>
-                    <div className="h-acadnet-step-content">
-                      <h4 className="h-acadnet-step-title">Practice Linux Questions</h4>
-                      <p className="h-acadnet-step-desc">Test your knowledge with curated questions</p>
-                    </div>
-                    <div className="h-acadnet-step-link">
-                      <ArrowRight size={14} />
-                    </div>
-                  </Link>
-                </div>
-              </div>
-
-              <div className={`h-acadnet-domain-card magic-card ${expandedDomain === 'network' ? 'expanded' : ''}`}
-                   onClick={() => setExpandedDomain(expandedDomain === 'network' ? null : 'network')}>
-                <div className="h-acadnet-domain-header">
-                  <div className="h-acadnet-domain-icon h-acadnet-domain-icon--network">
-                    <Network size={24} />
-                  </div>
-                  <div className="h-acadnet-domain-info">
-                    <h3 className="h-acadnet-domain-title">Networking (Retelistica)</h3>
-                    <p className="h-acadnet-domain-subtitle">Protocol understanding</p>
-                  </div>
-                  <div className="h-acadnet-expand-icon">
-                    <ChevronDown size={20} />
-                  </div>
-                </div>
-
-                <div className="h-acadnet-domain-details">
-                  <Link to="/grile?filter=network" className="h-acadnet-step" onClick={(e) => e.stopPropagation()}>
-                    <div className="h-acadnet-step-content">
-                      <h4 className="h-acadnet-step-title">Practice Network Questions</h4>
-                      <p className="h-acadnet-step-desc">Deep dive into protocols, routing, and infrastructure</p>
-                    </div>
-                    <div className="h-acadnet-step-link">
-                      <ArrowRight size={14} />
-                    </div>
-                  </Link>
-                </div>
-              </div>
-
-              <div className={`h-acadnet-domain-card magic-card ${expandedDomain === 'debug' ? 'expanded' : ''}`}
-                   onClick={() => setExpandedDomain(expandedDomain === 'debug' ? null : 'debug')}>
-                <div className="h-acadnet-domain-header">
-                  <div className="h-acadnet-domain-icon h-acadnet-domain-icon--debug">
-                    <Code size={24} />
-                  </div>
-                  <div className="h-acadnet-domain-info">
-                    <h3 className="h-acadnet-domain-title">Debugging (IS)</h3>
-                    <p className="h-acadnet-domain-subtitle">Problem solving skills</p>
-                  </div>
-                  <div className="h-acadnet-expand-icon">
-                    <ChevronDown size={20} />
-                  </div>
-                </div>
-
-                <div className="h-acadnet-domain-details">
-                  <Link to="/is" className="h-acadnet-step" onClick={(e) => e.stopPropagation()}>
-                    <div className="h-acadnet-step-content">
-                      <h4 className="h-acadnet-step-title">Debug Challenges</h4>
-                      <p className="h-acadnet-step-desc">Solve complex programming and system issues</p>
-                    </div>
-                    <div className="h-acadnet-step-link">
-                      <ArrowRight size={14} />
-                    </div>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </MagicBento>
-        </div>
-      </section>
+      <AcadnetPreparation />
 
       {/* ── Partners ── */}
       <section className="h-section">
