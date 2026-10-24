@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken';
+import { verifyAuthSession } from '../utils/authSession.js';
 
-export const authMiddleware = (req, res, next) => {
+export const authMiddleware = async (req, res, next) => {
   const token = req.cookies?.token;
   
   if (!token) {
@@ -8,8 +8,9 @@ export const authMiddleware = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = await verifyAuthSession(token);
     req.userId = decoded.userId;
+    req.authVersion = decoded.authVersion;
     next();
   } catch (error) {
     res.status(401).json({ message: 'Token is not valid' });

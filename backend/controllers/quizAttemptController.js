@@ -1,6 +1,6 @@
 import { dailyChallengeStatus, dailyRewardFilter } from '../utils/dailyChallenge.js';
 import { randomBytes } from 'crypto';
-import jwt from 'jsonwebtoken';
+import { verifyAuthSession } from '../utils/authSession.js';
 import QuizAttempt from '../models/QuizAttempt.js';
 import Question from '../models/Question.js';
 import Exam from '../models/Exam.js';
@@ -11,10 +11,10 @@ import { calculateXPWithBoosts } from './shopController.js';
 import { trackCompetitiveXP } from './competitiveController.js';
 import { updateUserStreak, getStreakInfo } from '../utils/streakUtils.js';
 
-export const optionalQuizAuth = (req, res, next) => {
+export const optionalQuizAuth = async (req, res, next) => {
   if (!req.cookies?.token) return next();
   try {
-    req.userId = jwt.verify(req.cookies.token, process.env.JWT_SECRET).userId;
+    req.userId = (await verifyAuthSession(req.cookies.token)).userId;
     next();
   } catch {
     // An expired login must not prevent visitors from practicing without an account.

@@ -122,9 +122,9 @@ export default function Hero() {
             {typedText}<span className={`h-cursor ${typingDone ? 'h-cursor-blink' : ''}`}>|</span>
           </p>
           <div className="h-cta">
-            <Link to="#tracks" className="h-btn-primary h-btn-start-learning" onClick={(e) => {
+            <Link to="#features" className="h-btn-primary h-btn-start-learning" onClick={(e) => {
               e.preventDefault();
-              document.getElementById('tracks')?.scrollIntoView({ behavior: 'smooth' });
+              document.getElementById('features')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
             }}>
               Start Learning <ArrowRight size={16} />
             </Link>

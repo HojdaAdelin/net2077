@@ -22,7 +22,7 @@ export const register = async (req, res) => {
 
     await user.save();
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+    const token = jwt.sign({ userId: user._id, authVersion: user.authVersion || 0 }, process.env.JWT_SECRET, { expiresIn: '30d' });
     
     const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token', token, {
@@ -68,7 +68,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+    const token = jwt.sign({ userId: user._id, authVersion: user.authVersion || 0 }, process.env.JWT_SECRET, { expiresIn: '30d' });
     
     const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token', token, {
@@ -117,6 +117,10 @@ export const getMe = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
     
+    if (req.authVersion !== (user.authVersion || 0)) {
+      return res.status(401).json({ message: 'Session expired. Please sign in again.' });
+    }
+
     const now = new Date();
     const activeBoosts = user.activeBoosts?.filter(boost => boost.expiresAt > now) || [];
     if (activeBoosts.length !== (user.activeBoosts?.length || 0)) {
@@ -126,7 +130,7 @@ export const getMe = async (req, res) => {
     
     const streakInfo = getStreakInfo(user);
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+    const token = jwt.sign({ userId: user._id, authVersion: user.authVersion || 0 }, process.env.JWT_SECRET, { expiresIn: '30d' });
     const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token', token, {
       httpOnly: true,

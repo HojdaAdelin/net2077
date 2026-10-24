@@ -224,3 +224,37 @@
     font-size: 24px;
   }
 }
+
+.auth-recovery-link { align-self:flex-end; font-size:13px; line-height:1.6; margin-top:2px; text-underline-offset:4px; }
+.auth-forgot-link { display:inline-block; margin-bottom:16px; font-size:14px; text-underline-offset:4px; }
+.auth-recovery-link:hover,.auth-forgot-link:hover { text-decoration:underline; }
+.auth-register-prompt { margin:0; line-height:1.7; }
+.auth-reset-page > .container { width:100%; max-width:688px; box-sizing:border-box; }
+.auth-reset-page .auth-container { width:100%; max-width:640px; margin:0 auto; }
+.auth-reset-page .auth-header { margin-bottom:28px; }
+.auth-reset-page .form-input,.auth-page .password-input-wrapper .form-input { box-sizing:border-box; width:100%; min-width:0; }
+.auth-reset-notice { margin:0; color:var(--text-secondary); font-size:13px; line-height:1.7; }
+.auth-recovery-link:focus-visible,.auth-forgot-link:focus-visible { outline:2px solid var(--accent-primary); outline-offset:4px; border-radius:2px; }
+@media(max-width:420px) { .auth-reset-page .auth-card { padding:30px 22px; } .auth-reset-page .auth-submit { font-size:14px; } }
+
+.auth-reset-steps { display:flex; list-style:none; gap:14px; margin:0 0 28px; padding:0; color:var(--text-secondary); }
+.auth-reset-steps li { display:flex; align-items:center; gap:7px; font-size:12px; }
+.auth-reset-steps li>span { display:grid; place-items:center; width:23px; height:23px; border:1px solid var(--border); border-radius:50%; flex-shrink:0; font-size:10px; }
+.auth-reset-steps li.active { color:var(--text-primary); }
+.auth-reset-steps li.active>span { border-color:var(--accent-primary); }
+.auth-reset-page .error-message { margin-bottom:20px; line-height:1.6; }
+.auth-reset-address { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:13px; min-width:0; }
+.auth-reset-address>span { overflow-wrap:anywhere; min-width:0; }
+.auth-reset-address>button,.auth-reset-text-button { border:0; background:transparent; color:var(--text-primary); font:inherit; font-size:13px; text-decoration:underline; text-underline-offset:4px; cursor:pointer; }
+.auth-reset-address>button { flex-shrink:0; }
+.auth-reset-code { font-variant-numeric:tabular-nums; letter-spacing:6px; font-size:24px; text-align:center; }
+.auth-reset-expiry { margin:0; color:var(--text-secondary); font-size:12px; line-height:1.6; }
+.auth-reset-expiry time { color:var(--text-primary); font-variant-numeric:tabular-nums; }
+.auth-reset-text-button { align-self:center; padding:5px; }
+.auth-reset-page button:disabled { cursor:default; opacity:.5; }
+.auth-reset-footer { text-align:center; margin-top:28px; font-size:13px; }
+.auth-reset-success { display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center; }
+.auth-reset-success h2 { margin:0; font-size:22px; font-weight:600; }
+.auth-reset-success p { margin:0; color:var(--text-secondary); font-size:14px; line-height:1.8; }
+.auth-reset-success>a { width:100%; box-sizing:border-box; text-decoration:none; }
+@media(max-width:420px) { .auth-reset-steps { gap:10px; flex-wrap:wrap; } .auth-reset-steps li { font-size:11px; } .auth-reset-code { letter-spacing:4px; font-size:21px; } }

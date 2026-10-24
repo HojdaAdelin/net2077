@@ -125,7 +125,7 @@ function FeatureCard({ card, reducedMotion }) {
 export default function FeaturesSection() {
   const reducedMotion = useReducedMotion();
   return (
-    <section className="fs-section" aria-labelledby="features-heading">
+    <section id="features" className="fs-section" aria-labelledby="features-heading">
       <div className="fs-container">
         <h2 id="features-heading" className="fs-title">Features</h2>
         <div className="fs-cards">

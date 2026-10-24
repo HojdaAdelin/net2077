@@ -21,6 +21,7 @@ import RoadmapDetail from './pages/RoadmapDetail';
 import LessonView from './pages/LessonView';
 import Progress from './pages/Progress';
 import Login from './pages/Login';
+import ResetPassword from './pages/ResetPassword';
 import Register from './pages/Register';
 import Terms from './pages/Terms';
 import Onboarding from './pages/Onboarding';
@@ -67,6 +68,7 @@ export default function App() {
                   <Route path="/learn/lesson/:lessonId" element={<LessonView />} />
                   <Route path="/progress" element={<Progress />} />
                   <Route path="/login" element={<Login />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/onboarding" element={<Onboarding />} />
                   <Route path="/updates" element={<Updates />} />

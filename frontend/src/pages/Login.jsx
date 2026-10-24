@@ -45,7 +45,7 @@ export default function Login() {
               <p className="auth-subtitle">{t('login.subtitle')}</p>
             </div>
 
-            {error && <div className="error-message">{error}</div>}
+            {error && <div className="error-message" role="alert">{error}</div>}
 
             <form onSubmit={handleSubmit} className="auth-form" autoComplete="on">
               <div className="form-group">
@@ -83,6 +83,7 @@ export default function Login() {
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
+                {error && <Link to="/reset-password" className="auth-link auth-recovery-link">{t('login.forgotPassword')}</Link>}
               </div>
 
               <button type="submit" className="btn btn-primary auth-submit" disabled={loading}>
@@ -93,7 +94,8 @@ export default function Login() {
             <div className="auth-divider">{t('login.or')}</div>
 
             <div className="auth-footer">
-              {t('login.noAccount')} <Link to="/register" className="auth-link">{t('login.signUp')}</Link>
+              <Link to="/reset-password" className="auth-link auth-forgot-link">{t('login.forgotPassword')}</Link>
+              <p className="auth-register-prompt">{t('login.noAccount')} <Link to="/register" className="auth-link">{t('login.signUp')}</Link></p>
             </div>
           </div>
         </div>

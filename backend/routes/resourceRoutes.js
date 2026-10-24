@@ -1,5 +1,5 @@
 import express from 'express';
-import jwt from 'jsonwebtoken';
+import { verifyAuthSession } from '../utils/authSession.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { isRoot } from '../middleware/checkRole.js';
 import {
@@ -10,11 +10,11 @@ import {
 import Roadmap from '../models/Roadmap.js';
 
 // Middleware optional - ataseaza userId daca exista token valid, altfel continua
-const optionalAuth = (req, res, next) => {
+const optionalAuth = async (req, res, next) => {
   const token = req.cookies?.token;
   if (token) {
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = await verifyAuthSession(token);
       req.userId = decoded.userId;
     } catch {}
   }
