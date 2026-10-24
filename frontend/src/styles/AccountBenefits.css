@@ -1,0 +1,32 @@
+.account-benefits { position:relative; z-index:1; background:var(--bg-primary); }
+.account-benefits-layout { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); gap:76px; align-items:start; }
+.account-benefits-intro { padding-top:14px; }
+.account-benefits-intro h2 { max-width:370px; margin:0; color:var(--text-primary); font-size:clamp(28px,3.4vw,38px); font-weight:500; line-height:1.25; letter-spacing:-1.2px; }
+.account-benefits-intro>p { max-width:360px; margin:20px 0 0; color:var(--text-secondary); font-size:14px; line-height:1.85; }
+.account-benefits-actions { display:flex; flex-direction:column; align-items:flex-start; gap:18px; margin-top:32px; }
+.account-benefits-register { display:inline-flex; align-items:center; justify-content:center; gap:20px; padding:13px 18px; border:1px solid var(--accent-primary); border-radius:6px; background:var(--accent-primary); color:var(--bg-primary); font-size:13px; font-weight:600; text-decoration:none; transition:opacity .18s; }
+.account-benefits-register:hover { opacity:.85; }
+.account-benefits-comparison { min-width:0; }
+.account-benefits-comparison table { width:100%; table-layout:fixed; border-collapse:collapse; border-top:1px solid var(--border); }
+.account-benefits-feature-col { width:54%; }
+.account-benefits-comparison thead th { padding:17px 10px; color:var(--text-secondary); font-size:11px; font-weight:500; line-height:1.5; text-align:center; border-bottom:1px solid var(--border); }
+.account-benefits-comparison thead th:first-child { text-align:left; padding-left:0; }
+.account-benefits-comparison tbody th { text-align:left; color:var(--text-primary); font-weight:400; padding:14px 12px 14px 0; font-size:13px; line-height:1.6; }
+.account-benefits-comparison td { padding:12px 8px; text-align:center; }
+.account-benefits-comparison tbody tr { border-bottom:1px solid var(--border); }
+.account-benefits-comparison .account-benefits-account { background:var(--bg-secondary); color:var(--text-primary); }
+.account-benefits-yes,.account-benefits-no { display:inline-grid; place-items:center; vertical-align:middle; width:24px; height:24px; color:var(--text-primary); }
+.account-benefits-no { color:var(--text-muted); font-size:15px; }
+.account-benefits-sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+.account-benefits a:focus-visible { outline:2px solid var(--accent-primary); outline-offset:5px; }
+@media(max-width:900px) { .account-benefits-layout { gap:36px; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); } .account-benefits-feature-col { width:48%; } }
+@media(max-width:700px) {
+  .account-benefits-layout { grid-template-columns:minmax(0,1fr); gap:34px; }
+  .account-benefits-intro { padding-top:0; }
+  .account-benefits-intro h2 { max-width:500px; }
+  .account-benefits-intro>p { max-width:500px; margin-top:16px; }
+  .account-benefits-actions { margin-top:24px; }
+  .account-benefits-feature-col { width:52%; }
+}
+@media(max-width:380px) { .account-benefits-comparison thead th { padding:14px 6px; } .account-benefits-comparison tbody th { font-size:12px; } }
+@media(prefers-reduced-motion:reduce) { .account-benefits *, .account-benefits *::after { transition:none !important; } }

@@ -9,6 +9,7 @@ import {
   HelpCircle, Users, Map
 } from 'lucide-react';
 import AcadnetPreparation from './AcadnetPreparation';
+import AccountBenefits from './AccountBenefits';
 import DarkVeil from './DarkVeil';
 import FeaturesSection from './FeaturesSection';
 import '../styles/Hero.css';
@@ -32,17 +33,7 @@ const TRACKS = [];
 
 
 
-const FEATURES_COMPARISON = [
-  { label: 'Access to all questions',  guest: true,  account: true },
-  { label: 'Track your progress',      guest: false, account: true },
-  { label: 'Exam sessions',            guest: false, account: true },
-  { label: 'Daily challenges',         guest: false, account: true },
-  { label: 'Terminal practice',        guest: false, account: true },
-  { label: 'Debug Challenges',         guest: false, account: true },
-  { label: 'Roadmaps',                 guest: false, account: true },
-  { label: 'Scripts Interface',        guest: false, account: true },
-  { label: 'Forums',                   guest: false, account: true },
-];
+
 
 export default function Hero() {
   const { user } = useContext(AuthContext);
@@ -182,52 +173,7 @@ export default function Hero() {
         </div>
       </section>
 
-      {!user && (
-        <section className="h-section">
-          <div className="h-container">
-            <div className="h-section-header">
-              <h2 className="h-section-title">Free to start, better with an account</h2>
-              <p className="h-section-sub">You can browse questions without signing up. But you'll want to track where you're going.</p>
-            </div>
-
-            <div className="h-compare-wrap">
-              <table className="h-compare-table">
-                <thead>
-                  <tr>
-                    <th className="h-compare-th h-compare-th-feature">Feature</th>
-                    <th className="h-compare-th h-compare-th-guest">Without account</th>
-                    <th className="h-compare-th h-compare-th-account">
-                      <span className="h-compare-account-label">With account</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {FEATURES_COMPARISON.map((f, i) => (
-                    <tr key={f.label} className={`h-compare-row ${i % 2 === 0 ? 'h-compare-row-even' : ''}`}>
-                      <td className="h-compare-td h-compare-td-feature">{f.label}</td>
-                      <td className="h-compare-td h-compare-td-center">
-                        {f.guest
-                          ? <Check size={16} className="h-compare-check" />
-                          : <X size={16} className="h-compare-x" />}
-                      </td>
-                      <td className="h-compare-td h-compare-td-center h-compare-td-account">
-                        <Check size={16} className="h-compare-check" />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-
-              <div className="h-compare-cta">
-                <Link to="/register" className="h-register-btn">
-                  <UserPlus size={16} /> Create free account
-                </Link>
-                <span className="h-compare-login-hint">Already have one? <Link to="/login" className="h-compare-login-link">Sign in</Link></span>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
+      {!user && <AccountBenefits />}
 
     </div>
   );

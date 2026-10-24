@@ -40,3 +40,5 @@
 .ft-link-text::after { content:''; position:absolute; left:0; right:0; bottom:-3px; height:1px; background:currentColor; transform:scaleX(0); transform-origin:left center; transition:transform .28s ease; }
 .ft-link:hover .ft-link-text::after,.ft-link:focus-visible .ft-link-text::after,.ft-legal:hover .ft-link-text::after,.ft-legal:focus-visible .ft-link-text::after { transform:scaleX(1); }
 @media(prefers-reduced-motion:reduce) { .ft-root *,.ft-root *::after { transition:none !important; } }
+
+.hero-root + .ft-root { margin-top:0; border-top:0; }
