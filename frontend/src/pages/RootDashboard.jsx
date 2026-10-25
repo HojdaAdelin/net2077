@@ -1,13 +1,14 @@
 import BulkExplanationImport from '../components/BulkExplanationImport';
 import ExplanationEditor from '../components/ExplanationEditor';
 import SeasonBoxEditor from '../components/SeasonBoxEditor';
+import TerminalAdminPanel from '../components/TerminalAdminPanel';
 import { useState, useEffect, useCallback, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Settings, Users, FileText, Megaphone, Upload,
   Trash2, Plus, X, RefreshCw, Send, Sparkles, Zap, Bug,
   ChevronDown, CheckCircle, XCircle, Clock, Download,
-  Search, Copy, Database, ListFilter, ClipboardList, BarChart2, ScrollText, Pencil, UserSearch
+  Search, Copy, Database, ListFilter, ClipboardList, BarChart2, ScrollText, Pencil, UserSearch, Terminal as TerminalIcon
 } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
@@ -1826,6 +1827,7 @@ const TABS = [
   { id: 'updates',   label: 'Updates',    icon: FileText },
   { id: 'questions', label: 'Questions',  icon: Settings },
   { id: 'qmanager',  label: 'Q Manager',  icon: Database },
+  { id: 'terminal',  label: 'Terminal',   icon: TerminalIcon },
   { id: 'planner',   label: 'Planner',    icon: ClipboardList },
   { id: 'stats',     label: 'Stats',      icon: BarChart2 },
   { id: 'terms',     label: 'Terms',      icon: ScrollText },
@@ -1871,6 +1873,7 @@ export default function RootDashboard() {
             {activeTab === 'updates'   && <UpdatesPanel />}
             {activeTab === 'questions' && <QuestionsPanel />}
             {activeTab === 'qmanager'  && <QuestionManagerPanel />}
+            {activeTab === 'terminal'  && <TerminalAdminPanel />}
             {activeTab === 'planner'   && <PlannerPanel />}
             {activeTab === 'stats'     && <StatsPanel />}
             {activeTab === 'terms'     && <TermsPanel />}
