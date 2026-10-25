@@ -1091,3 +1091,44 @@ r Dialog */
 .nav-season-link:hover .nav-season-icon {
   transform: rotate(20deg) scale(1.2);
 }
+
+.nav-terminal-glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.nav-terminal-glitch::before,
+.nav-terminal-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  clip-path: inset(0 0 100% 0);
+}
+
+.nav-terminal-glitch::before {
+  color: #60d9ca;
+  animation: nav-terminal-glitch-cyan 2.4s infinite;
+}
+
+.nav-terminal-glitch::after {
+  color: #c4a7e7;
+  animation: nav-terminal-glitch-purple 2.4s infinite;
+}
+
+@keyframes nav-terminal-glitch-cyan {
+  0%, 12%, 35%, 47%, 70%, 82%, 100% { clip-path: inset(0 0 100% 0); transform: none; }
+  3%, 38%, 73% { clip-path: inset(20% 0 58% 0); transform: translateX(-2px); }
+  7%, 42%, 77% { clip-path: inset(65% 0 14% 0); transform: translateX(1px); }
+}
+
+@keyframes nav-terminal-glitch-purple {
+  0%, 12%, 35%, 47%, 70%, 82%, 100% { clip-path: inset(0 0 100% 0); transform: none; }
+  3%, 38%, 73% { clip-path: inset(60% 0 18% 0); transform: translateX(2px); }
+  7%, 42%, 77% { clip-path: inset(12% 0 70% 0); transform: translateX(-1px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-terminal-glitch::before,
+  .nav-terminal-glitch::after { animation: none; }
+}

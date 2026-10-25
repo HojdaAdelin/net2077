@@ -260,8 +260,8 @@ export default function Navbar() {
                 >
                   <Terminal size={18} className="practice-item-icon" />
                   <div className="practice-item-content">
-                    <div className="practice-item-title">Terminal</div>
-                    <div className="practice-item-desc">Practice terminal commands</div>
+                    <div className="practice-item-title"><span className="nav-terminal-glitch" data-text="Terminal">Terminal</span></div>
+                    <div className="practice-item-desc"><span className="nav-terminal-glitch" data-text="Practice terminal commands">Practice terminal commands</span></div>
                   </div>
                 </Link>
                 <Link 
