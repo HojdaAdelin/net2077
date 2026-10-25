@@ -5,7 +5,15 @@ import { authMiddleware } from '../middleware/authMiddleware.js';
 export const getExams = async (req, res) => {
   try {
     const exams = await Exam.find().sort({ year: -1, phase: 1 });
-    res.json(exams);
+    const tags = [...new Set(exams.map(exam => exam.tag))];
+    const counts = tags.length ? await Question.aggregate([
+      { $match: { tags: { $in: tags } } },
+      { $project: { examTags: { $setIntersection: ['$tags', tags] } } },
+      { $unwind: '$examTags' },
+      { $group: { _id: '$examTags', count: { $sum: 1 } } }
+    ]) : [];
+    const countByTag = new Map(counts.map(entry => [entry._id, entry.count]));
+    res.json(exams.map(exam => ({ ...exam.toObject(), questionCount: countByTag.get(exam.tag) || 0 })));
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

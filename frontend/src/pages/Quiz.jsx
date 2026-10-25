@@ -1,4 +1,5 @@
 import ExplanationViewer from '../components/ExplanationViewer';
+import ExamReview from '../components/ExamReview';
 import { useState, useEffect, useCallback, useContext, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import '../styles/Quiz.css';
@@ -805,6 +806,9 @@ export default function Quiz({ isExam = false }) {
               <p>{totalPoints} / {maxPoints} points</p>
             </div>
           </div>
+          {isExam && (
+            <ExamReview questions={questions} selectedAnswers={verifiedResult?.selectedAnswers || selectedAnswers} />
+          )}
           {isExam && (
             <div className="exam-results-meta">
               <div className="exam-results-item">

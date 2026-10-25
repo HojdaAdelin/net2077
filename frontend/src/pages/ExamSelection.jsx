@@ -1,9 +1,9 @@
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useLayoutEffect, useContext } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
 import { AuthContext } from '../context/AuthContext';
 import '../styles/ExamSelection.css';
-import { Clock3, Tally5, Plus, X, ChevronRight, ChevronLeft, Trash2, Users, Pencil } from 'lucide-react';
+import { Clock3, Tally5, ListChecks, Plus, X, ChevronDown, ChevronRight, ChevronLeft, SlidersHorizontal, Trash2, Users, Pencil } from 'lucide-react';
 
 const EMPTY_META = {
   id: '', title: '', description: '',
@@ -17,8 +17,17 @@ export default function ExamSelection() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState(null);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [anyYear, setAnyYear] = useState(true);
+  const [selectedYear, setSelectedYear] = useState(2026);
+  const [unfinishedExam, setUnfinishedExam] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const isRoot = user?.role === 'root';
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [location.key]);
 
   // modal state
   const [editingExam, setEditingExam] = useState(null);
@@ -39,6 +48,37 @@ export default function ExamSelection() {
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => { loadExams(); }, []);
+
+  useEffect(() => {
+    const refreshUnfinishedExam = () => {
+      const pending = [];
+      for (const exam of exams) {
+        try {
+          const saved = JSON.parse(localStorage.getItem(`exam_state_${exam.id}`) || 'null');
+          if (!saved || typeof saved.attemptId !== 'string' || !saved.attemptId ||
+              saved.examStarted !== true || saved.showResults !== false || saved.finishReason ||
+              !Number.isFinite(saved.timeLeft) || !Number.isFinite(saved.lastSavedAt)) continue;
+          const elapsed = Math.max(0, (Date.now() - saved.lastSavedAt) / 1000);
+          if (saved.timeLeft - elapsed <= 0) continue;
+          const answers = saved.selectedAnswers;
+          const answered = answers && typeof answers === 'object' && !Array.isArray(answers)
+            ? Object.values(answers).filter(value => Array.isArray(value) && value.length > 0).length : 0;
+          pending.push({ exam, answered, lastSavedAt: saved.lastSavedAt });
+        } catch { /* Invalid or unavailable browser storage must not block exam selection. */ }
+      }
+      pending.sort((a, b) => b.lastSavedAt - a.lastSavedAt);
+      setUnfinishedExam(pending[0] || null);
+    };
+    refreshUnfinishedExam();
+    window.addEventListener('storage', refreshUnfinishedExam);
+    window.addEventListener('focus', refreshUnfinishedExam);
+    const timer = window.setInterval(refreshUnfinishedExam, 30000);
+    return () => {
+      window.removeEventListener('storage', refreshUnfinishedExam);
+      window.removeEventListener('focus', refreshUnfinishedExam);
+      window.clearInterval(timer);
+    };
+  }, [exams, location.key]);
 
   const loadExams = async () => {
     try {
@@ -81,7 +121,7 @@ export default function ExamSelection() {
       });
       const data = await res.json();
       if (!data.success) { setMetaError(data.message || 'Failed to create exam.'); return; }
-      setExams(prev => [data.exam, ...prev]);
+      await loadExams();
       setStep(2);
     } catch { setMetaError('Server error.'); }
   };
@@ -115,6 +155,7 @@ export default function ExamSelection() {
       clearInterval(iv);
       setProgress(100);
       setImportResult(data);
+      if (res.ok) await loadExams();
     } catch {
       clearInterval(iv);
       setImportResult({ parseError: 'Server error during import.' });
@@ -149,7 +190,7 @@ export default function ExamSelection() {
         setMetaError(data.message || 'Failed to update exam.');
         return;
       }
-      setExams(previous => previous.map(exam => exam._id === data.exam._id ? data.exam : exam));
+      await loadExams();
       // Reset persisted state when the edited exam is next opened.
       try { localStorage.removeItem(`exam_state_${editingExam.id}`); } catch { /* Storage can be unavailable. */ }
       setShowModal(false);
@@ -190,15 +231,21 @@ export default function ExamSelection() {
   // ── Filter / search ──────────────────────────────────────────────────────
   const handleFilterClick = (filter) => {
     setActiveFilter(activeFilter === filter ? null : filter);
+  };
+
+  const resetFilters = () => {
+    setActiveFilter(null);
+    setAnyYear(true);
     setSearchQuery('');
   };
+  const activeFilterCount = Number(Boolean(activeFilter)) + Number(!anyYear);
 
   const filteredExams = exams
     .filter(exam => {
-      const q = searchQuery.toLowerCase();
+      const q = searchQuery.trim().toLowerCase();
       const matchSearch = !q || exam.title.toLowerCase().includes(q) || exam.description.toLowerCase().includes(q) || exam.tag?.toLowerCase().includes(q);
       const matchFilter = !activeFilter || exam.title.toLowerCase().includes(activeFilter.toLowerCase()) || exam.description.toLowerCase().includes(activeFilter.toLowerCase()) || exam.tag?.toLowerCase().includes(activeFilter.toLowerCase());
-      return matchSearch && matchFilter;
+      return matchSearch && matchFilter && (anyYear || Number(exam.year) === selectedYear);
     })
     .sort((a, b) => (b.new_test_badge ? 1 : 0) - (a.new_test_badge ? 1 : 0));
 
@@ -224,22 +271,80 @@ export default function ExamSelection() {
           type="text"
           placeholder="Search exams..."
           value={searchQuery}
-          onChange={e => { setSearchQuery(e.target.value); setActiveFilter(null); }}
+          onChange={e => setSearchQuery(e.target.value)}
           className="exam-search-input"
+          aria-label="Search exams"
         />
-        <div className="exam-filter-buttons">
-          {['Acadnet', 'Linux', 'Network'].map(f => (
-            <button
-              key={f}
-              className={`filter-btn filter-${f.toLowerCase()} ${activeFilter === f ? 'active' : ''}`}
-              onClick={() => handleFilterClick(f)}
-            >{f}</button>
-          ))}
-        </div>
+        <button
+          type="button"
+          className={`exam-filters-toggle ${filtersOpen ? 'open' : ''}`}
+          aria-expanded={filtersOpen}
+          aria-controls="exam-filter-panel"
+          onClick={() => setFiltersOpen(open => !open)}
+        >
+          <SlidersHorizontal size={17} aria-hidden="true" />
+          Filters{activeFilterCount > 0 && <span className="exam-filter-count">{activeFilterCount}</span>}
+          <ChevronDown size={17} className="exam-filters-chevron" aria-hidden="true" />
+        </button>
       </div>
 
+      {filtersOpen && (
+        <div id="exam-filter-panel" className="exam-filter-panel">
+          <fieldset className="exam-filter-group">
+            <legend>Category</legend>
+            <div className="exam-filter-options">
+              <button type="button" className="exam-filter-option" aria-pressed={!activeFilter} onClick={() => setActiveFilter(null)}>All categories</button>
+              {['AcadNet', 'Linux', 'Network', 'Arduino'].map(category => (
+                <button type="button" key={category} className="exam-filter-option" aria-pressed={activeFilter === category} onClick={() => handleFilterClick(category)}>{category}</button>
+              ))}
+            </div>
+          </fieldset>
+          <fieldset className="exam-filter-group exam-year-filter">
+            <legend>Year</legend>
+            <div className="exam-year-heading">
+              <button type="button" className="exam-filter-option" aria-pressed={anyYear} onClick={() => setAnyYear(true)}>Any year</button>
+              <output htmlFor="exam-year-slider" className="exam-year-value" aria-live="polite">{anyYear ? 'All years' : selectedYear}</output>
+            </div>
+            <input
+              id="exam-year-slider"
+              type="range"
+              min="2010"
+              max="2030"
+              step="1"
+              value={selectedYear}
+              aria-label="Filter exams by year"
+              onChange={event => { setSelectedYear(Number(event.target.value)); setAnyYear(false); }}
+            />
+            <div className="exam-year-range" aria-hidden="true"><span>2010</span><span>2030</span></div>
+          </fieldset>
+        </div>
+      )}
+
+      {unfinishedExam && (
+        <section className="unfinished-exam-card" aria-labelledby="unfinished-exam-heading">
+          <div className="unfinished-exam-content">
+            <span className="unfinished-exam-label"><Clock3 size={15} aria-hidden="true" /> In progress</span>
+            <h2 id="unfinished-exam-heading">{unfinishedExam.exam.title}</h2>
+            <div className="unfinished-exam-details">
+              <span>{unfinishedExam.answered} questions answered</span>
+              <span>{unfinishedExam.exam.duration} minutes total</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="btn btn-primary unfinished-exam-continue"
+            onClick={() => navigate(`/exam/${unfinishedExam.exam.id}`)}
+          >
+            Continue Exam <ChevronRight size={17} aria-hidden="true" />
+          </button>
+        </section>
+      )}
+
       {filteredExams.length === 0 ? (
-        <div className="no-exams"><p>No exams found matching your search.</p></div>
+        <div className="no-exams" role="status">
+          <p>No exams match your search and filters.</p>
+          <button type="button" className="btn btn-secondary" onClick={resetFilters}>Clear filters</button>
+        </div>
       ) : (
         <div className="exams-grid">
           {filteredExams.map(exam => (
@@ -260,11 +365,15 @@ export default function ExamSelection() {
               <div className="exam-details">
                 <div className="exam-detail">
                   <span className="detail-icon"><Clock3 size={18} /></span>
-                  <span className="detail-text">{exam.duration} minutes</span>
+                  <span className="detail-text"><strong>{exam.duration}</strong><span>minutes</span></span>
                 </div>
                 <div className="exam-detail">
                   <span className="detail-icon"><Tally5 size={18} /></span>
-                  <span className="detail-text">{exam.totalPoints} points</span>
+                  <span className="detail-text"><strong>{exam.totalPoints}</strong><span>points</span></span>
+                </div>
+                <div className="exam-detail">
+                  <span className="detail-icon"><ListChecks size={18} /></span>
+                  <span className="detail-text"><strong>{exam.questionCount ?? '—'}</strong><span>questions</span></span>
                 </div>
               </div>
               {isRoot && (

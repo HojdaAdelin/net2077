@@ -6,6 +6,7 @@ build
 basiccommandslinux.txt
 main_questions.json
 test
+/backend/test/
 migrateRoles.js
 setUserRole.js
 uso.txt
