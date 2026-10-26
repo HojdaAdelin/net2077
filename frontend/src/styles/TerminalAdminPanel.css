@@ -50,6 +50,7 @@
 .ta-picker-row:has(input:checked) { background: var(--bg-secondary); }
 .ta-selection-filter { margin: 0 0 12px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 5px; background: transparent; color: var(--text-secondary); font: inherit; font-size: 12px; cursor: pointer; }
 .ta-selection-filter[aria-pressed="true"] { background: var(--bg-secondary); color: var(--text-primary); border-color: var(--accent-secondary); }
+.ta-picker-toggles { display: flex; flex-wrap: wrap; gap: 8px; }
 .ta-difficulty { font-size: 11px; text-transform: capitalize; }
 .ta-difficulty.easy { color: var(--success); }
 .ta-difficulty.medium { color: var(--warning); }

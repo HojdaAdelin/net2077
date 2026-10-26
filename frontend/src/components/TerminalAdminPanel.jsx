@@ -58,6 +58,7 @@ export default function TerminalAdminPanel() {
   const [pickerSearch, setPickerSearch] = useState('');
   const [pickerDifficulty, setPickerDifficulty] = useState('');
   const [selectedOnly, setSelectedOnly] = useState(false);
+  const [unassignedOnly, setUnassignedOnly] = useState(false);
   const [draggedProblem, setDraggedProblem] = useState(null);
   const [dropTarget, setDropTarget] = useState(null);
 
@@ -87,6 +88,7 @@ export default function TerminalAdminPanel() {
     setPickerSearch('');
     setPickerDifficulty('');
     setSelectedOnly(false);
+    setUnassignedOnly(false);
     setDraggedProblem(null);
     setDropTarget(null);
     setError('');
@@ -148,8 +150,10 @@ export default function TerminalAdminPanel() {
   const visibleProblems = problems.filter(problem => matchesProblem(problem, search, difficulty));
   const problemsById = new Map(problems.map(problem => [problem._id, problem]));
   const orderedProblems = categoryDraft.questions.map(id => problemsById.get(id)).filter(Boolean);
+  const assignedProblemIds = new Set(categories.flatMap(category => category.questions));
   const pickerProblems = (selectedOnly ? orderedProblems : problems)
-    .filter(problem => matchesProblem(problem, pickerSearch, pickerDifficulty));
+    .filter(problem => matchesProblem(problem, pickerSearch, pickerDifficulty) &&
+      (!unassignedOnly || !assignedProblemIds.has(problem._id)));
   const visibleCategories = categories.filter(category => category.name.toLowerCase().includes(categorySearch.trim().toLowerCase()));
 
   return (
@@ -221,7 +225,10 @@ export default function TerminalAdminPanel() {
                   </div>
                 )}
                 <ProblemFilters search={pickerSearch} onSearch={setPickerSearch} difficulty={pickerDifficulty} onDifficulty={setPickerDifficulty} label="Find problems for category" />
-                <button type="button" className="ta-selection-filter" aria-pressed={selectedOnly} onClick={() => setSelectedOnly(value => !value)}>Selected only</button>
+                <div className="ta-picker-toggles">
+                  <button type="button" className="ta-selection-filter" aria-pressed={selectedOnly} onClick={() => { setSelectedOnly(value => !value); setUnassignedOnly(false); }}>Selected only</button>
+                  <button type="button" className="ta-selection-filter" aria-pressed={unassignedOnly} onClick={() => { setUnassignedOnly(value => !value); setSelectedOnly(false); }}>Unassigned only</button>
+                </div>
                 <div className="ta-picker">
                   {pickerProblems.length ? pickerProblems.map(problem => (
                     <label key={problem._id} className="ta-picker-row">
@@ -232,7 +239,7 @@ export default function TerminalAdminPanel() {
                         <span className="ta-picker-meta"><span className={`ta-difficulty ${problem.difficulty}`}>{problem.difficulty}</span><span>{problem.points} points</span></span>
                       </span>
                     </label>
-                  )) : <p className="ta-empty">No problems match your search and difficulty.</p>}
+                  )) : <p className="ta-empty">No problems match the selected filters.</p>}
                 </div>
               </>
             ) : (
