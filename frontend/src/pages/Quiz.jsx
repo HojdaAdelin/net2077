@@ -240,6 +240,7 @@ export default function Quiz({ isExam = false }) {
       const urlParams = new URLSearchParams(location.search);
       const tagsParam = urlParams.get('tags');
       const chaptersParam = urlParams.get('chapters');
+      const board = urlParams.get('board');
       const queryType = urlParams.get('type') || type;
 
       const sessionKind = isExam ? 'exam' : type === 'daily' && ['challenge', 'network', 'arduino'].includes(mode) ? 'daily' :
@@ -303,6 +304,10 @@ export default function Quiz({ isExam = false }) {
         );
       }
 
+      if (!isExam && board === 'esp32') {
+        filtered = filtered.filter(question => ['ARDUINO', 'ESP32'].every(tag => question.tags?.includes(tag)));
+      }
+
       let sessionData = null;
       let savedSession = null;
       if (isExam) {
@@ -314,7 +319,7 @@ export default function Quiz({ isExam = false }) {
             method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
             body: JSON.stringify({ kind: sessionKind, examId, attemptId,
               category: mode === 'network' ? 'NETWORK' : mode === 'arduino' ? 'ARDUINO' : 'LINUX', includeAcadnet: urlParams.get('acadnet') === '1',
-              type: queryType, tags: tagsParam, chapters: chaptersParam })
+              type: queryType, tags: tagsParam, chapters: chaptersParam, board })
           });
           const result = await response.json();
           if (!response.ok) throw Object.assign(new Error(result.message || 'Unable to start quiz'), { status: response.status });

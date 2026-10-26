@@ -1,5 +1,5 @@
 import express from 'express';
-import { getTerminalQuestions, getUserTerminalProgress, submitTerminalCommand } from '../controllers/terminalController.js';
+import { getTerminalQuestions, getTerminalCategories, getUserTerminalProgress, submitTerminalCommand } from '../controllers/terminalController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { isRoot } from '../middleware/checkRole.js';
 import { getTerminalAdmin, createTerminalProblem, updateTerminalProblem, deleteTerminalProblem,
@@ -16,6 +16,7 @@ router.put('/admin/categories/:id', authMiddleware, isRoot, updateTerminalCatego
 router.delete('/admin/categories/:id', authMiddleware, isRoot, deleteTerminalCategory);
 
 router.get('/', getTerminalQuestions);
+router.get('/categories', authMiddleware, getTerminalCategories);
 router.get('/progress', authMiddleware, getUserTerminalProgress);
 router.post('/submit', authMiddleware, submitTerminalCommand);
 

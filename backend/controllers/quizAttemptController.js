@@ -34,7 +34,7 @@ const corrections = (attempt) => attempt.questions.map(q => ({ _id: q._id, corre
 
 export const startQuizAttempt = async (req, res) => {
   try {
-    const { kind, examId, attemptId, category, includeAcadnet, type, tags, chapters } = req.body;
+    const { kind, examId, attemptId, category, includeAcadnet, type, tags, chapters, board } = req.body;
     if (!['exam', 'daily', 'random'].includes(kind)) throw fail('Invalid quiz mode');
     if (attemptId) {
       const attempt = await ownedAttempt(req);
@@ -64,6 +64,10 @@ export const startQuizAttempt = async (req, res) => {
       if (typeof tags === 'string' && tags) conditions.push({ tags: { $in: tags.split(',') } });
       if (typeof chapters === 'string' && chapters) conditions.push({ tags: { $in: chapters.split(',') } });
       if (conditions.length) filter.$and = conditions;
+    }
+    if (kind !== 'exam' && board === 'esp32') {
+      if (kind === 'daily' && category !== 'ARDUINO') throw fail('ESP32 is only available in the Arduino category.');
+      filter.$and = [...(filter.$and || []), { tags: { $all: ['ARDUINO', 'ESP32'] } }];
     }
     const questions = kind === 'exam' ? await Question.find(filter).lean() :
       await Question.aggregate([{ $match: filter }, { $sample: { size: kind === 'daily' ? 20 : 50 } }]);

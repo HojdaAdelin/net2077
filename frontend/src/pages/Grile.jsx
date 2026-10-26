@@ -1,6 +1,6 @@
 import DailyChallengesCard from '../components/DailyChallengesCard';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect, useContext, useCallback, useRef } from 'react';
 import { getUserProgress, getDailyChallengeStatus } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
@@ -71,6 +71,9 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
   const [selectedTag, setSelectedTag] = useState(preSelectedCategory || (type === 'acadnet' ? 'ACADNET' : '') || ((type === 'basic' || type === 'daily') ? 'LINUX' : ''));
   const [selectedChapters, setSelectedChapters] = useState([]);
   const [includeAcadnet, setIncludeAcadnet] = useState(false);
+  const [selectedBoard, setSelectedBoard] = useState('');
+  const [modeAttention, setModeAttention] = useState(0);
+  const modeSectionRef = useRef(null);
   const navigate = useNavigate();
 
   const availableTags = [
@@ -120,13 +123,18 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
       } else if (selectedTag === 'NETWORK') {
         navigate('/grile/daily/network');
       } else if (selectedTag === 'ARDUINO') {
-        navigate('/grile/daily/arduino');
+        navigate(selectedBoard === 'esp32' ? '/grile/daily/arduino?board=esp32' : '/grile/daily/arduino');
       }
       return;
     }
 
     // Regular quiz handling
-    if (!selectedMode) return;
+    if (!selectedMode) {
+      setModeAttention(previous => previous + 1);
+      modeSectionRef.current?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'nearest' });
+      modeSectionRef.current?.querySelector('button')?.focus({ preventScroll: true });
+      return;
+    }
     if (isTagRequired && !selectedTag) return;
     if (needsAuth) return;
 
@@ -144,6 +152,7 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
     if (finalTag) {
       params.set('tags', finalTag);
     }
+    if (selectedTag === 'ARDUINO' && selectedBoard === 'esp32') params.set('board', 'esp32');
     if (selectedChapters.length > 0) {
       params.set('chapters', selectedChapters.join(','));
     }
@@ -160,7 +169,8 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
         <p>{type === 'daily' ? 'Select Linux, Network or Arduino for your daily challenge' : 'Select mode and optionally filter by tags'}</p>
         
         {type !== 'daily' && (
-          <div className="modal-section">
+          <div className="modal-section quiz-mode-section" ref={modeSectionRef}>
+            {!selectedMode && modeAttention > 0 && <span key={modeAttention} className="quiz-mode-shockwave" aria-hidden="true" />}
             <h3 className="section-title">Quiz Mode</h3>
             <div className="mode-options">
               {user && (
@@ -309,6 +319,33 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
           </div>
         )}
 
+        {selectedTag === 'ARDUINO' && (
+          <div className="modal-section">
+            <h3 className="section-title">Board Type <span className="optional-label">(optional)</span></h3>
+            <div className="quiz-board-options">
+              <button
+                type="button"
+                className="quiz-board-option"
+                aria-pressed={selectedBoard === 'arduino'}
+                onClick={() => setSelectedBoard(previous => previous === 'arduino' ? '' : 'arduino')}
+              >
+                <img src="/arduino.png" alt="Arduino Uno board" width="300" height="200" />
+                <span className="quiz-board-caption"><span>Arduino</span><span className="quiz-board-selection" aria-hidden="true" /></span>
+              </button>
+              <button
+                type="button"
+                className="quiz-board-option"
+                aria-pressed={selectedBoard === 'esp32'}
+                onClick={() => setSelectedBoard(previous => previous === 'esp32' ? '' : 'esp32')}
+              >
+                <img src="/esp32.png" alt="ESP32 development board" width="300" height="200" />
+                <span className="quiz-board-caption"><span>ESP32</span><span className="quiz-board-selection" aria-hidden="true" /></span>
+              </button>
+            </div>
+            <p className="tag-helper">No board selected: all Arduino questions are included.</p>
+          </div>
+        )}
+
         <div className="modal-footer">
           {showChapterFilter && (
             <div className="modal-footer-note">
@@ -325,7 +362,7 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
             <button 
               onClick={handleStart}
               className="btn btn-primary"
-              disabled={!canStart}
+              disabled={!canStart && (type === 'daily' || Boolean(selectedMode))}
             >
               Start Quiz
             </button>
@@ -337,6 +374,13 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
 }
 
 export default function Grile() {
+  useEffect(() => {
+    ['/arduino.png', '/esp32.png'].forEach(src => {
+      const image = new Image();
+      image.src = src;
+    });
+  }, []);
+
   const [searchParams] = useSearchParams();
   const [stats, setStats] = useState({ 
     basic: 0, 

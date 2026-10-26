@@ -25,6 +25,19 @@
 .ta-color { width: 100%; height: 36px; padding: 3px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-secondary); cursor: pointer; }
 .ta-problem-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .ta-picker-heading { margin: 10px 0 14px; }
+.ta-order-section { margin-bottom: 20px; }
+.ta-order-section > .ta-help { margin-bottom: 10px; line-height: 1.6; }
+.ta-order-list { list-style: none; padding: 0; margin: 0; max-height: 360px; overflow-y: auto; border: 1px solid var(--border); border-radius: 7px; }
+.ta-order-row { display: flex; align-items: center; gap: 9px; padding: 10px 12px; border-bottom: 1px solid var(--border); background: var(--bg-card); }
+.ta-order-row:last-child { border-bottom: 0; }
+.ta-order-grip { flex-shrink: 0; color: var(--text-muted); cursor: grab; }
+.ta-order-row:active .ta-order-grip { cursor: grabbing; }
+.ta-order-number { flex-shrink: 0; min-width: 28px; color: var(--text-secondary); font-size: 12px; font-variant-numeric: tabular-nums; }
+.ta-order-title { flex: 1; min-width: 0; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.ta-order-actions { display: flex; flex-shrink: 0; gap: 2px; }
+.ta-order-actions button { min-width: 30px; min-height: 34px; justify-content: center; }
+.ta-order-drop { box-shadow: inset 0 0 0 2px var(--accent-primary); background: var(--bg-secondary); }
+.ta-order-dragging { opacity: 0.5; }
 .ta-picker { max-height: 340px; overflow: auto; border: 1px solid var(--border); border-radius: 7px; }
 .ta-picker-row { display: grid; grid-template-columns: 18px minmax(0, 1fr); align-items: start; gap: 12px; padding: 14px; cursor: pointer; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-primary); }
 .ta-picker-row:last-child { border-bottom: 0; }

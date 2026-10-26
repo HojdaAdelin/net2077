@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Plus, Pencil, Trash2, X, Save, RefreshCw } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, Save, RefreshCw, GripVertical, ArrowUp, ArrowDown } from 'lucide-react';
 import { API_URL } from '../config';
 import { useConfirm } from '../context/ConfirmContext';
+import { moveTerminalProblem } from '../utils/terminalProblemOrder';
 import '../styles/TerminalAdminPanel.css';
 
 const emptyCategory = () => ({ name: '', levelName: 'Intro', levelColor: '#22c55e', questions: [] });
@@ -57,6 +58,8 @@ export default function TerminalAdminPanel() {
   const [pickerSearch, setPickerSearch] = useState('');
   const [pickerDifficulty, setPickerDifficulty] = useState('');
   const [selectedOnly, setSelectedOnly] = useState(false);
+  const [draggedProblem, setDraggedProblem] = useState(null);
+  const [dropTarget, setDropTarget] = useState(null);
 
   const load = useCallback(async signal => {
     const data = await request('', { signal });
@@ -84,6 +87,8 @@ export default function TerminalAdminPanel() {
     setPickerSearch('');
     setPickerDifficulty('');
     setSelectedOnly(false);
+    setDraggedProblem(null);
+    setDropTarget(null);
     setError('');
     setNotice('');
   };
@@ -96,6 +101,11 @@ export default function TerminalAdminPanel() {
   };
   const toggleProblem = id => setCategoryDraft(previous => ({ ...previous, questions:
     previous.questions.includes(id) ? previous.questions.filter(value => value !== id) : [...previous.questions, id] }));
+  const moveProblem = (id, targetIndex) => {
+    if (busy) return;
+    setCategoryDraft(previous => ({ ...previous,
+      questions: moveTerminalProblem(previous.questions, id, targetIndex) }));
+  };
 
   const save = async event => {
     event.preventDefault();
@@ -136,8 +146,10 @@ export default function TerminalAdminPanel() {
   };
 
   const visibleProblems = problems.filter(problem => matchesProblem(problem, search, difficulty));
-  const pickerProblems = problems.filter(problem => matchesProblem(problem, pickerSearch, pickerDifficulty) &&
-    (!selectedOnly || categoryDraft.questions.includes(problem._id)));
+  const problemsById = new Map(problems.map(problem => [problem._id, problem]));
+  const orderedProblems = categoryDraft.questions.map(id => problemsById.get(id)).filter(Boolean);
+  const pickerProblems = (selectedOnly ? orderedProblems : problems)
+    .filter(problem => matchesProblem(problem, pickerSearch, pickerDifficulty));
   const visibleCategories = categories.filter(category => category.name.toLowerCase().includes(categorySearch.trim().toLowerCase()));
 
   return (
@@ -166,6 +178,48 @@ export default function TerminalAdminPanel() {
                   <LevelTag name={categoryDraft.levelName} color={categoryDraft.levelColor} />
                 </div>
                 <div className="ta-picker-heading"><h4>Problems in this category</h4><span>{categoryDraft.questions.length} selected</span></div>
+                {orderedProblems.length > 0 && (
+                  <div className="ta-order-section">
+                    <p className="ta-help" id="ta-order-help">Drag problems to reorder them, or use the arrow buttons. Save changes to keep this order.</p>
+                    <ol className="ta-order-list" aria-label="Category problem order" aria-describedby="ta-order-help">
+                      {orderedProblems.map((problem, index) => (
+                        <li
+                          key={problem._id}
+                          className={`ta-order-row${dropTarget === problem._id && draggedProblem !== problem._id ? ' ta-order-drop' : ''}${draggedProblem === problem._id ? ' ta-order-dragging' : ''}`}
+                          draggable={!busy}
+                          onDragStart={event => {
+                            if (busy) { event.preventDefault(); return; }
+                            event.dataTransfer.effectAllowed = 'move';
+                            event.dataTransfer.setData('text/plain', problem._id);
+                            setDraggedProblem(problem._id);
+                          }}
+                          onDragOver={event => {
+                            if (!draggedProblem || busy) return;
+                            event.preventDefault();
+                            event.dataTransfer.dropEffect = 'move';
+                            setDropTarget(problem._id);
+                          }}
+                          onDrop={event => {
+                            event.preventDefault();
+                            if (draggedProblem && event.dataTransfer.getData('text/plain') === draggedProblem) moveProblem(draggedProblem, index);
+                            setDraggedProblem(null);
+                            setDropTarget(null);
+                          }}
+                          onDragEnd={() => { setDraggedProblem(null); setDropTarget(null); }}
+                        >
+                          <GripVertical size={16} className="ta-order-grip" aria-hidden="true" />
+                          <span className="ta-order-number">#{index + 1}</span>
+                          <span className="ta-order-title">{problem.title}</span>
+                          <div className="ta-order-actions">
+                            <button type="button" disabled={busy || index === 0} aria-label={`Move ${problem.title} up`} className="rd-icon-btn" onClick={() => moveProblem(problem._id, index - 1)}><ArrowUp size={16} /></button>
+                            <button type="button" disabled={busy || index === orderedProblems.length - 1} aria-label={`Move ${problem.title} down`} className="rd-icon-btn" onClick={() => moveProblem(problem._id, index + 1)}><ArrowDown size={16} /></button>
+                            <button type="button" className="rd-icon-btn ta-delete" aria-label={`Remove ${problem.title} from category`} onClick={() => toggleProblem(problem._id)}><X size={16} /></button>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
                 <ProblemFilters search={pickerSearch} onSearch={setPickerSearch} difficulty={pickerDifficulty} onDifficulty={setPickerDifficulty} label="Find problems for category" />
                 <button type="button" className="ta-selection-filter" aria-pressed={selectedOnly} onClick={() => setSelectedOnly(value => !value)}>Selected only</button>
                 <div className="ta-picker">

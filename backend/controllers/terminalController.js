@@ -1,9 +1,29 @@
 import Terminal from '../models/Terminal.js';
+import TerminalCategory from '../models/TerminalCategory.js';
 import { levelFromXp } from '../utils/xpUtils.js';
 import User from '../models/User.js';
 import { updateUserStreak } from '../utils/streakUtils.js';
 import { trackCompetitiveXP } from './competitiveController.js';
 import { calculateXPWithBoosts } from './shopController.js';
+
+export const getTerminalCategories = async (req, res) => {
+  try {
+    const categories = await TerminalCategory.find().sort({ createdAt: 1, _id: 1 })
+      .populate('questions', 'title description difficulty points').lean();
+    res.json({ categories: categories.map(category => {
+      const seen = new Set();
+      const questions = category.questions.filter(question => {
+        if (!question || seen.has(String(question._id))) return false;
+        seen.add(String(question._id));
+        return true;
+      }).map(({ _id, title, description, difficulty, points }) => ({ _id, title, description, difficulty, points }));
+      return { _id: category._id, name: category.name, levelName: category.levelName,
+        levelColor: category.levelColor, questions, questionCount: questions.length };
+    }) });
+  } catch (error) {
+    res.status(500).json({ message: 'Unable to load terminal categories. Please try again.' });
+  }
+};
 
 export const getTerminalQuestions = async (req, res) => {
   try {
