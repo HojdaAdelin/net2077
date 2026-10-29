@@ -233,6 +233,8 @@
   transition: border-color 0.18s, box-shadow 0.18s;
 }
 .tp-category-card:hover { border-color: var(--accent-secondary); box-shadow: 0 6px 20px var(--shadow); }
+.tp-category-badge { display: flex; justify-content: flex-end; align-items: center; margin: -8px 0 16px; min-height: 80px; }
+.tp-category-badge img { display: block; width: 88px; height: 88px; object-fit: contain; }
 .tp-card-heading { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; align-items: center; gap: 10px; margin: 0 0 24px; }
 .tp-category-icon { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 1px solid color-mix(in srgb, var(--level-color) 35%, var(--border)); border-radius: 7px; background: color-mix(in srgb, var(--level-color) 7%, var(--bg-card)); color: var(--level-color); }
 .tp-category-card h2 { margin: 0; min-width: 0; color: var(--text-primary); font-size: 22px; font-weight: 650; line-height: 1.4; letter-spacing: -0.5px; overflow-wrap: anywhere; }
@@ -280,6 +282,13 @@
 }
 .tp-category-enter:hover { background: var(--text-primary); border-color: var(--text-primary); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 5px 18px var(--shadow-hover); }
 .tp-category-enter:active { transform: translateY(1px); }
+.tp-category-enter:disabled, .tp-category-enter:disabled:hover { background: var(--bg-secondary); border-color: var(--border); color: var(--text-muted); box-shadow: none; cursor: not-allowed; transform: none; }
+.tp-category-locked { box-shadow: none; }
+.tp-category-locked .tp-category-icon { color: var(--text-muted); border-color: var(--border); background: var(--bg-secondary); }
+.tp-category-locked .tp-card-glitch::before, .tp-category-locked .tp-card-glitch::after { animation: none; }
+.tp-unlock-hint { margin: -10px 0 12px; font-size: 11px; line-height: 1.5; color: var(--text-secondary); }
+.tp-locked-notice > svg { margin-bottom: 14px; color: var(--text-muted); }
+.tp-locked-notice h2 { font-size: 22px; }
 .tp-card-glitch, .tp-button-glitch { position: relative; }
 .tp-card-glitch::before, .tp-card-glitch::after,
 .tp-button-glitch::before, .tp-button-glitch::after {

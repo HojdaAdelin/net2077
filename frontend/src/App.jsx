@@ -1,4 +1,6 @@
 import Uncover from './pages/Uncover';
+import { useEffect } from 'react';
+import terminalBadgeFiles from 'virtual:terminal-badges';
 import StreakChain from './pages/StreakChain';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
@@ -45,6 +47,14 @@ import LinuxStartTest from './pages/LinuxStartTest';
 import './styles/global.css';
 
 export default function App() {
+  useEffect(() => {
+    terminalBadgeFiles.forEach(file => {
+      const image = new Image();
+      image.fetchPriority = 'low';
+      image.src = `/${encodeURIComponent(file)}`;
+    });
+  }, []);
+
   return (
     <ThemeProvider>
       <LanguageProvider>

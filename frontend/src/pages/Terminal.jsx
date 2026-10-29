@@ -2,9 +2,9 @@ import { useState, useEffect, useContext, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { Terminal as TerminalIcon, Maximize2, Minimize2, ArrowLeft, ArrowRight, CheckCircle2, Circle } from 'lucide-react';
+import { Terminal as TerminalIcon, Maximize2, Minimize2, ArrowLeft, ArrowRight, CheckCircle2, Circle, LockKeyhole } from 'lucide-react';
 import LoginRequired from '../components/LoginRequired';
-import { terminalCategoryProgress } from '../utils/terminalCategoryProgress';
+import { terminalCategoryProgress, terminalCategoryAccess } from '../utils/terminalCategoryProgress';
 import '../styles/Terminal.css';
 
 async function terminalRequest(path, options = {}) {
@@ -30,7 +30,7 @@ function CategoryProgress({ category, solved }) {
   );
 }
 
-function TerminalSession({ question, isSolved, username, onExit, onSolved }) {
+function TerminalSession({ question, categoryId, isSolved, username, onExit, onSolved }) {
   const [lines, setLines] = useState([]);
   const [input, setInput] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -73,7 +73,7 @@ function TerminalSession({ question, isSolved, username, onExit, onSolved }) {
     try {
       const result = await terminalRequest('/submit', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ questionId: question._id, command }),
+        body: JSON.stringify({ questionId: question._id, command, categoryId }),
       });
       if (result.success) {
         setLines(previous => [...previous, { type: 'success', text: 'Correct! Problem solved. Type exit to return to the category.' }]);
@@ -158,10 +158,11 @@ export default function Terminal() {
 
   const categoryId = searchParams.get('category');
   const problemId = searchParams.get('problem');
-  const activeCategory = categories.find(category => category._id === categoryId);
+  const categoryAccess = terminalCategoryAccess(categories, userProgress.solved);
+  const activeCategory = categoryAccess.find(category => category._id === categoryId);
   const activeProblem = activeCategory?.questions.find(question => question._id === problemId);
   const solvedIds = new Set((userProgress.solved || []).filter(Boolean).map(item => String(item._id ?? item)));
-  const enterCategory = category => setSearchParams({ category: category._id });
+  const enterCategory = category => { if (!category.locked) setSearchParams({ category: category._id }); };
   const backToCategory = () => enterCategory(activeCategory);
   const onSolved = (question, result) => {
     setUserProgress(previous => {
@@ -178,6 +179,8 @@ export default function Terminal() {
         <div className="tp-empty" role="alert"><p>{error}</p><button type="button" className="btn btn-secondary" onClick={() => setRetry(value => value + 1)}>Try again</button></div>
       ) : (categoryId && !activeCategory) || (problemId && !activeProblem) ? (
         <div className="tp-empty"><p>This category or problem is no longer available.</p><button type="button" className="btn btn-secondary" onClick={() => setSearchParams({})}>Back to categories</button></div>
+      ) : activeCategory?.locked ? (
+        <div className="tp-empty tp-locked-notice"><LockKeyhole size={28} aria-hidden="true" /><h2>Category locked</h2><p>Complete all problems in {activeCategory.prerequisiteName} to unlock this category.</p><button type="button" className="btn btn-secondary" onClick={() => setSearchParams({})}>Back to categories</button></div>
       ) : activeCategory ? (
         <>
           <button type="button" className="tp-back" onClick={activeProblem ? backToCategory : () => setSearchParams({})}><ArrowLeft size={16} />{activeProblem ? 'Back to category' : 'All categories'}</button>
@@ -186,7 +189,7 @@ export default function Terminal() {
             <CategoryProgress category={activeCategory} solved={userProgress.solved} />
           </div>
           {activeProblem ? (
-            <TerminalSession key={`${user.id}:${activeCategory._id}:${activeProblem._id}`} question={activeProblem} isSolved={solvedIds.has(activeProblem._id)} username={user.username} onExit={backToCategory} onSolved={onSolved} />
+            <TerminalSession key={`${user.id}:${activeCategory._id}:${activeProblem._id}`} categoryId={activeCategory._id} question={activeProblem} isSolved={solvedIds.has(activeProblem._id)} username={user.username} onExit={backToCategory} onSolved={onSolved} />
           ) : (
             <div className="tp-problem-list">
               {activeCategory.questions.map((question, index) => {
@@ -213,15 +216,17 @@ export default function Terminal() {
         </>
       ) : (
         <div className="tp-category-grid">
-          {categories.map(category => {
+          {categoryAccess.map(category => {
             const progress = terminalCategoryProgress(category.questions, userProgress.solved);
             return (
-              <article className="tp-category-card" key={category._id} style={{ '--level-color': category.levelColor }}>
+              <article className={`tp-category-card${category.locked ? ' tp-category-locked' : ''}`} key={category._id} style={{ '--level-color': category.levelColor }}>
                 <div className="tp-card-heading"><span className="tp-category-icon"><TerminalIcon size={24} aria-hidden="true" /></span><h2 className="tp-card-glitch" data-text={category.name}>{category.name}</h2><LevelTag category={category} /></div>
+                {category.badge && <div className="tp-category-badge"><img src={`/${encodeURIComponent(category.badge)}`} alt={`${category.name} badge`} width="100" height="100" loading="lazy" /></div>}
                 <div className="tp-card-progress-caption"><span>Progress</span><strong>{progress.percent}%</strong></div>
                 <div className="tp-progress-track" role="progressbar" aria-label={`${category.name} progress`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress.percent} aria-valuetext={`${progress.completed} of ${progress.total} problems solved`}><div className="tp-progress-fill" style={{ width: `${progress.percent}%` }} /></div>
                 <div className="tp-card-counts"><span>{progress.completed} of {progress.total} solved</span><span className={progress.total > 0 && !progress.remaining ? 'tp-complete-label' : ''}>{progress.total > 0 && !progress.remaining ? 'Completed' : `${progress.remaining} remaining`}</span></div>
-                <button type="button" className="tp-category-enter" onClick={() => enterCategory(category)}><span className="tp-button-glitch" data-text="Enter">Enter</span><ArrowRight size={17} aria-hidden="true" /></button>
+                {category.locked && <p className="tp-unlock-hint">Complete {category.prerequisiteName} to unlock.</p>}
+                <button type="button" className="tp-category-enter" disabled={category.locked} onClick={() => enterCategory(category)}>{category.locked ? <><span>Locked</span><LockKeyhole size={16} aria-hidden="true" /></> : <><span className="tp-button-glitch" data-text="Enter">Enter</span><ArrowRight size={17} aria-hidden="true" /></>}</button>
               </article>
             );
           })}

@@ -3,9 +3,10 @@ import { Plus, Pencil, Trash2, X, Save, RefreshCw, GripVertical, ArrowUp, ArrowD
 import { API_URL } from '../config';
 import { useConfirm } from '../context/ConfirmContext';
 import { moveTerminalProblem } from '../utils/terminalProblemOrder';
+import terminalBadgeFiles from 'virtual:terminal-badges';
 import '../styles/TerminalAdminPanel.css';
 
-const emptyCategory = () => ({ name: '', levelName: 'Intro', levelColor: '#22c55e', questions: [] });
+const emptyCategory = () => ({ name: '', levelName: 'Intro', levelColor: '#22c55e', badge: '', questions: [] });
 const emptyProblem = () => ({ title: '', description: '', difficulty: 'easy', points: 5, order: 0, acceptedCommands: '' });
 const matchesProblem = (problem, search, difficulty) =>
   problem.title.toLowerCase().includes(search.trim().toLowerCase()) &&
@@ -84,7 +85,7 @@ export default function TerminalAdminPanel() {
   };
   const openCategory = category => {
     setEditor({ type: 'category', id: category?._id || null });
-    setCategoryDraft(category ? { name: category.name, levelName: category.levelName, levelColor: category.levelColor, questions: [...category.questions] } : emptyCategory());
+    setCategoryDraft(category ? { name: category.name, levelName: category.levelName, levelColor: category.levelColor, badge: category.badge || '', questions: [...category.questions] } : emptyCategory());
     setPickerSearch('');
     setPickerDifficulty('');
     setSelectedOnly(false);
@@ -180,6 +181,20 @@ export default function TerminalAdminPanel() {
                   <label className="ta-field">Level tag<input className="rd-input" required maxLength={40} value={categoryDraft.levelName} onChange={event => setCategoryDraft({ ...categoryDraft, levelName: event.target.value })} placeholder="Intro, Basic, Advanced..." /></label>
                   <label className="ta-field">Tag color<input className="ta-color" type="color" value={categoryDraft.levelColor} onChange={event => setCategoryDraft({ ...categoryDraft, levelColor: event.target.value })} /></label>
                   <LevelTag name={categoryDraft.levelName} color={categoryDraft.levelColor} />
+                </div>
+                <div className="ta-badge-section">
+                  <h4>Category badge <span className="ta-help">(optional)</span></h4>
+                  <div className="ta-badge-picker" role="group" aria-label="Category badge">
+                    <button type="button" className="ta-badge-option" aria-pressed={!categoryDraft.badge} onClick={() => setCategoryDraft({ ...categoryDraft, badge: '' })}><span className="ta-no-badge">—</span><span>No badge</span></button>
+                    {terminalBadgeFiles.map(file => (
+                      <button key={file} type="button" className="ta-badge-option" aria-pressed={categoryDraft.badge === file} onClick={() => setCategoryDraft({ ...categoryDraft, badge: file })}>
+                        <img src={`/${encodeURIComponent(file)}`} alt="" width="64" height="64" loading="lazy" />
+                        <span>{file.replace(/^terminal_/i, '').replace(/\.[^.]+$/, '').replace(/[_-]/g, ' ')}</span>
+                      </button>
+                    ))}
+                  </div>
+                  {!terminalBadgeFiles.length && <p className="ta-help">Add images named terminal_*.png (or another image format) to the public folder to make them available here.</p>}
+                  {categoryDraft.badge && !terminalBadgeFiles.includes(categoryDraft.badge) && <p className="ta-help">The saved badge is not in the public folder: {categoryDraft.badge}. Choose another badge or No badge.</p>}
                 </div>
                 <div className="ta-picker-heading"><h4>Problems in this category</h4><span>{categoryDraft.questions.length} selected</span></div>
                 {orderedProblems.length > 0 && (
