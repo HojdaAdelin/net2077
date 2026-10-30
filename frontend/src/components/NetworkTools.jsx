@@ -10,7 +10,7 @@ const TOOLS = [
   { id: 'dhcp', label: 'DHCP', icon: Network, help: 'Request an IP address, gateway and DNS server on an interface.' },
 ];
 
-export default function NetworkTools({ topology, sourceId, onSourceChange, activeResult, onDHCP, onResult, onReset }) {
+export default function NetworkTools({ topology, sourceId, sourceEditable = true, onSourceChange, activeResult, onDHCP, onResult, onReset }) {
   const [mode, setMode] = useState('ping');
   const [target, setTarget] = useState('');
   const [port, setPort] = useState('eth0');
@@ -39,9 +39,10 @@ export default function NetworkTools({ topology, sourceId, onSourceChange, activ
         <p className="nl-tool-help">{TOOLS.find(item => item.id === mode).help}</p>
         <label className="nl-config-field"><span>Source device</span><select value={source?.id || ''} onChange={event => { onSourceChange(event.target.value); reset(); setPort('eth0'); }} required><option value="">Choose a device</option>{sources.map(device => <option value={device.id} key={device.id}>{device.name}</option>)}</select></label>
         {mode === 'dhcp' ? <label className="nl-config-field"><span>Client interface</span><select value={port} onChange={event => { setPort(event.target.value); reset(); }}>{Object.keys(source?.config.interfaces || { eth0: {} }).map(name => <option key={name}>{name}</option>)}</select></label> : <label className="nl-config-field"><span>{mode === 'dns' ? 'Hostname' : mode === 'http' ? 'Address / URL' : 'Destination IP / hostname'}</span><input required value={target} onChange={event => { setTarget(event.target.value); reset(); }} placeholder={mode === 'dns' ? 'site.local' : mode === 'http' ? 'http://site.local' : '192.168.1.10'} /></label>}
-        <button type="submit" className="nl-primary-button" disabled={!source || mode === 'dhcp' && isRoutingDevice(source.type)}><Play size={13} />Run {TOOLS.find(item => item.id === mode).label} simulation</button>
+        <button type="submit" className="nl-primary-button" disabled={!source || mode === 'dhcp' && (isRoutingDevice(source.type) || !sourceEditable)}><Play size={13} />Run {TOOLS.find(item => item.id === mode).label} simulation</button>
       </form>
       {mode === 'dhcp' && source && isRoutingDevice(source.type) && <p className="nl-config-help">Use a PC, laptop, or server as a DHCP client.</p>}
+      {mode === 'dhcp' && source && !sourceEditable && <p className="nl-config-help">This device has a preset configuration. Choose an editable client.</p>}
       {!sources.length && <p className="nl-tool-empty">Add a PC, laptop, server or router to start a simulation.</p>}
       {result && result === activeResult && <details className={`nl-test-result ${result.ok ? 'success' : 'failure'}`}><summary>{result.ok ? <CheckCircle2 size={15} /> : <CircleAlert size={15} />}Result &amp; full trace</summary><strong>{result.message}</strong>{result.steps.length > 0 && <ol>{result.steps.map((step, index) => <li key={index}>{step}</li>)}</ol>}{result.page && <div className="nl-http-page"><span>HTTP response · text preview</span><h3>{result.page.title}</h3><p>{result.page.body}</p></div>}</details>}
     </div>

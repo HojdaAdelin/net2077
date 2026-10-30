@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { canAccessNetworkLab } from '../utils/networkLabAccess';
+import { Network } from 'lucide-react';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -251,6 +251,10 @@ export default function Navbar() {
                     <div className="practice-item-desc">Network questions & protocols</div>
                   </div>
                 </Link>
+                <Link to="/network-lab/problems" className="practice-dropdown-item practice-dropdown-item--network-lab" onClick={() => { closeMobileMenu(); setPracticeDropdownOpen(false); }}>
+                  <Network size={18} className="practice-item-icon" />
+                  <div className="practice-item-content"><div className="practice-item-title">Network Lab</div><div className="practice-item-desc"><span className="nav-network-signal">Solve practical networking labs</span></div></div>
+                </Link>
                 <Link 
                   to="/terminal" 
                   className="practice-dropdown-item"
@@ -265,12 +269,6 @@ export default function Navbar() {
                     <div className="practice-item-desc"><span className="nav-terminal-glitch" data-text="Practice terminal commands">Practice terminal commands</span></div>
                   </div>
                 </Link>
-                {canAccessNetworkLab(user) && (
-                  <Link to="/network-lab" className="practice-dropdown-item" onClick={() => { closeMobileMenu(); setPracticeDropdownOpen(false); }}>
-                    <Globe size={18} className="practice-item-icon" />
-                    <div className="practice-item-content"><div className="practice-item-title">Network Lab</div><div className="practice-item-desc">Build network topologies</div></div>
-                  </Link>
-                )}
                 <Link 
                   to="/is" 
                   className="practice-dropdown-item"

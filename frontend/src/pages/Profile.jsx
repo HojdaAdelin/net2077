@@ -54,6 +54,7 @@ export default function Profile() {
     switch (category.toLowerCase()) {
       case 'linux': return <Monitor size={20} />;
       case 'network': return <Globe size={20} />;
+      case 'network lab': return <Globe size={20} />;
       case 'terminal': return <Terminal size={20} />;
       case 'arduino': return <Microchip size={20} />;
       case 'is': return <Wrench size={20} />;
@@ -195,6 +196,10 @@ export default function Profile() {
                   Network
                 </span>
                 <span className="user-profile-category-value">{profileData.categoryStats.network}</span>
+              </div>
+              <div className="user-profile-category-stat">
+                <span className="user-profile-category-label"><Globe size={16} style={{ marginRight: '8px' }} />Network Lab</span>
+                <span className="user-profile-category-value">{profileData.categoryStats['network lab'] || 0}</span>
               </div>
               <div className="user-profile-category-stat">
                 <span className="user-profile-category-label">

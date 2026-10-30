@@ -964,6 +964,12 @@ export default function Grile() {
                 </button>
               )}
 
+              {card.title === 'Network Questions' && (
+                <Link to="/network-lab/problems" className="compact-reset-btn compact-network-lab-btn" onClick={event => event.stopPropagation()}>
+                  <Wifi size={15} />Network Lab<ArrowRight size={15} />
+                </Link>
+              )}
+
               {card.title === 'Network Questions' && user && (
                 <button
                   onClick={(e) => {

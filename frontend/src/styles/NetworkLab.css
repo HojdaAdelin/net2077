@@ -11,7 +11,10 @@
   padding: 94px 32px 60px;
 }
 [data-theme="light"] .nl-page { --nl-stage: #f2f5f9; --nl-grid: #b8c6d5; --nl-label: #35445a; --nl-subtle: #697b92; --nl-wire: #607890; --nl-port-fill: #e8eef5; --nl-highlight: #0b858b; }
-.nl-page-header { display: flex; justify-content: center; margin-bottom: 28px; }
+.nl-page-header { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 18px; margin-bottom: 28px; }
+.nl-practice-link { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 46px; padding: 13px 22px; border: 1px solid #0f766e; border-radius: 8px; background: #0f766e; color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 16px rgba(15, 118, 110, .18); transition: background .15s, box-shadow .15s; }
+.nl-practice-link:hover { color: #fff; background: #115e59; border-color: #115e59; box-shadow: 0 5px 20px rgba(15, 118, 110, .28); }
+.nl-practice-link:focus-visible { outline: 2px solid var(--nl-highlight); outline-offset: 4px; }
 .nl-title-lockup { position: relative; display: flex; align-items: center; justify-content: center; width: min(560px, 100%); height: 104px; }
 .nl-title-circuit { position: absolute; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 .nl-page-header h1 { position: relative; margin: 0; color: var(--text-primary); font-size: clamp(26px, 3vw, 36px); line-height: 1.2; letter-spacing: -1.2px; font-weight: 650; }

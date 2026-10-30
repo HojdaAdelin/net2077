@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "slug": "your-first-lan",
+  "title": "Your first LAN",
+  "summary": "Connect a workstation to a small local network and verify communication.",
+  "description": "PC-02 is already configured with 192.168.1.20/24. Connect both PCs to different ports on Switch-01. Configure PC-01 with 192.168.1.10/24, then verify that it can reach PC-02. You do not need a default gateway for this local network.",
+  "difficulty": "easy",
+  "xp": 50,
+  "published": false,
+  "tags": ["IPv4", "Switching", "Connectivity"],
+  "hints": ["Each Ethernet port accepts one cable.", "Hosts in the same subnet can communicate through a switch without a router."],
+  "permissions": { "configure": ["pc-1"], "cables": true, "devices": false },
+  "topology": {
+    "devices": [
+      { "id": "pc-1", "type": "pc", "name": "PC-01", "x": 0, "y": 0 },
+      { "id": "switch-1", "type": "switch", "name": "Switch-01", "x": 250, "y": 150 },
+      { "id": "pc-2", "type": "pc", "name": "PC-02", "x": 500, "y": 0, "config": { "interfaces": { "eth0": { "ip": "192.168.1.20", "mask": "/24" } } } }
+    ],
+    "cables": []
+  },
+  "objectives": [
+    { "id": "pc-address", "type": "interface", "label": "Configure PC-01 with 192.168.1.10/24.", "device": "pc-1", "port": "eth0", "ip": "192.168.1.10", "mask": "/24", "enabled": true },
+    { "id": "pc-connectivity", "type": "ping", "label": "Make PC-02 reachable from PC-01.", "source": "pc-1", "target": "192.168.1.20", "targetDevice": "pc-2", "expected": true }
+  ]
+}

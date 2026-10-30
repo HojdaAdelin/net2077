@@ -2,6 +2,7 @@ import BulkExplanationImport from '../components/BulkExplanationImport';
 import ExplanationEditor from '../components/ExplanationEditor';
 import SeasonBoxEditor from '../components/SeasonBoxEditor';
 import TerminalAdminPanel from '../components/TerminalAdminPanel';
+import NetworkProblemAdmin from '../components/NetworkProblemAdmin';
 import { useState, useEffect, useCallback, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -800,7 +801,7 @@ function QuestionManagerPanel() {
 }
 
 /* ─── Questions Panel ─── */
-function QuestionsPanel() {
+function QuestionsPanel({ onManageNetwork }) {
   const [questionsRaw, setQuestionsRaw] = useState('');
   const [importing, setImporting] = useState(false);
   const [downloading, setDownloading] = useState(false);
@@ -842,6 +843,7 @@ function QuestionsPanel() {
 
   return (
     <div className="rd-questions">
+      <div className="npa-management-card"><div className="npa-management-icon"><Database size={23} /></div><div><h3>Network Lab problems</h3><p>Create, preview and organize practical networking problems. Import ready-made labs with JSON.</p></div><button type="button" className="nlp-button primary" onClick={onManageNetwork}>Manage problems <Pencil size={14} /></button></div>
       <div className="rd-questions-header">
         <span className="rd-section-label" style={{ margin: 0 }}>Import questions (JSON array)</span>
         <button className="rd-export-btn" onClick={handleExport} disabled={downloading}>
@@ -1828,6 +1830,7 @@ const TABS = [
   { id: 'questions', label: 'Questions',  icon: Settings },
   { id: 'qmanager',  label: 'Q Manager',  icon: Database },
   { id: 'terminal',  label: 'Terminal',   icon: TerminalIcon },
+  { id: 'networklab', label: 'Network Lab', icon: Database },
   { id: 'planner',   label: 'Planner',    icon: ClipboardList },
   { id: 'stats',     label: 'Stats',      icon: BarChart2 },
   { id: 'terms',     label: 'Terms',      icon: ScrollText },
@@ -1871,9 +1874,10 @@ export default function RootDashboard() {
             {activeTab === 'support'   && <SupportPanel />}
             {activeTab === 'buildnote' && <BuildNotePanel />}
             {activeTab === 'updates'   && <UpdatesPanel />}
-            {activeTab === 'questions' && <QuestionsPanel />}
+            {activeTab === 'questions' && <QuestionsPanel onManageNetwork={() => setActiveTab('networklab')} />}
             {activeTab === 'qmanager'  && <QuestionManagerPanel />}
             {activeTab === 'terminal'  && <TerminalAdminPanel />}
+            {activeTab === 'networklab' && <NetworkProblemAdmin />}
             {activeTab === 'planner'   && <PlannerPanel />}
             {activeTab === 'stats'     && <StatsPanel />}
             {activeTab === 'terms'     && <TermsPanel />}

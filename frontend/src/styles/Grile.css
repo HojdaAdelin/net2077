@@ -365,6 +365,26 @@
   color: var(--text-muted);
 }
 
+.compact-network-lab-btn {
+  --network-lab-accent: #38b8bb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  text-decoration: none;
+  color: var(--network-lab-accent);
+  background: color-mix(in srgb, var(--network-lab-accent) 8%, var(--bg-card));
+  border-color: color-mix(in srgb, var(--network-lab-accent) 30%, var(--border));
+}
+[data-theme="light"] .compact-network-lab-btn { --network-lab-accent: #0b858b; }
+.compact-network-lab-btn:hover:not(:disabled) {
+  color: var(--network-lab-accent);
+  background: color-mix(in srgb, var(--network-lab-accent) 14%, var(--bg-card));
+  border-color: var(--network-lab-accent);
+}
+.compact-network-lab-btn:focus-visible { outline: 2px solid var(--network-lab-accent); outline-offset: 3px; }
+.compact-network-lab-btn + .compact-reset-btn { margin-top: 0; }
+
 @media (max-width: 768px) {
   .compact-cards-grid {
     grid-template-columns: 1fr;

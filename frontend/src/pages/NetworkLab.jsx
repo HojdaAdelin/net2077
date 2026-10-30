@@ -1,5 +1,5 @@
 import { useContext, useEffect, useId, useReducer, useRef, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { MousePointer2, Cable, Plus, Minus, Scan, ArrowUpRight, Settings2, FlaskConical, CircleHelp } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import NetworkDeviceArtwork from '../components/NetworkDeviceArtwork';
@@ -9,7 +9,6 @@ import NetworkInspector from '../components/NetworkInspector';
 import { usePacketPlayback, PacketControls, PacketMarker } from '../components/PacketPlayback';
 import { hasWireless, isBridgeDevice } from '../utils/networkConfig';
 import { wirelessConnections } from '../utils/networkSimulation';
-import { canAccessNetworkLab } from '../utils/networkLabAccess';
 import { DEVICE_TYPES, emptyTopology, topologyReducer, portPosition, cablePath, connectionError, portInUse, samePort, fitTopology } from '../utils/networkTopology';
 import '../styles/NetworkLab.css';
 
@@ -19,10 +18,18 @@ const DEVICE_GROUPS = [
   { label: 'Services', types: ['server'] },
 ];
 
-function NetworkWorkspace() {
-  const [topology, updateTopology] = useReducer(topologyReducer, undefined, emptyTopology);
+export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, embedded = false }) {
+  const [topology, updateTopology] = useReducer(topologyReducer, initialTopology, value => value ? structuredClone(value) : emptyTopology());
+  const editable = id => !problem || problem.permissions.configure.includes(id) || (problem.permissions.devices && !problem.topology.devices.some(device => device.id === id));
+  const removable = id => !problem || (problem.permissions.devices && !problem.topology.devices.some(device => device.id === id));
+  const cablesEditable = !problem || problem.permissions.cables;
+  const devicesEditable = !problem || problem.permissions.devices;
   const playback = usePacketPlayback();
-  const dispatch = action => { playback.clear(); updateTopology(action); };
+  const dispatch = action => {
+    if ((action.type === 'add' && !devicesEditable) || (action.type === 'delete-device' && !removable(action.id)) ||
+      (['connect', 'delete-cable'].includes(action.type) && !cablesEditable) || (action.type === 'configure' && !editable(action.id))) return;
+    playback.clear(); updateTopology(action);
+  };
   const [tool, setTool] = useState('select');
   const [selected, setSelected] = useState(null);
   const [source, setSource] = useState(null);
@@ -48,6 +55,7 @@ function NetworkWorkspace() {
   const tracedLinks = playback.session ? playback.session.trace.slice(0, playback.index + 1).map(event => event.linkId).filter(Boolean) : highlightedLinks;
 
   useEffect(() => { setHighlightedLinks([]); }, [topology]);
+  useEffect(() => { onTopologyChange?.(topology); }, [topology, onTopologyChange]);
 
   useEffect(() => {
     if (selectedDevice && !isBridgeDevice(selectedDevice.type)) setSimulationSourceId(selectedDevice.id);
@@ -57,6 +65,10 @@ function NetworkWorkspace() {
     const observer = new ResizeObserver(([entry]) => setSize({ width: Math.max(1, entry.contentRect.width), height: Math.max(1, entry.contentRect.height) }));
     observer.observe(stageRef.current);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (initialTopology?.devices.length) setView(fitTopology(initialTopology.devices, stageRef.current.clientWidth, stageRef.current.clientHeight));
   }, []);
 
   const worldPoint = event => {
@@ -69,6 +81,7 @@ function NetworkWorkspace() {
   };
 
   const chooseTool = value => {
+    if (value === 'cable' && !cablesEditable) { setMessage('Connections are preset for this problem. Configure the editable devices instead.'); return; }
     setTool(value);
     setSource(null);
     setMessage(value === 'cable' ? 'Choose a free port on the first device, then a port on another device.' : 'Drag devices to arrange them. Drag the background to move around.');
@@ -99,6 +112,7 @@ function NetworkWorkspace() {
   };
 
   const choosePort = endpoint => {
+    if (!cablesEditable) { setMessage('The connections are locked for this problem.'); return; }
     const device = topology.devices.find(item => item.id === endpoint.deviceId);
     if (source && samePort(source, endpoint)) { setSource(null); setMessage('Cable cancelled.'); return; }
     if (portInUse(topology, endpoint)) { setMessage('This port already has a cable. Select the cable to remove it.'); return; }
@@ -184,8 +198,8 @@ function NetworkWorkspace() {
   const endpointLabel = endpoint => `${topology.devices.find(device => device.id === endpoint.deviceId)?.name || 'Device'} · ${endpoint.portId}`;
 
   return (
-    <div className="nl-page" onKeyDown={keyDown}>
-      <div className="nl-page-header">
+    <div className={`nl-page${embedded ? ' nl-embedded' : ''}`} onKeyDown={keyDown}>
+      {!embedded && <div className="nl-page-header">
         <div className="nl-title-lockup">
           <svg className="nl-title-circuit" viewBox="0 0 480 96" fill="none" aria-hidden="true">
             <path className="nl-title-trace" d="M12 48H58L78 24H130M350 24H402L422 48H468M58 48L82 72H130M350 72H398L422 48" />
@@ -195,19 +209,21 @@ function NetworkWorkspace() {
           </svg>
           <h1>Network Lab</h1>
         </div>
-      </div>
+        <Link className="nl-practice-link" to="/network-lab/problems">Practice problems <ArrowUpRight size={15} /></Link>
+      </div>}
       <div className="nl-workspace">
         <aside className="nl-sidebar">
-          <div className="nl-sidebar-heading"><h2>Device library</h2><span>{topology.devices.length} added</span></div>
-          <p className="nl-library-hint">Choose a device to add it to your network.</p>
-          <div className="nl-device-palette">{DEVICE_GROUPS.map(group => <div className="nl-device-group" key={group.label}><h3>{group.label}</h3><div>{group.types.map(type => {
+          <div className="nl-sidebar-heading"><h2>{devicesEditable ? 'Device library' : 'Lab devices'}</h2><span>{topology.devices.length} devices</span></div>
+          <p className="nl-library-hint">{devicesEditable ? 'Choose a device to add it to your network.' : 'Select a device to inspect its configuration.'}</p>
+          {!devicesEditable && <div className="nl-lab-device-list">{topology.devices.map(device => <button type="button" key={device.id} className={`nl-palette-device${selectedDevice?.id === device.id ? ' is-selected' : ''}`} onClick={() => { setSelected({ kind: 'device', id: device.id }); setInspectorTab('device'); }}><NetworkDeviceArtwork type={device.type} className="nl-palette-art" /><span className="nl-palette-label"><strong>{device.name}</strong><small>{editable(device.id) ? 'Editable' : 'Preset configuration'}</small></span></button>)}</div>}
+          {devicesEditable && <div className="nl-device-palette">{DEVICE_GROUPS.map(group => <div className="nl-device-group" key={group.label}><h3>{group.label}</h3><div>{group.types.map(type => {
             const config = DEVICE_TYPES[type];
             return (
             <button key={type} type="button" className="nl-palette-device" onClick={() => addDevice(type)}>
               <NetworkDeviceArtwork type={type} className="nl-palette-art" />
               <span className="nl-palette-label"><strong>{config.label}</strong><small>{config.ports.length} {config.ports.length === 1 ? 'port' : 'ports'}{hasWireless(type) ? ' + Wi-Fi' : ''}</small></span><Plus size={15} aria-hidden="true" />
             </button>
-          ); })}</div></div>)}</div>
+          ); })}</div></div>)}</div>}
           <details className="nl-library-help"><summary><CircleHelp size={13} />Quick guide</summary><p>Click two free Ethernet ports to connect devices. Double-click a device to configure it.</p><div className="nl-shortcuts"><span><kbd>Del</kbd> Remove selection</span><span><kbd>Esc</kbd> Cancel cable</span><span><kbd>↑ ↓ ← →</kbd> Move device</span></div></details>
         </aside>
         <section className="nl-editor" aria-label="Topology editor">
@@ -230,7 +246,7 @@ function NetworkWorkspace() {
               })}
               {topology.devices.map(device => {
                 const config = DEVICE_TYPES[device.type];
-                return <g key={device.id} data-device={device.id} transform={`translate(${device.x} ${device.y})`} className={`nl-device${selectedDevice?.id === device.id ? ' selected' : ''}${activePacketDevice === device.id ? playback.event.status === 'blocked' ? ' packet-blocked' : ' packet-active' : ''}`} style={{ '--device-color': config.color }} role="button" tabIndex={0} aria-label={`${device.name}, ${config.label}. Double-click to configure. Select and use arrow keys to move.`} onDoubleClick={event => { if (!event.target.closest('[data-port]')) setSettingsDeviceId(device.id); }} onKeyDown={event => { if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); setSelected({ kind: 'device', id: device.id }); if (event.key === 'Enter') setSettingsDeviceId(device.id); } }}>
+                return <g key={device.id} data-device={device.id} transform={`translate(${device.x} ${device.y})`} className={`nl-device${selectedDevice?.id === device.id ? ' selected' : ''}${activePacketDevice === device.id ? playback.event.status === 'blocked' ? ' packet-blocked' : ' packet-active' : ''}`} style={{ '--device-color': config.color }} role="button" tabIndex={0} aria-label={`${device.name}, ${config.label}. ${editable(device.id) ? 'Double-click to configure.' : 'Preset configuration.'} Select and use arrow keys to move.`} onDoubleClick={event => { if (!event.target.closest('[data-port]') && editable(device.id)) setSettingsDeviceId(device.id); }} onKeyDown={event => { if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); setSelected({ kind: 'device', id: device.id }); setInspectorTab('device'); if (event.key === 'Enter' && editable(device.id)) setSettingsDeviceId(device.id); } }}>
                   <rect x="-10" y="-26" width="180" height="177" rx="12" className="nl-device-outline" />
                   <text x="80" y="-9" textAnchor="middle" className="nl-device-name">{device.name}</text>
                   <NetworkDeviceArtwork type={device.type} width="160" height="112" />
@@ -255,10 +271,10 @@ function NetworkWorkspace() {
           <div className="nl-inspector-tabs" role="tablist" aria-label="Inspector views">{[['device', 'Device', Settings2], ['simulation', 'Simulation', FlaskConical]].map(([id, label, Icon]) => <button key={id} type="button" role="tab" id={`${gridId}-${id}-tab`} aria-selected={inspectorTab === id} aria-controls={`${gridId}-${id}-panel`} tabIndex={inspectorTab === id ? 0 : -1} onKeyDown={event => { if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) { event.preventDefault(); const next = event.key === 'Home' ? 'device' : event.key === 'End' ? 'simulation' : id === 'device' ? 'simulation' : 'device'; setInspectorTab(next); document.getElementById(`${gridId}-${next}-tab`)?.focus(); } }} onClick={() => setInspectorTab(id)}><Icon size={14} />{label}{id === 'simulation' && playback.playing && <span className="nl-tab-running" />}</button>)}</div>
           <div className="nl-inspector-content">
             <div role="tabpanel" id={`${gridId}-device-panel`} aria-labelledby={`${gridId}-device-tab`} hidden={inspectorTab !== 'device'}>
-              <NetworkInspector topology={topology} wifiLinks={wifiLinks} device={selectedDevice} cable={selectedCable} onConfigure={() => setSettingsDeviceId(selectedDevice.id)} onSimulate={() => { setSimulationSourceId(selectedDevice.id); setInspectorTab('simulation'); }} onDelete={removeSelected} onDeselect={() => setSelected(null)} />
+              <NetworkInspector topology={topology} wifiLinks={wifiLinks} device={selectedDevice} cable={selectedCable} readOnly={!editable(selectedDevice?.id)} canDelete={selectedCable ? cablesEditable : removable(selectedDevice?.id)} onConfigure={() => setSettingsDeviceId(selectedDevice.id)} onSimulate={() => { setSimulationSourceId(selectedDevice.id); setInspectorTab('simulation'); }} onDelete={removeSelected} onDeselect={() => setSelected(null)} />
             </div>
             <div role="tabpanel" id={`${gridId}-simulation-panel`} aria-labelledby={`${gridId}-simulation-tab`} hidden={inspectorTab !== 'simulation'}>
-              <NetworkTools topology={topology} sourceId={simulationSourceId} onSourceChange={setSimulationSourceId} activeResult={playback.session} onReset={() => { playback.clear(); setHighlightedLinks([]); }} onResult={result => { setHighlightedLinks(result.links); setMessage(result.message); playback.start(result); }} onDHCP={(id, config) => { const device = topology.devices.find(item => item.id === id); dispatch({ type: 'configure', id, settings: { name: device.name, config } }); }} />
+              <NetworkTools topology={topology} sourceId={simulationSourceId} sourceEditable={editable(simulationSourceId)} onSourceChange={setSimulationSourceId} activeResult={playback.session} onReset={() => { playback.clear(); setHighlightedLinks([]); }} onResult={result => { setHighlightedLinks(result.links); setMessage(result.message); playback.start(result); }} onDHCP={(id, config) => { const device = topology.devices.find(item => item.id === id); dispatch({ type: 'configure', id, settings: { name: device.name, config } }); }} />
               <PacketControls playback={playback} topology={topology} />
               <div className="nl-simulation-legend"><span><i className="nl-legend-route" />Packet / route</span><span><i className="nl-legend-blocked" />Blocked</span></div>
             </div>
@@ -272,6 +288,5 @@ function NetworkWorkspace() {
 
 export default function NetworkLab() {
   const { user } = useContext(AuthContext);
-  if (!canAccessNetworkLab(user)) return <Navigate to="/" replace />;
-  return <NetworkWorkspace key={user.id} />;
+  return <NetworkWorkspace key={user?.id || 'guest'} />;
 }

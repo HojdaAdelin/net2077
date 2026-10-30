@@ -23,6 +23,8 @@ const userSchema = new mongoose.Schema({
     ARDUINO: {type: Number, default: 0}
   },
   solvedTerminalQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Terminal' }],
+  solvedNetworkProblems: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NetworkProblem' }],
+  networkLabStats: { solved: { type: Number, default: 0 } },
   terminalStats: {
     solved: { type: Number, default: 0 }
   },

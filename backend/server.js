@@ -31,6 +31,7 @@ import plannerRoutes from './routes/plannerRoutes.js';
 import termsRoutes from './routes/termsRoutes.js';
 import seasonBoxRoutes from './routes/seasonBoxRoutes.js';
 import seasonPassRoutes from './routes/seasonPassRoutes.js';
+import networkProblemRoutes from './routes/networkProblemRoutes.js';
 import ArenaMatch from './models/ArenaMatch.js';
 import { initializeCompetitiveSystem, checkAndResetPeriod } from './controllers/competitiveController.js';
 
@@ -64,6 +65,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use('/api/questions/explanations', express.json({ limit: '16mb' }));
+app.use('/api/network-problems', express.json({ limit: '1mb' }));
 app.use(express.json());
 
 
@@ -126,6 +128,7 @@ app.use('/api/planner', plannerRoutes);
 app.use('/api/terms', termsRoutes);
 app.use('/api/season-box', seasonBoxRoutes);
 app.use('/api/season-pass', seasonPassRoutes);
+app.use('/api/network-problems', networkProblemRoutes);
 
 function startArenaCleanupJob() {
   setInterval(async () => {

@@ -428,6 +428,7 @@ export default function Progress() {
             {[
               { name: 'Linux', Icon: Monitor, solved: linuxSolved, color: '#d99119' },
               { name: 'Network', Icon: Globe, solved: networkSolved, color: '#3b82f6' },
+              { name: 'Network Lab', Icon: Globe, solved: progress.networkLabStats?.solved || 0, color: '#0f928a' },
               { name: 'Terminal', Icon: Terminal, solved: terminalSolved, color: '#22a66c' },
               { name: 'Arduino', Icon: Cpu, solved: arduinoSolved, color: '#ec4899' },
             ].map(({ name, Icon, solved, color }) => (
@@ -438,7 +439,7 @@ export default function Progress() {
                 </dt>
                 <dd className="category-stats-value">
                   <strong>{solved.toLocaleString()}</strong>
-                  <span>{name === 'Terminal' ? 'commands solved' : 'questions solved'}</span>
+                  <span>{name === 'Terminal' ? 'commands solved' : name === 'Network Lab' ? 'labs completed' : 'questions solved'}</span>
                 </dd>
               </div>
             ))}

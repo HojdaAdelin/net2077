@@ -22,7 +22,7 @@ export const getUserProgress = async (req, res) => {
     const arduinoSolved = user.solvedByTag.ARDUINO || 0;
     const terminalSolved = user.terminalStats.solved || 0;
     const isSolved = user.isStats.solved || 0;
-    const totalSolvedByCategories = linuxSolved + networkSolved + terminalSolved + isSolved + arduinoSolved;
+    const totalSolvedByCategories = linuxSolved + networkSolved + terminalSolved + isSolved + arduinoSolved + (user.networkLabStats?.solved || 0);
 
     const streakInfo = getStreakInfo(user);
 
@@ -31,6 +31,7 @@ export const getUserProgress = async (req, res) => {
       solvedQuestions,
       solvedByTag: user.solvedByTag,
       terminalStats: user.terminalStats,
+      networkLabStats: user.networkLabStats,
       simulations: user.simulations,
       xp: user.xp,
       level: user.level,
