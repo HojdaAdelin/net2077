@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { canAccessNetworkLab } from '../utils/networkLabAccess';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -264,6 +265,12 @@ export default function Navbar() {
                     <div className="practice-item-desc"><span className="nav-terminal-glitch" data-text="Practice terminal commands">Practice terminal commands</span></div>
                   </div>
                 </Link>
+                {canAccessNetworkLab(user) && (
+                  <Link to="/network-lab" className="practice-dropdown-item" onClick={() => { closeMobileMenu(); setPracticeDropdownOpen(false); }}>
+                    <Globe size={18} className="practice-item-icon" />
+                    <div className="practice-item-content"><div className="practice-item-title">Network Lab</div><div className="practice-item-desc">Build network topologies</div></div>
+                  </Link>
+                )}
                 <Link 
                   to="/is" 
                   className="practice-dropdown-item"
