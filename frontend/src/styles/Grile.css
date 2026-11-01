@@ -384,6 +384,23 @@
 }
 .compact-network-lab-btn:focus-visible { outline: 2px solid var(--network-lab-accent); outline-offset: 3px; }
 .compact-network-lab-btn + .compact-reset-btn { margin-top: 0; }
+.compact-terminal-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  text-decoration: none;
+  color: var(--card-color, #f59e0b);
+  background: color-mix(in srgb, var(--card-color, #f59e0b) 8%, var(--bg-card));
+  border-color: color-mix(in srgb, var(--card-color, #f59e0b) 30%, var(--border));
+}
+.compact-terminal-btn:hover:not(:disabled) {
+  color: var(--card-color, #f59e0b);
+  background: color-mix(in srgb, var(--card-color, #f59e0b) 14%, var(--bg-card));
+  border-color: var(--card-color, #f59e0b);
+}
+.compact-terminal-btn:focus-visible { outline: 2px solid var(--card-color, #f59e0b); outline-offset: 3px; }
+.compact-terminal-btn + .compact-reset-btn { margin-top: 0; }
 
 @media (max-width: 768px) {
   .compact-cards-grid {

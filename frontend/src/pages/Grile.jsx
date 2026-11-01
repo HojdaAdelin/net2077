@@ -4,7 +4,7 @@ import { useState, useEffect, useContext, useCallback, useRef } from 'react';
 import { getUserProgress, getDailyChallengeStatus } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { X, Monitor, Wifi, Cpu, BookOpen, Trophy, FileCheck, ArrowRight, Users } from 'lucide-react';
+import { X, Monitor, Wifi, Cpu, BookOpen, Trophy, FileCheck, ArrowRight, Users, Terminal } from 'lucide-react';
 import '../styles/Grile.css';
 
 function CategoryLeaderboardModal({ tag, label, color, onClose }) {
@@ -923,6 +923,12 @@ export default function Grile() {
                 >
                   Reset for XP ({solved.basic}/50)
                 </button>
+              )}
+
+              {card.title === 'Linux Questions' && (
+                <Link to="/terminal" className="compact-reset-btn compact-terminal-btn" onClick={event => event.stopPropagation()}>
+                  <Terminal size={15} />Terminal<ArrowRight size={15} />
+                </Link>
               )}
 
               {card.title === 'Linux Questions' && user && (

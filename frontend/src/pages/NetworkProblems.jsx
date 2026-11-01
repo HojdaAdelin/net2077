@@ -1,38 +1,58 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Network, ArrowLeft, ArrowUpRight, CheckCircle2, Circle, RotateCcw, Zap, Search, FlaskConical, Save, Lightbulb } from 'lucide-react';
+import { Network, ArrowLeft, ArrowUpRight, CheckCircle2, Circle, RotateCcw, Zap, Search, FlaskConical, Save, Lightbulb, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import { useConfirm } from '../context/ConfirmContext';
 import LoginRequired from '../components/LoginRequired';
 import NetworkDifficultyFilter from '../components/NetworkDifficultyFilter';
+import NetworkLabLoading from '../components/NetworkLabLoading';
 import { NetworkWorkspace } from './NetworkLab';
 import { networkRequest } from '../services/networkProblems';
 import '../styles/NetworkProblems.css';
+
+const PROBLEMS_PER_PAGE = 9;
 
 export default function NetworkProblems() {
   const { user } = useContext(AuthContext);
   const [problems, setProblems] = useState([]), [loading, setLoading] = useState(true), [error, setError] = useState('');
   const [search, setSearch] = useState(''), [filter, setFilter] = useState('all');
   const [difficulty, setDifficulty] = useState('all');
+  const [page, setPage] = useState(1);
+  const listToolbar = useRef(null);
+  useEffect(() => { setPage(1); }, [search, filter, difficulty, user?.id]);
   useEffect(() => {
     if (!user) return;
     const controller = new AbortController();
-    networkRequest('', { signal: controller.signal }).then(data => setProblems(data.problems))
+    setLoading(true); setError('');
+    networkRequest('', { signal: controller.signal }).then(data => { if (!controller.signal.aborted) setProblems(data.problems); })
       .catch(error => { if (error.name !== 'AbortError') setError(error.message); }).finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
   }, [user?.id]);
   if (!user) return <LoginRequired icon={Network} title="Network Lab problems" description="Sign in to solve practical networking problems and save your progress." />;
+  if (loading) return <NetworkLabLoading />;
   const visible = problems.filter(problem => (filter !== 'solved' || problem.solved) && (filter !== 'unsolved' || !problem.solved) &&
     (difficulty === 'all' || problem.difficulty === difficulty) &&
     `${problem.title} ${problem.summary} ${problem.tags.join(' ')}`.toLowerCase().includes(search.toLowerCase()));
   const published = problems.filter(problem => problem.published);
   const solved = published.filter(problem => problem.solved).length;
+  const pageCount = Math.max(1, Math.ceil(visible.length / PROBLEMS_PER_PAGE));
+  const currentPage = Math.min(page, pageCount);
+  const firstIndex = (currentPage - 1) * PROBLEMS_PER_PAGE;
+  const pageProblems = visible.slice(firstIndex, firstIndex + PROBLEMS_PER_PAGE);
+  const pageNumbers = pageCount <= 7 ? Array.from({ length: pageCount }, (_, index) => index + 1) :
+    [...new Set([1, pageCount, currentPage - 1, currentPage, currentPage + 1])].filter(value => value >= 1 && value <= pageCount).sort((a, b) => a - b);
+  const changePage = value => {
+    setPage(value);
+    listToolbar.current?.scrollIntoView({ block: 'start', behavior: 'auto' });
+  };
   return <div className="nlp-page">
     <header className="nlp-hero"><div><span className="nlp-eyebrow"><Network size={15} />NETWORK LAB</span><h1>Build skills. Solve networks.</h1><p>Configure real networking concepts in a simulated lab, one problem at a time.</p></div><Link className="nlp-button" to="/network-lab"><FlaskConical size={15} />Open sandbox<ArrowUpRight size={14} /></Link></header>
     <div className="nlp-overview"><div><strong>{published.length}</strong><span>Practice problems</span></div><div><strong>{solved}</strong><span>Completed</span></div><div><strong>{published.filter(problem => !problem.solved).reduce((total, problem) => total + problem.xp, 0)}</strong><span>XP available</span></div><div className="nlp-overview-progress"><span>Your progress <b>{published.length ? Math.round(solved / published.length * 100) : 0}%</b></span><progress value={solved} max={published.length || 1} /></div></div>
     <div className="nlp-list-toolbar"><label className="nlp-search"><Search size={16} /><input aria-label="Search problems" placeholder="Search problems or topics…" value={search} onChange={event => setSearch(event.target.value)} /></label><div className="nlp-list-options"><div className="nlp-filters" role="group" aria-label="Problem filter">{[['all', 'All problems'], ['unsolved', 'To do'], ['solved', 'Completed']].map(([id, title]) => <button type="button" key={id} aria-pressed={filter === id} onClick={() => setFilter(id)}>{title}</button>)}</div><NetworkDifficultyFilter value={difficulty} onChange={setDifficulty} /></div></div>
     {error && <p className="nlp-error" role="alert">{error}</p>}
-    {loading ? <div className="nlp-empty">Loading your labs…</div> : !visible.length ? <div className="nlp-empty"><Network size={30} /><h2>{problems.length ? 'No matching problems' : 'Your next challenge is on its way'}</h2><p>{problems.length ? 'Try another search or filter.' : 'New networking problems will appear here when they are published.'}</p></div> : <div className="nlp-grid">{visible.map(problem => <Link to={`/network-lab/problems/${problem._id}`} className={`nlp-card${problem.solved ? ' is-solved' : ''}`} key={problem._id}><div className="nlp-card-top"><span className="nlp-card-icon"><Network size={23} /></span><span className={`nlp-difficulty ${problem.difficulty}`}>{problem.difficulty}</span>{!problem.published && <span className="nlp-badge">Draft</span>}</div><h2>{problem.title}</h2><p>{problem.summary}</p><div className="nlp-tags">{problem.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="nlp-card-footer"><span><Zap size={14} />{problem.xp} XP</span><span>{problem.solved ? <><CheckCircle2 size={14} />Completed</> : <>{problem.objectiveCount} objectives<ArrowUpRight size={15} /></>}</span></div></Link>)}</div>}
+    <div ref={listToolbar} className="nlp-list-anchor" />
+    {!visible.length ? <div className="nlp-empty"><Network size={30} /><h2>{problems.length ? 'No matching problems' : 'Your next challenge is on its way'}</h2><p>{problems.length ? 'Try another search or filter.' : 'New networking problems will appear here when they are published.'}</p></div> : <div className="nlp-grid">{pageProblems.map(problem => <Link to={`/network-lab/problems/${problem._id}`} className={`nlp-card${problem.solved ? ' is-solved' : ''}`} key={problem._id}><div className="nlp-card-top"><span className="nlp-card-icon"><Network size={23} /></span><span className={`nlp-difficulty ${problem.difficulty}`}>{problem.difficulty}</span>{!problem.published && <span className="nlp-badge">Draft</span>}</div><h2>{problem.title}</h2><p>{problem.summary}</p><div className="nlp-tags">{problem.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="nlp-card-footer"><span><Zap size={14} />{problem.xp} XP</span><span>{problem.solved ? <><CheckCircle2 size={14} />Completed</> : <>{problem.objectiveCount} objectives<ArrowUpRight size={15} /></>}</span></div></Link>)}</div>}
+    {visible.length > 0 && <div className="nlp-pagination"><span className="nlp-pagination-summary" role="status">Showing {firstIndex + 1}–{Math.min(firstIndex + PROBLEMS_PER_PAGE, visible.length)} of {visible.length} problems</span>{pageCount > 1 && <nav aria-label="Network problems pages"><button type="button" onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1} aria-label="Previous page"><ChevronLeft size={14} /><span>Previous</span></button>{pageNumbers.map((number, index) => <span className="nlp-page-number-group" key={number}>{index > 0 && number - pageNumbers[index - 1] > 1 && <span className="nlp-page-ellipsis" aria-hidden="true">…</span>}<button type="button" aria-label={`Page ${number}`} aria-current={currentPage === number ? 'page' : undefined} onClick={() => changePage(number)}>{number}</button></span>)}<button type="button" onClick={() => changePage(currentPage + 1)} disabled={currentPage === pageCount} aria-label="Next page"><span>Next</span><ChevronRight size={14} /></button></nav>}</div>}
   </div>;
 }
 
@@ -122,7 +142,7 @@ export function NetworkProblem() {
     try { await save(); if (version === generation.current) navigate('/network-lab/problems'); } catch { /* Keep the workspace open so saving can be retried. */ }
   };
   if (!user) return <LoginRequired icon={Network} title="Network Lab problems" description="Sign in to continue this lab and save your progress." />;
-  if (loading) return <div className="nlp-page nlp-empty">Preparing your workspace…</div>;
+  if (loading) return <NetworkLabLoading view="problem" />;
   if (!data || error && !context.current) return <div className="nlp-page"><Link to="/network-lab/problems" className="nlp-back"><ArrowLeft size={15} />All problems</Link><p className="nlp-error" role="alert">{error || 'Problem not found.'}</p></div>;
   const { problem } = data;
   return <div className="nlp-page nlp-problem-page">
