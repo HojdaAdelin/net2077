@@ -8,6 +8,7 @@ import SeasonBox from '../components/SeasonBox';
 import AvatarFrame from '../components/AvatarFrame';
 import NameEffectRenderer from '../components/NameEffectRenderer';
 import SeasonPassTrack from '../components/SeasonPassTrack';
+import SeasonCollectModal from '../components/SeasonCollectModal';
 import '../styles/AvatarFrame.css';
 import '../styles/NameEffects.css';
 import '../styles/Season.css';
@@ -64,6 +65,7 @@ export default function Season() {
 
   return (
     <div className="season-page">
+      <SeasonCollectModal />
       <div className="container">
 
         {/* Season header card */}

@@ -1,5 +1,7 @@
 import SeasonPass from '../models/SeasonPass.js';
 import User from '../models/User.js';
+import ShopItem from '../models/ShopItem.js';
+import { availablePassRewards, rewardUpdate } from '../utils/seasonPassRewards.js';
 
 // ─── Admin: create a new season pass ─────────────────────────────────────────
 export const createSeasonPass = async (req, res) => {
@@ -111,85 +113,52 @@ export const getActivePass = async (req, res) => {
 };
 
 // ─── Collect a reward ────────────────────────────────────────────────────────
-export const collectReward = async (req, res) => {
+async function collectPassRewards(req, res, all) {
   try {
-    const { level, tier } = req.body;
-    if (!level || !tier) return res.status(400).json({ message: 'level and tier required' });
-    if (!['free', 'premium'].includes(tier)) return res.status(400).json({ message: 'invalid tier' });
-
-    const pass = await SeasonPass.findOne({ isActive: true });
-    if (!pass) return res.status(404).json({ message: 'No active pass' });
-
-    const user = await User.findById(req.userId);
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
-    const sp = user.seasonPass || {};
-    const isSamePass = sp.passId?.toString() === pass._id.toString();
-    if (!isSamePass || (sp.level ?? 0) < level) {
-      return res.status(400).json({ message: 'Level not reached yet' });
+    if (!all && (!Number.isSafeInteger(req.body.level) || !['free', 'premium'].includes(req.body.tier))) {
+      return res.status(400).json({ message: 'Invalid level or tier.' });
     }
-
-    if (tier === 'premium' && !sp.isPremium) {
-      return res.status(403).json({ message: 'Premium track not unlocked' });
-    }
-
-    const claimedArr = tier === 'free'
-      ? (sp.claimedLevels?.free ?? [])
-      : (sp.claimedLevels?.premium ?? []);
-
-    if (claimedArr.includes(level)) {
-      return res.status(400).json({ message: 'Already claimed' });
-    }
-
-    // Find the reward
-    const levelEntry = pass.levels?.find(l => l.level === level);
-    const reward = levelEntry?.[tier];
-
-    // Apply reward
-    if (reward && reward.type !== 'none') {
-      if (reward.type === 'gold') {
-        user.gold = (user.gold || 0) + Number(reward.value || 0);
-      } else if (reward.type === 'frame') {
-        // Add frame to user's owned frames
-        if (!user.frames) user.frames = { owned: [], active: null };
-        if (!user.frames.owned) user.frames.owned = [];
-        const frameKey = reward.value;
-        if (frameKey && !user.frames.owned.includes(frameKey)) {
-          user.frames.owned.push(frameKey);
-        }
-      } else if (reward.type === 'nameEffect') {
-        // Add name effect to user's owned effects
-        if (!user.nameEffects) user.nameEffects = { owned: [], active: null };
-        if (!user.nameEffects.owned) user.nameEffects.owned = [];
-        const effectKey = reward.value;
-        if (effectKey && !user.nameEffects.owned.includes(effectKey)) {
-          user.nameEffects.owned.push(effectKey);
-        }
+    for (let retry = 0; retry < 5; retry++) {
+      const pass = await SeasonPass.findOne({ isActive: true }).lean();
+      if (!pass) return res.status(404).json({ message: 'No active pass.' });
+      if (all && req.body.passId !== String(pass._id)) {
+        return res.status(409).json({ message: 'The season changed. Reload the page.' });
       }
-      // Other reward types (item) can be implemented later
+      const user = await User.findById(req.userId).lean();
+      if (!user) return res.status(404).json({ message: 'User not found.' });
+      const progress = user.seasonPass || {};
+      const rewards = availablePassRewards(pass, progress).filter(entry =>
+        all || (entry.level === req.body.level && entry.tier === req.body.tier));
+      if (!rewards.length && !all) return res.status(409).json({ message: 'Reward unavailable or already collected.' });
+      let updated = user;
+      if (rewards.length) {
+        const itemIds = rewards.filter(entry => entry.reward.type === 'item').map(entry => entry.reward.value);
+        const items = itemIds.length ? await ShopItem.find({ itemId: { $in: itemIds } }).lean() : [];
+        const update = rewardUpdate(rewards, items, user.inventory || []);
+        // The reward and its receipt are written together. Concurrent claims retry from fresh data.
+        const filter = { _id: user._id, 'seasonPass.passId': pass._id,
+          'seasonPass.level': progress.level, 'seasonPass.isPremium': progress.isPremium };
+        for (const tier of ['free', 'premium']) {
+          const path = `seasonPass.claimedLevels.${tier}`;
+          filter[path] = progress.claimedLevels?.[tier] ?? { $exists: false };
+        }
+        if (itemIds.length) filter.inventory = user.inventory || [];
+        updated = await User.findOneAndUpdate(filter, update, { new: true }).lean();
+        if (!updated) continue;
+      }
+      return res.json({ success: true, collectedCount: rewards.length, userProgress: updated.seasonPass,
+        gold: updated.gold, frames: updated.frames, nameEffects: updated.nameEffects, inventory: updated.inventory });
     }
-
-    // Mark as claimed
-    if (!user.seasonPass.claimedLevels) {
-      user.seasonPass.claimedLevels = { free: [], premium: [] };
-    }
-    if (tier === 'free') {
-      user.seasonPass.claimedLevels.free = [...(user.seasonPass.claimedLevels.free || []), level];
-    } else {
-      user.seasonPass.claimedLevels.premium = [...(user.seasonPass.claimedLevels.premium || []), level];
-    }
-    user.markModified('seasonPass');
-    await user.save();
-
-    res.json({ success: true, gold: user.gold });
-  } catch (err) {
-    console.error('[SeasonPass] collect error:', err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(409).json({ message: 'Your rewards changed. Please try again.' });
+  } catch (error) {
+    console.error('[SeasonPass] collect error:', error);
+    res.status(500).json({ message: 'Unable to collect rewards. Please try again.' });
   }
-};
+}
 
+export const collectReward = (req, res) => collectPassRewards(req, res, false);
+export const collectAllRewards = (req, res) => collectPassRewards(req, res, true);
 
-// ─── Buy premium track ────────────────────────────────────────────────────────
 export const buyPremium = async (req, res) => {
   try {
     const pass = await SeasonPass.findOne({ isActive: true });

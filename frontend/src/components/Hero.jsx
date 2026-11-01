@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -31,6 +31,51 @@ const LINUX_CHAPTERS = [
 
 const TRACKS = [];
 
+const SUBTITLE = 'A place for people who enjoy systems, networks, code and everything in between.';
+
+function HeroSubtitle() {
+  const textRef = useRef(null);
+  const cursorRef = useRef(null);
+
+  useEffect(() => {
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let frame;
+    let startedAt;
+    let previousCount = -1;
+    const finish = () => {
+      cancelAnimationFrame(frame);
+      textRef.current.textContent = SUBTITLE;
+      cursorRef.current.classList.add('h-cursor-blink');
+    };
+    const animate = (now) => {
+      startedAt ??= now;
+      const count = Math.min(SUBTITLE.length, Math.max(0, Math.floor((now - startedAt - 600) / 22)));
+      if (count !== previousCount) {
+        textRef.current.textContent = SUBTITLE.slice(0, count);
+        previousCount = count;
+      }
+      if (count < SUBTITLE.length) frame = requestAnimationFrame(animate);
+      else finish();
+    };
+    const handleMotion = () => { if (motion.matches) finish(); };
+    textRef.current.textContent = '';
+    cursorRef.current.classList.remove('h-cursor-blink');
+    if (motion.matches) finish();
+    else frame = requestAnimationFrame(animate);
+    motion.addEventListener('change', handleMotion);
+    return () => {
+      cancelAnimationFrame(frame);
+      motion.removeEventListener('change', handleMotion);
+    };
+  }, []);
+
+  return (
+    <p className="h-sub" aria-label={SUBTITLE}>
+      <span className="h-sub-reserve" aria-hidden="true">{SUBTITLE}<span className="h-cursor">|</span></span>
+      <span className="h-sub-typed" aria-hidden="true"><span ref={textRef}>{SUBTITLE}</span><span ref={cursorRef} className="h-cursor">|</span></span>
+    </p>
+  );
+}
 
 
 
@@ -48,28 +93,6 @@ export default function Hero() {
     });
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     return () => observer.disconnect();
-  }, []);
-
-  // Typing effect for subtitle
-  const SUBTITLE = 'A place for people who enjoy systems, networks, code and everything in between.';
-  const [typedText, setTypedText] = useState('');
-  const [typingDone, setTypingDone] = useState(false);
-
-  useEffect(() => {
-    let i = 0;
-    // small delay before typing starts so title fade is visible first
-    const delay = setTimeout(() => {
-      const interval = setInterval(() => {
-        i++;
-        setTypedText(SUBTITLE.slice(0, i));
-        if (i >= SUBTITLE.length) {
-          clearInterval(interval);
-          setTypingDone(true);
-        }
-      }, 22);
-      return () => clearInterval(interval);
-    }, 600);
-    return () => clearTimeout(delay);
   }, []);
 
   const handleStartTest = () => {
@@ -105,13 +128,11 @@ export default function Hero() {
       <section className="h-hero">
         <div className="h-container">
           <h1 className="h-title">
-            <span className="h-title-word h-title-word-1">Build.</span>
-            <span className="h-title-word h-title-word-2">Break.</span>
-            <span className="h-title-word h-title-word-3">Understand.</span>
+            <span className="h-title-word h-title-word-1">Master.</span>
+            <span className="h-title-word h-title-word-2">Applied.</span>
+            <span className="h-title-word h-title-word-3">Informatics.</span>
           </h1>
-          <p className="h-sub">
-            {typedText}<span className={`h-cursor ${typingDone ? 'h-cursor-blink' : ''}`}>|</span>
-          </p>
+          <HeroSubtitle />
           <div className="h-cta">
             <Link to="#features" className="h-btn-primary h-btn-start-learning" onClick={(e) => {
               e.preventDefault();
@@ -132,7 +153,7 @@ export default function Hero() {
       <div className="h-stats-stripe">
         <div className="h-stats-stripe-inner">
           <div className="h-stripe-stat">
-            <span className="h-stripe-num">2000+</span>
+            <span className="h-stripe-num">2500+</span>
             <span className="h-stripe-label">Questions</span>
           </div>
           <div className="h-stripe-divider" />

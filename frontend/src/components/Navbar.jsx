@@ -6,6 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useMessage } from '../context/MessageContext';
 import { useInbox } from '../context/InboxContext';
+import SeasonRewardBadge from './SeasonRewardBadge';
 import { Languages, ChevronDown, LogIn, Swords, UserPlus, Star,RotateCcw, LogOut, User, Sun, Moon, Settings, Inbox, UserCircle, BookOpen, Monitor, Globe, Terminal, CircleAlert, Package, Zap, Sparkles, FileTerminal, Users, Bookmark, Menu, X, Circle, CircleArrowDown, CircleArrowOutDownLeft, CircleArrowRight } from 'lucide-react';
 import GoldIcon from './GoldIcon';
 import StreakIndicator from './StreakIndicator';
@@ -379,6 +380,7 @@ export default function Navbar() {
           <Link to="/season" className="nav-season-link" onClick={closeMobileMenu}>
             <Zap size={14} className="nav-season-icon" />
             Season
+            <SeasonRewardBadge />
           </Link>
           <Link to="/learn" onClick={closeMobileMenu}>Learn</Link>
           {user && <Link to="/progress" onClick={closeMobileMenu}>Progress</Link>}

@@ -37,6 +37,7 @@ const CARDS = [
     entries: [
       { icon: BookOpen, label: '300+ Questions', to: '/grile?filter=network' },
       { icon: FlaskConical, label: '5+ Tests', to: '/exam-selection' },
+      { icon: Network, label: 'Network Lab', to: '/network-lab/problems' },
     ],
   },
   {

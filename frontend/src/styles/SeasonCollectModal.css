@@ -1,0 +1,78 @@
+.season-collect-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, .72);
+}
+
+.season-collect-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .35);
+  animation: season-collect-enter .22s ease-out;
+}
+
+.season-collect-dialog button { font: inherit; cursor: pointer; }
+.season-collect-dialog button:disabled { opacity: .55; cursor: wait; }
+.season-collect-dialog button:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 4px; }
+.season-collect-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  padding: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 0;
+  border-radius: 6px;
+}
+.season-collect-emblem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 18px;
+  border-radius: 18px;
+  color: #eab308;
+  background: rgba(234, 179, 8, .12);
+}
+.season-collect-eyebrow { font-size: 12px; color: var(--text-muted); }
+.season-collect-dialog h2 { font-size: 24px; margin: 8px 0; }
+.season-collect-dialog p { font-size: 14px; line-height: 1.6; color: var(--text-secondary); }
+.season-collect-rewards { list-style: none; padding: 0; margin: 24px 0; display: grid; gap: 10px; }
+.season-collect-rewards li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  text-align: left;
+}
+.season-collect-reward-icon { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; flex-shrink: 0; color: var(--accent-primary); }
+.season-collect-reward-icon img { width: 40px; height: 40px; object-fit: contain; }
+.season-collect-reward-name { flex: 1; font-size: 14px; overflow-wrap: anywhere; }
+.season-collect-rewards strong { font-size: 16px; white-space: nowrap; }
+.season-collect-actions { display: flex; gap: 10px; }
+.season-collect-actions button { flex: 1; padding: 12px; border-radius: 9px; font-weight: 600; }
+.season-collect-dismiss { color: var(--text-secondary); background: transparent; border: 1px solid var(--border); }
+.season-collect-submit { display: flex; gap: 8px; align-items: center; justify-content: center; background: var(--accent-primary); color: var(--bg-primary); border: 1px solid var(--accent-primary); }
+.season-collect-dialog .season-collect-error { color: #ef4444; }
+@keyframes season-collect-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 480px) { .season-collect-dialog { padding: 26px 18px; } }
+@media (prefers-reduced-motion: reduce) { .season-collect-dialog { animation: none; } }

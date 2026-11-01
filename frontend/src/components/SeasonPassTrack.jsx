@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
 import '../styles/SeasonPassTrack.css';
+import { useSeasonPass } from '../context/SeasonPassContext';
+import SeasonRewardBadge from './SeasonRewardBadge';
 
 function RewardIcon({ reward, size = 15 }) {
   if (!reward || reward.type === 'none') return <span className="spt-dash">—</span>;
@@ -35,9 +37,7 @@ function RewardIcon({ reward, size = 15 }) {
 
 export default function SeasonPassTrack() {
   const { user, updateUser } = useContext(AuthContext);
-  const [pass, setPass]                 = useState(null);
-  const [userProgress, setUserProgress] = useState(null);
-  const [loading, setLoading]           = useState(true);
+  const { pass, userProgress, setUserProgress, loading } = useSeasonPass();
   const [open, setOpen]                 = useState(false);
   const [page, setPage]                 = useState(0);
   const [collecting, setCollecting]     = useState(null);
@@ -47,14 +47,6 @@ export default function SeasonPassTrack() {
   const trackRef = useRef(null);
 
   const LEVELS_PER_PAGE = 5;
-
-  useEffect(() => {
-    fetch(`${API_URL}/season-pass/active`, { credentials: 'include' })
-      .then(r => r.json())
-      .then(d => { if (d.success && d.pass) { setPass(d.pass); setUserProgress(d.userProgress); } })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
 
   useEffect(() => {
     if (open) document.body.style.overflow = 'hidden';
@@ -150,14 +142,8 @@ export default function SeasonPassTrack() {
       });
       const data = await res.json();
       if (data.success) {
-        setUserProgress(prev => ({
-          ...prev,
-          claimedLevels: {
-            free:    tier === 'free'    ? [...claimedFree, lvl] : claimedFree,
-            premium: tier === 'premium' ? [...claimedPrem, lvl] : claimedPrem,
-          },
-        }));
-        if (data.gold !== undefined) updateUser({ gold: data.gold });
+        setUserProgress(data.userProgress);
+        updateUser({ gold: data.gold, frames: data.frames, nameEffects: data.nameEffects, inventory: data.inventory });
       }
     } catch { /**/ }
     finally { setCollecting(null); }
@@ -207,10 +193,11 @@ export default function SeasonPassTrack() {
             </button>
           )}
           <button
-            className="spt-btn-secondary"
+            className="spt-btn-secondary spt-view-pass"
             onClick={() => { setOpen(true); setPage(currentPage); }}
           >
             View Pass
+            <SeasonRewardBadge />
           </button>
         </div>
 

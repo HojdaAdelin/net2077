@@ -6,6 +6,7 @@ import {
   deleteSeasonPass,
   getActivePass,
   collectReward,
+  collectAllRewards,
   buyPremium,
   addTestXP,
 } from '../controllers/seasonPassController.js';
@@ -30,6 +31,7 @@ const router = express.Router();
 // Public (optionally auth for user progress)
 router.get('/active', optionalAuth, getActivePass);
 router.post('/collect', authMiddleware, collectReward);
+router.post('/collect-all', authMiddleware, collectAllRewards);
 router.post('/buy-premium', authMiddleware, buyPremium);
 
 // Root-only admin

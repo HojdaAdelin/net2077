@@ -9,6 +9,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { MessageProvider } from './context/MessageContext';
 import { ConfirmProvider } from './context/ConfirmContext';
 import { InboxProvider } from './context/InboxContext';
+import { SeasonPassProvider } from './context/SeasonPassContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SupportButton from './components/SupportButton';
@@ -61,6 +62,7 @@ export default function App() {
     <ThemeProvider>
       <LanguageProvider>
         <AuthProvider>
+          <SeasonPassProvider>
           <InboxProvider>
             <MessageProvider>
               <ConfirmProvider>
@@ -115,6 +117,7 @@ export default function App() {
             </ConfirmProvider>
           </MessageProvider>
           </InboxProvider>
+          </SeasonPassProvider>
         </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>

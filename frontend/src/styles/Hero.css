@@ -56,7 +56,7 @@
   line-height: 1.1;
   letter-spacing: -1.5px;
   margin: 0 0 20px 0;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 /* Progressive word animation - smooth flow */
@@ -103,12 +103,34 @@
 }
 
 .h-sub {
+  display: grid;
   font-size: clamp(15px, 2vw, 18px);
   color: var(--text-secondary);
   max-width: 580px;
   margin: 0 auto 36px;
   line-height: 1.65;
   min-height: 1.65em;
+}
+
+.h-sub-reserve,
+.h-sub-typed {
+  grid-area: 1 / 1;
+}
+
+.h-sub-reserve {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .h-title-word {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .h-sub .h-cursor {
+    animation: none;
+  }
 }
 
 /* Typing cursor */
