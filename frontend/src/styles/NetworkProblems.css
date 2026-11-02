@@ -1,7 +1,7 @@
 .nlp-page, .npa-panel, .npa-editor { --nlp-accent: #0f928a; --nlp-accent-soft: color-mix(in srgb, var(--nlp-accent) 9%, transparent); color: var(--text-primary); }
 [data-theme="dark"] :is(.nlp-page, .npa-panel, .npa-editor) { --nlp-accent: #5eead4; }
 .nlp-page { max-width: 1550px; margin: 0 auto; padding: 112px 32px 70px; }
-.nlp-problem-page { max-width: 1800px; }
+.nlp-page.nlp-problem-page { max-width: 1800px; padding-top: 24px; }
 .nlp-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--nlp-accent); font-size: 10px; font-weight: 650; letter-spacing: 1.5px; }
 .nlp-hero { display: flex; align-items: center; justify-content: space-between; gap: 25px; margin: 0 0 35px; }
 .nlp-hero h1 { margin: 15px 0 12px; color: var(--text-primary); font-size: clamp(26px, 3.5vw, 42px); font-weight: 650; letter-spacing: -1.5px; }

@@ -4,6 +4,7 @@ import ShopItem from '../models/ShopItem.js';
 import SeasonPass from '../models/SeasonPass.js';
 import User from '../models/User.js';
 import { DEFAULT_SEASON_BOX } from '../data/seasonBoxDefaults.js';
+import { ensureCommonBoost } from './ensureCommonBoost.js';
 
 export const TICKET_TOTAL = 10000;
 export const RARITIES = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
@@ -28,6 +29,7 @@ export const publicSeasonBox = config => ({
 });
 
 export async function seasonBoxCatalog(config) {
+  await ensureCommonBoost();
   const [items, passes, frames, names, profiles] = await Promise.all([
     ShopItem.find({ $or: [{ category: 'boost' }, { itemId: 'reset_daily' }] }).sort({ order: 1, name: 1 }).lean(),
     SeasonPass.find({}).select('levels bestRewards').lean(),

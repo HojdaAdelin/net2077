@@ -1,5 +1,18 @@
 [
   {
+    "itemId": "2x_xp_5min_common",
+    "name": "2x XP Boost",
+    "description": "Double XP for 5 minutes",
+    "price": 10,
+    "category": "boost",
+    "icon": "Zap",
+    "duration": 5,
+    "multiplier": 2,
+    "isSpecialOffer": false,
+    "isActive": false,
+    "order": 0
+  },
+  {
     "itemId": "2x_xp_5min",
     "name": "2x XP Boost",
     "description": "Double XP for 10 minutes",
