@@ -1,0 +1,38 @@
+.nl-address-dialog { position: fixed; inset: 0; margin: auto; width: min(1120px, calc(100% - 28px)); max-width: none; max-height: 88dvh; padding: 0; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card); color: var(--text-primary); box-shadow: 0 24px 80px rgba(0,0,0,.35); }
+.nl-address-dialog::backdrop { background: rgba(0,0,0,.65); }
+.nl-address-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 24px 24px 18px; }
+.nl-address-header > div > span { display: flex; align-items: center; gap: 7px; color: var(--nl-highlight); font-size: 9px; letter-spacing: 1.2px; }
+.nl-address-header h2 { margin: 8px 0 5px; font-size: 23px; letter-spacing: -.6px; }
+.nl-address-header p { color: var(--text-secondary); font-size: 12px; line-height: 1.7; }
+.nl-address-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 0 24px 18px; }
+.nl-address-toolbar label { display: flex; align-items: center; gap: 9px; width: min(440px, 100%); padding: 9px 12px; border: 1px solid var(--border); border-radius: 7px; background: var(--bg-primary); color: var(--text-secondary); }
+.nl-address-toolbar label:focus-within { border-color: var(--nl-highlight); }
+.nl-address-toolbar input { width: 100%; min-width: 0; padding: 0; border: 0; background: transparent; color: var(--text-primary); font: inherit; font-size: 12px; outline: none; }
+.nl-address-toolbar > span { color: var(--text-secondary); font: 11px Consolas, monospace; white-space: nowrap; }
+.nl-address-scroll { max-height: 55dvh; overflow: auto; border-block: 1px solid var(--border); scrollbar-width: thin; scrollbar-color: var(--border) var(--bg-secondary); }
+.nl-address-scroll table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
+.nl-address-caption { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.nl-address-scroll th { position: sticky; top: 0; z-index: 1; background: var(--bg-secondary); color: var(--text-secondary); font-size: 10px; font-weight: 550; white-space: nowrap; padding: 12px 15px; }
+.nl-address-scroll td { padding: 12px 15px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.nl-address-scroll tr:last-child td { border-bottom: 0; }
+.nl-address-scroll tbody tr { cursor: pointer; }
+.nl-address-scroll tbody tr:hover { background: color-mix(in srgb, var(--nl-highlight) 5%, transparent); }
+.nl-address-device { display: flex; flex-direction: column; gap: 3px; padding: 0; border: 0; border-radius: 2px; background: transparent; color: var(--text-primary); text-align: left; font: inherit; cursor: pointer; }
+.nl-address-device strong { display: flex; align-items: center; gap: 6px; font-weight: 550; }
+.nl-address-device strong svg { color: var(--text-secondary); }
+.nl-address-device small { font-size: 10px; color: var(--text-secondary); }
+.nl-address-mono { font: 11px Consolas, monospace; }
+.nl-address-scroll td.nl-address-missing { color: var(--warning); font-size: 10px; font-family: inherit; }
+.nl-address-state { display: inline-flex; align-items: center; gap: 6px; color: var(--text-secondary); font-size: 10px; }
+.nl-address-state i { width: 5px; height: 5px; border-radius: 50%; background: var(--text-secondary); }
+.nl-address-state.is-enabled i { background: var(--nl-highlight); }
+.nl-address-scroll .is-disabled .nl-address-mono { color: var(--text-secondary); }
+.nl-address-empty { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 45px 20px; text-align: center; color: var(--text-secondary); }
+.nl-address-empty strong { font-size: 14px; color: var(--text-primary); }
+.nl-address-empty p { font-size: 12px; }
+.nl-address-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 15px 24px; color: var(--text-secondary); font-size: 10px; }
+.nl-address-footer span { display: flex; align-items: center; gap: 6px; }
+.nl-history-tools { display: flex; align-items: center; gap: 3px; border-left: 1px solid var(--border); padding-left: 8px; margin-left: 3px; }
+.nl-history-tools button:disabled { opacity: .3; cursor: not-allowed; }
+.nl-history-tools button:disabled:hover { background: transparent; color: var(--text-secondary); }
+@media (max-width: 600px) { .nl-address-header { padding: 18px 15px 15px; } .nl-address-toolbar { padding: 0 15px 15px; flex-wrap: wrap; } .nl-address-toolbar label { width: 100%; } .nl-address-footer { padding: 13px 15px; } .nl-address-scroll { max-height: 50dvh; } }

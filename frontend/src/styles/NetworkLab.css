@@ -60,7 +60,7 @@
 .nl-shortcuts kbd { padding: 2px 4px; border: 1px solid var(--border); border-radius: 3px; background: var(--bg-secondary); color: var(--text-secondary); font-size: 9px; }
 .nl-editor { min-width: 0; display: flex; flex-direction: column; }
 .nl-toolbar { min-height: 56px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 10px 15px; border-bottom: 1px solid var(--border); }
-.nl-tools { display: flex; gap: 4px; }
+.nl-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
 .nl-tools > button, .nl-fit-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 32px; padding: 7px 11px; color: var(--text-secondary); background: transparent; border: 1px solid transparent; border-radius: 5px; font: inherit; font-size: 11px; cursor: pointer; }
 .nl-tools > button[aria-pressed="true"] { background: var(--bg-secondary); border-color: var(--border); color: var(--text-primary); }
 .nl-tools > button:hover, .nl-fit-button:hover { background: var(--bg-secondary); color: var(--text-primary); }

@@ -1,15 +1,17 @@
 import { useContext, useEffect, useId, useReducer, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MousePointer2, Cable, Plus, Minus, Scan, ArrowUpRight, Settings2, FlaskConical, CircleHelp } from 'lucide-react';
+import { MousePointer2, Cable, Plus, Minus, Scan, ArrowUpRight, Settings2, FlaskConical, CircleHelp, Undo2, Redo2, TableProperties } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import NetworkDeviceArtwork from '../components/NetworkDeviceArtwork';
 import NetworkDeviceSettings from '../components/NetworkDeviceSettings';
 import NetworkTools from '../components/NetworkTools';
 import NetworkInspector from '../components/NetworkInspector';
+import NetworkAddressTable from '../components/NetworkAddressTable';
+import { createNetworkHistory, networkHistoryReducer } from '../utils/networkHistory';
 import { usePacketPlayback, PacketControls, PacketMarker } from '../components/PacketPlayback';
 import { hasWireless, isBridgeDevice } from '../utils/networkConfig';
 import { wirelessConnections } from '../utils/networkSimulation';
-import { DEVICE_TYPES, emptyTopology, topologyReducer, portPosition, cablePath, connectionError, portInUse, samePort, fitTopology } from '../utils/networkTopology';
+import { DEVICE_TYPES, emptyTopology, portPosition, cablePath, connectionError, portInUse, samePort, fitTopology } from '../utils/networkTopology';
 import '../styles/NetworkLab.css';
 
 const DEVICE_GROUPS = [
@@ -19,7 +21,9 @@ const DEVICE_GROUPS = [
 ];
 
 export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, embedded = false }) {
-  const [topology, updateTopology] = useReducer(topologyReducer, initialTopology, value => value ? structuredClone(value) : emptyTopology());
+  const [history, updateHistory] = useReducer(networkHistoryReducer, initialTopology,
+    value => createNetworkHistory(value ? structuredClone(value) : emptyTopology()));
+  const topology = history.present;
   const editable = id => !problem || problem.permissions.configure.includes(id) || (problem.permissions.devices && !problem.topology.devices.some(device => device.id === id));
   const removable = id => !problem || (problem.permissions.devices && !problem.topology.devices.some(device => device.id === id));
   const cablesEditable = !problem || problem.permissions.cables;
@@ -28,7 +32,7 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
   const dispatch = action => {
     if ((action.type === 'add' && !devicesEditable) || (action.type === 'delete-device' && !removable(action.id)) ||
       (['connect', 'delete-cable'].includes(action.type) && !cablesEditable) || (action.type === 'configure' && !editable(action.id))) return;
-    playback.clear(); updateTopology(action);
+    playback.clear(); updateHistory({ type: 'edit', operation: action });
   };
   const [tool, setTool] = useState('select');
   const [selected, setSelected] = useState(null);
@@ -39,6 +43,7 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
   const [size, setSize] = useState({ width: 1000, height: 650 });
   const [isDragging, setIsDragging] = useState(false);
   const [settingsDeviceId, setSettingsDeviceId] = useState(null);
+  const [addressTableOpen, setAddressTableOpen] = useState(false);
   const [inspectorTab, setInspectorTab] = useState('device');
   const [simulationSourceId, setSimulationSourceId] = useState('');
   const [highlightedLinks, setHighlightedLinks] = useState([]);
@@ -53,6 +58,20 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
   const wifiLinks = wirelessConnections(topology);
   const activePacketDevice = playback.event?.deviceId;
   const tracedLinks = playback.session ? playback.session.trace.slice(0, playback.index + 1).map(event => event.linkId).filter(Boolean) : highlightedLinks;
+  const canUndo = history.past.length > 0 && !history.transaction;
+  const canRedo = history.future.length > 0 && !history.transaction;
+
+  const restoreHistory = direction => {
+    if (dragRef.current || (direction === 'undo' ? !canUndo : !canRedo)) return;
+    playback.clear();
+    setHighlightedLinks([]);
+    setSource(null);
+    setSelected(null);
+    setSimulationSourceId('');
+    setSettingsDeviceId(null);
+    updateHistory({ type: direction });
+    setMessage(direction === 'undo' ? 'Last workspace change undone.' : 'Workspace change restored.');
+  };
 
   useEffect(() => { setHighlightedLinks([]); }, [topology]);
   useEffect(() => { onTopologyChange?.(topology); }, [topology, onTopologyChange]);
@@ -147,7 +166,7 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
   });
 
   const pointerDown = event => {
-    if (event.button !== 0 || event.target.closest('[data-port]')) return;
+    if (event.button !== 0 || dragRef.current || event.target.closest('[data-port]')) return;
     const deviceElement = event.target.closest('[data-device]');
     const cableElement = event.target.closest('[data-cable]');
     svgRef.current.focus({ preventScroll: true });
@@ -157,6 +176,7 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
       setSelected({ kind: 'device', id: device.id });
       if (!playback.playing) setInspectorTab('device');
       if (tool === 'cable') { setMessage('Click one of the small ports below the device to connect a cable.'); return; }
+      updateHistory({ type: 'begin' });
       dragRef.current = { kind: 'device', id: device.id, start: worldPoint(event), x: device.x, y: device.y, pointerId: event.pointerId };
     } else {
       setSelected(null);
@@ -177,14 +197,24 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
   };
   const finishPointer = event => {
     if (dragRef.current?.pointerId !== event.pointerId) return;
+    if (dragRef.current.kind === 'device') updateHistory({ type: 'commit' });
     dragRef.current = null;
     setIsDragging(false);
     if (svgRef.current.hasPointerCapture(event.pointerId)) svgRef.current.releasePointerCapture(event.pointerId);
   };
 
   const keyDown = event => {
-    if (settingsDeviceId) return;
-    if (event.target.closest('input, textarea, select, button, [contenteditable="true"]')) return;
+    if (settingsDeviceId || addressTableOpen || event.defaultPrevented) return;
+    if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+    if ((event.ctrlKey || event.metaKey) && !event.altKey) {
+      const key = event.key.toLowerCase();
+      if (key === 'z' || key === 'y') {
+        event.preventDefault();
+        restoreHistory(key === 'y' || event.shiftKey ? 'redo' : 'undo');
+        return;
+      }
+    }
+    if (event.target.closest('button')) return;
     if (event.key === 'Escape') { setSource(null); setTool('select'); setMessage('Selection mode.'); }
     if (event.key === 'Delete' || event.key === 'Backspace') { event.preventDefault(); removeSelected(); }
     if (selectedDevice && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
@@ -224,12 +254,24 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
               <span className="nl-palette-label"><strong>{config.label}</strong><small>{config.ports.length} {config.ports.length === 1 ? 'port' : 'ports'}{hasWireless(type) ? ' + Wi-Fi' : ''}</small></span><Plus size={15} aria-hidden="true" />
             </button>
           ); })}</div></div>)}</div>}
-          <details className="nl-library-help"><summary><CircleHelp size={13} />Quick guide</summary><p>Click two free Ethernet ports to connect devices. Double-click a device to configure it.</p><div className="nl-shortcuts"><span><kbd>Del</kbd> Remove selection</span><span><kbd>Esc</kbd> Cancel cable</span><span><kbd>↑ ↓ ← →</kbd> Move device</span></div></details>
+          <details className="nl-library-help"><summary><CircleHelp size={13} />Quick guide</summary><p>Click two free Ethernet ports to connect devices. Double-click a device to configure it.</p><div className="nl-shortcuts"><span><kbd>Del</kbd> Remove selection</span><span><kbd>Esc</kbd> Cancel cable</span><span><kbd>↑ ↓ ← →</kbd> Move device</span><span><kbd>Ctrl/⌘ Z</kbd> Undo</span><span><kbd>Ctrl/⌘ Shift Z</kbd> Redo</span></div></details>
         </aside>
         <section className="nl-editor" aria-label="Topology editor">
-          <div className="nl-toolbar"><div className="nl-tools" role="group" aria-label="Canvas tools"><button type="button" aria-pressed={tool === 'select'} onClick={() => chooseTool('select')}><MousePointer2 size={15} />Select</button><button type="button" aria-pressed={tool === 'cable'} onClick={() => chooseTool('cable')}><Cable size={16} />Cable</button><button type="button" aria-pressed={inspectorTab === 'simulation'} onClick={() => setInspectorTab('simulation')}><FlaskConical size={15} />Simulate</button></div><div className="nl-view-tools"><button type="button" className="nl-icon-button" aria-label="Zoom out" onClick={() => zoomTo(view.zoom / 1.2)}><Minus size={15} /></button><span>{Math.round(view.zoom * 100)}%</span><button type="button" className="nl-icon-button" aria-label="Zoom in" onClick={() => zoomTo(view.zoom * 1.2)}><Plus size={15} /></button><span className="nl-toolbar-separator" /><button type="button" className="nl-fit-button" onClick={() => setView(fitTopology(topology.devices, size.width, size.height))}><Scan size={15} />Fit view</button></div></div>
+          <div className="nl-toolbar">
+            <div className="nl-tools" role="group" aria-label="Canvas tools">
+              <button type="button" aria-pressed={tool === 'select'} onClick={() => chooseTool('select')}><MousePointer2 size={15} />Select</button>
+              <button type="button" aria-pressed={tool === 'cable'} onClick={() => chooseTool('cable')}><Cable size={16} />Cable</button>
+              <button type="button" aria-pressed={inspectorTab === 'simulation'} onClick={() => setInspectorTab('simulation')}><FlaskConical size={15} />Simulate</button>
+              <button type="button" aria-haspopup="dialog" onClick={() => setAddressTableOpen(true)}><TableProperties size={15} />Address table</button>
+              <div className="nl-history-tools" role="group" aria-label="Workspace history">
+                <button type="button" className="nl-icon-button" disabled={!canUndo} onClick={() => restoreHistory('undo')} aria-label="Undo last change" title="Undo (Ctrl/⌘ Z)"><Undo2 size={16} /></button>
+                <button type="button" className="nl-icon-button" disabled={!canRedo} onClick={() => restoreHistory('redo')} aria-label="Redo last change" title="Redo (Ctrl/⌘ Shift Z or Ctrl Y)"><Redo2 size={16} /></button>
+              </div>
+            </div>
+            <div className="nl-view-tools"><button type="button" className="nl-icon-button" aria-label="Zoom out" onClick={() => zoomTo(view.zoom / 1.2)}><Minus size={15} /></button><span>{Math.round(view.zoom * 100)}%</span><button type="button" className="nl-icon-button" aria-label="Zoom in" onClick={() => zoomTo(view.zoom * 1.2)}><Plus size={15} /></button><span className="nl-toolbar-separator" /><button type="button" className="nl-fit-button" onClick={() => setView(fitTopology(topology.devices, size.width, size.height))}><Scan size={15} />Fit view</button></div>
+          </div>
           <div className={`nl-stage${isDragging ? ' is-dragging' : ''}${tool === 'cable' ? ' is-cabling' : ''}`} ref={stageRef}>
-            <svg className="nl-canvas" ref={svgRef} tabIndex={0} role="application" aria-label="Network topology. Drag devices to move them. Click two ports to connect them. Use arrow keys to move a selected device." viewBox={`${view.x} ${view.y} ${size.width / view.zoom} ${size.height / view.zoom}`} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={finishPointer} onPointerCancel={finishPointer} onLostPointerCapture={() => { dragRef.current = null; setIsDragging(false); }}>
+            <svg className="nl-canvas" ref={svgRef} tabIndex={0} role="application" aria-label="Network topology. Drag devices to move them. Click two ports to connect them. Use arrow keys to move a selected device." viewBox={`${view.x} ${view.y} ${size.width / view.zoom} ${size.height / view.zoom}`} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={finishPointer} onPointerCancel={finishPointer} onLostPointerCapture={finishPointer}>
               <defs><pattern id={gridId} width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="0.8" className="nl-grid-dot" /></pattern></defs>
               <rect x={view.x} y={view.y} width={size.width / view.zoom} height={size.height / view.zoom} fill={`url(#${gridId})`} />
               {topology.cables.map(cable => {
@@ -282,6 +324,15 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
         </aside>
       </div>
       {settingsDevice && <NetworkDeviceSettings key={settingsDevice.id} device={settingsDevice} onClose={() => setSettingsDeviceId(null)} onApply={settings => { dispatch({ type: 'configure', id: settingsDevice.id, settings }); setMessage(`${settings.name} configured for this session.`); }} />}
+      {addressTableOpen && <NetworkAddressTable topology={topology} editable={editable} onClose={() => setAddressTableOpen(false)} onSelect={id => {
+        const device = topology.devices.find(item => item.id === id);
+        if (!device) return;
+        setSelected({ kind: 'device', id });
+        setInspectorTab('device');
+        setView(fitTopology([device], size.width, size.height));
+        setAddressTableOpen(false);
+        requestAnimationFrame(() => svgRef.current?.focus({ preventScroll: true }));
+      }} />}
     </div>
   );
 }
