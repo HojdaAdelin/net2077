@@ -52,6 +52,7 @@
 .npc-search > svg { flex-shrink: 0; }
 .npc-search input { border: 0; outline: none; background: transparent; min-width: 0; width: 100%; color: var(--text-primary); font: inherit; font-size: 12px; padding: 0; }
 .npc-search:focus-within { border-color: var(--nlp-accent); }
+.nlp-page.npc-page .npc-search input:is(:focus, :focus-visible) { outline: none; border: 0; box-shadow: none; background: transparent; }
 .npc-search button { display: flex; align-items: center; justify-content: center; padding: 3px; color: var(--text-secondary); border: 0; border-radius: 3px; background: transparent; cursor: pointer; }
 .npc-sort { display: flex; align-items: center; gap: 8px; position: relative; flex-shrink: 0; font-size: 11px; color: var(--text-secondary); }
 .npc-sort select { appearance: none; padding: 10px 26px 10px 10px; min-height: 43px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card); color: var(--text-primary); font: inherit; cursor: pointer; }

@@ -3,12 +3,13 @@ import NetworkDeviceArtwork from './NetworkDeviceArtwork';
 import { DEVICE_TYPES, portInUse } from '../utils/networkTopology';
 import { isBridgeDevice } from '../utils/networkConfig';
 
-export default function NetworkInspector({ topology, wifiLinks, device, cable, readOnly = false, canDelete = true, onConfigure, onSimulate, onDelete, onDeselect }) {
+export default function NetworkInspector({ topology, wifiLinks, device, cable, readOnly = false, canDelete = true, onConfigure, onSimulate, onDelete, onDeselect, quickGuide }) {
   const endpoint = value => `${topology.devices.find(item => item.id === value.deviceId)?.name || 'Device'} · ${value.portId}`;
   if (!device && !cable) return <div className="nl-inspector-empty">
     <div className="nl-inspector-empty-icon"><MousePointer2 size={24} /></div>
     <h3>Explore your network</h3><p>Select a device to see its interfaces and configure it, or select a cable to inspect its connection.</p>
     <div className="nl-inspector-guide"><span><b>1</b>Add devices from the library</span><span><b>2</b>Connect their Ethernet ports</span><span><b>3</b>Configure addresses and simulate</span></div>
+    {quickGuide}
   </div>;
   if (cable) return <div className="nl-device-inspector">
     <div className="nl-sidebar-heading"><h2>Connection</h2><button type="button" className="nl-icon-button" aria-label="Deselect cable" onClick={onDeselect}><X size={15} /></button></div>

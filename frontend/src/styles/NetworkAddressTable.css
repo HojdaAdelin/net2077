@@ -8,6 +8,7 @@
 .nl-address-toolbar label { display: flex; align-items: center; gap: 9px; width: min(440px, 100%); padding: 9px 12px; border: 1px solid var(--border); border-radius: 7px; background: var(--bg-primary); color: var(--text-secondary); }
 .nl-address-toolbar label:focus-within { border-color: var(--nl-highlight); }
 .nl-address-toolbar input { width: 100%; min-width: 0; padding: 0; border: 0; background: transparent; color: var(--text-primary); font: inherit; font-size: 12px; outline: none; }
+.nl-page .nl-address-dialog .nl-address-toolbar input:is(:focus, :focus-visible) { outline: none; border: 0; box-shadow: none; background: transparent; }
 .nl-address-toolbar > span { color: var(--text-secondary); font: 11px Consolas, monospace; white-space: nowrap; }
 .nl-address-scroll { max-height: 55dvh; overflow: auto; border-block: 1px solid var(--border); scrollbar-width: thin; scrollbar-color: var(--border) var(--bg-secondary); }
 .nl-address-scroll table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }

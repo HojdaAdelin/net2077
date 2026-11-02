@@ -1,0 +1,35 @@
+.nl-inspector-empty > .nl-quick-guide-button { width: 100%; margin-top: 26px; }
+.nl-toolbar { scroll-margin-top: 84px; }
+.nl-quick-guide-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 15px; border: 1px solid color-mix(in srgb, var(--nl-highlight) 45%, var(--border)); border-radius: 8px; background: color-mix(in srgb, var(--nl-highlight) 10%, var(--bg-card)); color: var(--nl-highlight); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.nl-quick-guide-button:hover { border-color: var(--nl-highlight); background: color-mix(in srgb, var(--nl-highlight) 17%, var(--bg-card)); }
+.nl-guide-dialog { position: fixed; inset: 0; width: 100%; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: var(--text-primary); overflow: hidden; }
+.nl-guide-dialog::backdrop { background: transparent; }
+.nl-guide-shade { position: absolute; background: rgba(0, 0, 0, .72); }
+.nl-guide-shade-full { inset: 0; }
+.nl-guide-spotlight { position: absolute; border: 2px solid var(--nl-highlight, #38b8bb); border-radius: 10px; box-shadow: 0 0 0 4px rgba(56, 184, 187, .12); pointer-events: none; }
+.nl-guide-arrow { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.nl-guide-arrow > path { fill: none; stroke: var(--nl-highlight, #38b8bb); stroke-width: 2; }
+.nl-guide-arrow marker path { fill: none; stroke: var(--nl-highlight, #38b8bb); stroke-width: 1.5; }
+.nl-guide-card { position: absolute; width: min(350px, calc(100vw - 24px)); max-height: calc(100dvh - 120px); overflow-y: auto; padding: 20px; border: 1px solid color-mix(in srgb, var(--nl-highlight, #38b8bb) 45%, var(--border)); border-radius: 13px; background: var(--bg-card); color: var(--text-primary); box-shadow: 0 20px 65px rgba(0,0,0,.4); scrollbar-width: thin; }
+.nl-guide-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.nl-guide-card-top > span { display: flex; align-items: center; gap: 7px; color: var(--nl-highlight, #38b8bb); font-size: 9px; font-weight: 600; letter-spacing: 1.2px; }
+.nl-guide-card button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font: inherit; font-size: 11px; cursor: pointer; }
+.nl-guide-card-top button { padding: 3px; border: 0; border-radius: 4px; background: transparent; color: var(--text-secondary); }
+.nl-guide-step-heading { display: flex; align-items: center; gap: 11px; margin-bottom: 13px; }
+.nl-guide-icon { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 40px; height: 40px; border-radius: 9px; color: var(--nl-highlight, #38b8bb); background: color-mix(in srgb, var(--nl-highlight, #38b8bb) 10%, transparent); }
+.nl-guide-step-heading small { display: block; margin-bottom: 3px; color: var(--text-secondary); font-size: 8px; letter-spacing: 1px; }
+.nl-guide-step-heading h2 { margin: 0; font-size: 17px; line-height: 1.35; font-weight: 600; letter-spacing: -.3px; }
+.nl-guide-card p { margin: 0; font-size: 12px; line-height: 1.8; color: var(--text-secondary); }
+.nl-guide-card p.nl-guide-tip { margin-top: 14px; padding: 10px 12px; border-left: 2px solid var(--nl-highlight, #38b8bb); border-radius: 0 5px 5px 0; background: color-mix(in srgb, var(--nl-highlight, #38b8bb) 6%, transparent); font-size: 11px; }
+.nl-guide-progress { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 20px 0 15px; }
+.nl-guide-progress > div { display: flex; gap: 4px; }
+.nl-guide-progress > div > span { display: block; width: 22px; height: 3px; border-radius: 3px; background: var(--border); }
+.nl-guide-progress > div > span.is-active { background: var(--nl-highlight, #38b8bb); }
+.nl-guide-progress > span { color: var(--text-secondary); font: 10px Consolas, monospace; }
+.nl-guide-card footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.nl-guide-back { padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--text-secondary); }
+.nl-guide-back:disabled { opacity: .35; cursor: not-allowed; }
+.nl-guide-next { padding: 9px 14px; border: 1px solid #0f766e; border-radius: 6px; background: #0f766e; color: #fff; font-weight: 600; }
+.nl-guide-next:hover { background: #115e59; }
+.nl-guide-dialog button:focus-visible { outline: 2px solid var(--nl-highlight, #38b8bb); outline-offset: 3px; }
+@media (max-width: 600px) { .nl-guide-card { padding: 16px; } .nl-quick-guide-button { padding: 9px 12px; } }
