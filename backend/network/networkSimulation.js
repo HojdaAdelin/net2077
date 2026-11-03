@@ -1,13 +1,16 @@
-import { ipv4, formatIPv4, sameSubnet, maskPrefix, prefixMask, parseCIDR, isBridgeDevice, isRoutingDevice, allDeviceInterfaces, interfaceEnabled, isSwitchport } from './networkConfig.js';
+import { parseAddress, sameAddress, addressInNetwork, networkFor, parseNetwork } from './networkAddressing.js';
+import { interfaceAcl } from './networkAcl.js';
+import { buildOspfState } from './networkOspf.js';
+import { ipv4, formatIPv4, sameSubnet, maskPrefix, prefixMask, isBridgeDevice, isRoutingDevice, allDeviceInterfaces, interfaceEnabled, isSwitchport } from './networkConfig.js';
 import { vlanLayer2Domain, sviOperational } from './networkLayer2.js';
 export { sviOperational } from './networkLayer2.js';
 
 const splitKey = key => { const [deviceId, portId] = key.split('/'); return { deviceId, portId }; };
 const enabled = interfaceEnabled;
-const addressInterfaces = (device, topology) => Object.entries(allDeviceInterfaces(device)).filter(([port, iface]) =>
+const addressInterfaces = (device, topology, family = 4) => Object.entries(allDeviceInterfaces(device)).filter(([port, iface]) =>
   enabled(device, port) && !isSwitchport(device, port) &&
   (iface.kind !== 'svi' || sviOperational(topology, device, iface.vlan)) &&
-  ipv4(iface.ip) !== null && maskPrefix(iface.mask) !== null);
+  (family === 6 ? parseAddress(iface.ipv6)?.family === 6 : ipv4(iface.ip) !== null && maskPrefix(iface.mask) !== null));
 
 export function wirelessConnections(topology) {
   const links = [];
@@ -24,50 +27,64 @@ export function layer2Domain(topology, origin) {
   return vlanLayer2Domain(topology, origin, wirelessConnections(topology));
 }
 
-function routeFor(device, destination, topology) {
-  const candidates = addressInterfaces(device, topology).filter(([, iface]) => sameSubnet(iface.ip, destination, iface.mask))
-    .map(([port, iface]) => ({ port, iface, nextHop: destination, prefix: maskPrefix(iface.mask), connected: true }));
-  for (const route of device.config.routes || []) {
-    const network = parseCIDR(route.destination);
-    const iface = allDeviceInterfaces(device)[route.port];
-    if (!network || !iface?.ip || !enabled(device, route.port) || !sameSubnet(destination, network.ip, `/${network.prefix}`)) continue;
-    if (!sameSubnet(iface.ip, route.nextHop, iface.mask)) continue;
-    candidates.push({ port: route.port, iface, nextHop: route.nextHop, prefix: network.prefix });
+export const getOspfState = topology => buildOspfState(topology, layer2Domain, addressInterfaces);
+function routeFor(device, destination, topology, ospf) {
+  const family = parseAddress(destination).family;
+  const candidates = [];
+  for (const [port, iface] of addressInterfaces(device, topology, family)) {
+    const network = family === 6 ? `${iface.ipv6}/${iface.prefix6}` : networkFor(iface.ip, maskPrefix(iface.mask));
+    if (addressInNetwork(destination, network)) candidates.push({ port, iface, nextHop: destination, prefix: parseNetwork(network, false).prefix, connected: true, distance: 0 });
   }
-  if (device.config.gateway) {
-    for (const [port, iface] of addressInterfaces(device, topology)) if (sameSubnet(iface.ip, device.config.gateway, iface.mask)) {
-      candidates.push({ port, iface, nextHop: device.config.gateway, prefix: 0 });
-    }
+  const routes = [...(family === 6 ? device.config.routes6 || [] : device.config.routes || []).map(r => ({ ...r, distance: 1 })), ...(family === 4 ? ospf.devices[device.id]?.routes || [] : []).map(r => ({ ...r, distance: 110 }))];
+  const gateway = family === 6 ? device.config.gateway6 : device.config.gateway;
+  if (gateway) for (const [port, iface] of addressInterfaces(device, topology, family)) {
+    const network = family === 6 ? `${iface.ipv6}/${iface.prefix6}` : networkFor(iface.ip, maskPrefix(iface.mask));
+    if (addressInNetwork(gateway, network)) routes.push({ destination: family === 6 ? '::/0' : '0.0.0.0/0', nextHop: gateway, port, distance: 1 });
   }
-  return candidates.sort((a, b) => b.prefix - a.prefix || Number(Boolean(b.connected)) - Number(Boolean(a.connected)))[0];
+  for (const route of routes) {
+    const iface = addressInterfaces(device, topology, family).find(([port]) => port === route.port)?.[1];
+    if (!iface || !addressInNetwork(destination, route.destination)) continue;
+    const network = family === 6 ? `${iface.ipv6}/${iface.prefix6}` : networkFor(iface.ip, maskPrefix(iface.mask));
+    if (!addressInNetwork(route.nextHop, network)) continue;
+    candidates.push({ ...route, iface, prefix: parseNetwork(route.destination).prefix });
+  }
+  return candidates.sort((a, b) => b.prefix - a.prefix || a.distance - b.distance || (a.cost || 0) - (b.cost || 0))[0];
 }
 
-function deliver(topology, sourceId, destination, protocol) {
+function deliver(topology, sourceId, destination, protocol, options, ospf) {
+  const family = parseAddress(destination)?.family;
+  const address = iface => family === 6 ? iface.ipv6 : iface.ip;
+  const actualProtocol = protocol === 'http' ? 'tcp' : protocol === 'dns' ? 'udp' : protocol === 'icmp' && family === 6 ? 'icmpv6' : protocol;
+  const packet = { family, protocol: actualProtocol, destinationIP: destination, ...options };
+  const numbered = device => addressInterfaces(device, topology, family);
   const steps = [], links = [], trace = [];
   let current = topology.devices.find(device => device.id === sourceId);
-  let sourceIP = '';
-  const record = (message, extra = {}) => trace.push({ deviceId: current?.id, protocol,
-    sourceIP: sourceIP || (current ? addressInterfaces(current, topology)[0]?.[1].ip || '' : ''), destinationIP: destination, message, status: 'active', ...extra });
+  let sourceIP = options.sourceIP || '';
+  const record = (message, extra = {}) => trace.push({ deviceId: current?.id, protocol: actualProtocol, sourcePort: packet.sourcePort, destinationPort: packet.destinationPort,
+    sourceIP: sourceIP || (current ? address(numbered(current)[0]?.[1] || {}) || '' : ''), destinationIP: destination, message, status: 'active', ...extra });
   const fail = message => {
     record(message, { status: 'blocked' });
     return { ok: false, message, steps, links, trace };
   };
   if (!current || isBridgeDevice(current.type)) return fail('Select a PC, laptop, server, or routing device as the source.');
-  if (ipv4(destination) === null) return fail('Enter a valid destination IPv4 address.');
+  if (!family) return fail('Enter a valid IPv4 or IPv6 destination address.');
   record('Packet created. Select an outgoing route.');
   const visited = new Set();
   for (let ttl = 32; ttl > 0; ttl--) {
-    if (current.type === 'firewall' && !current.config.firewall[protocol]) return fail(`${current.name}: ${protocol.toUpperCase()} traffic is blocked by the firewall.`);
-    const local = addressInterfaces(current, topology).find(([, iface]) => iface.ip === destination);
+    if (current.type === 'firewall' && current.config.firewall[actualProtocol === 'icmpv6' ? 'icmpv6' : protocol] === false) return fail(`${current.name}: ${protocol.toUpperCase()} traffic is blocked by the firewall.`);
+    const local = numbered(current).find(([, iface]) => sameAddress(address(iface), destination));
     if (local) {
       record('Packet reached its destination.', { status: 'delivered', sourceIP: sourceIP || destination });
       return { ok: true, message: 'Packet delivered.', steps, links, trace, sourceIP: sourceIP || destination, targetId: current.id, targetPort: local[0] };
     }
     if (visited.has(current.id)) return fail(`Routing loop detected at ${current.name}.`);
     visited.add(current.id);
-    const route = routeFor(current, destination, topology);
-    if (!route) return fail(`${current.name}: no route to ${destination}. Check its IP address, subnet mask, gateway, and static routes.`);
-    if (!sourceIP) sourceIP = route.iface.ip;
+    const route = routeFor(current, destination, topology, ospf);
+    if (!route) return fail(`${current.name}: no route to ${destination}. Check addressing, prefix, gateway, static routes and OSPF advertisements.`);
+    if (!sourceIP) sourceIP = address(route.iface);
+    packet.sourceIP = sourceIP;
+    const outgoing = interfaceAcl(current, route.port, 'out', packet);
+    if (!outgoing.allowed) return fail(`${current.name}: ${outgoing.message}`);
     steps.push(`${current.name} → ${route.port}: ${route.connected ? 'directly connected network' : `next hop ${route.nextHop}`}`);
     record(`${current.name}: ${route.connected ? 'destination is on a connected network' : `forward via ${route.nextHop}`}. Outgoing interface: ${route.port}.`);
     const domain = layer2Domain(topology, { deviceId: current.id, portId: route.port });
@@ -78,10 +95,10 @@ function deliver(topology, sourceId, destination, protocol) {
       const device = topology.devices.find(item => item.id === endpoint.deviceId);
       const iface = device ? allDeviceInterfaces(device)[endpoint.portId] : null;
       if (!device || isBridgeDevice(device.type) || isSwitchport(device, endpoint.portId) || !iface || !enabled(device, endpoint.portId)) continue;
-      if (iface.ip === route.iface.ip) ownAddress.push(key);
-      if (device.id !== current.id && iface.ip === route.nextHop) responders.push({ device, endpoint, path });
+      if (sameAddress(address(iface), address(route.iface))) ownAddress.push(key);
+      if (device.id !== current.id && sameAddress(address(iface), route.nextHop)) responders.push({ device, endpoint, path });
     }
-    if (ownAddress.length > 1) return fail(`Duplicate IP address ${route.iface.ip} on the local network.`);
+    if (ownAddress.length > 1) return fail(`Duplicate IP address ${address(route.iface)} on the local network.`);
     if (responders.length > 1) return fail(`Duplicate IP address ${route.nextHop} on the local network.`);
     if (!responders.length) return fail(`${current.name}: cannot resolve ${route.nextHop} on ${route.port}. Check cables, VLAN membership, allowed trunk VLANs, interface state, Wi-Fi association, and addressing.`);
     const responder = responders[0];
@@ -95,17 +112,22 @@ function deliver(topology, sourceId, destination, protocol) {
     const hopDevices = [...new Set(responder.path.map(edge => splitKey(edge.to).deviceId))];
     steps.push(`Local delivery: ${[current.id, ...hopDevices].map(id => topology.devices.find(device => device.id === id)?.name).join(' → ')}`);
     current = responder.device;
-    if (addressInterfaces(current, topology).some(([, iface]) => iface.ip === destination)) continue;
-    if (!isRoutingDevice(current.type) || (current.type === 'l3switch' && current.config.ipRouting === false)) return fail(`${current.name} cannot forward packets to another network. Check IP routing on L3 switches.`);
+    const incoming = interfaceAcl(current, responder.endpoint.portId, 'in', packet);
+    if (!incoming.allowed) return fail(`${current.name}: ${incoming.message}`);
+    if (numbered(current).some(([, iface]) => sameAddress(address(iface), destination))) continue;
+    if (!isRoutingDevice(current.type) || (family === 6 ? current.config.ipv6Routing === false : current.type === 'l3switch' && current.config.ipRouting === false)) return fail(`${current.name} cannot forward packets to another network. Check IPv${family} routing.`);
   }
   return fail('Packet TTL expired. Check for a routing loop.');
 }
 
-export function testConnectivity(topology, sourceId, destination, protocol = 'icmp') {
-  const outward = deliver(topology, sourceId, destination, protocol);
+export function testConnectivity(topology, sourceId, destination, protocol = 'icmp', options = {}) {
+  const ospf = getOspfState(topology);
+  const transport = ['http', 'dns', 'tcp', 'udp'].includes(protocol);
+  const ports = { sourcePort: transport ? 49152 : null, destinationPort: protocol === 'http' ? 80 : protocol === 'dns' ? 53 : null, ...options };
+  const outward = deliver(topology, sourceId, destination, protocol, ports, ospf);
   outward.trace = outward.trace.map(event => ({ ...event, phase: 'Request' }));
   if (!outward.ok) return outward;
-  const reply = deliver(topology, outward.targetId, outward.sourceIP, protocol);
+  const reply = deliver(topology, outward.targetId, outward.sourceIP, protocol, { sourceIP: destination, sourcePort: ports.destinationPort, destinationPort: ports.sourcePort }, ospf);
   const trace = [...outward.trace, ...reply.trace.map(event => ({ ...event, phase: 'Reply' }))];
   if (!reply.ok) return { ...reply, message: `Request reached the destination, but the reply failed: ${reply.message}`,
     steps: [...outward.steps, 'Reply path:', ...reply.steps], links: [...outward.links, ...reply.links], trace };
@@ -136,7 +158,7 @@ export function resolveHostname(topology, sourceId, hostname) {
 }
 
 export function simulatePing(topology, sourceId, target) {
-  if (ipv4(target.trim()) !== null) return testConnectivity(topology, sourceId, target.trim());
+  if (parseAddress(target.trim())) return testConnectivity(topology, sourceId, target.trim());
   const dns = resolveHostname(topology, sourceId, target);
   if (!dns.ok) return dns;
   const result = testConnectivity(topology, sourceId, dns.ip);
@@ -146,11 +168,12 @@ export function simulatePing(topology, sourceId, target) {
 export function simulateHTTP(topology, sourceId, target) {
   let url;
   try { url = new URL(target.includes('://') ? target : `http://${target}`); }
-  catch { return { ok: false, message: 'Enter an IPv4 address or an HTTP URL.', steps: [], links: [] }; }
+  catch { return { ok: false, message: 'Enter an IPv4 address or an HTTP URL (use brackets around IPv6 literals).', steps: [], links: [] }; }
   if (url.protocol !== 'http:' || (url.port && url.port !== '80') || url.username || url.password) return { ok: false, message: 'This lab supports HTTP on port 80. Use http:// with no credentials.', steps: [], links: [] };
-  const dns = ipv4(url.hostname) === null ? resolveHostname(topology, sourceId, url.hostname) : null;
+  const host = url.hostname.replace(/^\[|\]$/g, '');
+  const dns = !parseAddress(host) ? resolveHostname(topology, sourceId, host) : null;
   if (dns && !dns.ok) return dns;
-  const result = testConnectivity(topology, sourceId, dns ? dns.ip : url.hostname, 'http');
+  const result = testConnectivity(topology, sourceId, dns ? dns.ip : host, 'http');
   if (!result.ok) return { ...result, trace: [...(dns?.trace || []), ...(result.trace || [])] };
   const server = topology.devices.find(device => device.id === result.targetId);
   if (server.type !== 'server' || !server.config.services.http.enabled) {

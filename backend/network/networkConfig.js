@@ -1,5 +1,9 @@
 import { normalizeVlanSettings, allDeviceInterfaces, isSwitchport } from './networkVlans.js';
+import { normalizeAdvancedConfig } from './networkAdvancedConfig.js';
 export * from './networkVlans.js';
+export * from './networkAddressing.js';
+export { normalizeAdvancedConfig, canonicalArea } from './networkAdvancedConfig.js';
+export { ACL_PROTOCOLS, normalizeAcl, validTransportPort } from './networkAcl.js';
 
 export const isRoutingDevice = type => ['router', 'l3switch', 'cloud', 'firewall'].includes(type);
 export const isBridgeDevice = type => ['switch', 'ap'].includes(type);
@@ -41,22 +45,23 @@ export function parseCIDR(value) {
 }
 
 export function defaultDeviceConfig(type, ports) {
-  return normalizeVlanSettings(type, ports, {
+  return normalizeAdvancedConfig(type, normalizeVlanSettings(type, ports, {
     interfaces: Object.fromEntries(interfaceNames(type, ports).map(port => [port, { enabled: true, ip: '', mask: '255.255.255.0' }])),
     gateway: '', dns: '', routes: [],
     wireless: { enabled: true, ssid: type === 'ap' ? 'NET2077' : '', password: '' },
-    firewall: { icmp: true, dns: true, http: true, dhcp: true },
+    firewall: { icmp: true, icmpv6: true, dns: true, http: true, dhcp: true },
     services: {
       dhcp: { enabled: false, start: '192.168.1.100', end: '192.168.1.150', mask: '255.255.255.0', gateway: '192.168.1.1', dns: '' },
       dns: { enabled: false, records: [] },
       http: { enabled: false, title: 'Welcome to the lab', body: 'This page is served by your simulated HTTP server.' },
     },
-  });
+  }));
 }
 
 export function validateDeviceSettings(type, ports, input) {
   const config = structuredClone(input.config);
   normalizeVlanSettings(type, ports, config);
+  normalizeAdvancedConfig(type, config);
   const fail = message => { throw new Error(message); };
   const name = String(input.name || '').trim();
   if (!name || name.length > 40) fail('Device name must contain 1–40 characters.');

@@ -1,6 +1,7 @@
+import { parseAddress, sameAddress, validUnicast6, validPrefix6, parseNetwork, networkFor } from './networkAddressing.js';
 import { DEVICE_TYPES, emptyTopology, connectionError } from './networkTopology.js';
-import { defaultDeviceConfig, validateDeviceSettings, ipv4, maskPrefix, allDeviceInterfaces, validInterfaceName, validVlanId, parseVlanList, switchPort, isSwitchDevice } from './networkConfig.js';
-import { simulatePing, simulateHTTP, resolveHostname, requestDHCP } from './networkSimulation.js';
+import { defaultDeviceConfig, validateDeviceSettings, ipv4, maskPrefix, allDeviceInterfaces, validInterfaceName, validVlanId, parseVlanList, switchPort, isSwitchDevice, interfaceProtocolFields } from './networkConfig.js';
+import { getOspfState, testConnectivity, simulatePing, simulateHTTP, resolveHostname, requestDHCP } from './networkSimulation.js';
 
 const fail = message => { throw Object.assign(new Error(message), { status: 400 }); };
 const object = value => value && typeof value === 'object' && !Array.isArray(value);
@@ -14,10 +15,10 @@ function deviceConfig(type, input = {}) {
   const result = defaultDeviceConfig(type, DEVICE_TYPES[type].ports);
   for (const port of Object.keys(result.interfaces)) {
     const data = input.interfaces?.[port] || {};
-    result.interfaces[port] = { enabled: boolean(data.enabled, true), ip: data.ip ?? '', mask: data.mask ?? '255.255.255.0' };
+    result.interfaces[port] = { enabled: boolean(data.enabled, true), ip: data.ip ?? '', mask: data.mask ?? '255.255.255.0', ...interfaceProtocolFields(data) };
   }
   for (const key of ['gateway', 'dns']) result[key] = input[key] ?? result[key];
-  for (const key of ['vlans', 'switchports', 'subinterfaces', 'svis', 'ipRouting']) {
+  for (const key of ['vlans', 'switchports', 'subinterfaces', 'svis', 'ipRouting', 'gateway6', 'routes6', 'ipv6Routing', 'acls', 'ospf']) {
     if (input[key] !== undefined) result[key] = structuredClone(input[key]);
   }
   result.routes = (input.routes ?? []).map(route => ({ destination: route.destination, nextHop: route.nextHop, port: route.port }));
@@ -94,8 +95,10 @@ export function normalizeProblem(input) {
       device(goal.device); result.device = goal.device; result.port = getPort(goal.device, goal.port);
       if (goal.ip !== undefined) result.ip = address(goal.ip);
       if (goal.mask !== undefined) { if (maskPrefix(goal.mask) === null) fail('Invalid objective subnet mask.'); result.mask = goal.mask; }
+      if (goal.ipv6 !== undefined) { if (!validUnicast6(goal.ipv6)) fail('Invalid IPv6 objective address.'); result.ipv6 = goal.ipv6; }
+      if (goal.prefix6 !== undefined) { if (!validPrefix6(goal.prefix6)) fail('Invalid IPv6 objective prefix.'); result.prefix6 = goal.prefix6; }
       if (goal.enabled !== undefined) result.enabled = boolean(goal.enabled, true);
-      if (!['ip', 'mask', 'enabled'].some(key => Object.hasOwn(result, key))) fail('Interface objectives need an IP, mask or enabled setting.');
+      if (!['ip', 'mask', 'enabled', 'ipv6', 'prefix6'].some(key => Object.hasOwn(result, key))) fail('Interface objectives need an IP, mask or enabled setting.');
     } else if (goal.type === 'vlan') {
       const target = device(goal.device);
       if (!isSwitchDevice(target.type) || !validVlanId(goal.vlan)) fail('VLAN objectives need a switch and VLAN ID from 1 to 4094.');
@@ -120,11 +123,48 @@ export function normalizeProblem(input) {
     } else if (goal.type === 'ipRouting') {
       if (device(goal.device).type !== 'l3switch') fail('IP routing objectives need an L3 switch.');
       result.device = goal.device; result.enabled = boolean(goal.enabled, true);
+    } else if (goal.type === 'traffic') {
+      device(goal.source); result.source = goal.source;
+      if (!parseAddress(goal.target)) fail('Traffic objectives need an IPv4 or IPv6 destination.');
+      result.target = goal.target; result.expected = boolean(goal.expected, true);
+      if (!['tcp', 'udp', 'icmp', 'icmpv6'].includes(goal.protocol)) fail('Invalid traffic protocol.');
+      if (goal.protocol === 'icmpv6' && parseAddress(goal.target).family !== 6) fail('ICMPv6 requires an IPv6 destination.');
+      result.protocol = goal.protocol;
+      for (const key of ['sourcePort', 'destinationPort']) if (goal[key] !== undefined) {
+        if (!['tcp', 'udp'].includes(goal.protocol) || !Number.isInteger(goal[key]) || goal[key] < 0 || goal[key] > 65535) fail('Traffic ports require TCP/UDP and values from 0 to 65535.');
+        result[key] = goal[key];
+      }
+      if (['tcp', 'udp'].includes(goal.protocol) && result.destinationPort === undefined) fail('Set the destination port.');
+      if (goal.targetDevice) { device(goal.targetDevice); result.targetDevice = goal.targetDevice; }
+    } else if (goal.type === 'gateway6') {
+      device(goal.device); result.device = goal.device;
+      if (!validUnicast6(goal.value)) fail('Invalid IPv6 gateway objective.'); result.value = goal.value;
+    } else if (['ospfNeighbor', 'ospfRoute', 'staticRoute', 'aclBinding', 'ipv6Routing'].includes(goal.type)) {
+      const target = device(goal.device); result.device = goal.device;
+      if (!['router', 'l3switch', 'cloud', 'firewall'].includes(target.type) && goal.type !== 'staticRoute') fail('This objective requires a routing device.');
+      if (goal.type === 'ipv6Routing') result.enabled = boolean(goal.enabled, true);
+      if (goal.type === 'ospfNeighbor') {
+        if (goal.peer === goal.device || !['router', 'l3switch', 'cloud', 'firewall'].includes(device(goal.peer).type)) fail('Choose another routing device as the OSPF neighbor.');
+        result.peer = goal.peer; result.expected = boolean(goal.expected, true);
+      }
+      if (['ospfRoute', 'staticRoute'].includes(goal.type)) {
+        const prefix = parseNetwork(goal.destination);
+        if (!prefix || (goal.type === 'ospfRoute' && prefix.family !== 4)) fail('Enter an aligned destination network.');
+        result.destination = networkFor(goal.destination.split('/')[0], prefix.prefix);
+        if (goal.nextHop !== undefined) { if (parseAddress(goal.nextHop)?.family !== prefix.family) fail('Invalid next hop objective.'); result.nextHop = goal.nextHop; }
+        if (goal.port !== undefined) result.port = getPort(goal.device, goal.port);
+      }
+      if (goal.type === 'aclBinding') {
+        result.port = getPort(goal.device, goal.port);
+        if (![4, 6].includes(goal.family) || !['in', 'out'].includes(goal.direction)) fail('ACL binding requires family 4/6 and direction in/out.');
+        result.family = goal.family; result.direction = goal.direction; result.name = text(goal.name, 'ACL name', 40);
+        if (!/^[a-zA-Z][a-zA-Z0-9_-]{0,39}$/.test(result.name)) fail('Invalid ACL objective name.');
+      }
     } else if (goal.type === 'gateway') {
       device(goal.device); result.device = goal.device; result.value = address(goal.value);
     } else if (goal.type === 'dhcp') {
       device(goal.device); result.device = goal.device; result.port = getPort(goal.device, goal.port ?? 'eth0');
-    } else fail('Unsupported objective type. Use ping, http, dns, interface, gateway, dhcp, vlan, switchport, subinterface or ipRouting.');
+    } else fail('Unsupported objective type.');
     return result;
   });
   if (objectives.every(goal => goal.expected === false)) fail('Include at least one positive configuration or connectivity objective.');
@@ -168,7 +208,7 @@ export function evaluateObjectives(problem, topology) {
       else if (result.ok && goal.expectedIP && result.ip !== goal.expectedIP) detail = `DNS returned ${result.ip}, but this objective requires ${goal.expectedIP}.`;
     } else if (goal.type === 'interface') {
       const iface = device && allDeviceInterfaces(device)[goal.port];
-      passed = Boolean(iface && (goal.ip === undefined || iface.ip === goal.ip) && (goal.mask === undefined || maskPrefix(iface.mask) === maskPrefix(goal.mask)) && (goal.enabled === undefined || iface.enabled === goal.enabled));
+      passed = Boolean(iface && (goal.ip === undefined || iface.ip === goal.ip) && (goal.mask === undefined || maskPrefix(iface.mask) === maskPrefix(goal.mask)) && (goal.enabled === undefined || iface.enabled === goal.enabled) && (goal.ipv6 === undefined || sameAddress(iface.ipv6, goal.ipv6)) && (goal.prefix6 === undefined || iface.prefix6 === goal.prefix6));
     } else if (goal.type === 'vlan') {
       const vlan = device?.config.vlans?.find(item => item.id === goal.vlan);
       passed = Boolean(vlan && vlan.enabled === goal.enabled);
@@ -184,6 +224,18 @@ export function evaluateObjectives(problem, topology) {
         (goal.ip === undefined || iface.ip === goal.ip) && (goal.mask === undefined || maskPrefix(iface.mask) === maskPrefix(goal.mask)));
     } else if (goal.type === 'ipRouting') passed = device?.config.ipRouting === goal.enabled;
     else if (goal.type === 'gateway') passed = device?.config.gateway === goal.value;
+    else if (goal.type === 'gateway6') passed = sameAddress(device?.config.gateway6, goal.value);
+    else if (goal.type === 'ipv6Routing') passed = device?.config.ipv6Routing === goal.enabled;
+    else if (goal.type === 'traffic') {
+      const result = testConnectivity(topology, goal.source, goal.target, goal.protocol, Object.fromEntries(['sourcePort', 'destinationPort'].filter(k => goal[k] !== undefined).map(k => [k, goal[k]])));
+      passed = result.ok === goal.expected && (!goal.targetDevice || !goal.expected || result.targetId === goal.targetDevice); detail = result.message;
+      if (result.ok && !goal.expected) detail = 'Traffic succeeds but should be blocked.';
+    } else if (goal.type === 'ospfNeighbor') passed = Boolean(getOspfState(topology).devices[goal.device]?.neighbors.some(n => n.peerId === goal.peer && n.state === 'Full')) === goal.expected;
+    else if (['ospfRoute', 'staticRoute'].includes(goal.type)) {
+      const routes = goal.type === 'ospfRoute' ? getOspfState(topology).devices[goal.device]?.routes : parseNetwork(goal.destination).family === 6 ? device?.config.routes6 : device?.config.routes;
+      passed = Boolean(routes?.some(r => networkFor(r.destination.split('/')[0], parseNetwork(r.destination).prefix) === goal.destination && (!goal.nextHop || sameAddress(r.nextHop, goal.nextHop)) && (!goal.port || r.port === goal.port)));
+    } else if (goal.type === 'aclBinding') passed = allDeviceInterfaces(device)[goal.port]?.[`${goal.family === 6 ? 'acl6' : 'acl'}${goal.direction === 'in' ? 'In' : 'Out'}`] === goal.name;
+
     else if (goal.type === 'dhcp') {
       const result = requestDHCP(topology, goal.device, goal.port);
       const iface = device?.config.interfaces[goal.port];

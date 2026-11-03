@@ -30,7 +30,7 @@ export default function NetworkVlanSettings({ device, config, setConfig, section
       const settings = config.switchports[port];
       const change = update => setConfig(previous => ({ ...previous,
         switchports: { ...previous.switchports, [port]: { ...previous.switchports[port], ...update } },
-        interfaces: update.mode && update.mode !== 'routed' ? { ...previous.interfaces, [port]: { ...previous.interfaces[port], ip: '' } } : previous.interfaces,
+        interfaces: update.mode && update.mode !== 'routed' ? { ...previous.interfaces, [port]: { ...previous.interfaces[port], ip: '', ipv6: '' } } : previous.interfaces,
       }));
       return <div className="nl-vlan-port" key={port}><strong>{port}</strong><div className="nl-config-grid">
         <Field label="Port mode"><select value={settings.mode} onChange={event => change({ mode: event.target.value })}><option value="access">Access</option><option value="trunk">Trunk (802.1Q)</option>{device.type === 'l3switch' && <option value="routed">Routed port</option>}</select></Field>
@@ -54,9 +54,9 @@ export default function NetworkVlanSettings({ device, config, setConfig, section
       </div>;
     })}
     <button type="button" className="nl-secondary-button" disabled={config.subinterfaces.length >= 128} onClick={() => {
-      const parent = ports.find(port => !config.interfaces[port].ip) || ports[0];
+      const parent = ports.find(port => !config.interfaces[port].ip && !config.interfaces[port].ipv6) || ports[0];
       const vlan = freeVlan(config.subinterfaces.filter(iface => iface.parent === parent).map(iface => iface.vlan));
-      setConfig(previous => ({ ...previous, subinterfaces: [...previous.subinterfaces, { name: `${parent}.${vlan}`, parent, vlan, native: false, enabled: true, ip: '', mask: '/24' }] }));
+      setConfig(previous => ({ ...previous, subinterfaces: [...previous.subinterfaces, { name: `${parent}.${vlan}`, parent, vlan, native: false, enabled: true, ip: '', ipv6: '', mask: '/24' }] }));
     }}><Plus size={14} />Add subinterface</button>
   </>;
 
@@ -70,7 +70,7 @@ export default function NetworkVlanSettings({ device, config, setConfig, section
     </div>)}
     <button type="button" className="nl-secondary-button" disabled={config.svis.length >= 128} onClick={() => {
       const vlan = config.vlans.find(item => !config.svis.some(iface => iface.vlan === item.id))?.id || freeVlan(config.svis.map(iface => iface.vlan));
-      setConfig(previous => ({ ...previous, svis: [...previous.svis, { vlan, enabled: true, ip: '', mask: '/24' }] }));
+      setConfig(previous => ({ ...previous, svis: [...previous.svis, { vlan, enabled: true, ip: '', ipv6: '', mask: '/24' }] }));
     }}><Plus size={14} />Add VLAN interface</button>
   </>;
 }

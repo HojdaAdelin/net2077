@@ -2,6 +2,7 @@ export const isSwitchDevice = type => ['switch', 'l3switch'].includes(type);
 export const validVlanId = value => Number.isInteger(value) && value >= 1 && value <= 4094;
 const fail = message => { throw Object.assign(new Error(message), { status: 400 }); };
 const object = value => value && typeof value === 'object' && !Array.isArray(value);
+export const interfaceProtocolFields = item => Object.fromEntries(['ipv6', 'prefix6', 'aclIn', 'aclOut', 'acl6In', 'acl6Out'].filter(key => item[key] !== undefined).map(key => [key, item[key]]));
 const vlanId = (value, label) => validVlanId(value) ? value : fail(`${label}: use a VLAN ID from 1 to 4094.`);
 
 export function parseVlanList(value) {
@@ -102,8 +103,8 @@ export function normalizeVlanSettings(type, ports, config) {
       if (item.enabled !== undefined && typeof item.enabled !== 'boolean') fail('Subinterface enabled must be a boolean.');
       if (item.native && nativeParents.has(item.parent)) fail('Only one native subinterface is allowed per parent.');
       if (item.native) nativeParents.add(item.parent);
-      if (config.interfaces[item.parent]?.ip) fail(`${item.parent}: remove the physical IP before using subinterfaces.`);
-      return { name, parent: item.parent, vlan, native: item.native ?? false, enabled: item.enabled ?? true, ip: item.ip ?? '', mask: item.mask ?? '/24' };
+      if (config.interfaces[item.parent]?.ip || config.interfaces[item.parent]?.ipv6) fail(`${item.parent}: remove the physical IP before using subinterfaces.`);
+      return { name, parent: item.parent, vlan, native: item.native ?? false, enabled: item.enabled ?? true, ip: item.ip ?? '', mask: item.mask ?? '/24', ...interfaceProtocolFields(item) };
     }).sort((a, b) => a.name.localeCompare(b.name));
   } else if (config.subinterfaces?.length) fail('802.1Q subinterfaces are available on routers.');
 
@@ -118,7 +119,7 @@ export function normalizeVlanSettings(type, ports, config) {
       if (seen.has(vlan)) fail('Only one SVI per VLAN is allowed.');
       seen.add(vlan);
       if (item.enabled !== undefined && typeof item.enabled !== 'boolean') fail('SVI enabled must be a boolean.');
-      return { vlan, enabled: item.enabled ?? true, ip: item.ip ?? '', mask: item.mask ?? '/24' };
+      return { vlan, enabled: item.enabled ?? true, ip: item.ip ?? '', mask: item.mask ?? '/24', ...interfaceProtocolFields(item) };
     }).sort((a, b) => a.vlan - b.vlan);
   } else if (config.svis?.length || config.ipRouting !== undefined) fail('SVIs and IP routing settings are available on L3 switches.');
   return config;

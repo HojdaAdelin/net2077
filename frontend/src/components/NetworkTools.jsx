@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Play, CheckCircle2, CircleAlert, Radio, Globe, Search, Network } from 'lucide-react';
 import { isBridgeDevice, isRoutingDevice } from '../utils/networkConfig';
-import { simulatePing, resolveHostname, simulateHTTP, requestDHCP } from '../utils/networkSimulation';
+import { testConnectivity, simulatePing, resolveHostname, simulateHTTP, requestDHCP } from '../utils/networkSimulation';
 
 const TOOLS = [
-  { id: 'ping', label: 'Ping', icon: Radio, help: 'Check whether a device can reach an IP address or hostname.' },
+  { id: 'traffic', label: 'TCP / UDP', icon: Network, help: 'Test a destination port, including the return path through stateless ACLs.' },
+  { id: 'ping', label: 'Ping', icon: Radio, help: 'Check IPv4 / IPv6 connectivity or resolve a hostname before pinging.' },
   { id: 'dns', label: 'DNS', icon: Search, help: 'Resolve a hostname using the source device’s DNS server.' },
   { id: 'http', label: 'HTTP', icon: Globe, help: 'Request a page from a simulated web server.' },
   { id: 'dhcp', label: 'DHCP', icon: Network, help: 'Request an IP address, gateway and DNS server on an interface.' },
@@ -13,6 +14,8 @@ const TOOLS = [
 export default function NetworkTools({ topology, sourceId, sourceEditable = true, onSourceChange, activeResult, onDHCP, onResult, onReset }) {
   const [mode, setMode] = useState('ping');
   const [target, setTarget] = useState('');
+  const [transport, setTransport] = useState('tcp');
+  const [destinationPort, setDestinationPort] = useState(80);
   const [port, setPort] = useState('eth0');
   const [result, setResult] = useState(null);
   const sources = topology.devices.filter(device => !isBridgeDevice(device.type));
@@ -23,7 +26,7 @@ export default function NetworkTools({ topology, sourceId, sourceEditable = true
   const reset = () => { setResult(null); onReset(); };
   const run = event => {
     event.preventDefault();
-    const outcome = mode === 'dhcp' ? requestDHCP(topology, sourceId, port) : mode === 'dns' ? resolveHostname(topology, sourceId, target) : mode === 'http' ? simulateHTTP(topology, sourceId, target) : simulatePing(topology, sourceId, target);
+    const outcome = mode === 'traffic' ? testConnectivity(topology, sourceId, target.trim(), transport, { destinationPort }) : mode === 'dhcp' ? requestDHCP(topology, sourceId, port) : mode === 'dns' ? resolveHostname(topology, sourceId, target) : mode === 'http' ? simulateHTTP(topology, sourceId, target) : simulatePing(topology, sourceId, target);
     if (!outcome.trace?.length) outcome.trace = [{ deviceId: sourceId, protocol: mode === 'ping' ? 'icmp' : mode,
       phase: 'Validation', sourceIP: source?.config.interfaces[port]?.ip || '', destinationIP: target,
       message: outcome.message, status: outcome.ok ? 'delivered' : 'blocked' }];
@@ -38,7 +41,8 @@ export default function NetworkTools({ topology, sourceId, sourceEditable = true
         <div className="nl-tool-picker" role="group" aria-label="Network tool">{TOOLS.map(({ id, label, icon: Icon }) => <button key={id} type="button" aria-pressed={mode === id} onClick={() => { setMode(id); reset(); }}><Icon size={16} />{label}</button>)}</div>
         <p className="nl-tool-help">{TOOLS.find(item => item.id === mode).help}</p>
         <label className="nl-config-field"><span>Source device</span><select value={source?.id || ''} onChange={event => { onSourceChange(event.target.value); reset(); setPort('eth0'); }} required><option value="">Choose a device</option>{sources.map(device => <option value={device.id} key={device.id}>{device.name}</option>)}</select></label>
-        {mode === 'dhcp' ? <label className="nl-config-field"><span>Client interface</span><select value={port} onChange={event => { setPort(event.target.value); reset(); }}>{Object.keys(source?.config.interfaces || { eth0: {} }).map(name => <option key={name}>{name}</option>)}</select></label> : <label className="nl-config-field"><span>{mode === 'dns' ? 'Hostname' : mode === 'http' ? 'Address / URL' : 'Destination IP / hostname'}</span><input required value={target} onChange={event => { setTarget(event.target.value); reset(); }} placeholder={mode === 'dns' ? 'site.local' : mode === 'http' ? 'http://site.local' : '192.168.1.10'} /></label>}
+        {mode === 'dhcp' ? <label className="nl-config-field"><span>Client interface</span><select value={port} onChange={event => { setPort(event.target.value); reset(); }}>{Object.keys(source?.config.interfaces || { eth0: {} }).map(name => <option key={name}>{name}</option>)}</select></label> : <label className="nl-config-field"><span>{mode === 'dns' ? 'Hostname' : mode === 'http' ? 'Address / URL' : mode === 'traffic' ? 'Destination IPv4 / IPv6' : 'Destination IP / hostname'}</span><input required value={target} onChange={event => { setTarget(event.target.value); reset(); }} placeholder={mode === 'dns' ? 'site.local' : mode === 'http' ? 'http://site.local' : '192.168.1.10'} /></label>}
+        {mode === 'traffic' && <div className="nl-config-grid"><label className="nl-config-field"><span>Protocol</span><select value={transport} onChange={e => { setTransport(e.target.value); reset(); }}><option value="tcp">TCP</option><option value="udp">UDP</option></select></label><label className="nl-config-field"><span>Destination port</span><input required type="number" min="0" max="65535" value={destinationPort} onChange={e => { setDestinationPort(Number(e.target.value)); reset(); }} /></label></div>}
         <button type="submit" className="nl-primary-button" disabled={!source || mode === 'dhcp' && (isRoutingDevice(source.type) || !sourceEditable)}><Play size={13} />Run {TOOLS.find(item => item.id === mode).label} simulation</button>
       </form>
       {mode === 'dhcp' && source && isRoutingDevice(source.type) && <p className="nl-config-help">Use a PC, laptop, or server as a DHCP client.</p>}

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
+import NetworkAdvancedSettings from './NetworkAdvancedSettings';
 import NetworkVlanSettings from './NetworkVlanSettings';
 import { DEVICE_TYPES } from '../utils/networkTopology';
-import { isBridgeDevice, isRoutingDevice, hasWireless, validateDeviceSettings, normalizeVlanSettings, isSwitchDevice, isSwitchport, allDeviceInterfaces, switchPort } from '../utils/networkConfig';
+import { isBridgeDevice, isRoutingDevice, hasWireless, validateDeviceSettings, normalizeAdvancedConfig, normalizeVlanSettings, isSwitchDevice, isSwitchport, allDeviceInterfaces, switchPort } from '../utils/networkConfig';
 
 function Field({ label, children, ...props }) {
   return <label className="nl-config-field"><span>{label}</span>{children || <input {...props} />}</label>;
@@ -14,7 +15,7 @@ function Toggle({ label, checked, onChange }) {
 export default function NetworkDeviceSettings({ device, onApply, onClose }) {
   const dialogRef = useRef(null);
   const [name, setName] = useState(device.name);
-  const [config, setConfig] = useState(() => normalizeVlanSettings(device.type, DEVICE_TYPES[device.type].ports, structuredClone(device.config)));
+  const [config, setConfig] = useState(() => normalizeAdvancedConfig(device.type, normalizeVlanSettings(device.type, DEVICE_TYPES[device.type].ports, structuredClone(device.config))));
   const [tab, setTab] = useState('network');
   const [error, setError] = useState('');
   const bridge = isBridgeDevice(device.type);
@@ -48,6 +49,7 @@ export default function NetworkDeviceSettings({ device, onApply, onClose }) {
           {device.type === 'router' && <button type="button" aria-pressed={tab === 'subinterfaces'} onClick={() => setTab('subinterfaces')}>802.1Q subinterfaces</button>}
           {device.type === 'l3switch' && <button type="button" aria-pressed={tab === 'svis'} onClick={() => setTab('svis')}>VLAN interfaces</button>}
           {routing && <button type="button" aria-pressed={tab === 'routes'} onClick={() => setTab('routes')}>Static routes</button>}
+          {(!bridge) && ['ipv6', ...(routing ? ['acl', 'ospf'] : [])].map(section => <button key={section} type="button" aria-pressed={tab === section} onClick={() => setTab(section)}>{section === 'ipv6' ? 'IPv6' : section.toUpperCase()}</button>)}
           {hasWireless(device.type) && <button type="button" aria-pressed={tab === 'wifi'} onClick={() => setTab('wifi')}>Wi-Fi</button>}
           {device.type === 'server' && <button type="button" aria-pressed={tab === 'services'} onClick={() => setTab('services')}>Services</button>}
           {device.type === 'firewall' && <button type="button" aria-pressed={tab === 'policy'} onClick={() => setTab('policy')}>Traffic policy</button>}
@@ -67,6 +69,7 @@ export default function NetworkDeviceSettings({ device, onApply, onClose }) {
             {!bridge && <div className="nl-config-grid"><Field label="Default gateway (optional)" placeholder="192.168.1.1" value={config.gateway} onChange={event => setConfig({ ...config, gateway: event.target.value })} /><Field label="DNS server (optional)" placeholder="192.168.1.10" value={config.dns} onChange={event => setConfig({ ...config, dns: event.target.value })} /></div>}
           </>}
           {['switching', 'subinterfaces', 'svis'].includes(tab) && <NetworkVlanSettings device={device} config={config} setConfig={setConfig} section={tab} />}
+          {['ipv6', 'acl', 'ospf'].includes(tab) && <NetworkAdvancedSettings device={device} config={config} setConfig={setConfig} section={tab} />}
           {tab === 'routes' && <>
             <p className="nl-config-help">Connected networks are learned from interface addresses. Add a route for each remote network, or use 0.0.0.0/0 for a default route. Remember the return route.</p>
             {config.routes.map((route, index) => <div className="nl-route-row" key={index}>
@@ -85,7 +88,7 @@ export default function NetworkDeviceSettings({ device, onApply, onClose }) {
           </>}
           {tab === 'policy' && <>
             <p className="nl-config-help">This firewall uses a simple allow/block policy for both directions. Uncheck a protocol to block it through the firewall.</p>
-            {['icmp', 'dns', 'http'].map(protocol => <Toggle key={protocol} label={`Allow ${protocol === 'icmp' ? 'ICMP (ping)' : protocol.toUpperCase()}`} checked={config.firewall[protocol]} onChange={value => setConfig({ ...config, firewall: { ...config.firewall, [protocol]: value } })} />)}
+            {['icmp', 'icmpv6', 'dns', 'http'].map(protocol => <Toggle key={protocol} label={`Allow ${protocol === 'icmp' ? 'ICMP (ping)' : protocol.toUpperCase()}`} checked={config.firewall[protocol]} onChange={value => setConfig({ ...config, firewall: { ...config.firewall, [protocol]: value } })} />)}
           </>}
           {tab === 'services' && <>
             <div className="nl-service-section"><Toggle label="DHCP server" checked={config.services.dhcp.enabled} onChange={enabled => editService('dhcp', { enabled })} />
