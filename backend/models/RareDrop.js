@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const RareDropSchema = new mongoose.Schema({
+  boxId: { type: String, default: 'season-box', index: true },
   username: { type: String, required: true },
   prizeId:  { type: String, required: true },
   label:    { type: String, required: true },

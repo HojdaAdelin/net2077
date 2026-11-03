@@ -13,6 +13,8 @@ const prizeSchema = new mongoose.Schema({
 
 const schema = new mongoose.Schema({
   _id: { type: String, default: 'season-box' },
+  name: { type: String, default: 'Season Box', maxlength: 60 },
+  image: { type: String, default: '/season.png' },
   cost: { type: Number, required: true },
   duplicateGold: { type: Number, required: true },
   ticketTotal: { type: Number, default: 10000, enum: [10000] },

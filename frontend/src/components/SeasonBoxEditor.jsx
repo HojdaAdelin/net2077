@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Gift, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Save } from 'lucide-react';
+import { useConfirm } from '../context/ConfirmContext';
 import { API_URL } from '../config';
 import AvatarFrame from './AvatarFrame';
 import { seasonBoxDistribution } from '../utils/seasonBoxDistribution';
@@ -12,6 +13,10 @@ const RARITIES = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
 const newId = () => `box-${globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`}`;
 
 export default function SeasonBoxEditor() {
+  const { showConfirm } = useConfirm();
+  const [boxes, setBoxes] = useState([]);
+  const [images, setImages] = useState(['/season.png']);
+  const [selectedId, setSelectedId] = useState('season-box');
   const [config, setConfig] = useState(null);
   const [catalog, setCatalog] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,19 +26,21 @@ export default function SeasonBoxEditor() {
   const [reload, setReload] = useState(0);
 
   useEffect(() => {
+    if (selectedId === 'new') return;
     const controller = new AbortController();
     setLoading(true);
+    setConfig(null);
     setMessage(null);
-    fetch(`${API_URL}/season-box/config`, { credentials: 'include', signal: controller.signal })
+    fetch(`${API_URL}/season-box/config?boxId=${encodeURIComponent(selectedId)}`, { credentials: 'include', signal: controller.signal })
       .then(async response => {
         const data = await response.json();
         if (!response.ok || !data.success) throw new Error(data.message || 'Unable to load Season Box.');
-        if (!controller.signal.aborted) { setConfig(data.config); setCatalog(data.catalog); setDirty(false); }
+        if (!controller.signal.aborted) { setConfig(data.config); setCatalog(data.catalog); setBoxes(data.boxes || []); setImages(data.images || ['/season.png']); setDirty(false); }
       })
       .catch(error => { if (error.name !== 'AbortError') setMessage({ error: true, text: error.message }); })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [reload]);
+  }, [reload, selectedId]);
 
   const setDraft = updater => { setDirty(true); setMessage(null); setConfig(updater); };
   const prizes = config?.prizes || [];
@@ -57,12 +64,34 @@ export default function SeasonBoxEditor() {
     if (saving || !distribution.valid) return;
     setSaving(true); setMessage(null);
     try {
-      const response = await fetch(`${API_URL}/season-box/config`, { method: 'PUT',
+      const response = await fetch(`${API_URL}/season-box/config`, { method: config._id ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(config) });
       const data = await response.json();
       if (!response.ok || !data.success) throw new Error(data.message || 'Unable to save Season Box.');
-      setConfig(data.config); setCatalog(data.catalog); setDirty(false);
-      setMessage({ text: 'Season Box saved. New openings will use these rewards and chances.' });
+      setConfig(data.config); setCatalog(data.catalog); setBoxes(data.boxes || []); setImages(data.images || ['/season.png']); setDirty(false);
+      setSelectedId(data.config._id);
+      setMessage({ text: `${data.config.name} saved. New openings will use these rewards and chances.` });
+    } catch (error) { setMessage({ error: true, text: error.message }); }
+    finally { setSaving(false); }
+  };
+
+  const discardDraft = async () => !dirty || await showConfirm({ title: 'Unsaved box changes', message: 'Discard the unsaved changes to this box?', confirmText: 'Discard changes', type: 'warning' });
+  const selectBox = async id => { if (id !== selectedId && await discardDraft()) { setDirty(false); setSelectedId(id); } };
+  const addBox = async () => {
+    if (!await discardDraft()) return;
+    setSelectedId('new'); setMessage(null); setDirty(true);
+    setConfig({ name: 'New Season Box', image: images.find(src => src.startsWith('/box_')) || '/season.png', cost: 20, duplicateGold: 20, revision: 0,
+      prizes: [{ id: newId(), type: 'gold', amount: 10, label: '10 Gold', rarity: 'common', chance: 100, quantity: 1 }] });
+  };
+  const deleteBox = async () => {
+    if (!config?._id || config._id === 'season-box') return;
+    if (!await showConfirm({ title: `Delete ${config.name}?`, message: 'This removes the box from Season. Rewards already received by users are kept.', confirmText: 'Delete box', type: 'danger' })) return;
+    setSaving(true); setMessage(null);
+    try {
+      const response = await fetch(`${API_URL}/season-box/config/${encodeURIComponent(config._id)}`, { method: 'DELETE', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ revision: config.revision }) });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.message || 'Unable to delete box.');
+      setBoxes(data.boxes); setConfig(data.config); setCatalog(data.catalog); setImages(data.images); setDirty(false); setSelectedId('season-box');
     } catch (error) { setMessage({ error: true, text: error.message }); }
     finally { setSaving(false); }
   };
@@ -71,19 +100,32 @@ export default function SeasonBoxEditor() {
     <details className="rd-box-editor">
       <summary className="rd-box-summary">
         <Gift size={18} aria-hidden="true" />
-        <span>Season Box<small>Rewards, rarity, chances and ticket ranges</small></span>
+        <span>Season Boxes<small>Create boxes and edit their images, rewards and chances</small></span>
         <ChevronDown size={18} className="rd-box-chevron" aria-hidden="true" />
       </summary>
       <div className="rd-box-body">
+        <div className="rd-box-manager">
+          <label>Box<select className="rd-input" value={selectedId} disabled={loading || saving} onChange={event => selectBox(event.target.value)}>
+            {boxes.map(box => <option key={box._id} value={box._id}>{box.name}{box._id === 'season-box' ? ' (main)' : ''}</option>)}
+            {selectedId === 'new' && <option value="new">New box (unsaved)</option>}
+          </select></label>
+          <button type="button" className="rd-box-reload" disabled={loading || saving || !config} onClick={addBox}><Plus size={15} />Add box</button>
+          {config?._id && config._id !== 'season-box' && <button type="button" className="rd-box-reload rd-box-delete" disabled={loading || saving} onClick={deleteBox}><Trash2 size={15} />Delete box</button>}
+        </div>
         {loading ? <p className="rd-box-note" role="status">Loading Season Box...</p> : config ? (
           <form onSubmit={save}>
             <fieldset disabled={saving} className="rd-box-fields">
+              <div className="rd-box-identity">
+                <label>Box name<input className="rd-input" required maxLength={60} value={config.name || ''} onChange={event => setDraft(previous => ({ ...previous, name: event.target.value }))} /></label>
+                <label>Box image<select className="rd-input" value={config.image || '/season.png'} onChange={event => setDraft(previous => ({ ...previous, image: event.target.value }))}>{[...new Set([...images, config.image].filter(Boolean))].map(image => <option key={image} value={image}>{image.slice(1)}</option>)}</select></label>
+                <img className="rd-box-image-preview" src={config.image || '/season.png'} alt={config.name || 'Box preview'} />
+              </div>
+              {!images.some(image => image.startsWith('/box_')) && <p className="rd-box-note">Add images named box_*.png, box_*.webp or similar to frontend/public, then reload this editor to select them.</p>}
               <div className="rd-box-settings">
                 <label>Opening cost (gold)<input className="rd-input" type="number" min="0" max="1000000000" step="1" required value={config.cost}
                   onChange={event => setDraft(previous => ({ ...previous, cost: event.target.value }))} /></label>
                 <label>Duplicate cosmetic (gold)<input className="rd-input" type="number" min="0" max="1000000000" step="1" required value={config.duplicateGold}
                   onChange={event => setDraft(previous => ({ ...previous, duplicateGold: event.target.value }))} /></label>
-                <div className="rd-box-image-note"><img src="/season.png" alt="Season Box" /><span>Image: season.png</span></div>
               </div>
 
               <div className={`rd-box-calculator${distribution.valid ? ' is-valid' : ''}`} aria-live="polite">
@@ -145,8 +187,8 @@ export default function SeasonBoxEditor() {
               <p className="rd-box-note">Inventory rewards use usable shop items. Profile rewards include existing frames and effects from the database and current rewards.</p>
             </fieldset>
             <div className="rd-box-footer">
-              <button type="submit" className="rd-primary-btn" disabled={saving || !distribution.valid}><Save size={15} /> {saving ? 'Saving...' : 'Save Season Box'}</button>
-              <button type="button" className="rd-box-reload" disabled={saving} onClick={() => setReload(value => value + 1)}>Reload saved</button>
+              <button type="submit" className="rd-primary-btn" disabled={saving || !distribution.valid}><Save size={15} /> {saving ? 'Saving...' : config._id ? 'Save box' : 'Create box'}</button>
+              <button type="button" className="rd-box-reload" disabled={saving} onClick={async () => { if (await discardDraft()) { if (selectedId === 'new') setSelectedId('season-box'); else setReload(value => value + 1); } }}>Reload saved</button>
               <span className="rd-box-draft-status">{dirty ? 'Unsaved changes' : config.revision ? `Saved configuration v${config.revision}` : 'Default configuration'}</span>
             </div>
           </form>

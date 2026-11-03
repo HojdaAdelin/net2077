@@ -4,7 +4,7 @@ import { Zap, Clock, Crown, Trophy, Medal } from 'lucide-react';
 import GoldIcon from '../components/GoldIcon';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import SeasonBox from '../components/SeasonBox';
+import SeasonBoxes from '../components/SeasonBoxes';
 import AvatarFrame from '../components/AvatarFrame';
 import NameEffectRenderer from '../components/NameEffectRenderer';
 import SeasonPassTrack from '../components/SeasonPassTrack';
@@ -15,6 +15,7 @@ import '../styles/Season.css';
 
 export default function Season() {
   const { user, updateUser } = useContext(AuthContext);
+  const [boxCount, setBoxCount] = useState(1);
   const [competitiveData, setCompetitiveData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [timeRemaining, setTimeRemaining] = useState('');
@@ -86,12 +87,13 @@ export default function Season() {
         </div>
 
         {/* Main content: SeasonBox left, Leaderboard right */}
-        <div className="season-main-card">
+        <div className={`season-main-card${boxCount > 1 ? ' season-main-card--multiple' : ''}`}>
           {/* Season Box */}
           <div className="season-box-section">
             <h3 className="season-section-title">Season Box</h3>
             {user ? (
-              <SeasonBox
+              <SeasonBoxes
+                onCountChange={setBoxCount}
                 userGold={user.gold ?? 0}
                 onGoldChange={(g) => updateUser({ gold: g })}
                 onInventoryChange={(inv) => updateUser({ inventory: inv })}

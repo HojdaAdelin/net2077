@@ -70,7 +70,10 @@ function formatTimeAgo(dateStr) {
   return `${Math.floor(hrs / 24)}d ago`;
 }
 
-export default function SeasonBox({ userGold, onGoldChange, onInventoryChange }) {
+export default function SeasonBox({ box, compact = false, busy = false, onOpeningChange, userGold, onGoldChange, onInventoryChange }) {
+  const boxId = box?.id || 'season-box';
+  const [identity, setIdentity] = useState({ name: box?.name || 'Season Box', image: box?.image || '/season.png' });
+  const [unavailable, setUnavailable] = useState(false);
   const [prizes, setPrizes]       = useState([]);
   const [boxRevision, setBoxRevision] = useState(0);
   const [cost, setCost]           = useState(20);
@@ -100,17 +103,17 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
   const fastRef     = useRef(false);  // fast spin mode toggle
 
   useEffect(() => {
+    const apply = data => { setPrizes(data.prizes); setCost(data.cost); setBoxRevision(data.revision); setIdentity({ name: data.name, image: data.image }); setLoadingPrizes(false); };
+    setUnavailable(false); setPrizesError('');
+    if (box) { apply(box); return; }
+    const controller = new AbortController();
     setLoadingPrizes(true);
-    setPrizesError('');
-    fetch(`${API_URL}/season-box/prizes`)
-      .then(r => r.json())
-      .then(d => {
-        if (d.success) { setPrizes(d.prizes); setCost(d.cost); setBoxRevision(d.revision); }
-        else { setPrizesError('Failed to load prizes. Try refreshing.'); }
-      })
-      .catch(() => setPrizesError('Failed to load prizes. Try refreshing.'))
-      .finally(() => setLoadingPrizes(false));
-  }, []);
+    fetch(`${API_URL}/season-box/prizes?boxId=${encodeURIComponent(boxId)}`, { signal: controller.signal })
+      .then(async response => { const data = await response.json(); if (!response.ok || !data.success) throw new Error('Failed to load prizes. Try refreshing.'); if (!controller.signal.aborted) apply(data); })
+      .catch(error => { if (error.name !== 'AbortError') setPrizesError(error.message); })
+      .finally(() => { if (!controller.signal.aborted) setLoadingPrizes(false); });
+    return () => controller.abort();
+  }, [box, boxId]);
 
   const buildStrip = (winnerPrize) =>
     Array.from({ length: STRIP_N }, (_, i) => {
@@ -124,7 +127,7 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
     const tiles = buildStrip(prize);
     setStrip(tiles);
     setReelIdx(idx);
-    setReelLabel(total > 1 ? `Opening ${idx + 1} / ${total}` : 'Opening Season Box...');
+    setReelLabel(total > 1 ? `Opening ${idx + 1} / ${total}` : `Opening ${identity.name}...`);
     setShowReel(true);
 
     let called = false;
@@ -209,7 +212,8 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
   };
 
   const handleOpen = async () => {
-    if (spinning || prizes.length === 0) return;
+    if (busy || spinning || unavailable || prizes.length === 0) return;
+    if (onOpeningChange?.(true) === false) return;
     setError('');
     setAllResults([]);
     setShowSummary(false);
@@ -220,57 +224,62 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ count: openCount, revision: boxRevision }),
+        body: JSON.stringify({ boxId, count: openCount, revision: boxRevision }),
       });
       const data = await resp.json();
 
       if (!resp.ok) {
         if (resp.status === 409 && data.prizes) {
-          setPrizes(data.prizes); setCost(data.cost); setBoxRevision(data.revision);
+          setPrizes(data.prizes); setCost(data.cost); setBoxRevision(data.revision); setIdentity({ name: data.name, image: data.image });
         }
         const msg = resp.status === 401
           ? 'Session expired — please log in again.'
           : data.message || 'Failed to open box';
         setError(msg);
+        if (resp.status === 404) setUnavailable(true);
+        onOpeningChange?.(false);
         setSpinning(false);
         return;
       }
 
+      onGoldChange?.(data.remainingGold);
+      onInventoryChange?.(data.inventory);
       setAllResults(data.results);
       pendingRef.current = data.results;
 
       runQueue(data.results, () => {
         setShowSummary(true);
         setSpinning(false);
-        onGoldChange?.(data.remainingGold);
-        onInventoryChange?.(data.inventory);
+        onOpeningChange?.(false);
         // Refresh rare drops list after opening
-        fetch(`${API_URL}/season-box/recent-rare`)
+        fetch(`${API_URL}/season-box/recent-rare?boxId=${encodeURIComponent(boxId)}`)
           .then(r => r.json())
           .then(d => setRecentRare(d.drops || []))
           .catch(() => {});
       });
     } catch {
       setError('Network error');
+      onOpeningChange?.(false);
       setSpinning(false);
     }
   };
 
   const totalCost = cost * openCount;
-  const canOpen   = (userGold ?? 0) >= totalCost && !spinning && prizes.length > 0;
+  const canOpen   = (userGold ?? 0) >= totalCost && !busy && !spinning && !unavailable && prizes.length > 0;
 
   return (
     <>
 
-      <div className="season-box-card">
+      <div className={`season-box-card${compact ? ' season-box-card--compact' : ''}`}>
+        {(compact || identity.name !== 'Season Box') && <h4 className="season-box-name">{identity.name}</h4>}
         <img
-          src="/season.png"
-          alt="Season Box"
+          src={identity.image || '/season.png'}
+          alt={identity.name}
           className="season-box-img season-box-img--clickable"
           onClick={() => {
             setShowContents(true);
             setLoadingRare(true);
-            fetch(`${API_URL}/season-box/recent-rare`)
+            fetch(`${API_URL}/season-box/recent-rare?boxId=${encodeURIComponent(boxId)}`)
               .then(r => r.json())
               .then(d => setRecentRare(d.drops || []))
               .catch(() => setRecentRare([]))
@@ -294,7 +303,7 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
             ))}
           </div>
 
-          {error && <p className="season-box-error">{error}</p>}
+          {(error || prizesError) && <p className="season-box-error" role="alert">{error || prizesError}</p>}
 
           <button
             className={`season-box-btn ${!canOpen ? 'disabled' : ''}`}
@@ -308,7 +317,7 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
             )}
           </button>
 
-          {!canOpen && !spinning && prizes.length === 0 && !error && (
+          {!canOpen && !spinning && prizes.length === 0 && !error && !prizesError && loadingPrizes && (
             <p className="season-box-insufficient">Loading prizes...</p>
           )}
           {!canOpen && !spinning && prizes.length > 0 && (userGold ?? 0) < totalCost && (
@@ -412,7 +421,7 @@ export default function SeasonBox({ userGold, onGoldChange, onInventoryChange })
             <button className="sb-result-close" onClick={() => setShowContents(false)}>
               <X size={17} />
             </button>
-            <p className="sb-modal-title">Possible Rewards</p>
+            <p className="sb-modal-title">{identity.name} rewards</p>
             <div className="sb-contents-list">
               {[...prizes]
                 .sort((a, b) => (b.max - b.min) - (a.max - a.min))

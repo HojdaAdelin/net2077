@@ -6,6 +6,11 @@
 .rd-box-chevron { flex-shrink: 0; color: var(--text-muted); }
 .rd-box-editor[open] > summary .rd-box-chevron { transform: rotate(180deg); }
 .rd-box-body { padding: 20px; border-top: 1px solid var(--border); }
+.rd-box-manager { display: flex; align-items: end; flex-wrap: wrap; gap: 12px; padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+.rd-box-manager > label { flex: 1; min-width: 180px; }
+.rd-box-delete { color: var(--danger, #ef4444); }
+.rd-box-identity { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 100px; align-items: center; gap: 16px; margin-bottom: 20px; }
+.rd-box-image-preview { width: 100px; height: 80px; object-fit: contain; border-radius: 8px; background: var(--bg-secondary); }
 .rd-box-fields { min-width: 0; margin: 0; padding: 0; border: 0; }
 .rd-box-settings { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 16px; margin-bottom: 20px; }
 .rd-box-editor label, .rd-box-ticket-field { display: flex; flex-direction: column; gap: 7px; min-width: 0; color: var(--text-secondary); font-size: 12px; }
@@ -44,6 +49,8 @@
   .rd-box-ticket-field { grid-column: 1 / -1; }
 }
 @media (max-width: 600px) {
+  .rd-box-identity { grid-template-columns: minmax(0, 1fr); }
+  .rd-box-manager > button { flex: 1; }
   .rd-box-summary, .rd-box-body { padding: 16px; }
   .rd-box-settings, .rd-box-reward-extra { grid-template-columns: minmax(0, 1fr); }
   .rd-box-reward { padding: 12px; }

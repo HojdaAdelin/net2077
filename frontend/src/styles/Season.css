@@ -108,7 +108,11 @@
 .season-box-section {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
+.season-boxes--multiple { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; align-items: start; }
+.season-main-card--multiple { grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr); }
+.season-boxes-status { color: var(--text-secondary); font-size: 14px; }
 
 .season-login-prompt {
   display: flex;
@@ -289,4 +293,7 @@
   .season-header-card {
     padding: 18px 20px;
   }
+}
+@media (max-width: 560px) {
+  .season-boxes--multiple { grid-template-columns: minmax(0, 1fr); }
 }

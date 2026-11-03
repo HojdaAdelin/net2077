@@ -1,10 +1,13 @@
 import express from 'express';
 import { isRoot } from '../middleware/checkRole.js';
-import { getSeasonBoxPrizes, openSeasonBox, setActiveFrame, setActiveNameEffect, setActiveProfileEffect, getRecentRareDrops, getSeasonBoxConfig, saveSeasonBoxConfig } from '../controllers/seasonBoxController.js';
+import { getSeasonBoxes, createSeasonBoxConfig, deleteSeasonBoxConfig, getSeasonBoxPrizes, openSeasonBox, setActiveFrame, setActiveNameEffect, setActiveProfileEffect, getRecentRareDrops, getSeasonBoxConfig, saveSeasonBoxConfig } from '../controllers/seasonBoxController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
+router.get('/boxes', getSeasonBoxes);
+router.post('/config', authMiddleware, isRoot, createSeasonBoxConfig);
+router.delete('/config/:boxId', authMiddleware, isRoot, deleteSeasonBoxConfig);
 router.get('/config', authMiddleware, isRoot, getSeasonBoxConfig);
 router.put('/config', authMiddleware, isRoot, saveSeasonBoxConfig);
 

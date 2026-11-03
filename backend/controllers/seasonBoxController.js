@@ -1,38 +1,69 @@
-import { randomInt } from 'crypto';
+import { randomInt, randomUUID } from 'crypto';
 import User from '../models/User.js';
 import RareDrop from '../models/RareDrop.js';
 import SeasonBoxConfig from '../models/SeasonBoxConfig.js';
-import { loadSeasonBox, publicSeasonBox, seasonBoxCatalog, buildSeasonBox, prizeForTicket, TICKET_TOTAL } from '../utils/seasonBoxConfig.js';
+import { PRIMARY_BOX_ID, validBoxId, loadSeasonBoxes, seasonBoxSummary, seasonBoxImages, buildBoxIdentity, rareDropFilter, loadSeasonBox, publicSeasonBox, seasonBoxCatalog, buildSeasonBox, prizeForTicket, TICKET_TOTAL } from '../utils/seasonBoxConfig.js';
 
-export const getSeasonBoxPrizes = async (req, res) => {
-  try { res.json(publicSeasonBox(await loadSeasonBox())); }
-  catch { res.status(500).json({ message: 'Unable to load Season Box.' }); }
+const missingBox = res => res.status(404).json({ message: 'This box no longer exists. Refresh the Season page.' });
+const editorPayload = async config => {
+  const [catalog, boxes, images] = await Promise.all([seasonBoxCatalog(config), loadSeasonBoxes(), seasonBoxImages()]);
+  return { success: true, config, catalog, boxes: boxes.map(seasonBoxSummary), images };
 };
 
+export const getSeasonBoxes = async (req, res) => {
+  try { res.json({ success: true, boxes: (await loadSeasonBoxes()).map(publicSeasonBox) }); }
+  catch { res.status(500).json({ message: 'Unable to load Season Boxes.' }); }
+};
+export const getSeasonBoxPrizes = async (req, res) => {
+  try {
+    const config = await loadSeasonBox(req.query.boxId);
+    if (!config) return missingBox(res);
+    res.json(publicSeasonBox(config));
+  } catch (error) { res.status(error.status || 500).json({ message: error.status ? error.message : 'Unable to load Season Box.' }); }
+};
 export const getSeasonBoxConfig = async (req, res) => {
   try {
-    const config = await loadSeasonBox();
-    const catalog = await seasonBoxCatalog(config);
-    res.json({ success: true, config, catalog });
-  } catch (error) { res.status(500).json({ message: 'Unable to load Season Box editor.' }); }
+    const config = await loadSeasonBox(req.query.boxId);
+    if (!config) return missingBox(res);
+    res.json(await editorPayload(config));
+  } catch (error) { res.status(error.status || 500).json({ message: error.status ? error.message : 'Unable to load Season Box editor.' }); }
 };
-
 export const saveSeasonBoxConfig = async (req, res) => {
   try {
-    if (!Number.isSafeInteger(req.body.revision) || req.body.revision < 0) {
-      return res.status(400).json({ message: 'Invalid configuration revision. Reload the editor.' });
-    }
-    const current = await loadSeasonBox();
-    if (current.revision !== req.body.revision) return res.status(409).json({ message: 'Season Box was changed elsewhere. Reload the editor before saving.' });
+    if (!Number.isSafeInteger(req.body.revision) || req.body.revision < 0) return res.status(400).json({ message: 'Invalid configuration revision. Reload the editor.' });
+    const current = await loadSeasonBox(req.body._id ?? PRIMARY_BOX_ID);
+    if (!current) return missingBox(res);
+    if (current.revision !== req.body.revision) return res.status(409).json({ message: 'This box was changed elsewhere. Reload the editor before saving.' });
     const catalog = await seasonBoxCatalog(current);
-    const changes = buildSeasonBox(req.body, catalog);
-    const config = await SeasonBoxConfig.findOneAndUpdate({ _id: 'season-box', revision: req.body.revision },
-      { $set: changes, $inc: { revision: 1 } }, { new: true, upsert: true, runValidators: true }).lean();
-    res.json({ success: true, config, catalog });
+    const changes = { ...buildSeasonBox(req.body, catalog), ...buildBoxIdentity(req.body, await seasonBoxImages(), current) };
+    const config = await SeasonBoxConfig.findOneAndUpdate({ _id: current._id, revision: req.body.revision },
+      { $set: changes, $inc: { revision: 1 } }, { new: true, upsert: current._id === PRIMARY_BOX_ID, runValidators: true }).lean();
+    if (!config) return res.status(409).json({ message: 'This box was changed or deleted. Reload the editor.' });
+    res.json(await editorPayload(config));
   } catch (error) {
-    if (error.code === 11000) return res.status(409).json({ message: 'Season Box was changed elsewhere. Reload the editor before saving.' });
+    if (error.code === 11000) return res.status(409).json({ message: 'This box was changed elsewhere. Reload the editor before saving.' });
     res.status(error.status || 500).json({ message: error.status ? error.message : 'Unable to save Season Box.' });
   }
+};
+export const createSeasonBoxConfig = async (req, res) => {
+  try {
+    const primary = await loadSeasonBox();
+    const catalog = await seasonBoxCatalog(primary);
+    const changes = { ...buildSeasonBox(req.body, catalog), ...buildBoxIdentity(req.body, await seasonBoxImages()) };
+    const config = await SeasonBoxConfig.create({ _id: `box-${randomUUID()}`, ...changes, revision: 0 });
+    res.status(201).json(await editorPayload(config.toObject()));
+  } catch (error) { res.status(error.status || 500).json({ message: error.status ? error.message : 'Unable to create Season Box.' }); }
+};
+export const deleteSeasonBoxConfig = async (req, res) => {
+  try {
+    const id = req.params.boxId;
+    if (!validBoxId(id)) return res.status(400).json({ message: 'Invalid box ID.' });
+    if (id === PRIMARY_BOX_ID) return res.status(400).json({ message: 'The main Season Box cannot be deleted.' });
+    if (!Number.isSafeInteger(req.body.revision) || req.body.revision < 0) return res.status(400).json({ message: 'Invalid configuration revision. Reload the editor.' });
+    const deleted = await SeasonBoxConfig.findOneAndDelete({ _id: id, revision: req.body.revision });
+    if (!deleted) return res.status(409).json({ message: 'This box was changed or deleted. Reload the editor.' });
+    res.json(await editorPayload(await loadSeasonBox()));
+  } catch { res.status(500).json({ message: 'Unable to delete Season Box.' }); }
 };
 
 const snapshotFilter = user => {
@@ -48,7 +79,8 @@ export const openSeasonBox = async (req, res) => {
   try {
     const count = Number(req.body?.count ?? 1);
     if (!Number.isInteger(count) || count < 1 || count > 5) return res.status(400).json({ message: 'Choose between 1 and 5 boxes.' });
-    const config = await loadSeasonBox();
+    const config = await loadSeasonBox(req.body.boxId);
+    if (!config) return missingBox(res);
     if (req.body.revision !== config.revision) {
       return res.status(409).json({ ...publicSeasonBox(config), success: false,
         message: 'Season Box rewards or price changed. The contents have been refreshed; please review them and try again.' });
@@ -99,7 +131,7 @@ export const openSeasonBox = async (req, res) => {
           icon: prize.icon, type: prize.type, amount: prize.amount ?? null, quantity: prize.quantity || 1,
           frameKey: prize.frameKey ?? null, effectKey: prize.effectKey ?? null, rarity: prize.rarity,
           duplicate, duplicateGold: duplicate ? config.duplicateGold : null });
-        if (chance <= 5 && !duplicate) rareDrops.push({ username: user.username, prizeId: prize.id,
+        if (chance <= 5 && !duplicate) rareDrops.push({ boxId: config._id, username: user.username, prizeId: prize.id,
           label: prize.label, icon: prize.icon, type: prize.type, frameKey: prize.frameKey ?? null,
           effectKey: prize.effectKey ?? null, rarity: prize.rarity, chance });
       }
@@ -109,7 +141,7 @@ export const openSeasonBox = async (req, res) => {
       if (!updated) continue;
       try {
         if (rareDrops.length) await RareDrop.insertMany(rareDrops);
-        const old = await RareDrop.find().sort({ droppedAt: -1 }).skip(5);
+        const old = await RareDrop.find(rareDropFilter(config._id)).sort({ droppedAt: -1 }).skip(5);
         if (old.length) await RareDrop.deleteMany({ _id: { $in: old.map(drop => drop._id) } });
       } catch (error) { console.error('[SeasonBox] Rare drop log:', error.message); }
       return res.json({ success: true, results, remainingGold: updated.gold, inventory: updated.inventory,
@@ -117,7 +149,7 @@ export const openSeasonBox = async (req, res) => {
     }
   } catch (error) {
     console.error('[SeasonBox] Error:', error);
-    res.status(500).json({ message: 'Unable to open Season Box.' });
+    res.status(error.status || 500).json({ message: error.status ? error.message : 'Unable to open Season Box.' });
   }
 };
 
@@ -191,7 +223,9 @@ export const setActiveFrame = async (req, res) => {
 
 export const getRecentRareDrops = async (req, res) => {
   try {
-    const drops = await RareDrop.find().sort({ droppedAt: -1 }).limit(5).lean();
+    const id = req.query.boxId ?? PRIMARY_BOX_ID;
+    if (!validBoxId(id)) return res.status(400).json({ message: 'Invalid box ID.' });
+    const drops = await RareDrop.find(rareDropFilter(id)).sort({ droppedAt: -1 }).limit(5).lean();
     res.json({ success: true, drops });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });

@@ -15,6 +15,12 @@
   object-position: center;
   background: var(--bg-secondary);
 }
+.season-box-name { margin: 0; padding: 16px 18px; color: var(--text-primary); font-size: 15px; overflow-wrap: anywhere; }
+.season-box-card--compact { width: 100%; max-width: none; margin: 0; align-self: start; }
+.season-box-card--compact .season-box-img { aspect-ratio: 16 / 11; }
+.season-box-card--compact .season-box-footer { padding: 14px 12px; }
+.season-box-card--compact .season-box-btn { width: 100%; justify-content: center; padding: 10px 12px; white-space: normal; }
+.season-box-card--compact .sb-count-selector { flex-wrap: wrap; justify-content: center; }
 
 .sb-prize-img {
   object-fit: contain;
