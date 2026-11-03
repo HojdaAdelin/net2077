@@ -1,7 +1,8 @@
 import { Cable, MousePointer2, Settings2, FlaskConical, Trash2, X } from 'lucide-react';
 import NetworkDeviceArtwork from './NetworkDeviceArtwork';
 import { DEVICE_TYPES, portInUse } from '../utils/networkTopology';
-import { isBridgeDevice } from '../utils/networkConfig';
+import { isBridgeDevice, allDeviceInterfaces, interfaceEnabled, isSwitchport, switchPort, vlanListText } from '../utils/networkConfig';
+import { sviOperational } from '../utils/networkSimulation';
 
 export default function NetworkInspector({ topology, wifiLinks, device, cable, readOnly = false, canDelete = true, onConfigure, onSimulate, onDelete, onDeselect, quickGuide }) {
   const endpoint = value => `${topology.devices.find(item => item.id === value.deviceId)?.name || 'Device'} · ${value.portId}`;
@@ -25,15 +26,20 @@ export default function NetworkInspector({ topology, wifiLinks, device, cable, r
     <div className="nl-device-identity"><NetworkDeviceArtwork type={device.type} /><div><span>{definition.label}</span><h3>{device.name}</h3><small>{connected} / {definition.ports.length} ports connected</small></div></div>
     {readOnly ? <p className="nl-library-hint">Preset configuration · inspect only</p> : <button type="button" className="nl-configure-button" onClick={onConfigure}><Settings2 size={14} />Configure device</button>}
     {!isBridgeDevice(device.type) && <button type="button" className="nl-inspector-test" onClick={onSimulate}><FlaskConical size={14} />Test from this device<span>→</span></button>}
-    <div className="nl-inspector-section-heading"><h4>Interfaces</h4><span>{Object.keys(device.config.interfaces).length}</span></div>
-    <div className="nl-interface-cards">{Object.entries(device.config.interfaces).map(([port, iface]) => {
+    <div className="nl-inspector-section-heading"><h4>Interfaces</h4><span>{Object.keys(allDeviceInterfaces(device)).length}</span></div>
+    <div className="nl-interface-cards">{Object.entries(allDeviceInterfaces(device)).map(([port, iface]) => {
       const wireless = port === 'wlan0';
-      const linked = wireless ? wifiLinks.some(link => link.from.deviceId === device.id || link.to.deviceId === device.id) : portInUse(topology, { deviceId: device.id, portId: port });
-      const enabled = iface.enabled && (!wireless || device.config.wireless.enabled);
+      const linked = iface.kind === 'svi' ? sviOperational(topology, device, iface.vlan) : wireless ? wifiLinks.some(link => link.from.deviceId === device.id || link.to.deviceId === device.id) : portInUse(topology, { deviceId: device.id, portId: iface.parent || port });
+      const enabled = interfaceEnabled(device, port);
+      const switching = isSwitchport(device, port), settings = switching ? switchPort(device, port) : null;
       const status = !enabled ? 'Disabled' : linked ? 'Connected' : 'Not connected';
-      return <div key={port} className="nl-interface-card"><div><strong>{port}</strong><span className={`nl-interface-state ${enabled && linked ? 'is-up' : ''}`}><i />{status}</span></div><p>{!enabled ? 'Interface is turned off' : isBridgeDevice(device.type) ? 'Layer 2 · bridges traffic' : iface.ip ? `${iface.ip} · ${iface.mask}` : 'No IP address configured'}</p></div>;
+      return <div key={port} className="nl-interface-card"><div><strong>{port}</strong><span className={`nl-interface-state ${enabled && linked ? 'is-up' : ''}`}><i />{status}</span></div><p>{!enabled ? 'Interface is turned off' : switching || isBridgeDevice(device.type) ? 'Layer 2 · bridges traffic' : iface.ip ? `${iface.ip} · ${iface.mask}` : 'No IP address configured'}</p>
+        {settings && <p className="nl-port-vlan">{settings.mode === 'access' ? `Access · VLAN ${settings.accessVlan}` : `Trunk · native ${settings.nativeVlan} · allowed ${vlanListText(settings.allowedVlans)}`}</p>}
+        {iface.kind && <p className="nl-port-vlan">VLAN {iface.vlan} · {iface.kind === 'svi' ? 'SVI' : iface.native ? '802.1Q native' : '802.1Q tagged'}</p>}
+      </div>;
     })}</div>
     {!isBridgeDevice(device.type) && <dl className="nl-device-addresses"><div><dt>Gateway</dt><dd>{device.config.gateway || 'Not set'}</dd></div><div><dt>DNS server</dt><dd>{device.config.dns || 'Not set'}</dd></div></dl>}
+    {device.type === 'l3switch' && <p className="nl-routing-status">IP routing: {device.config.ipRouting === false ? 'disabled' : 'enabled'}</p>}
     {canDelete && <button type="button" className="nl-delete-button" onClick={onDelete}><Trash2 size={14} />Remove device</button>}
   </div>;
 }

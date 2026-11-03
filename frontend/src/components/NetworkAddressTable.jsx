@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { LockKeyhole, Search, TableProperties, X } from 'lucide-react';
 import { DEVICE_TYPES } from '../utils/networkTopology';
-import { isBridgeDevice, maskPrefix } from '../utils/networkConfig';
+import { isBridgeDevice, maskPrefix, allDeviceInterfaces, interfaceEnabled, isSwitchport, switchPort, vlanListText } from '../utils/networkConfig';
 import '../styles/NetworkAddressTable.css';
 
 export default function NetworkAddressTable({ topology, editable, onSelect, onClose }) {
@@ -9,9 +9,9 @@ export default function NetworkAddressTable({ topology, editable, onSelect, onCl
   const titleId = useId();
   const [search, setSearch] = useState('');
   const query = search.trim().toLowerCase();
-  const rows = topology.devices.flatMap(device => Object.entries(device.config.interfaces).map(([port, iface]) => ({
-    device, port, iface, bridge: isBridgeDevice(device.type),
-    enabled: iface.enabled !== false && (port !== 'wlan0' || device.config.wireless.enabled),
+  const rows = topology.devices.flatMap(device => Object.entries(allDeviceInterfaces(device)).map(([port, iface]) => ({
+    device, port, iface, bridge: isBridgeDevice(device.type) || isSwitchport(device, port),
+    enabled: interfaceEnabled(device, port),
   }))).filter(({ device, port, iface }) =>
     `${device.name} ${DEVICE_TYPES[device.type].label} ${port} ${iface.ip} ${iface.mask} ${device.config.gateway} ${device.config.dns}`.toLowerCase().includes(query)
   );
@@ -35,7 +35,7 @@ export default function NetworkAddressTable({ topology, editable, onSelect, onCl
         <thead><tr><th scope="col">Device</th><th scope="col">Interface</th><th scope="col">IPv4 address</th><th scope="col">Subnet</th><th scope="col">Gateway</th><th scope="col">DNS server</th><th scope="col">State</th></tr></thead>
         <tbody>{rows.map(({ device, port, iface, bridge, enabled }) => <tr key={`${device.id}/${port}`} className={!enabled ? 'is-disabled' : ''} onClick={() => onSelect(device.id)}>
           <td><button type="button" className="nl-address-device" onClick={event => { event.stopPropagation(); onSelect(device.id); }}><strong>{device.name}{!editable(device.id) && <LockKeyhole size={11} aria-label="Preset configuration" />}</strong><small>{DEVICE_TYPES[device.type].label}</small></button></td>
-          <td className="nl-address-mono">{port}</td>
+          <td className="nl-address-mono">{port}{isSwitchport(device, port) ? <small className="nl-address-vlan">{switchPort(device, port).mode === 'access' ? `VLAN ${switchPort(device, port).accessVlan}` : `Trunk ${vlanListText(switchPort(device, port).allowedVlans)}`}</small> : iface.vlan && <small className="nl-address-vlan">VLAN {iface.vlan}{iface.native ? ' · native' : ''}</small>}</td>
           <td className={`nl-address-mono${!bridge && !iface.ip ? ' nl-address-missing' : ''}`}>{bridge ? '—' : iface.ip || 'Not configured'}</td>
           <td className="nl-address-mono" title={!bridge && iface.ip ? iface.mask : undefined}>{!bridge && iface.ip ? `/${maskPrefix(iface.mask)}` : '—'}</td>
           <td className="nl-address-mono">{!bridge && device.config.gateway || '—'}</td>

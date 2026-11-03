@@ -62,6 +62,11 @@ export function topologyReducer(state, action) {
 
 export function portPosition(device, portId) {
   const ports = DEVICE_TYPES[device.type].ports;
+  if (!ports.includes(portId)) {
+    const parent = device.config.subinterfaces?.find(iface => iface.name === portId)?.parent;
+    if (parent) return portPosition(device, parent);
+    return { x: device.x + 80, y: device.y + 56 };
+  }
   return { x: device.x + (ports.indexOf(portId) + 1) * 160 / (ports.length + 1), y: device.y + 128 };
 }
 

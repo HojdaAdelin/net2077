@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
+import NetworkVlanSettings from './NetworkVlanSettings';
 import { DEVICE_TYPES } from '../utils/networkTopology';
-import { isBridgeDevice, isRoutingDevice, hasWireless, validateDeviceSettings } from '../utils/networkConfig';
+import { isBridgeDevice, isRoutingDevice, hasWireless, validateDeviceSettings, normalizeVlanSettings, isSwitchDevice, isSwitchport, allDeviceInterfaces, switchPort } from '../utils/networkConfig';
 
 function Field({ label, children, ...props }) {
   return <label className="nl-config-field"><span>{label}</span>{children || <input {...props} />}</label>;
@@ -13,7 +14,7 @@ function Toggle({ label, checked, onChange }) {
 export default function NetworkDeviceSettings({ device, onApply, onClose }) {
   const dialogRef = useRef(null);
   const [name, setName] = useState(device.name);
-  const [config, setConfig] = useState(() => structuredClone(device.config));
+  const [config, setConfig] = useState(() => normalizeVlanSettings(device.type, DEVICE_TYPES[device.type].ports, structuredClone(device.config)));
   const [tab, setTab] = useState('network');
   const [error, setError] = useState('');
   const bridge = isBridgeDevice(device.type);
@@ -43,6 +44,9 @@ export default function NetworkDeviceSettings({ device, onApply, onClose }) {
         <div className="nl-settings-header"><div><span>{DEVICE_TYPES[device.type].label} configuration</span><h2 id="nl-settings-title">{device.name}</h2></div><button type="button" className="nl-icon-button" onClick={onClose} aria-label="Close configuration"><X size={19} /></button></div>
         <div className="nl-settings-tabs" role="group" aria-label="Configuration sections">
           <button type="button" aria-pressed={tab === 'network'} onClick={() => setTab('network')}>Network</button>
+          {isSwitchDevice(device.type) && <button type="button" aria-pressed={tab === 'switching'} onClick={() => setTab('switching')}>Switching</button>}
+          {device.type === 'router' && <button type="button" aria-pressed={tab === 'subinterfaces'} onClick={() => setTab('subinterfaces')}>802.1Q subinterfaces</button>}
+          {device.type === 'l3switch' && <button type="button" aria-pressed={tab === 'svis'} onClick={() => setTab('svis')}>VLAN interfaces</button>}
           {routing && <button type="button" aria-pressed={tab === 'routes'} onClick={() => setTab('routes')}>Static routes</button>}
           {hasWireless(device.type) && <button type="button" aria-pressed={tab === 'wifi'} onClick={() => setTab('wifi')}>Wi-Fi</button>}
           {device.type === 'server' && <button type="button" aria-pressed={tab === 'services'} onClick={() => setTab('services')}>Services</button>}
@@ -53,20 +57,22 @@ export default function NetworkDeviceSettings({ device, onApply, onClose }) {
           {tab === 'network' && <>
             <Field label="Device name" value={name} onChange={event => setName(event.target.value)} maxLength={40} />
             <p className="nl-config-help">{bridge ? 'This device bridges traffic between enabled ports. It does not need an IP address for switching.' : 'Configure an address on each interface you want to use. Connected devices need compatible subnets.'}</p>
-            {device.type === 'l3switch' && <p className="nl-config-help">L3 switch ports operate as routed interfaces in this version. VLANs are not modeled yet.</p>}
+            {device.type === 'l3switch' && <p className="nl-config-help">Use Switching to choose access, trunk or routed ports. Use VLAN interfaces to configure inter-VLAN gateways.</p>}
             {device.type === 'cloud' && <p className="nl-config-help">The cloud represents an upstream router inside this lab. It does not connect to the real internet.</p>}
             <div className="nl-config-interfaces">{Object.entries(config.interfaces).map(([port, iface]) => <div className="nl-config-interface" key={port}>
               <div className="nl-config-interface-heading"><strong>{port === 'wlan0' ? 'wlan0 · Wi-Fi' : port}</strong><Toggle label="Enabled" checked={iface.enabled} onChange={value => editInterface(port, { enabled: value })} /></div>
-              {!bridge && <div className="nl-config-grid"><Field label="IPv4 address" placeholder="192.168.1.10" value={iface.ip} onChange={event => editInterface(port, { ip: event.target.value })} /><Field label="Subnet mask / prefix" placeholder="255.255.255.0" value={iface.mask} onChange={event => editInterface(port, { mask: event.target.value })} /></div>}
+              {!bridge && !isSwitchport({ ...device, config }, port) && <div className="nl-config-grid"><Field label="IPv4 address" placeholder="192.168.1.10" value={iface.ip} onChange={event => editInterface(port, { ip: event.target.value })} /><Field label="Subnet mask / prefix" placeholder="255.255.255.0" value={iface.mask} onChange={event => editInterface(port, { mask: event.target.value })} /></div>}
+              {isSwitchport({ ...device, config }, port) && <p className="nl-config-help">{switchPort({ ...device, config }, port).mode === 'access' ? `Access VLAN ${config.switchports[port].accessVlan}` : '802.1Q trunk'} ? configure VLAN membership in Switching.</p>}
             </div>)}</div>
             {!bridge && <div className="nl-config-grid"><Field label="Default gateway (optional)" placeholder="192.168.1.1" value={config.gateway} onChange={event => setConfig({ ...config, gateway: event.target.value })} /><Field label="DNS server (optional)" placeholder="192.168.1.10" value={config.dns} onChange={event => setConfig({ ...config, dns: event.target.value })} /></div>}
           </>}
+          {['switching', 'subinterfaces', 'svis'].includes(tab) && <NetworkVlanSettings device={device} config={config} setConfig={setConfig} section={tab} />}
           {tab === 'routes' && <>
             <p className="nl-config-help">Connected networks are learned from interface addresses. Add a route for each remote network, or use 0.0.0.0/0 for a default route. Remember the return route.</p>
             {config.routes.map((route, index) => <div className="nl-route-row" key={index}>
               <Field label="Destination network" placeholder="192.168.2.0/24" value={route.destination} onChange={event => setConfig({ ...config, routes: config.routes.map((item, i) => i === index ? { ...item, destination: event.target.value } : item) })} />
               <Field label="Next hop" placeholder="10.0.0.2" value={route.nextHop} onChange={event => setConfig({ ...config, routes: config.routes.map((item, i) => i === index ? { ...item, nextHop: event.target.value } : item) })} />
-              <Field label="Interface"><select value={route.port} onChange={event => setConfig({ ...config, routes: config.routes.map((item, i) => i === index ? { ...item, port: event.target.value } : item) })}>{DEVICE_TYPES[device.type].ports.map(port => <option key={port}>{port}</option>)}</select></Field>
+              <Field label="Interface"><select value={route.port} onChange={event => setConfig({ ...config, routes: config.routes.map((item, i) => i === index ? { ...item, port: event.target.value } : item) })}>{Object.keys(allDeviceInterfaces({ ...device, config })).filter(port => !isSwitchport({ ...device, config }, port)).map(port => <option key={port}>{port}</option>)}</select></Field>
               <button type="button" className="nl-icon-button" aria-label={`Remove route ${index + 1}`} onClick={() => setConfig({ ...config, routes: config.routes.filter((_, i) => i !== index) })}><Trash2 size={16} /></button>
             </div>)}
             <button type="button" className="nl-secondary-button" onClick={() => setConfig({ ...config, routes: [...config.routes, { destination: '', nextHop: '', port: DEVICE_TYPES[device.type].ports[0] }] })}><Plus size={14} />Add route</button>

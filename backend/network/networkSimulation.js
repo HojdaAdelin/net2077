@@ -1,11 +1,13 @@
-import { ipv4, formatIPv4, sameSubnet, maskPrefix, prefixMask, parseCIDR, isBridgeDevice, isRoutingDevice } from './networkConfig.js';
+import { ipv4, formatIPv4, sameSubnet, maskPrefix, prefixMask, parseCIDR, isBridgeDevice, isRoutingDevice, allDeviceInterfaces, interfaceEnabled, isSwitchport } from './networkConfig.js';
+import { vlanLayer2Domain, sviOperational } from './networkLayer2.js';
+export { sviOperational } from './networkLayer2.js';
 
-const endpointKey = endpoint => `${endpoint.deviceId}/${endpoint.portId}`;
 const splitKey = key => { const [deviceId, portId] = key.split('/'); return { deviceId, portId }; };
-const enabled = (device, port) => device.config?.interfaces[port]?.enabled !== false &&
-  (port !== 'wlan0' || device.config?.wireless.enabled);
-const interfaces = device => Object.entries(device.config?.interfaces || {}).filter(([port]) => enabled(device, port));
-const addressInterfaces = device => interfaces(device).filter(([, iface]) => ipv4(iface.ip) !== null && maskPrefix(iface.mask) !== null);
+const enabled = interfaceEnabled;
+const addressInterfaces = (device, topology) => Object.entries(allDeviceInterfaces(device)).filter(([port, iface]) =>
+  enabled(device, port) && !isSwitchport(device, port) &&
+  (iface.kind !== 'svi' || sviOperational(topology, device, iface.vlan)) &&
+  ipv4(iface.ip) !== null && maskPrefix(iface.mask) !== null);
 
 export function wirelessConnections(topology) {
   const links = [];
@@ -18,49 +20,22 @@ export function wirelessConnections(topology) {
   return links;
 }
 
-// Traverse cables and transparent bridges only. Routers terminate a broadcast domain.
 export function layer2Domain(topology, origin) {
-  const graph = new Map();
-  const add = (from, to, linkId = null) => {
-    const key = endpointKey(from);
-    if (!graph.has(key)) graph.set(key, []);
-    graph.get(key).push({ to: endpointKey(to), linkId });
-  };
-  for (const link of [...topology.cables, ...wirelessConnections(topology)]) {
-    const from = topology.devices.find(device => device.id === link.from.deviceId);
-    const to = topology.devices.find(device => device.id === link.to.deviceId);
-    if (!from || !to || !enabled(from, link.from.portId) || !enabled(to, link.to.portId)) continue;
-    add(link.from, link.to, link.id); add(link.to, link.from, link.id);
-  }
-  for (const device of topology.devices.filter(item => isBridgeDevice(item.type))) {
-    for (const [from] of interfaces(device)) for (const [to] of interfaces(device)) {
-      if (from !== to) add({ deviceId: device.id, portId: from }, { deviceId: device.id, portId: to });
-    }
-  }
-  const found = new Map([[endpointKey(origin), []]]);
-  const queue = [endpointKey(origin)];
-  for (let cursor = 0; cursor < queue.length; cursor++) {
-    for (const edge of graph.get(queue[cursor]) || []) {
-      if (found.has(edge.to)) continue;
-      found.set(edge.to, [...found.get(queue[cursor]), { from: queue[cursor], to: edge.to, linkId: edge.linkId }]);
-      queue.push(edge.to);
-    }
-  }
-  return found;
+  return vlanLayer2Domain(topology, origin, wirelessConnections(topology));
 }
 
-function routeFor(device, destination) {
-  const candidates = addressInterfaces(device).filter(([, iface]) => sameSubnet(iface.ip, destination, iface.mask))
+function routeFor(device, destination, topology) {
+  const candidates = addressInterfaces(device, topology).filter(([, iface]) => sameSubnet(iface.ip, destination, iface.mask))
     .map(([port, iface]) => ({ port, iface, nextHop: destination, prefix: maskPrefix(iface.mask), connected: true }));
   for (const route of device.config.routes || []) {
     const network = parseCIDR(route.destination);
-    const iface = device.config.interfaces[route.port];
+    const iface = allDeviceInterfaces(device)[route.port];
     if (!network || !iface?.ip || !enabled(device, route.port) || !sameSubnet(destination, network.ip, `/${network.prefix}`)) continue;
     if (!sameSubnet(iface.ip, route.nextHop, iface.mask)) continue;
     candidates.push({ port: route.port, iface, nextHop: route.nextHop, prefix: network.prefix });
   }
   if (device.config.gateway) {
-    for (const [port, iface] of addressInterfaces(device)) if (sameSubnet(iface.ip, device.config.gateway, iface.mask)) {
+    for (const [port, iface] of addressInterfaces(device, topology)) if (sameSubnet(iface.ip, device.config.gateway, iface.mask)) {
       candidates.push({ port, iface, nextHop: device.config.gateway, prefix: 0 });
     }
   }
@@ -72,7 +47,7 @@ function deliver(topology, sourceId, destination, protocol) {
   let current = topology.devices.find(device => device.id === sourceId);
   let sourceIP = '';
   const record = (message, extra = {}) => trace.push({ deviceId: current?.id, protocol,
-    sourceIP: sourceIP || (current ? addressInterfaces(current)[0]?.[1].ip || '' : ''), destinationIP: destination, message, status: 'active', ...extra });
+    sourceIP: sourceIP || (current ? addressInterfaces(current, topology)[0]?.[1].ip || '' : ''), destinationIP: destination, message, status: 'active', ...extra });
   const fail = message => {
     record(message, { status: 'blocked' });
     return { ok: false, message, steps, links, trace };
@@ -83,14 +58,14 @@ function deliver(topology, sourceId, destination, protocol) {
   const visited = new Set();
   for (let ttl = 32; ttl > 0; ttl--) {
     if (current.type === 'firewall' && !current.config.firewall[protocol]) return fail(`${current.name}: ${protocol.toUpperCase()} traffic is blocked by the firewall.`);
-    const local = addressInterfaces(current).find(([, iface]) => iface.ip === destination);
+    const local = addressInterfaces(current, topology).find(([, iface]) => iface.ip === destination);
     if (local) {
       record('Packet reached its destination.', { status: 'delivered', sourceIP: sourceIP || destination });
       return { ok: true, message: 'Packet delivered.', steps, links, trace, sourceIP: sourceIP || destination, targetId: current.id, targetPort: local[0] };
     }
     if (visited.has(current.id)) return fail(`Routing loop detected at ${current.name}.`);
     visited.add(current.id);
-    const route = routeFor(current, destination);
+    const route = routeFor(current, destination, topology);
     if (!route) return fail(`${current.name}: no route to ${destination}. Check its IP address, subnet mask, gateway, and static routes.`);
     if (!sourceIP) sourceIP = route.iface.ip;
     steps.push(`${current.name} → ${route.port}: ${route.connected ? 'directly connected network' : `next hop ${route.nextHop}`}`);
@@ -101,27 +76,27 @@ function deliver(topology, sourceId, destination, protocol) {
     for (const [key, path] of domain) {
       const endpoint = splitKey(key);
       const device = topology.devices.find(item => item.id === endpoint.deviceId);
-      const iface = device?.config.interfaces[endpoint.portId];
-      if (!device || isBridgeDevice(device.type) || !iface || !enabled(device, endpoint.portId)) continue;
+      const iface = device ? allDeviceInterfaces(device)[endpoint.portId] : null;
+      if (!device || isBridgeDevice(device.type) || isSwitchport(device, endpoint.portId) || !iface || !enabled(device, endpoint.portId)) continue;
       if (iface.ip === route.iface.ip) ownAddress.push(key);
       if (device.id !== current.id && iface.ip === route.nextHop) responders.push({ device, endpoint, path });
     }
     if (ownAddress.length > 1) return fail(`Duplicate IP address ${route.iface.ip} on the local network.`);
     if (responders.length > 1) return fail(`Duplicate IP address ${route.nextHop} on the local network.`);
-    if (!responders.length) return fail(`${current.name}: cannot resolve ${route.nextHop} on ${route.port}. Check cables, interface state, Wi-Fi association, and addressing.`);
+    if (!responders.length) return fail(`${current.name}: cannot resolve ${route.nextHop} on ${route.port}. Check cables, VLAN membership, allowed trunk VLANs, interface state, Wi-Fi association, and addressing.`);
     const responder = responders[0];
     for (const edge of responder.path) {
       if (edge.linkId) links.push(edge.linkId);
       const from = splitKey(edge.from), to = splitKey(edge.to);
       const device = topology.devices.find(item => item.id === to.deviceId);
-      record(edge.linkId ? `${device.name}: packet arrives on ${to.portId}.` : `${device.name}: bridge forwards from ${from.portId} to ${to.portId}.`,
-        { from, to, linkId: edge.linkId, deviceId: to.deviceId });
+      record(edge.linkId ? `${device.name}: packet arrives on ${to.portId}${edge.tag ? ` (802.1Q VLAN ${edge.tag})` : ' (untagged)'}.` : `${device.name}: VLAN ${edge.vlan} forwards from ${from.portId} to ${to.portId}.`,
+        { from, to, linkId: edge.linkId, deviceId: to.deviceId, vlan: edge.vlan, ...(edge.linkId ? { vlanTag: edge.tag } : {}) });
     }
     const hopDevices = [...new Set(responder.path.map(edge => splitKey(edge.to).deviceId))];
     steps.push(`Local delivery: ${[current.id, ...hopDevices].map(id => topology.devices.find(device => device.id === id)?.name).join(' → ')}`);
     current = responder.device;
-    if (addressInterfaces(current).some(([, iface]) => iface.ip === destination)) continue;
-    if (!isRoutingDevice(current.type)) return fail(`${current.name} is an end device and cannot forward packets to another network.`);
+    if (addressInterfaces(current, topology).some(([, iface]) => iface.ip === destination)) continue;
+    if (!isRoutingDevice(current.type) || (current.type === 'l3switch' && current.config.ipRouting === false)) return fail(`${current.name} cannot forward packets to another network. Check IP routing on L3 switches.`);
   }
   return fail('Packet TTL expired. Check for a routing loop.');
 }
@@ -197,7 +172,7 @@ export function requestDHCP(topology, sourceId, port = 'eth0') {
   for (const [key, path] of domain) {
     const endpoint = splitKey(key);
     const device = topology.devices.find(item => item.id === endpoint.deviceId);
-    const iface = device.config.interfaces[endpoint.portId];
+    const iface = allDeviceInterfaces(device)[endpoint.portId];
     if (iface?.ip && !(device.id === sourceId && endpoint.portId === port)) occupied.add(ipv4(iface.ip));
     if (device.id !== sourceId && device.type === 'server' && device.config.services.dhcp.enabled && iface?.ip) servers.push({ device, iface, path });
   }

@@ -1,5 +1,5 @@
 import { DEVICE_TYPES, emptyTopology, connectionError } from './networkTopology.js';
-import { defaultDeviceConfig, validateDeviceSettings, interfaceNames, ipv4, maskPrefix } from './networkConfig.js';
+import { defaultDeviceConfig, validateDeviceSettings, ipv4, maskPrefix, allDeviceInterfaces, validInterfaceName, validVlanId, parseVlanList, switchPort, isSwitchDevice } from './networkConfig.js';
 import { simulatePing, simulateHTTP, resolveHostname, requestDHCP } from './networkSimulation.js';
 
 const fail = message => { throw Object.assign(new Error(message), { status: 400 }); };
@@ -17,6 +17,9 @@ function deviceConfig(type, input = {}) {
     result.interfaces[port] = { enabled: boolean(data.enabled, true), ip: data.ip ?? '', mask: data.mask ?? '255.255.255.0' };
   }
   for (const key of ['gateway', 'dns']) result[key] = input[key] ?? result[key];
+  for (const key of ['vlans', 'switchports', 'subinterfaces', 'svis', 'ipRouting']) {
+    if (input[key] !== undefined) result[key] = structuredClone(input[key]);
+  }
   result.routes = (input.routes ?? []).map(route => ({ destination: route.destination, nextHop: route.nextHop, port: route.port }));
   for (const section of ['wireless', 'firewall']) {
     for (const key of Object.keys(result[section])) result[section][key] = input[section]?.[key] ?? result[section][key];
@@ -72,7 +75,7 @@ export function normalizeProblem(input) {
   const xp = input.xp ?? 50;
   if (!Number.isSafeInteger(xp) || xp < 0 || xp > 10000) fail('XP must be a whole number between 0 and 10,000.');
   const device = id => topology.devices.find(item => item.id === id) || fail(`Unknown device: ${id}.`);
-  const getPort = (id, port) => interfaceNames(device(id).type, DEVICE_TYPES[device(id).type].ports).includes(port) ? port : fail(`Unknown interface ${id}/${port}.`);
+  const getPort = (id, port) => validInterfaceName(device(id), port) ? port : fail(`Unknown interface ${id}/${port}.`);
   if (!Array.isArray(input.objectives) || !input.objectives.length || input.objectives.length > 30) fail('Add between 1 and 30 objectives.');
   const objectiveIds = new Set();
   const objectives = input.objectives.map((goal, index) => {
@@ -93,11 +96,35 @@ export function normalizeProblem(input) {
       if (goal.mask !== undefined) { if (maskPrefix(goal.mask) === null) fail('Invalid objective subnet mask.'); result.mask = goal.mask; }
       if (goal.enabled !== undefined) result.enabled = boolean(goal.enabled, true);
       if (!['ip', 'mask', 'enabled'].some(key => Object.hasOwn(result, key))) fail('Interface objectives need an IP, mask or enabled setting.');
+    } else if (goal.type === 'vlan') {
+      const target = device(goal.device);
+      if (!isSwitchDevice(target.type) || !validVlanId(goal.vlan)) fail('VLAN objectives need a switch and VLAN ID from 1 to 4094.');
+      result.device = goal.device; result.vlan = goal.vlan; result.enabled = boolean(goal.enabled, true);
+    } else if (goal.type === 'switchport') {
+      const target = device(goal.device);
+      if (!isSwitchDevice(target.type) || !DEVICE_TYPES[target.type].ports.includes(goal.port)) fail('Switchport objectives need a physical switch port.');
+      if (!(target.type === 'l3switch' ? ['access', 'trunk', 'routed'] : ['access', 'trunk']).includes(goal.mode)) fail('Choose a valid switchport mode.');
+      result.device = goal.device; result.port = goal.port; result.mode = goal.mode;
+      for (const key of goal.mode === 'access' ? ['accessVlan'] : goal.mode === 'trunk' ? ['nativeVlan'] : []) if (goal[key] !== undefined) {
+        if (!validVlanId(goal[key])) fail(`Invalid ${key}.`);
+        result[key] = goal[key];
+      }
+      if (goal.mode === 'trunk' && goal.allowedVlans !== undefined) result.allowedVlans = parseVlanList(goal.allowedVlans);
+    } else if (goal.type === 'subinterface') {
+      const target = device(goal.device);
+      if (target.type !== 'router' || !validInterfaceName(target, goal.port) || !goal.port.includes('.') || !validVlanId(goal.vlan)) fail('Subinterface objectives need a router, logical interface and VLAN.');
+      result.device = goal.device; result.port = goal.port; result.vlan = goal.vlan;
+      result.native = boolean(goal.native, false); result.enabled = boolean(goal.enabled, true);
+      if (goal.ip !== undefined) result.ip = address(goal.ip);
+      if (goal.mask !== undefined) { if (maskPrefix(goal.mask) === null) fail('Invalid subinterface mask.'); result.mask = goal.mask; }
+    } else if (goal.type === 'ipRouting') {
+      if (device(goal.device).type !== 'l3switch') fail('IP routing objectives need an L3 switch.');
+      result.device = goal.device; result.enabled = boolean(goal.enabled, true);
     } else if (goal.type === 'gateway') {
       device(goal.device); result.device = goal.device; result.value = address(goal.value);
     } else if (goal.type === 'dhcp') {
       device(goal.device); result.device = goal.device; result.port = getPort(goal.device, goal.port ?? 'eth0');
-    } else fail('Objective type must be ping, http, dns, interface, gateway or dhcp.');
+    } else fail('Unsupported objective type. Use ping, http, dns, interface, gateway, dhcp, vlan, switchport, subinterface or ipRouting.');
     return result;
   });
   if (objectives.every(goal => goal.expected === false)) fail('Include at least one positive configuration or connectivity objective.');
@@ -117,7 +144,8 @@ const cableSignature = cable => [cable.from, cable.to].map(end => `${end.deviceI
 export function validateSubmission(problem, input) {
   const topology = normalizeTopology(input);
   const originalIds = new Set(problem.topology.devices.map(item => item.id));
-  for (const original of problem.topology.devices) {
+  // Canonical defaults keep older saved labs compatible with the VLAN configuration fields.
+  for (const original of normalizeTopology(problem.topology).devices) {
     const current = topology.devices.find(item => item.id === original.id);
     if (!current || current.type !== original.type) fail('The starting devices must remain in the topology with their original types.');
     if (!problem.permissions.configure.includes(original.id) && (JSON.stringify(current.config) !== JSON.stringify(original.config) || current.name !== original.name)) fail(`${original.name} has a locked configuration.`);
@@ -139,9 +167,23 @@ export function evaluateObjectives(problem, topology) {
       else if (result.ok && goal.targetDevice && result.targetId !== goal.targetDevice) detail = 'Traffic reached a different device. Check the destination addressing.';
       else if (result.ok && goal.expectedIP && result.ip !== goal.expectedIP) detail = `DNS returned ${result.ip}, but this objective requires ${goal.expectedIP}.`;
     } else if (goal.type === 'interface') {
-      const iface = device?.config.interfaces[goal.port];
+      const iface = device && allDeviceInterfaces(device)[goal.port];
       passed = Boolean(iface && (goal.ip === undefined || iface.ip === goal.ip) && (goal.mask === undefined || maskPrefix(iface.mask) === maskPrefix(goal.mask)) && (goal.enabled === undefined || iface.enabled === goal.enabled));
-    } else if (goal.type === 'gateway') passed = device?.config.gateway === goal.value;
+    } else if (goal.type === 'vlan') {
+      const vlan = device?.config.vlans?.find(item => item.id === goal.vlan);
+      passed = Boolean(vlan && vlan.enabled === goal.enabled);
+    } else if (goal.type === 'switchport') {
+      const settings = device && switchPort(device, goal.port);
+      passed = Boolean(settings && settings.mode === goal.mode &&
+        (goal.accessVlan === undefined || settings.accessVlan === goal.accessVlan) &&
+        (goal.nativeVlan === undefined || settings.nativeVlan === goal.nativeVlan) &&
+        (goal.allowedVlans === undefined || JSON.stringify(settings.allowedVlans) === JSON.stringify(goal.allowedVlans)));
+    } else if (goal.type === 'subinterface') {
+      const iface = device?.config.subinterfaces?.find(item => item.name === goal.port);
+      passed = Boolean(iface && iface.vlan === goal.vlan && iface.native === goal.native && iface.enabled === goal.enabled &&
+        (goal.ip === undefined || iface.ip === goal.ip) && (goal.mask === undefined || maskPrefix(iface.mask) === maskPrefix(goal.mask)));
+    } else if (goal.type === 'ipRouting') passed = device?.config.ipRouting === goal.enabled;
+    else if (goal.type === 'gateway') passed = device?.config.gateway === goal.value;
     else if (goal.type === 'dhcp') {
       const result = requestDHCP(topology, goal.device, goal.port);
       const iface = device?.config.interfaces[goal.port];

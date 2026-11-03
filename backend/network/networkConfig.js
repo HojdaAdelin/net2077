@@ -1,3 +1,6 @@
+import { normalizeVlanSettings, allDeviceInterfaces, isSwitchport } from './networkVlans.js';
+export * from './networkVlans.js';
+
 export const isRoutingDevice = type => ['router', 'l3switch', 'cloud', 'firewall'].includes(type);
 export const isBridgeDevice = type => ['switch', 'ap'].includes(type);
 export const hasWireless = type => ['laptop', 'ap'].includes(type);
@@ -38,7 +41,7 @@ export function parseCIDR(value) {
 }
 
 export function defaultDeviceConfig(type, ports) {
-  return {
+  return normalizeVlanSettings(type, ports, {
     interfaces: Object.fromEntries(interfaceNames(type, ports).map(port => [port, { enabled: true, ip: '', mask: '255.255.255.0' }])),
     gateway: '', dns: '', routes: [],
     wireless: { enabled: true, ssid: type === 'ap' ? 'NET2077' : '', password: '' },
@@ -48,11 +51,12 @@ export function defaultDeviceConfig(type, ports) {
       dns: { enabled: false, records: [] },
       http: { enabled: false, title: 'Welcome to the lab', body: 'This page is served by your simulated HTTP server.' },
     },
-  };
+  });
 }
 
 export function validateDeviceSettings(type, ports, input) {
   const config = structuredClone(input.config);
+  normalizeVlanSettings(type, ports, config);
   const fail = message => { throw new Error(message); };
   const name = String(input.name || '').trim();
   if (!name || name.length > 40) fail('Device name must contain 1–40 characters.');
@@ -61,17 +65,21 @@ export function validateDeviceSettings(type, ports, input) {
     const number = ipv4(value);
     if (number === null || number === 0 || (number >>> 24) >= 224 || (number >>> 24) === 127) fail(`${label}: enter a valid unicast IPv4 address.`);
   };
-  for (const port of interfaceNames(type, ports)) {
-    const iface = config.interfaces[port];
+  for (const port of interfaceNames(type, ports)) if (!config.interfaces[port]) fail(`Missing interface ${port}.`);
+  for (const [port, iface] of Object.entries(allDeviceInterfaces({ type, config }))) {
     if (!iface) fail(`Missing interface ${port}.`);
+    if (typeof iface.ip !== 'string' || typeof iface.mask !== 'string' || typeof iface.enabled !== 'boolean') fail(`${port}: invalid interface settings.`);
     iface.ip = iface.ip.trim();
     iface.mask = iface.mask.trim();
     if (maskPrefix(iface.mask) === null) fail(`${port}: enter a contiguous subnet mask or prefix, such as 255.255.255.0 or /24.`);
     validIP(iface.ip, port);
+    if (isSwitchport({ type, config }, port) && iface.ip) fail(`${port}: switchports use VLANs, not physical IP addresses. Use an SVI or a routed port.`);
     if (iface.ip && maskPrefix(iface.mask) <= 30) {
       const host = (ipv4(iface.ip) & ~prefixMask(maskPrefix(iface.mask))) >>> 0;
       if (host === 0 || host === (~prefixMask(maskPrefix(iface.mask)) >>> 0)) fail(`${port}: the network and broadcast addresses cannot be assigned to a host.`);
     }
+    const target = config.interfaces[port] || config.subinterfaces?.find(item => item.name === port) || config.svis?.find(item => `vlan${item.vlan}` === port);
+    target.ip = iface.ip; target.mask = iface.mask;
   }
   config.gateway = config.gateway.trim(); config.dns = config.dns.trim();
   validIP(config.gateway, 'Gateway'); validIP(config.dns, 'DNS server');
@@ -80,9 +88,10 @@ export function validateDeviceSettings(type, ports, input) {
     route.destination = route.destination.trim(); route.nextHop = route.nextHop.trim();
     if (!parseCIDR(route.destination)) fail('Routes must use a network address in CIDR notation, such as 192.168.2.0/24.');
     validIP(route.nextHop, 'Route next hop', false);
-    const iface = config.interfaces[route.port];
+    const allInterfaces = allDeviceInterfaces({ type, config });
+    const iface = allInterfaces[route.port];
     if (!iface || !iface.ip || !sameSubnet(iface.ip, route.nextHop, iface.mask)) fail('Each route next hop must be in the subnet of its outgoing interface.');
-    if (Object.values(config.interfaces).some(item => item.ip === route.nextHop)) fail('A route next hop must be another device, not this device.');
+    if (Object.values(allInterfaces).some(item => item.ip === route.nextHop)) fail('A route next hop must be another device, not this device.');
   }
   if (config.wireless.ssid.length > 32 || config.wireless.password.length > 63) fail('Use at most 32 characters for the SSID and 63 for the Wi-Fi password.');
   if (type === 'server') {
