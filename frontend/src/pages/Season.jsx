@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Zap, Clock, Crown, Trophy, Medal } from 'lucide-react';
+import { Zap, Clock } from 'lucide-react';
 import GoldIcon from '../components/GoldIcon';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
@@ -123,11 +123,11 @@ export default function Season() {
                 ) : (
                   competitiveData.leaderboard.map((entry) => (
                     <div key={entry.rank} className={`season-lb-item rank-${entry.rank}`}>
-                      <div className="season-lb-rank">
-                        <span className="season-lb-num">#{entry.rank}</span>
-                        {entry.rank === 1 && <Crown size={18} className="rank-icon gold" />}
-                        {entry.rank === 2 && <Trophy size={16} className="rank-icon silver" />}
-                        {entry.rank === 3 && <Medal size={15} className="rank-icon bronze" />}
+                      <div className="season-lb-rank" aria-label={`Rank ${entry.rank}`}>
+                        <span className="season-lb-num">{entry.rank}</span>
+                        {entry.rank <= 3 && <span className="season-lb-finish" aria-hidden="true">
+                          {Array.from({ length: 4 - entry.rank }, (_, index) => <i key={index} />)}
+                        </span>}
                       </div>
                       <AvatarFrame frame={entry.activeFrame} size={32} />
                       <div className="season-lb-user">
@@ -142,7 +142,7 @@ export default function Season() {
                       </div>
                       <div className="season-lb-stats">
                         <span className="season-lb-xp">
-                          <Zap size={13} /> {entry.xpEarned.toLocaleString()} XP
+                          {entry.xpEarned.toLocaleString()} <span className="season-lb-unit">XP</span>
                         </span>
                         <span className="season-lb-gold">
                           <GoldIcon size={13} /> {entry.goldReward}

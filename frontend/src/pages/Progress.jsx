@@ -11,6 +11,7 @@ import { xpProgressInLevel } from '../utils/xpUtils.js';
 import AvatarFrame from '../components/AvatarFrame';
 import LevelXpDialog from '../components/LevelXpDialog';
 import ProgressNavigation from '../components/ProgressNavigation';
+import LoginRequired from '../components/LoginRequired';
 import '../styles/AvatarFrame.css';
 import '../styles/NameEffects.css';
 import '../styles/Progress.css';

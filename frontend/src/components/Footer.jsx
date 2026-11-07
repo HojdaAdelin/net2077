@@ -26,6 +26,13 @@ export default function Footer() {
             <Link to="/progress" className="ft-link"><span className="ft-link-text">{t('footer.progress')}</span></Link>
           </div>
         </nav>
+        <nav className="ft-col" aria-label="Lab">
+          <h2 className="ft-col-label">Lab</h2>
+          <div className="ft-nav-links">
+            <Link to="/network-lab" className="ft-link"><span className="ft-link-text">Network Lab</span></Link>
+            <Link to="/terminal" className="ft-link"><span className="ft-link-text">Terminal</span></Link>
+          </div>
+        </nav>
         <nav className="ft-col" aria-label={t('footer.links')}>
           <h2 className="ft-col-label">{t('footer.links')}</h2>
           <div className="ft-nav-links">
