@@ -38,6 +38,10 @@ import NetworkProblems, { NetworkProblem } from './pages/NetworkProblems';
 import IS from './pages/IS';
 import Profile from './pages/Profile';
 import Forum from './pages/Forum';
+import Events from './pages/Events';
+import EventDetail from './pages/EventDetail';
+import EventEditor from './pages/EventEditor';
+import EventCompete from './pages/EventCompete';
 import Arena from './pages/Arena';
 import ArenaPlay from './pages/ArenaPlay';
 import ArenaMatch from './pages/ArenaMatch';
@@ -96,6 +100,11 @@ export default function App() {
                   <Route path="/network-lab/problems/:problemId" element={<NetworkProblem />} />
                   <Route path="/is" element={<IS />} />
                   <Route path="/forum" element={<Forum />} />
+                  <Route path="/events" element={<Events />} />
+                  <Route path="/events/new" element={<EventEditor />} />
+                  <Route path="/events/:id/edit" element={<EventEditor />} />
+                  <Route path="/events/:id/compete" element={<EventCompete />} />
+                  <Route path="/events/:id" element={<EventDetail />} />
                   <Route path="/forum/:zoneId/:itemId" element={<Forum />} />
                   <Route path="/forum/topic/:topicId" element={<Forum />} />
                   <Route path="/arena" element={<Arena />} />

@@ -1,0 +1,20 @@
+import express from 'express';
+import rateLimit from 'express-rate-limit';
+import { authMiddleware } from '../middleware/authMiddleware.js';
+import { isRoot } from '../middleware/checkRole.js';
+import { optionalQuizAuth } from '../controllers/quizAttemptController.js';
+import { listEvents, getEvent, joinEvent, getEventAttempt, saveEventAttempt, eventLeaderboard, createEvent, getEventEditor, updateEvent, deleteEvent } from '../controllers/eventController.js';
+
+const router = express.Router();
+const writes = rateLimit({ windowMs: 60000, limit: 120, standardHeaders: 'draft-8', legacyHeaders: false });
+router.get('/', optionalQuizAuth, listEvents);
+router.post('/', authMiddleware, isRoot, writes, createEvent);
+router.get('/:id/editor', authMiddleware, isRoot, getEventEditor);
+router.put('/:id', authMiddleware, isRoot, writes, updateEvent);
+router.delete('/:id', authMiddleware, isRoot, writes, deleteEvent);
+router.get('/:id/leaderboard', optionalQuizAuth, eventLeaderboard);
+router.post('/:id/join', authMiddleware, writes, joinEvent);
+router.get('/:id/attempt', authMiddleware, getEventAttempt);
+router.put('/:id/attempt', authMiddleware, writes, saveEventAttempt);
+router.get('/:id', optionalQuizAuth, getEvent);
+export default router;

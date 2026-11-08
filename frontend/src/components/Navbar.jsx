@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Network } from 'lucide-react';
+import { Network, CalendarDays } from 'lucide-react';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -331,6 +331,10 @@ export default function Navbar() {
             </Link>
             {communityDropdownOpen && (
               <div className="practice-dropdown">
+                <Link to="/events" className="practice-dropdown-item" onClick={() => { closeMobileMenu(); setCommunityDropdownOpen(false); }}>
+                  <CalendarDays size={18} className="practice-item-icon" />
+                  <div className="practice-item-content"><div className="practice-item-title">Events</div><div className="practice-item-desc">Competitions & results</div></div>
+                </Link>
                 <Link 
                   to="/forum" 
                   className="practice-dropdown-item"

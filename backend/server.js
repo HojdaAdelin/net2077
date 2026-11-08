@@ -32,6 +32,7 @@ import termsRoutes from './routes/termsRoutes.js';
 import seasonBoxRoutes from './routes/seasonBoxRoutes.js';
 import seasonPassRoutes from './routes/seasonPassRoutes.js';
 import networkProblemRoutes from './routes/networkProblemRoutes.js';
+import eventRoutes from './routes/eventRoutes.js';
 import ArenaMatch from './models/ArenaMatch.js';
 import { initializeCompetitiveSystem, checkAndResetPeriod } from './controllers/competitiveController.js';
 
@@ -129,6 +130,7 @@ app.use('/api/terms', termsRoutes);
 app.use('/api/season-box', seasonBoxRoutes);
 app.use('/api/season-pass', seasonPassRoutes);
 app.use('/api/network-problems', networkProblemRoutes);
+app.use('/api/events', eventRoutes);
 
 function startArenaCleanupJob() {
   setInterval(async () => {
