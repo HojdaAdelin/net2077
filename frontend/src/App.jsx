@@ -34,6 +34,7 @@ import Leaderboard from './pages/Leaderboard';
 import Lab from './pages/Lab';
 import Terminal from './pages/Terminal';
 import NetworkLab from './pages/NetworkLab';
+import NetworkCourse from './pages/NetworkCourse';
 import NetworkProblems, { NetworkProblem } from './pages/NetworkProblems';
 import IS from './pages/IS';
 import Profile from './pages/Profile';
@@ -96,6 +97,7 @@ export default function App() {
                   <Route path="/lab" element={<Lab />} />
                   <Route path="/terminal" element={<Terminal />} />
                   <Route path="/network-lab" element={<NetworkLab />} />
+                  <Route path="/network-lab/course" element={<NetworkCourse />} />
                   <Route path="/network-lab/problems" element={<NetworkProblems />} />
                   <Route path="/network-lab/problems/:problemId" element={<NetworkProblem />} />
                   <Route path="/is" element={<IS />} />

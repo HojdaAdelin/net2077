@@ -7,6 +7,7 @@ import NetworkLabLoading from './NetworkLabLoading';
 import { networkRequest } from '../services/networkProblems';
 import { filterNetworkProblems, recommendedNetworkProblem } from '../utils/networkProblemCatalog';
 import '../styles/NetworkProblemCatalog.css';
+import { NetworkCourseCard } from '../pages/NetworkCourse';
 
 const PAGE_SIZE = 8;
 const initialFilters = { search: '', status: 'all', difficulty: 'all', topic: 'all', sort: 'recommended' };
@@ -127,7 +128,7 @@ export default function NetworkProblemCatalog() {
         </div>
 
         {data.error ? <div className="npc-empty" role="alert"><Network size={28} /><h2>Unable to load labs</h2><p>{data.error}</p><button type="button" className="nlp-button" onClick={() => setRetry(previous => previous + 1)}>Try again</button></div> : <>
-          {recommended && currentPage === 1 && <section className="npc-recommended" aria-label="Recommended next lab"><LabCard problem={recommended} number={problems.indexOf(recommended) + 1} featured /></section>}
+          {currentPage === 1 && <div className={`npc-learning-row${recommended ? '' : ' nc-course-only'}`}>{recommended && <section className="npc-recommended" aria-label="Recommended next lab"><LabCard problem={recommended} number={problems.indexOf(recommended) + 1} featured /></section>}<NetworkCourseCard /></div>}
           <div className="npc-results-heading"><div><h2>{activeCount || filters.search.trim() ? 'Matching labs' : 'Explore the labs'}</h2><span aria-live="polite">{visible.length} {visible.length === 1 ? 'lab' : 'labs'}</span></div>{activeCount > 0 && <button type="button" onClick={clearFilters}>Clear filters<X size={12} /></button>}</div>
           {!visible.length ? <div className="npc-empty"><Search size={28} /><h2>{problems.length ? 'No labs found' : 'New challenges are on the way'}</h2><p>{problems.length ? 'Try a different topic or broaden your search.' : 'Your networking practice starts here. Check back for new labs.'}</p>{problems.length > 0 && <button type="button" className="nlp-button" onClick={clearFilters}>Reset filters</button>}</div> : <div className="npc-grid">{visible.slice(offset, offset + PAGE_SIZE).map(problem => <LabCard key={problem._id} problem={problem} number={problems.indexOf(problem) + 1} />)}</div>}
           {visible.length > 0 && <div className="nlp-pagination npc-pagination"><span className="nlp-pagination-summary" role="status">Showing {offset + 1}–{Math.min(offset + PAGE_SIZE, visible.length)} of {visible.length}</span>{pageCount > 1 && <nav aria-label="Network problems pages"><button type="button" onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1} aria-label="Previous page"><ChevronLeft size={15} /></button>{pageNumbers.map((number, index) => <span className="nlp-page-number-group" key={number}>{index > 0 && number - pageNumbers[index - 1] > 1 && <span className="nlp-page-ellipsis">…</span>}<button type="button" aria-label={`Page ${number}`} aria-current={currentPage === number ? 'page' : undefined} onClick={() => changePage(number)}>{number}</button></span>)}<button type="button" onClick={() => changePage(currentPage + 1)} disabled={currentPage === pageCount} aria-label="Next page"><ChevronRight size={15} /></button></nav>}</div>}

@@ -1,4 +1,4 @@
-.nlp-page.npc-page { max-width: 1380px; padding-top: 68px; }
+.nlp-page.npc-page { max-width: 1380px; padding-top: 16px; }
 .npc-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 30px; }
 .npc-header h1 { margin: 0 0 8px; font-size: clamp(30px, 4vw, 46px); font-weight: 650; letter-spacing: -1.8px; line-height: 1.2; }
 .npc-header h1 > span { color: var(--nlp-accent); }

@@ -8,6 +8,7 @@ import NetworkTools from '../components/NetworkTools';
 import NetworkInspector from '../components/NetworkInspector';
 import NetworkAddressTable from '../components/NetworkAddressTable';
 import NetworkWorkspaceGuide from '../components/NetworkWorkspaceGuide';
+import { settingsLessonGuide } from '../utils/networkCourseGuide';
 import { createNetworkHistory, networkHistoryReducer } from '../utils/networkHistory';
 import { usePacketPlayback, PacketControls, PacketMarker } from '../components/PacketPlayback';
 import { hasWireless, isBridgeDevice } from '../utils/networkConfig';
@@ -21,7 +22,7 @@ const DEVICE_GROUPS = [
   { label: 'Services', types: ['server'] },
 ];
 
-export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, embedded = false }) {
+export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, embedded = false, courseLesson, guideRequest = 0, onGuideComplete }) {
   const [history, updateHistory] = useReducer(networkHistoryReducer, initialTopology,
     value => createNetworkHistory(value ? structuredClone(value) : emptyTopology()));
   const topology = history.present;
@@ -46,6 +47,16 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
   const [settingsDeviceId, setSettingsDeviceId] = useState(null);
   const [addressTableOpen, setAddressTableOpen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
+  const [lessonGuide, setLessonGuide] = useState(false);
+  const [configurationGuide, setConfigurationGuide] = useState(null);
+  useEffect(() => {
+    if (!guideRequest || !courseLesson) return;
+    const configuration = settingsLessonGuide(courseLesson);
+    if (configuration) {
+      setGuideOpen(false);
+      setConfigurationGuide({ ...configuration, lesson: courseLesson });
+    } else { setLessonGuide(true); setGuideOpen(true); }
+  }, [guideRequest, courseLesson]);
   const [inspectorTab, setInspectorTab] = useState('device');
   const [simulationSourceId, setSimulationSourceId] = useState('');
   const [highlightedLinks, setHighlightedLinks] = useState([]);
@@ -209,7 +220,7 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
   };
 
   const keyDown = event => {
-    if (settingsDeviceId || addressTableOpen || guideOpen || event.defaultPrevented) return;
+    if (settingsDeviceId || addressTableOpen || guideOpen || configurationGuide || event.defaultPrevented) return;
     if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
     if ((event.ctrlKey || event.metaKey) && !event.altKey) {
       const key = event.key.toLowerCase();
@@ -317,7 +328,7 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
           <div className="nl-inspector-tabs" role="tablist" aria-label="Inspector views">{[['device', 'Device', Settings2], ['simulation', 'Simulation', FlaskConical]].map(([id, label, Icon]) => <button key={id} type="button" role="tab" id={`${gridId}-${id}-tab`} aria-selected={inspectorTab === id} aria-controls={`${gridId}-${id}-panel`} tabIndex={inspectorTab === id ? 0 : -1} onKeyDown={event => { if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) { event.preventDefault(); const next = event.key === 'Home' ? 'device' : event.key === 'End' ? 'simulation' : id === 'device' ? 'simulation' : 'device'; setInspectorTab(next); document.getElementById(`${gridId}-${next}-tab`)?.focus(); } }} onClick={() => setInspectorTab(id)}><Icon size={14} />{label}{id === 'simulation' && playback.playing && <span className="nl-tab-running" />}</button>)}</div>
           <div className="nl-inspector-content">
             <div role="tabpanel" id={`${gridId}-device-panel`} aria-labelledby={`${gridId}-device-tab`} hidden={inspectorTab !== 'device'}>
-              <NetworkInspector quickGuide={<button ref={guideButtonRef} type="button" className="nl-quick-guide-button" aria-haspopup="dialog" onClick={() => { guideReturnTab.current = inspectorTab; setGuideOpen(true); }}><CircleHelp size={17} />Quick Guide</button>} topology={topology} wifiLinks={wifiLinks} device={selectedDevice} cable={selectedCable} readOnly={!editable(selectedDevice?.id)} canDelete={selectedCable ? cablesEditable : removable(selectedDevice?.id)} onConfigure={() => setSettingsDeviceId(selectedDevice.id)} onSimulate={() => { setSimulationSourceId(selectedDevice.id); setInspectorTab('simulation'); }} onDelete={removeSelected} onDeselect={() => setSelected(null)} />
+              <NetworkInspector quickGuide={<button ref={guideButtonRef} type="button" className="nl-quick-guide-button" aria-haspopup="dialog" onClick={() => { guideReturnTab.current = inspectorTab; setLessonGuide(false); setGuideOpen(true); }}><CircleHelp size={17} />Quick Guide</button>} topology={topology} wifiLinks={wifiLinks} device={selectedDevice} cable={selectedCable} readOnly={!editable(selectedDevice?.id)} canDelete={selectedCable ? cablesEditable : removable(selectedDevice?.id)} onConfigure={() => setSettingsDeviceId(selectedDevice.id)} onSimulate={() => { setSimulationSourceId(selectedDevice.id); setInspectorTab('simulation'); }} onDelete={removeSelected} onDeselect={() => setSelected(null)} />
             </div>
             <div role="tabpanel" id={`${gridId}-simulation-panel`} aria-labelledby={`${gridId}-simulation-tab`} hidden={inspectorTab !== 'simulation'}>
               <NetworkTools topology={topology} sourceId={simulationSourceId} sourceEditable={editable(simulationSourceId)} onSourceChange={setSimulationSourceId} activeResult={playback.session} onReset={() => { playback.clear(); setHighlightedLinks([]); }} onResult={result => { setHighlightedLinks(result.links); setMessage(result.message); playback.start(result); }} onDHCP={(id, config) => { const device = topology.devices.find(item => item.id === id); dispatch({ type: 'configure', id, settings: { name: device.name, config } }); }} />
@@ -327,6 +338,7 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
           </div>
         </aside>
       </div>
+      {configurationGuide && <NetworkDeviceSettings key={`course-${courseLesson.id}-${guideRequest}`} device={configurationGuide.device} lessonGuide={configurationGuide} onClose={() => setConfigurationGuide(null)} />}
       {settingsDevice && <NetworkDeviceSettings key={settingsDevice.id} device={settingsDevice} onClose={() => setSettingsDeviceId(null)} onApply={settings => { dispatch({ type: 'configure', id: settingsDevice.id, settings }); setMessage(`${settings.name} configured for this session.`); }} />}
       {addressTableOpen && <NetworkAddressTable topology={topology} editable={editable} onClose={() => setAddressTableOpen(false)} onSelect={id => {
         const device = topology.devices.find(item => item.id === id);
@@ -338,7 +350,7 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
         requestAnimationFrame(() => svgRef.current?.focus({ preventScroll: true }));
       }} />}
       {guideOpen && <NetworkWorkspaceGuide libraryRef={libraryRef} toolbarRef={toolbarRef} canvasRef={stageRef} inspectorRef={inspectorRef}
-        devicesEditable={devicesEditable} cablesEditable={cablesEditable} onTabChange={setInspectorTab} onClose={() => {
+        devicesEditable={devicesEditable} cablesEditable={cablesEditable} lesson={lessonGuide ? courseLesson : undefined} onComplete={() => { if (!lessonGuide) onGuideComplete?.(); }} onTabChange={setInspectorTab} onClose={() => {
           setGuideOpen(false);
           setInspectorTab(guideReturnTab.current);
           requestAnimationFrame(() => guideButtonRef.current?.focus({ preventScroll: true }));

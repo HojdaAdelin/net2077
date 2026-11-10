@@ -2,12 +2,16 @@ import express from 'express';
 import rateLimit from 'express-rate-limit';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { isRoot } from '../middleware/checkRole.js';
+import { getCourseProgress, saveCourseLesson } from '../controllers/networkCourseController.js';
 import { listNetworkProblems, getNetworkProblem, saveNetworkAttempt, resetNetworkAttempt, checkNetworkProblem,
   adminListNetworkProblems, previewNetworkProblems, createNetworkProblems, updateNetworkProblem, deleteNetworkProblem, reorderNetworkProblems } from '../controllers/networkProblemController.js';
 
 const router = express.Router();
 router.use(authMiddleware);
 const checkLimiter = rateLimit({ windowMs: 60000, limit: 30, standardHeaders: true, legacyHeaders: false, keyGenerator: req => req.userId });
+router.get('/course/progress', getCourseProgress);
+const courseSaveLimiter = rateLimit({ windowMs: 60000, limit: 120, standardHeaders: true, legacyHeaders: false, keyGenerator: req => req.userId });
+router.put('/course/:lessonId', courseSaveLimiter, saveCourseLesson);
 router.get('/admin', isRoot, adminListNetworkProblems);
 router.post('/admin/preview', isRoot, previewNetworkProblems);
 router.post('/admin', isRoot, createNetworkProblems);

@@ -1,14 +1,15 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, Cable, Check, CircleHelp, FlaskConical, LayoutPanelLeft, MousePointer2, Settings2, X } from 'lucide-react';
 import { workspaceGuidePosition } from '../utils/workspaceGuidePosition';
+import { lockModalScroll } from '../utils/modalScrollLock';
 import '../styles/NetworkWorkspaceGuide.css';
 
-export default function NetworkWorkspaceGuide({ libraryRef, toolbarRef, canvasRef, inspectorRef, devicesEditable, cablesEditable, onTabChange, onClose }) {
+export default function NetworkWorkspaceGuide({ libraryRef, toolbarRef, canvasRef, inspectorRef, devicesEditable, cablesEditable, onTabChange, onClose, onComplete, lesson, customSteps }) {
   const [index, setIndex] = useState(0);
   const [position, setPosition] = useState(null);
   const dialogRef = useRef(null), cardRef = useRef(null);
   const id = useId().replace(/:/g, '');
-  const steps = [
+  const defaultSteps = [
     { ref: libraryRef, icon: LayoutPanelLeft, title: devicesEditable ? 'Your device library' : 'Your lab devices', label: 'DEVICES',
       text: devicesEditable ? 'Add a PC, router, switch or server from this panel. Each device appears on the canvas, ready to connect and configure.' : 'Select a device from the list to inspect it. Editable devices can be configured; preset configurations stay locked for this lab.',
       tip: devicesEditable ? 'Start small: two PCs and a switch make a simple LAN.' : 'Read the lab mission and objectives to see what needs to change.' },
@@ -25,12 +26,17 @@ export default function NetworkWorkspaceGuide({ libraryRef, toolbarRef, canvasRe
       text: 'Choose a source device and run Ping, DNS, HTTP or DHCP. Inspect the result and use playback to follow each step, including the point where traffic is blocked.',
       tip: 'Start with Ping to an IP address, then test DNS and HTTP. DHCP applies settings to an editable end device.' },
   ];
+  const refs = { library: libraryRef, toolbar: toolbarRef, canvas: canvasRef, device: inspectorRef, simulation: inspectorRef };
+  const steps = customSteps || (lesson ? [
+    { ref: refs[lesson.target], tab: ['device', 'simulation'].includes(lesson.target) ? lesson.target : undefined, icon: Settings2, label: `LESSON ${lesson.number}`, title: lesson.title, text: lesson.theory, tip: lesson.task },
+    { ref: canvasRef, icon: MousePointer2, label: 'YOUR TURN', title: 'Try it in the workspace', text: lesson.task, tip: 'Close this guide to interact with the sandbox. Then answer the checkpoint and check your work.' },
+  ] : defaultSteps);
   const step = steps[index];
   const Icon = step.icon;
 
   useEffect(() => {
     const dialog = dialogRef.current;
-    const overflow = document.body.style.overflow;
+    const releaseScroll = lockModalScroll();
     const originalScroll = { left: window.scrollX, top: window.scrollY, behavior: 'instant' };
     const scrollContainers = [];
     for (let element = dialog.parentElement; element && element !== document.body; element = element.parentElement) {
@@ -38,11 +44,10 @@ export default function NetworkWorkspaceGuide({ libraryRef, toolbarRef, canvasRe
         scrollContainers.push({ element, left: element.scrollLeft, top: element.scrollTop });
       }
     }
-    document.body.style.overflow = 'hidden';
     dialog.showModal();
     return () => {
       dialog.close();
-      document.body.style.overflow = overflow;
+      releaseScroll();
       for (const { element, left, top } of scrollContainers) element.scrollTo({ left, top, behavior: 'instant' });
       window.scrollTo(originalScroll);
     };
@@ -51,26 +56,29 @@ export default function NetworkWorkspaceGuide({ libraryRef, toolbarRef, canvasRe
   useLayoutEffect(() => {
     setPosition(null);
     if (step.tab) onTabChange(step.tab);
-    const target = step.ref.current;
-    if (!target) return;
+    let target;
     let frame;
     const measure = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        if (!cardRef.current) return;
+        if (!cardRef.current || !target) return;
         const navbarBottom = document.querySelector('.navbar')?.getBoundingClientRect().bottom || 0;
         setPosition(workspaceGuidePosition(target.getBoundingClientRect(), cardRef.current.getBoundingClientRect(), {
           width: document.documentElement.clientWidth, height: window.innerHeight, top: Math.max(12, navbarBottom + 8),
         }));
       });
     };
+    const observer = new ResizeObserver(measure);
+    // Wait for a requested configuration tab to render before resolving fields.
     const scrollFrame = requestAnimationFrame(() => {
+      const root = step.ref.current;
+      target = step.selector ? root?.querySelector(step.selector) || root : root;
+      if (!target) return;
       target.scrollIntoView({ block: step.scroll || 'center', inline: 'nearest', behavior: 'instant' });
+      observer.observe(target);
+      observer.observe(cardRef.current);
       measure();
     });
-    const observer = new ResizeObserver(measure);
-    observer.observe(target);
-    observer.observe(cardRef.current);
     window.addEventListener('resize', measure);
     window.addEventListener('scroll', measure, true);
     window.visualViewport?.addEventListener('resize', measure);
@@ -84,7 +92,7 @@ export default function NetworkWorkspaceGuide({ libraryRef, toolbarRef, canvasRe
     };
   }, [index, libraryRef, toolbarRef, canvasRef, inspectorRef, onTabChange]);
 
-  const next = () => index === steps.length - 1 ? onClose() : setIndex(value => value + 1);
+  const next = () => { if (index === steps.length - 1) { onComplete?.(); onClose(); } else setIndex(value => value + 1); };
   const highlight = position?.highlight;
   return <dialog ref={dialogRef} className="nl-guide-dialog" aria-labelledby={`${id}-title`} aria-describedby={`${id}-description`}
     onCancel={event => { event.preventDefault(); event.stopPropagation(); onClose(); }} onKeyDown={event => {
@@ -100,7 +108,7 @@ export default function NetworkWorkspaceGuide({ libraryRef, toolbarRef, canvasRe
       <svg className="nl-guide-arrow" aria-hidden="true"><defs><marker id={`${id}-arrow`} markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0 0L6 3.5L0 7" /></marker></defs><path d={`M${position.start.x} ${position.start.y} L${position.end.x} ${position.end.y}`} markerEnd={`url(#${id}-arrow)`} /></svg>
     </> : <div className="nl-guide-shade nl-guide-shade-full" />}
     <section ref={cardRef} className="nl-guide-card" style={position ? position.card : { left: 12, top: 12, visibility: 'hidden' }}>
-      <div className="nl-guide-card-top"><span><CircleHelp size={14} />QUICK GUIDE</span><button type="button" aria-label="Close Quick Guide" onClick={onClose}><X size={18} /></button></div>
+      <div className="nl-guide-card-top"><span><CircleHelp size={14} />{lesson ? 'LESSON GUIDE' : 'QUICK GUIDE'}</span><button type="button" aria-label={lesson ? "Close lesson guide" : "Close Quick Guide"} onClick={onClose}><X size={18} /></button></div>
       <div className="nl-guide-step-heading"><span className="nl-guide-icon"><Icon size={20} /></span><div><small>{step.label}</small><h2 id={`${id}-title`}>{step.title}</h2></div></div>
       <div aria-live="polite" aria-atomic="true"><p id={`${id}-description`}>{step.text}</p><p className="nl-guide-tip">{step.tip}</p></div>
       <div className="nl-guide-progress" aria-label={`Step ${index + 1} of ${steps.length}`}><div>{steps.map((item, number) => <span key={item.label} className={number <= index ? 'is-active' : ''} />)}</div><span>{index + 1} / {steps.length}</span></div>

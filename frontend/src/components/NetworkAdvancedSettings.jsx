@@ -1,7 +1,7 @@
 import { allDeviceInterfaces, isSwitchport, isRoutingDevice, ACL_PROTOCOLS } from '../utils/networkConfig';
 import '../styles/NetworkAdvancedSettings.css';
 
-const Field = ({ label, children }) => <label className="nl-config-field"><span>{label}</span>{children}</label>;
+const Field = ({ label, children }) => <label className="nl-config-field" data-guide-field={label}><span>{label}</span>{children}</label>;
 export default function NetworkAdvancedSettings({ device, config, setConfig, section }) {
   const entries = Object.entries(allDeviceInterfaces({ ...device, config })).filter(([port]) => !isSwitchport({ ...device, config }, port));
   const update = mutate => setConfig(previous => { const next = structuredClone(previous); mutate(next); return next; });
@@ -11,7 +11,7 @@ export default function NetworkAdvancedSettings({ device, config, setConfig, sec
   const button = (label, action) => <button type="button" className="nl-secondary-button" onClick={action}>{label}</button>;
   if (section === 'ipv6') return <div className="nl-advanced">
     <p className="nl-config-help">IPv6 runs alongside IPv4. Configure each LAN prefix and both directions of a routed path. Neighbor discovery is resolved automatically inside each VLAN.</p>
-    {isRoutingDevice(device.type) && <label className="nl-config-toggle"><input type="checkbox" checked={config.ipv6Routing} onChange={e => update(n => { n.ipv6Routing = e.target.checked; })} />Forward IPv6 packets</label>}
+    {isRoutingDevice(device.type) && <label className="nl-config-toggle" data-guide-field="Forward IPv6 packets"><input type="checkbox" checked={config.ipv6Routing} onChange={e => update(n => { n.ipv6Routing = e.target.checked; })} />Forward IPv6 packets</label>}
     {entries.map(([port, item]) => <div className="nl-config-interface" key={port}><strong>{port}</strong><div className="nl-config-grid">{input('IPv6 address', item.ipv6, v => update(n => { iface(n, port).ipv6 = v; }))}{input('Prefix length (0–128)', item.prefix6 ?? 64, v => update(n => { iface(n, port).prefix6 = v; }), 'number')}</div></div>)}
     {input('IPv6 default gateway', config.gateway6, v => update(n => { n.gateway6 = v; }))}
     <h3>IPv6 static routes</h3>
@@ -20,7 +20,7 @@ export default function NetworkAdvancedSettings({ device, config, setConfig, sec
   </div>;
   if (section === 'ospf') return <div className="nl-advanced">
     <p className="nl-config-help">OSPFv2 advertises IPv4 networks on selected interfaces. Neighbors need the same area and subnet. Passive interfaces advertise their network without forming neighbors. Routes converge immediately in this simulator.</p>
-    <label className="nl-config-toggle"><input type="checkbox" checked={config.ospf.enabled} onChange={e => update(n => { n.ospf.enabled = e.target.checked; })} />Enable OSPF</label>
+    <label className="nl-config-toggle" data-guide-field="Enable OSPF"><input type="checkbox" checked={config.ospf.enabled} onChange={e => update(n => { n.ospf.enabled = e.target.checked; })} />Enable OSPF</label>
     <div className="nl-config-grid">{input('Router ID (empty = highest active IPv4)', config.ospf.routerId, v => update(n => { n.ospf.routerId = v; }))}{input('Area', config.ospf.area, v => update(n => { n.ospf.area = v; }))}</div>
     {entries.map(([port]) => { const item = config.ospf.interfaces.find(i => i.port === port); return <div className="nl-config-interface" key={port}><label className="nl-config-toggle"><input type="checkbox" checked={Boolean(item)} onChange={e => update(n => { n.ospf.interfaces = e.target.checked ? [...n.ospf.interfaces, { port, passive: false, cost: 10 }] : n.ospf.interfaces.filter(i => i.port !== port); })} />Advertise {port}</label>{item && <div className="nl-config-grid"><label className="nl-config-toggle"><input type="checkbox" checked={item.passive} onChange={e => update(n => { n.ospf.interfaces.find(i => i.port === port).passive = e.target.checked; })} />Passive interface</label>{input('Cost (1–65535)', item.cost, v => update(n => { n.ospf.interfaces.find(i => i.port === port).cost = v; }), 'number')}</div>}</div>; })}
   </div>;

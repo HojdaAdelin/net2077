@@ -1,22 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
+import NetworkWorkspaceGuide from './NetworkWorkspaceGuide';
+import { Settings2 } from 'lucide-react';
+import { lockModalScroll } from '../utils/modalScrollLock';
 import NetworkAdvancedSettings from './NetworkAdvancedSettings';
 import NetworkVlanSettings from './NetworkVlanSettings';
 import { DEVICE_TYPES } from '../utils/networkTopology';
 import { isBridgeDevice, isRoutingDevice, hasWireless, validateDeviceSettings, normalizeAdvancedConfig, normalizeVlanSettings, isSwitchDevice, isSwitchport, allDeviceInterfaces, switchPort } from '../utils/networkConfig';
 
 function Field({ label, children, ...props }) {
-  return <label className="nl-config-field"><span>{label}</span>{children || <input {...props} />}</label>;
+  return <label className="nl-config-field" data-guide-field={label}><span>{label}</span>{children || <input {...props} />}</label>;
 }
 function Toggle({ label, checked, onChange }) {
-  return <label className="nl-config-toggle"><input type="checkbox" checked={checked} onChange={event => onChange(event.target.checked)} /><span>{label}</span></label>;
+  return <label className="nl-config-toggle" data-guide-field={label}><input type="checkbox" checked={checked} onChange={event => onChange(event.target.checked)} /><span>{label}</span></label>;
 }
 
-export default function NetworkDeviceSettings({ device, onApply, onClose }) {
+export default function NetworkDeviceSettings({ device, onApply, onClose, lessonGuide }) {
   const dialogRef = useRef(null);
   const [name, setName] = useState(device.name);
   const [config, setConfig] = useState(() => normalizeAdvancedConfig(device.type, normalizeVlanSettings(device.type, DEVICE_TYPES[device.type].ports, structuredClone(device.config))));
-  const [tab, setTab] = useState('network');
+  const [tab, setTab] = useState(lessonGuide?.steps[0].tab || 'network');
+  const [walkthroughOpen, setWalkthroughOpen] = useState(false);
+  const bodyRef = useRef(null), tabsRef = useRef(null), footerRef = useRef(null);
   const [error, setError] = useState('');
   const bridge = isBridgeDevice(device.type);
   const routing = isRoutingDevice(device.type);
@@ -24,14 +29,15 @@ export default function NetworkDeviceSettings({ device, onApply, onClose }) {
   const editService = (service, changes) => setConfig(previous => ({ ...previous, services: { ...previous.services, [service]: { ...previous.services[service], ...changes } } }));
   useEffect(() => {
     const dialog = dialogRef.current;
-    const overflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const releaseScroll = lockModalScroll();
     dialog.showModal();
-    return () => { dialog.close(); document.body.style.overflow = overflow; };
+    if (lessonGuide) setWalkthroughOpen(true);
+    return () => { dialog.close(); releaseScroll(); };
   }, []);
 
   const submit = event => {
     event.preventDefault();
+    if (lessonGuide) { onClose(); return; }
     try {
       const settings = validateDeviceSettings(device.type, DEVICE_TYPES[device.type].ports, { name, config });
       onApply(settings);
@@ -42,8 +48,8 @@ export default function NetworkDeviceSettings({ device, onApply, onClose }) {
   return (
     <dialog ref={dialogRef} className="nl-settings-dialog" aria-labelledby="nl-settings-title" onCancel={event => { event.preventDefault(); onClose(); }}>
       <form onSubmit={submit}>
-        <div className="nl-settings-header"><div><span>{DEVICE_TYPES[device.type].label} configuration</span><h2 id="nl-settings-title">{device.name}</h2></div><button type="button" className="nl-icon-button" onClick={onClose} aria-label="Close configuration"><X size={19} /></button></div>
-        <div className="nl-settings-tabs" role="group" aria-label="Configuration sections">
+        <div className="nl-settings-header"><div><span>{lessonGuide ? `LESSON ${lessonGuide.lesson.number} / CONFIGURATION EXAMPLE` : `${DEVICE_TYPES[device.type].label} configuration`}</span><h2 id="nl-settings-title">{device.name}</h2></div><button type="button" className="nl-icon-button" onClick={onClose} aria-label="Close configuration"><X size={19} /></button></div>
+        <div ref={tabsRef} className="nl-settings-tabs" role="group" aria-label="Configuration sections">
           <button type="button" aria-pressed={tab === 'network'} onClick={() => setTab('network')}>Network</button>
           {isSwitchDevice(device.type) && <button type="button" aria-pressed={tab === 'switching'} onClick={() => setTab('switching')}>Switching</button>}
           {device.type === 'router' && <button type="button" aria-pressed={tab === 'subinterfaces'} onClick={() => setTab('subinterfaces')}>802.1Q subinterfaces</button>}
@@ -54,7 +60,8 @@ export default function NetworkDeviceSettings({ device, onApply, onClose }) {
           {device.type === 'server' && <button type="button" aria-pressed={tab === 'services'} onClick={() => setTab('services')}>Services</button>}
           {device.type === 'firewall' && <button type="button" aria-pressed={tab === 'policy'} onClick={() => setTab('policy')}>Traffic policy</button>}
         </div>
-        <div className="nl-settings-body">
+        <div ref={bodyRef} className="nl-settings-body">
+          {lessonGuide && <div className="nc-config-example"><strong>A closer look at the real controls</strong><p>This is an interactive example. Changes here are not saved to your network. Follow the arrows, then try the same controls on your own device.</p><button type="button" onClick={() => { setConfig(normalizeAdvancedConfig(device.type, normalizeVlanSettings(device.type, DEVICE_TYPES[device.type].ports, structuredClone(device.config)))); setTab(lessonGuide.steps[0].tab); setWalkthroughOpen(true); }}>Replay explanation</button></div>}
           {error && <p className="nl-config-error" role="alert">{error}</p>}
           {tab === 'network' && <>
             <Field label="Device name" value={name} onChange={event => setName(event.target.value)} maxLength={40} />
@@ -91,19 +98,23 @@ export default function NetworkDeviceSettings({ device, onApply, onClose }) {
             {['icmp', 'icmpv6', 'dns', 'http'].map(protocol => <Toggle key={protocol} label={`Allow ${protocol === 'icmp' ? 'ICMP (ping)' : protocol.toUpperCase()}`} checked={config.firewall[protocol]} onChange={value => setConfig({ ...config, firewall: { ...config.firewall, [protocol]: value } })} />)}
           </>}
           {tab === 'services' && <>
-            <div className="nl-service-section"><Toggle label="DHCP server" checked={config.services.dhcp.enabled} onChange={enabled => editService('dhcp', { enabled })} />
+            <div className="nl-service-section" data-guide-service="dhcp"><Toggle label="DHCP server" checked={config.services.dhcp.enabled} onChange={enabled => editService('dhcp', { enabled })} />
               {config.services.dhcp.enabled && <><p className="nl-config-help">Configure a static server address in the pool subnet. Requests stay in the same LAN; DHCP relay is not supported.</p><div className="nl-config-grid">{[['start', 'Pool start'], ['end', 'Pool end'], ['mask', 'Subnet mask'], ['gateway', 'Default gateway'], ['dns', 'DNS server']].map(([key, label]) => <Field key={key} label={label} value={config.services.dhcp[key]} onChange={event => editService('dhcp', { [key]: event.target.value })} />)}</div></>}
             </div>
-            <div className="nl-service-section"><Toggle label="DNS server" checked={config.services.dns.enabled} onChange={enabled => editService('dns', { enabled })} />
+            <div className="nl-service-section" data-guide-service="dns"><Toggle label="DNS server" checked={config.services.dns.enabled} onChange={enabled => editService('dns', { enabled })} />
               {config.services.dns.enabled && <><p className="nl-config-help">Add local A records. Clients must use this server’s IP address as their DNS server.</p>{config.services.dns.records.map((record, index) => <div className="nl-dns-row" key={index}><Field label="Hostname" placeholder="site.local" value={record.name} onChange={event => editService('dns', { records: config.services.dns.records.map((item, i) => i === index ? { ...item, name: event.target.value } : item) })} /><Field label="IPv4 address" placeholder="192.168.1.10" value={record.ip} onChange={event => editService('dns', { records: config.services.dns.records.map((item, i) => i === index ? { ...item, ip: event.target.value } : item) })} /><button type="button" className="nl-icon-button" aria-label={`Remove DNS record ${index + 1}`} onClick={() => editService('dns', { records: config.services.dns.records.filter((_, i) => i !== index) })}><Trash2 size={16} /></button></div>)}<button type="button" className="nl-secondary-button" onClick={() => editService('dns', { records: [...config.services.dns.records, { name: '', ip: '' }] })}><Plus size={14} />Add DNS record</button></>}
             </div>
-            <div className="nl-service-section"><Toggle label="HTTP server" checked={config.services.http.enabled} onChange={enabled => editService('http', { enabled })} />
+            <div className="nl-service-section" data-guide-service="http"><Toggle label="HTTP server" checked={config.services.http.enabled} onChange={enabled => editService('http', { enabled })} />
               {config.services.http.enabled && <><Field label="Page title" maxLength={120} value={config.services.http.title} onChange={event => editService('http', { title: event.target.value })} /><Field label="Page content"><textarea rows={4} maxLength={5000} value={config.services.http.body} onChange={event => editService('http', { body: event.target.value })} /></Field></>}
             </div>
           </>}
         </div>
-        <div className="nl-settings-footer"><span>Changes apply to this session only.</span><button type="button" className="nl-secondary-button" onClick={onClose}>Cancel</button><button type="submit" className="nl-primary-button">Apply configuration</button></div>
+        <div ref={footerRef} className="nl-settings-footer"><span>{lessonGuide ? "Example only ? your sandbox stays unchanged." : "Changes apply to this session only."}</span>{!lessonGuide && <button type="button" className="nl-secondary-button" onClick={onClose}>Cancel</button>}<button type="submit" className="nl-primary-button">{lessonGuide ? "Back to sandbox" : "Apply configuration"}</button></div>
       </form>
+      {lessonGuide && walkthroughOpen && <NetworkWorkspaceGuide lesson={lessonGuide.lesson} customSteps={[
+        ...lessonGuide.steps.map((step, index) => ({ ...step, ref: bodyRef, icon: Settings2, label: `CONFIGURATION ${index + 1}` })),
+        { ref: footerRef, icon: Settings2, label: 'YOUR TURN', title: 'Now configure your own network', text: 'In the sandbox, double-click your device or select it and choose Configure device. Use the same tabs and fields you have just explored.', tip: 'Apply configuration saves changes to that device. This example does not change your topology.' },
+      ]} libraryRef={bodyRef} toolbarRef={tabsRef} canvasRef={bodyRef} inspectorRef={bodyRef} onTabChange={setTab} onClose={() => setWalkthroughOpen(false)} />}
     </dialog>
   );
 }

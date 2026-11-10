@@ -2,8 +2,8 @@ import { Plus, Trash2 } from 'lucide-react';
 import { vlanListText } from '../utils/networkConfig';
 import '../styles/NetworkVlans.css';
 
-const Field = ({ label, children }) => <label className="nl-config-field"><span>{label}</span>{children}</label>;
-const Toggle = ({ label, checked, onChange }) => <label className="nl-config-toggle"><input type="checkbox" checked={checked} onChange={event => onChange(event.target.checked)} /><span>{label}</span></label>;
+const Field = ({ label, children }) => <label className="nl-config-field" data-guide-field={label}><span>{label}</span>{children}</label>;
+const Toggle = ({ label, checked, onChange }) => <label className="nl-config-toggle" data-guide-field={label}><input type="checkbox" checked={checked} onChange={event => onChange(event.target.checked)} /><span>{label}</span></label>;
 const NumberField = ({ label, value, onChange }) => <Field label={label}><input type="number" min="1" max="4094" step="1" value={value} onChange={event => onChange(Number(event.target.value))} /></Field>;
 
 export default function NetworkVlanSettings({ device, config, setConfig, section }) {
@@ -15,7 +15,7 @@ export default function NetworkVlanSettings({ device, config, setConfig, section
   if (section === 'switching') return <>
     <p className="nl-config-help">Access ports carry one VLAN. Trunks carry the allowed VLANs; the native VLAN is sent untagged. Define the VLAN on each switch that must carry it.</p>
     <div className="nl-vlan-section-title"><h3>VLAN database</h3><span>{config.vlans.length} / 128</span></div>
-    {config.vlans.map((vlan, index) => <div className="nl-vlan-row" key={index}>
+    {config.vlans.map((vlan, index) => <div className="nl-vlan-row" data-guide-vlan={vlan.id} key={index}>
       <NumberField label="VLAN ID" value={vlan.id} onChange={id => patch('vlans', index, { id })} />
       <Field label="Name"><input value={vlan.name} maxLength={32} onChange={event => patch('vlans', index, { name: event.target.value })} /></Field>
       <Toggle label="Active" checked={vlan.enabled} onChange={enabled => patch('vlans', index, { enabled })} />
@@ -32,7 +32,7 @@ export default function NetworkVlanSettings({ device, config, setConfig, section
         switchports: { ...previous.switchports, [port]: { ...previous.switchports[port], ...update } },
         interfaces: update.mode && update.mode !== 'routed' ? { ...previous.interfaces, [port]: { ...previous.interfaces[port], ip: '', ipv6: '' } } : previous.interfaces,
       }));
-      return <div className="nl-vlan-port" key={port}><strong>{port}</strong><div className="nl-config-grid">
+      return <div className="nl-vlan-port" data-guide-port={port} key={port}><strong>{port}</strong><div className="nl-config-grid">
         <Field label="Port mode"><select value={settings.mode} onChange={event => change({ mode: event.target.value })}><option value="access">Access</option><option value="trunk">Trunk (802.1Q)</option>{device.type === 'l3switch' && <option value="routed">Routed port</option>}</select></Field>
         {settings.mode === 'access' && <NumberField label="Access VLAN" value={settings.accessVlan} onChange={accessVlan => change({ accessVlan })} />}
         {settings.mode === 'trunk' && <><NumberField label="Native VLAN" value={settings.nativeVlan} onChange={nativeVlan => change({ nativeVlan })} /><Field label="Allowed VLANs"><input value={typeof settings.allowedVlans === 'string' ? settings.allowedVlans : vlanListText(settings.allowedVlans)} placeholder="10,20,30-35 or all" onChange={event => change({ allowedVlans: event.target.value })} /></Field></>}
