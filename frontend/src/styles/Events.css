@@ -15,6 +15,10 @@
 .ev-page button { cursor: pointer; }
 .ev-page button:disabled { cursor: default; opacity: .45; }
 .ev-page :is(a,button,input,select,textarea):focus-visible { outline: 2px solid var(--ev-accent); outline-offset: 4px; }
+.ev-events .ev-filterbar :is(input,select):focus-visible { outline: none; }
+.ev-events .ev-filterbar > select:focus { border-color: var(--border); background: var(--bg-primary); box-shadow: none; }
+.ev-events .ev-filterbar .ev-search:focus-within { border-color: var(--border); }
+.ev-events .ev-filterbar .ev-search input:focus { background: transparent; box-shadow: none; }
 .ev-page-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 28px; padding: 0 0 38px; margin-bottom: 30px; border-bottom: 1px solid var(--border); }
 .ev-eyebrow { display: block; color: var(--text-secondary); font-size: 10px; letter-spacing: .15em; font-weight: 650; line-height: 1.6; }
 .ev-page-header h1 { margin: 15px 0 14px; font-size: clamp(40px, 6vw, 68px); line-height: 1.05; font-weight: 600; letter-spacing: -.055em; }
@@ -298,3 +302,6 @@
   .ev-question-footer .ev-text-link { font-size: 10px; }
   .ev-result-stats { grid-template-columns: 1fr; gap: 20px; }
 }
+
+.ev-page.ev-events { padding-top: 16px; }
+.ev-events .ev-page-header h1 { margin-top: 0; }

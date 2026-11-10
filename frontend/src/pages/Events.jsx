@@ -12,8 +12,8 @@ export default function Events() {
   const [search, setSearch] = useState(''), [difficulty, setDifficulty] = useState('');
   const { data, loading, error, reload } = useEventFeed(`?past=${past ? 1 : 0}&page=${page}&q=${encodeURIComponent(search)}&difficulty=${difficulty}`, 15000, user?.username);
   const next = !past && !search && !difficulty ? data?.nextEvent : null;
-  return <main className="ev-page">
-    <header className="ev-page-header"><div><span className="ev-eyebrow">NET2077 / COMMUNITY</span><h1>Events<span className="ev-heading-dot">.</span></h1><p>Acadnet simulations and community competitions.<br />Find your next event and explore the final standings.</p></div>{user?.role === 'root' ? <Link to="/events/new" className="ev-button ev-button--primary"><Plus size={17} />Organize an event</Link> : <Link to="/exam-selection" className="ev-text-link">Practice before you compete<ArrowUpRight size={16} /></Link>}</header>
+  return <main className="ev-page ev-events">
+    <header className="ev-page-header"><div><h1>Events<span className="ev-heading-dot">.</span></h1><p>Acadnet simulations and community competitions.<br />Find your next event and explore the final standings.</p></div>{user?.role === 'root' ? <Link to="/events/new" className="ev-button ev-button--primary"><Plus size={17} />Organize an event</Link> : <Link to="/exam-selection" className="ev-text-link">Practice before you compete<ArrowUpRight size={16} /></Link>}</header>
     {next && <section className="ev-next" aria-label="Next event"><EventCard event={next} featured /></section>}
     <section aria-labelledby="ev-calendar-title">
       <div className="ev-calendar-toolbar"><div className="ev-tabs" aria-label="Event schedule"><button type="button" aria-pressed={!past} onClick={() => { setPast(false); setPage(1); }}>Live & upcoming</button><button type="button" aria-pressed={past} onClick={() => { setPast(true); setPage(1); }}>Past events</button></div><span className="ev-timezone">Times in {Intl.DateTimeFormat().resolvedOptions().timeZone}</span></div>

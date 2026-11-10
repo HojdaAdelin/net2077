@@ -252,9 +252,9 @@ export default function Navbar() {
                     <div className="practice-item-desc">Network questions & protocols</div>
                   </div>
                 </Link>
-                <Link to="/network-lab/problems" className="practice-dropdown-item practice-dropdown-item--network-lab" onClick={() => { closeMobileMenu(); setPracticeDropdownOpen(false); }}>
+                <Link to="/network-lab/problems" className="practice-dropdown-item" onClick={() => { closeMobileMenu(); setPracticeDropdownOpen(false); }}>
                   <Network size={18} className="practice-item-icon" />
-                  <div className="practice-item-content"><div className="practice-item-title">Network Lab</div><div className="practice-item-desc"><span className="nav-network-signal">Solve practical networking labs</span></div></div>
+                  <div className="practice-item-content"><div className="practice-item-title">Network Lab</div><div className="practice-item-desc">Solve practical networking labs</div></div>
                 </Link>
                 <Link 
                   to="/terminal" 
