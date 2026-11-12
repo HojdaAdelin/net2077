@@ -29,6 +29,9 @@
 .fd-footnote > span { color: var(--text-secondary); font-size: 11px; line-height: 1.6; }
 .fd-footnote > a { display: inline-flex; align-items: center; gap: 7px; color: var(--fd-accent); font-size: 11px; text-decoration: none; }
 .fd-footnote > a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.fd-footnote > .fd-cta { justify-content: center; gap: 10px; min-height: 40px; padding: 10px 16px; border: 1px solid var(--fd-accent); border-radius: 6px; background: var(--fd-accent); color: var(--bg-primary); font-size: 12px; font-weight: 600; line-height: 1.5; transition: filter .15s ease; }
+.fd-footnote > .fd-cta:hover { text-decoration: none; filter: brightness(.92); }
+@media (prefers-reduced-motion: reduce) { .fd-footnote > .fd-cta { transition: none; } }
 .fd-network-diagram { position: relative; padding-top: 10px; margin: 0 -8px 12px; }
 .fd-network-diagram > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .fd-network-wire { stroke: var(--border); stroke-width: 1.5; stroke-dasharray: 3 4; }

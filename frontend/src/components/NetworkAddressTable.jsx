@@ -30,7 +30,7 @@ export default function NetworkAddressTable({ topology, editable, onSelect, onCl
       <div><span><TableProperties size={15} />WORKSPACE OVERVIEW</span><h2 id={titleId}>Address table</h2><p>Current interface settings. Select a device to find it on the canvas.</p></div>
       <button type="button" className="nl-icon-button" aria-label="Close address table" onClick={onClose}><X size={20} /></button>
     </header>
-    <div className="nl-tool-picker" role="group" aria-label="Address family">{[4, 6].map(value => <button type="button" key={value} aria-pressed={family === value} onClick={() => setFamily(value)}>IPv{value}</button>)}</div>
+    <div className="nl-address-family" role="group" aria-label="Address family">{[4, 6].map(value => <button type="button" key={value} aria-pressed={family === value} onClick={() => setFamily(value)}>IPv{value}</button>)}</div>
     <div className="nl-address-toolbar"><label><Search size={16} /><input autoFocus value={search} onChange={event => setSearch(event.target.value)} placeholder="Search device, interface or address…" aria-label="Search address table" /></label><span role="status">{rows.length} {rows.length === 1 ? 'interface' : 'interfaces'}</span></div>
     <div className="nl-address-scroll" tabIndex={0} role="region" aria-label="Interface addresses, scroll to view all columns">
       <table><caption className="nl-address-caption">Current device addresses, subnet prefixes, gateways, DNS servers and interface states.</caption>

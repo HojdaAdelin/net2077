@@ -4,6 +4,11 @@
 .nl-address-header > div > span { display: flex; align-items: center; gap: 7px; color: var(--nl-highlight); font-size: 9px; letter-spacing: 1.2px; }
 .nl-address-header h2 { margin: 8px 0 5px; font-size: 23px; letter-spacing: -.6px; }
 .nl-address-header p { color: var(--text-secondary); font-size: 12px; line-height: 1.7; }
+.nl-address-family { display: inline-flex; gap: 4px; margin: 0 24px 16px; padding: 3px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-primary); }
+.nl-address-family button { display: inline-flex; align-items: center; justify-content: center; min-height: 30px; padding: 5px 14px; border: 1px solid transparent; border-radius: 4px; background: transparent; color: var(--text-secondary); font-family: inherit; font-size: 11px; line-height: 1.5; font-weight: 550; cursor: pointer; }
+.nl-address-family button:hover { background: var(--bg-secondary); color: var(--text-primary); }
+.nl-address-family button[aria-pressed="true"] { border-color: color-mix(in srgb, var(--nl-highlight) 30%, var(--border)); background: color-mix(in srgb, var(--nl-highlight) 10%, var(--bg-primary)); color: var(--nl-highlight); }
+.nl-address-family button:focus-visible { outline: 2px solid var(--nl-highlight); outline-offset: 2px; }
 .nl-address-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 0 24px 18px; }
 .nl-address-toolbar label { display: flex; align-items: center; gap: 9px; width: min(440px, 100%); padding: 9px 12px; border: 1px solid var(--border); border-radius: 7px; background: var(--bg-primary); color: var(--text-secondary); }
 .nl-address-toolbar label:focus-within { border-color: var(--nl-highlight); }
@@ -36,4 +41,4 @@
 .nl-history-tools { display: flex; align-items: center; gap: 3px; border-left: 1px solid var(--border); padding-left: 8px; margin-left: 3px; }
 .nl-history-tools button:disabled { opacity: .3; cursor: not-allowed; }
 .nl-history-tools button:disabled:hover { background: transparent; color: var(--text-secondary); }
-@media (max-width: 600px) { .nl-address-header { padding: 18px 15px 15px; } .nl-address-toolbar { padding: 0 15px 15px; flex-wrap: wrap; } .nl-address-toolbar label { width: 100%; } .nl-address-footer { padding: 13px 15px; } .nl-address-scroll { max-height: 50dvh; } }
+@media (max-width: 600px) { .nl-address-header { padding: 18px 15px 15px; } .nl-address-family { margin-inline: 15px; } .nl-address-toolbar { padding: 0 15px 15px; flex-wrap: wrap; } .nl-address-toolbar label { width: 100%; } .nl-address-footer { padding: 13px 15px; } .nl-address-scroll { max-height: 50dvh; } }

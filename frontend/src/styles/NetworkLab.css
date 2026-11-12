@@ -119,9 +119,11 @@
 .nl-settings-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 24px 16px; }
 .nl-settings-header span { color: var(--text-secondary); font-size: 11px; }
 .nl-settings-header h2 { font-size: 21px; margin: 5px 0 0; letter-spacing: -0.5px; overflow-wrap: anywhere; }
-.nl-settings-tabs { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 24px 14px; border-bottom: 1px solid var(--border); }
-.nl-settings-tabs button { padding: 7px 10px; border: 1px solid transparent; border-radius: 5px; font: inherit; font-size: 12px; color: var(--text-secondary); background: transparent; cursor: pointer; }
-.nl-settings-tabs button[aria-pressed="true"] { border-color: var(--border); background: var(--bg-secondary); color: var(--text-primary); }
+.nl-settings-tabs { display: flex; flex-wrap: wrap; align-self: flex-start; gap: 4px; width: fit-content; max-width: calc(100% - 48px); margin: 0 24px; padding: 3px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-primary); }
+.nl-settings-tabs button { display: inline-flex; align-items: center; justify-content: center; min-height: 30px; padding: 5px 14px; border: 1px solid transparent; border-radius: 4px; font: inherit; font-size: 11px; line-height: 1.5; font-weight: 550; color: var(--text-secondary); background: transparent; cursor: pointer; }
+.nl-settings-tabs button:hover { background: var(--bg-secondary); color: var(--text-primary); }
+.nl-settings-tabs button[aria-pressed="true"] { border-color: color-mix(in srgb, var(--nl-highlight) 30%, var(--border)); background: color-mix(in srgb, var(--nl-highlight) 10%, var(--bg-primary)); color: var(--nl-highlight); }
+.nl-settings-tabs button:focus-visible { outline: 2px solid var(--nl-highlight); outline-offset: 2px; }
 .nl-settings-body { min-height: 0; overflow-y: auto; padding: 22px 24px; }
 .nl-config-field { display: flex; flex-direction: column; gap: 7px; margin: 0 0 15px; min-width: 0; font-size: 12px; }
 .nl-config-field > span { color: var(--text-secondary); }
@@ -322,7 +324,7 @@
   .nl-empty-art > svg { width: 80px; }
   .nl-statusbar { flex-wrap: wrap; gap: 7px; padding: 9px 12px; }
   .nl-settings-header, .nl-settings-body { padding: 16px; }
-  .nl-settings-tabs { padding: 0 16px 12px; }
+  .nl-settings-tabs { margin-inline: 16px; max-width: calc(100% - 32px); }
   .nl-settings-footer { padding: 14px 16px; }
   .nl-settings-footer > span { flex-basis: 100%; }
   .nl-route-row { grid-template-columns: 1fr 1fr; padding-bottom: 14px; border-bottom: 1px solid var(--border); margin-bottom: 14px; }

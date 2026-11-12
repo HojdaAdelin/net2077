@@ -14,7 +14,7 @@ function LinuxDemo() {
     <h3 className="fd-heading">Who gets access?</h3>
     <div className="fd-terminal"><span className="fd-terminal-path">student@net2077:~</span><code><span>$</span> chmod <b>{octal}</b> project/</code><div className="fd-ls"><code>d{symbolic}</code><span>project/</span></div></div>
     <div className="fd-permissions">{['Owner', 'Group', 'Others'].map((label, index) => <div className="fd-permission-group" key={label}><span>{label}</span><div role="group" aria-label={`${label} permissions`}>{[[4, 'r', 'read'], [2, 'w', 'write'], [1, 'x', 'execute']].map(([bit, letter, name]) => <button type="button" key={bit} aria-label={`${label}: ${name}`} aria-pressed={Boolean(permissions[index] & bit)} onClick={() => toggle(index, bit)}>{letter}</button>)}</div><small>{permissions[index]}</small></div>)}</div>
-    <div className="fd-footnote"><span>Toggle a permission. Watch the command.</span><Link to="/terminal">Try terminal problems<ArrowRight size={13} /></Link></div>
+    <div className="fd-footnote"><span>Toggle a permission. Watch the command.</span><Link className="fd-cta" to="/terminal">Try terminal problems<ArrowRight size={15} /></Link></div>
   </div>;
 }
 
@@ -35,7 +35,7 @@ function NetworkDemo({ reducedMotion }) {
     </div>
     <div className="fd-gateway"><label htmlFor="feature-demo-gateway">PC gateway</label><select id="feature-demo-gateway" value={gateway} onChange={event => { setGateway(event.target.value); setResult(null); }}><option value="192.168.10.254">192.168.10.254</option><option value="192.168.10.1">192.168.10.1</option></select><button type="button" onClick={send}><Send size={13} />Ping</button></div>
     <div className={`fd-ping-output${result ? result.ok ? ' is-success' : ' is-error' : ''}`} role="status"><span className="fd-output-prompt">&gt;</span><code>{result ? result.ok ? 'Reply from 192.168.20.80' : `No reply. Gateway ${gateway} is unreachable.` : 'ping 192.168.20.80'}</code></div>
-    <div className="fd-footnote"><span>Try Ping, then change the gateway.</span><Link to="/network-lab">Open Network Lab<ArrowRight size={13} /></Link></div>
+    <div className="fd-footnote"><span>Try Ping, then change the gateway.</span><Link className="fd-cta" to="/network-lab">Open Network Lab<ArrowRight size={15} /></Link></div>
   </div>;
 }
 

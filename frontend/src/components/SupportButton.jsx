@@ -154,7 +154,6 @@ const SupportButton = () => {
                 <button type="submit" className="support-submit" disabled={isSubmitting}>
                   {isSubmitting ? 'Sending...' : 'Send'}
                 </button>
-                <p className="rate-limit-info">You can submit up to 2 requests per hour</p>
               </form>
             )}
           </div>
