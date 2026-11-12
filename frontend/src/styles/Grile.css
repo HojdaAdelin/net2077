@@ -1929,3 +1929,5 @@ daily-loading-info {
   font-weight: 600;
   white-space: nowrap;
 }
+
+.mode-option--recommended .mode-title { display: flex; align-items: center; gap: 8px; }

@@ -1,3 +1,5 @@
+import QuizAttempt from '../models/QuizAttempt.js';
+import { recordQuizPerformance, practiceReceipt } from '../utils/quizPerformance.js';
 import { questionSearchFilter, questionSearchPagination } from '../utils/questionSearch.js';
 import { dailyChallengeStatus } from '../utils/dailyChallenge.js';
 import { validateAnswers, explanationAfterAnswer } from '../utils/questionValidation.js';
@@ -104,6 +106,15 @@ export const markSolved = async (req, res) => {
 
     if (!user) return res.status(404).json({ message: 'User not found' });
     const correct = validateAnswers(question, answers);
+    if (answers.length) {
+      let receipt;
+      if (req.body.attemptId) {
+        const attempt = await QuizAttempt.findOne({ token: req.body.attemptId, userId: req.userId, expiresAt: { $gt: new Date() } });
+        if (!attempt || !attempt.checked.has(questionId)) return res.status(400).json({ message: 'Check this question in its quiz session first.' });
+        receipt = { source: `attempt:${attempt.token}:${questionId}`, expiresAt: attempt.expiresAt };
+      } else receipt = practiceReceipt(req.body.submissionId, questionId);
+      await recordQuizPerformance(req.userId, [{ ...receipt, question, correct }]);
+    }
     if (!correct) return res.json({ correct: false, correctAnswers: question.correctAnswers, ...explanationAfterAnswer(question) });
     if (user.solvedQuestions.some(id => String(id) === questionId)) {
       return res.json(practiceResult(user, question, true));

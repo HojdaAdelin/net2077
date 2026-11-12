@@ -1,3 +1,4 @@
+import { createQuizSubmissionId } from '../utils/quizSubmission';
 import { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -27,6 +28,8 @@ export default function LinuxStartTest() {
   const [searchParams] = useSearchParams();
 
   const checkingRef = useRef(false);
+  const submissionIdRef = useRef(null);
+  if (!submissionIdRef.current) submissionIdRef.current = createQuizSubmissionId();
   const [submitError, setSubmitError] = useState(null);
   const [phase, setPhase] = useState('loading'); // loading | quiz | results
   const [questions, setQuestions] = useState([]);
@@ -93,7 +96,7 @@ export default function LinuxStartTest() {
     try {
       const response = await fetch(`${API_URL}/questions/attempts/check`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
-        body: JSON.stringify({ questionId: qid, answers: selectedAnswers[qid] || [] })
+        body: JSON.stringify({ questionId: qid, answers: selectedAnswers[qid] || [], submissionId: submissionIdRef.current })
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Unable to check answer');

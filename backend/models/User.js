@@ -17,6 +17,13 @@ const userSchema = new mongoose.Schema({
   }],
   sentFriendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   solvedQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
+  quizStatsSince: { type: Date, default: undefined },
+  quizPerformance: { type: Map, of: new mongoose.Schema({
+    category: String, type: String, tag: String,
+    correct: { type: Number, default: 0 }, wrong: { type: Number, default: 0 },
+    lastAnsweredAt: Date,
+  }, { _id: false }), default: {} },
+  quizAnswerReceipts: { type: [new mongoose.Schema({ key: String, expiresAt: Date }, { _id: false })], default: [] },
   solvedByTag: {
     LINUX: { type: Number, default: 0 },
     NETWORK: { type: Number, default: 0 },

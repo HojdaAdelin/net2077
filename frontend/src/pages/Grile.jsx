@@ -4,7 +4,7 @@ import { useState, useEffect, useContext, useCallback, useRef } from 'react';
 import { getUserProgress, getDailyChallengeStatus } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { API_URL } from '../config';
-import { X, Monitor, Wifi, Cpu, BookOpen, Trophy, FileCheck, ArrowRight, Users, Terminal } from 'lucide-react';
+import { X, Monitor, Wifi, Cpu, BookOpen, Trophy, FileCheck, Sparkles, ArrowRight, Users, Terminal } from 'lucide-react';
 import '../styles/Grile.css';
 
 function CategoryLeaderboardModal({ tag, label, color, onClose }) {
@@ -98,7 +98,7 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
     { id: 'CHAPTER15', label: 'Chapter 12 - Embedded Systems' }
   ];
 
-  const showChapterFilter = type === 'all' && selectedTag === 'LINUX' && (selectedMode === 'unsolved' || selectedMode === 'all');
+  const showChapterFilter = type === 'all' && selectedTag === 'LINUX' && ['unsolved', 'all'].includes(selectedMode);
 
   const toggleChapter = (chapterId) => {
     setSelectedChapters(prev => 
@@ -111,7 +111,7 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
   const isAllModeNoFilter = type === 'all' && selectedMode === 'all' && !selectedTag;
   const isTagRequired = type !== 'basic' && !isAllModeNoFilter;
   const needsTagAttention = isTagRequired && !selectedTag;
-  const needsAuth = selectedMode === 'unsolved' && !user;
+  const needsAuth = ['unsolved', 'recommended'].includes(selectedMode) && !user;
 
   const handleStart = () => {
     // Special handling for daily challenge
@@ -153,7 +153,7 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
       params.set('tags', finalTag);
     }
     if (selectedTag === 'ARDUINO' && selectedBoard === 'esp32') params.set('board', 'esp32');
-    if (selectedChapters.length > 0) {
+    if (showChapterFilter && selectedChapters.length > 0) {
       params.set('chapters', selectedChapters.join(','));
     }
 
@@ -198,11 +198,18 @@ function QuizModal({ type, onClose, user, preSelectedCategory = '' }) {
                 <div className="mode-title">Simulation Test</div>
                 <div className="mode-desc">Random 50 questions in test mode</div>
               </button>
+              <button
+                className={`mode-option mode-option--recommended ${selectedMode === 'recommended' ? 'selected' : ''}`}
+                onClick={() => setSelectedMode('recommended')}
+              >
+                <div className="mode-title"><Sparkles size={16} />Recommended questions</div>
+                <div className="mode-desc">Up to 50 unsolved questions tailored to your weak chapters, past practice and level</div>
+              </button>
             </div>
             
             {needsAuth && (
               <p className="auth-required-message">
-                You need an account to track unsolved questions.
+                Sign in to track your progress and get personalized questions.
               </p>
             )}
           </div>

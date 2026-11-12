@@ -1,3 +1,4 @@
+import { recordQuizPerformance } from '../utils/quizPerformance.js';
 import { randomBytes } from 'crypto';
 import QuizAttempt from '../models/QuizAttempt.js';
 import Question from '../models/Question.js';
@@ -71,6 +72,7 @@ export const answerStreakChain = async (req, res) => {
       if (!attempt.checked.has(questionId)) throw fail('The chain changed. Please reload to continue.', 409);
     }
     const selectedAnswers = attempt.checked.get(questionId);
+    if (selectedAnswers.length) await recordQuizPerformance(req.userId, [{ question, correct: validateAnswers(question, selectedAnswers), source: `attempt:${attempt.token}:${questionId}`, expiresAt: attempt.expiresAt }]);
     if (attempt.result || chainProgress(attempt).ended) attempt = await settleChain(attempt);
     res.json({ ...await chainResponse(attempt), feedback: { questionId,
       correct: validateAnswers(question, selectedAnswers), correctAnswers: question.correctAnswers, selectedAnswers } });

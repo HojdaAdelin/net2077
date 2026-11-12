@@ -1,3 +1,4 @@
+import { createQuizSubmissionId } from '../utils/quizSubmission';
 import ExplanationViewer from '../components/ExplanationViewer';
 import ExamReview from '../components/ExamReview';
 import { useState, useEffect, useCallback, useContext, useRef } from 'react';
@@ -19,6 +20,7 @@ export default function Quiz({ isExam = false }) {
   const navigate = useNavigate();
   const { user, updateUser } = useContext(AuthContext);
   const attemptRef = useRef(null);
+  const submissionIdRef = useRef(null);
   const loadRequestRef = useRef(0);
   const finishingRef = useRef(false);
   const checkingRef = useRef(false);
@@ -224,6 +226,7 @@ export default function Quiz({ isExam = false }) {
 
   const loadQuestions = async () => {
     const requestId = ++loadRequestRef.current;
+    submissionIdRef.current = createQuizSubmissionId();
     setLoading(true);
     setError(null);
     setSubmissionError(null);
@@ -270,9 +273,9 @@ export default function Quiz({ isExam = false }) {
       } else {
         setExamMeta(null);
         if (!sessionKind) {
-          const endpoint = mode === 'unsolved' ? '/questions/unsolved' : '/questions';
+          const endpoint = mode === 'recommended' ? `/questions/recommended?${urlParams.toString()}` : mode === 'unsolved' ? '/questions/unsolved' : '/questions';
           const response = await fetch(`${API_BASE}${endpoint}`, { credentials: 'include' });
-          if (!response.ok) throw new Error('Unable to load questions');
+          if (!response.ok) { const failure = await response.json(); throw new Error(failure.message || 'Unable to load questions'); }
           data = await response.json();
         }
       }
@@ -297,7 +300,7 @@ export default function Quiz({ isExam = false }) {
         filtered = filtered.filter(q => q.tags && q.tags.includes(tagsFilter));
       }
 
-      if (chaptersParam && !isExam) {
+      if (chaptersParam && !isExam && !(mode === 'recommended' && (tagsFilter === 'LINUX' || queryType === 'basic'))) {
         const selectedChapters = chaptersParam.split(',');
         filtered = filtered.filter(q => 
           q.tags && q.tags.some(tag => selectedChapters.includes(tag))
@@ -537,6 +540,7 @@ export default function Quiz({ isExam = false }) {
   const handleRetryWrong = () => {
     if (wrongQuestions.length === 0) return;
     setRetryMode(true);
+    submissionIdRef.current = createQuizSubmissionId();
     setQuestions(wrongQuestions);
     setCurrentIndex(0);
     setSelectedAnswers({});
@@ -598,7 +602,7 @@ export default function Quiz({ isExam = false }) {
       const endpoint = practiceReward && !sessionId ? '/questions/markSolved' : '/questions/attempts/check';
       const response = await fetch(`${API_BASE}${endpoint}`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
-        body: JSON.stringify({ questionId: currentQuestion._id, answers, attemptId: sessionId })
+        body: JSON.stringify({ questionId: currentQuestion._id, answers, attemptId: sessionId, submissionId: submissionIdRef.current })
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Unable to check answer. Please try again.');
@@ -612,7 +616,7 @@ export default function Quiz({ isExam = false }) {
       if (practiceReward && sessionId && isCorrect) {
         const rewardResponse = await fetch(`${API_BASE}/questions/markSolved`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
-          body: JSON.stringify({ questionId: currentQuestion._id, answers: result.selectedAnswers || answers })
+          body: JSON.stringify({ questionId: currentQuestion._id, answers: result.selectedAnswers || answers, attemptId: sessionId })
         });
         const reward = await rewardResponse.json();
         if (!rewardResponse.ok) throw new Error(reward.message || 'Unable to save progress');
@@ -734,7 +738,7 @@ export default function Quiz({ isExam = false }) {
         <div className="quiz-container">
           <div className="quiz-sidebar">
             <div className="quiz-progress">
-              <h3>Progress</h3>
+              <h3>{mode === 'recommended' ? 'Recommended practice' : 'Progress'}</h3>
               <div className="progress-info">
                 <span>0 questions</span>
               </div>
@@ -783,7 +787,7 @@ export default function Quiz({ isExam = false }) {
     return (
       <div className="container quiz-page">
         <div className="empty-quiz">
-          <h2>No questions available</h2>
+          <h2>{mode === 'recommended' ? 'No unsolved questions left for these filters' : 'No questions available'}</h2>
           <button onClick={isExam ? handleExitExam : () => navigate('/grile')} className="btn btn-primary">
             {isExam ? 'Back to Exams' : 'Back to Questions'}
           </button>

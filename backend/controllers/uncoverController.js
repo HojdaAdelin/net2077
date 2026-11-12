@@ -1,3 +1,4 @@
+import { recordQuizPerformance } from '../utils/quizPerformance.js';
 import { randomBytes } from 'crypto';
 import QuizAttempt from '../models/QuizAttempt.js';
 import Question from '../models/Question.js';
@@ -80,6 +81,9 @@ export const answerUncover = async (req, res) => {
     }
     const decision = attempt.uncoverDecisions.get(key);
     const expected = question.correctAnswers.includes(optionIndex);
+    const decisions = question.answers.map((_, index) => attempt.uncoverDecisions.get(uncoverDecisionKey(questionId, index)));
+    const wrong = decisions.some((value, index) => value !== undefined && value !== question.correctAnswers.includes(index));
+    if (wrong || decisions.every(value => value !== undefined)) await recordQuizPerformance(req.userId, [{ question, correct: !wrong, source: `attempt:${attempt.token}:${questionId}`, expiresAt: attempt.expiresAt }]);
     if (attempt.result || uncoverProgress(attempt).ended) attempt = await settle(attempt);
     res.json({ ...await uncoverResponse(attempt), feedback: { questionId, title: question.title,
       optionIndex, text: question.answers[optionIndex], decision, isCorrect: expected, correct: decision === expected } });

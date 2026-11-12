@@ -1,3 +1,4 @@
+import { recordQuizPerformance, practiceReceipt } from '../utils/quizPerformance.js';
 import { dailyChallengeStatus, dailyRewardFilter } from '../utils/dailyChallenge.js';
 import { randomBytes } from 'crypto';
 import { verifyAuthSession } from '../utils/authSession.js';
@@ -84,6 +85,7 @@ export const checkQuizAnswer = async (req, res) => {
   try {
     const { questionId, answers, attemptId } = req.body;
     let question;
+    let receipt;
     let selected = answers;
     let allowExplanation = true;
     if (attemptId) {
@@ -99,12 +101,14 @@ export const checkQuizAnswer = async (req, res) => {
         attempt = await QuizAttempt.findById(attempt._id);
       }
       selected = attempt.checked.get(questionId) || (attempt.result ? [] : answers);
+      receipt = { source: `attempt:${attempt.token}:${questionId}`, expiresAt: attempt.expiresAt };
     } else {
       if (typeof questionId !== 'string' || !/^[a-f\d]{24}$/i.test(questionId)) throw fail('Invalid question');
       question = await Question.findById(questionId);
       if (!question) throw fail('Question not found', 404);
     }
     const correct = validateAnswers(question, selected);
+    if (req.userId && selected.length) await recordQuizPerformance(req.userId, [{ ...(receipt || practiceReceipt(req.body.submissionId, questionId)), question, correct }]);
     res.json({ correct, correctAnswers: question.correctAnswers, selectedAnswers: selected, ...(allowExplanation ? explanationAfterAnswer(question) : {}) });
   } catch (error) { res.status(error.status || 500).json({ message: error.message }); }
 };
@@ -140,6 +144,10 @@ export const finishQuizAttempt = (expectedKind) => async (req, res) => {
     }
     const finalized = await QuizAttempt.findById(attempt._id);
     const result = finalized.result;
+    if (req.userId) await recordQuizPerformance(req.userId, finalized.questions.filter(q => finalized.checked.get(String(q._id))?.length).map(question => ({
+      question, correct: validateAnswers(question, finalized.checked.get(String(question._id))),
+      source: `attempt:${finalized.token}:${question._id}`, expiresAt: finalized.expiresAt,
+    })));
     let user = req.userId ? await User.findById(req.userId) : null;
     let xpGained = 0;
     let awarded = false;

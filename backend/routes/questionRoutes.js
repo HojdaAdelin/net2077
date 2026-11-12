@@ -7,6 +7,7 @@ import express from 'express';
 import { getQuestions, getQuestionFilters, getQuestionById, getUnsolvedQuestions, getRandom50, markSolved, dailyLinux, getDailyChallengeStatus, completeDailyChallenge, resetBasicStats, dailyNetwork, resetLinuxStats, resetArduinoStats, resetNetworkStats, resetAcadnetStats, getLinuxOverviewTest, submitRandom50, exportAllQuestions, exportFilteredQuestions, searchQuestions, deleteQuestion, updateQuestion } from '../controllers/questionController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { checkRole } from '../middleware/checkRole.js';
+import { getRecommendedQuestions } from '../controllers/recommendationController.js';
 
 const router = express.Router();
 router.get('/explanations/batch', authMiddleware, checkRole('root'), prepareExplanationBatch);
@@ -23,6 +24,7 @@ router.post('/attempts/check', optionalQuizAuth, checkQuizAnswer);
 router.post('/attempts/finish', optionalQuizAuth, finishQuizAttempt());
 
 router.get('/unsolved', hideQuestionSolutions, authMiddleware, getUnsolvedQuestions);
+router.get('/recommended', authMiddleware, getRecommendedQuestions);
 router.get('/random50', hideQuestionSolutions, getRandom50);
 router.get('/dailyLinux', hideQuestionSolutions, dailyLinux);
 router.get('/dailyNetwork', hideQuestionSolutions, dailyNetwork);

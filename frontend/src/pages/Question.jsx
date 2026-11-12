@@ -1,3 +1,4 @@
+import { createQuizSubmissionId } from '../utils/quizSubmission';
 import ExplanationViewer from '../components/ExplanationViewer';
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -14,10 +15,13 @@ export default function Question() {
   const [error, setError] = useState(null);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const submittingRef = useRef(false);
+  const submissionIdRef = useRef(null);
+  if (!submissionIdRef.current) submissionIdRef.current = createQuizSubmissionId();
   const [submitError, setSubmitError] = useState(null);
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
+    submissionIdRef.current = createQuizSubmissionId();
     loadQuestion();
   }, [questionId]);
 
@@ -60,7 +64,7 @@ export default function Question() {
     try {
       const response = await fetch(`${API_URL}/questions/attempts/check`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
-        body: JSON.stringify({ questionId, answers: selectedAnswers })
+        body: JSON.stringify({ questionId, answers: selectedAnswers, submissionId: submissionIdRef.current })
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Unable to check answer');
