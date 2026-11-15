@@ -4,6 +4,7 @@ import NetworkWorkspaceGuide from './NetworkWorkspaceGuide';
 import { Settings2 } from 'lucide-react';
 import { lockModalScroll } from '../utils/modalScrollLock';
 import NetworkAdvancedSettings from './NetworkAdvancedSettings';
+import NetworkStpSettings from './NetworkStpSettings';
 import NetworkNatSettings from './NetworkNatSettings';
 import NetworkVlanSettings from './NetworkVlanSettings';
 import { DEVICE_TYPES } from '../utils/networkTopology';
@@ -53,6 +54,7 @@ export default function NetworkDeviceSettings({ device, onApply, onClose, lesson
         <div ref={tabsRef} className="nl-settings-tabs" role="group" aria-label="Configuration sections">
           <button type="button" aria-pressed={tab === 'network'} onClick={() => setTab('network')}>Network</button>
           {isSwitchDevice(device.type) && <button type="button" aria-pressed={tab === 'switching'} onClick={() => setTab('switching')}>Switching</button>}
+          {isSwitchDevice(device.type) && <button type="button" aria-pressed={tab === 'stp'} onClick={() => setTab('stp')}>STP / RSTP</button>}
           {device.type === 'router' && <button type="button" aria-pressed={tab === 'subinterfaces'} onClick={() => setTab('subinterfaces')}>802.1Q subinterfaces</button>}
           {device.type === 'l3switch' && <button type="button" aria-pressed={tab === 'svis'} onClick={() => setTab('svis')}>VLAN interfaces</button>}
           {routing && <button type="button" aria-pressed={tab === 'routes'} onClick={() => setTab('routes')}>Static routes</button>}
@@ -79,6 +81,7 @@ export default function NetworkDeviceSettings({ device, onApply, onClose, lesson
           </>}
           {['switching', 'subinterfaces', 'svis'].includes(tab) && <NetworkVlanSettings device={device} config={config} setConfig={setConfig} section={tab} />}
           {['ipv6', 'acl', 'ospf'].includes(tab) && <NetworkAdvancedSettings device={device} config={config} setConfig={setConfig} section={tab} />}
+          {tab === 'stp' && <NetworkStpSettings device={device} config={config} setConfig={setConfig} />}
           {tab === 'nat' && <NetworkNatSettings device={device} config={config} setConfig={setConfig} />}
           {tab === 'routes' && <>
             <p className="nl-config-help">Connected networks are learned from interface addresses. Add a route for each remote network, or use 0.0.0.0/0 for a default route. Remember the return route.</p>

@@ -1,10 +1,13 @@
 import { Cable, MousePointer2, Settings2, FlaskConical, Trash2, X } from 'lucide-react';
+import NetworkStpStatus from './NetworkStpStatus';
+import { getStpState, stpPortKey } from '../../../backend/network/networkStp';
 import NetworkDeviceArtwork from './NetworkDeviceArtwork';
 import { DEVICE_TYPES, portInUse } from '../utils/networkTopology';
 import { isBridgeDevice, allDeviceInterfaces, interfaceEnabled, isSwitchport, switchPort, vlanListText } from '../utils/networkConfig';
 import { getOspfState, sviOperational } from '../utils/networkSimulation';
 
-export default function NetworkInspector({ topology, wifiLinks, device, cable, readOnly = false, canDelete = true, onConfigure, onSimulate, onDelete, onDeselect, quickGuide }) {
+export default function NetworkInspector({ topology, wifiLinks, device, cable, readOnly = false, canDelete = true, onConfigure, onSimulate, onDelete, onDeselect, quickGuide, stpState, stpVlan = 1, onStpVlanChange }) {
+  const spanningTree = stpState || getStpState(topology);
   const endpoint = value => `${topology.devices.find(item => item.id === value.deviceId)?.name || 'Device'} · ${value.portId}`;
   if (!device && !cable) return <div className="nl-inspector-empty">
     <div className="nl-inspector-empty-icon"><MousePointer2 size={24} /></div>
@@ -16,6 +19,7 @@ export default function NetworkInspector({ topology, wifiLinks, device, cable, r
     <div className="nl-sidebar-heading"><h2>Connection</h2><button type="button" className="nl-icon-button" aria-label="Deselect cable" onClick={onDeselect}><X size={15} /></button></div>
     <div className="nl-connection-title"><Cable size={23} /><div><h3>Ethernet cable</h3><span>Wired connection</span></div></div>
     <div className="nl-cable-endpoints"><span>{endpoint(cable.from)}</span><span className="nl-endpoint-line" /><span>{endpoint(cable.to)}</span></div>
+    {[cable.from, cable.to].map(end => { const state = spanningTree.ports[stpPortKey(end.deviceId, end.portId, stpVlan)]; return state && <p className={`nl-stp-port-state${['blocking', 'discarding'].includes(state.state) ? ' is-blocked' : ''}`} key={`${end.deviceId}/${end.portId}`}>{endpoint(end)} / VLAN {stpVlan}: {state.role} / {state.state}</p>; })}
     <p className="nl-inspector-description">Removing this cable frees both ports and keeps the devices.</p>
     {canDelete ? <button type="button" className="nl-delete-button" onClick={onDelete}><Trash2 size={14} />Remove cable</button> : <p className="nl-library-hint">This connection is preset for the problem.</p>}
   </div>;
@@ -35,6 +39,7 @@ export default function NetworkInspector({ topology, wifiLinks, device, cable, r
       const switching = isSwitchport(device, port), settings = switching ? switchPort(device, port) : null;
       const status = !enabled ? 'Disabled' : linked ? 'Connected' : 'Not connected';
       return <div key={port} className="nl-interface-card"><div><strong>{port}</strong><span className={`nl-interface-state ${enabled && linked ? 'is-up' : ''}`}><i />{status}</span></div><p>{!enabled ? 'Interface is turned off' : switching || isBridgeDevice(device.type) ? 'Layer 2 · bridges traffic' : iface.ip ? `${iface.ip} · ${iface.mask}` : 'No IPv4 address configured'}</p>
+        {spanningTree.ports[stpPortKey(device.id, port, stpVlan)] && (() => { const state = spanningTree.ports[stpPortKey(device.id, port, stpVlan)]; return <p className={`nl-stp-port-state${['blocking', 'discarding'].includes(state.state) ? ' is-blocked' : ''}`} title={state.reason}>VLAN {stpVlan}: {state.role} / {state.state}</p>; })()}
         {iface.ipv6 && <p>{iface.ipv6}/{iface.prefix6}</p>}
         {['aclIn', 'aclOut', 'acl6In', 'acl6Out'].filter(key => iface[key]).map(key => <p key={key}>{key}: {iface[key]}</p>)}
         {settings && <p className="nl-port-vlan">{settings.mode === 'access' ? `Access · VLAN ${settings.accessVlan}` : `Trunk · native ${settings.nativeVlan} · allowed ${vlanListText(settings.allowedVlans)}`}</p>}
@@ -43,6 +48,7 @@ export default function NetworkInspector({ topology, wifiLinks, device, cable, r
     })}</div>
     {!isBridgeDevice(device.type) && <dl className="nl-device-addresses"><div><dt>Gateway</dt><dd>{device.config.gateway || 'Not set'}</dd></div><div><dt>DNS server</dt><dd>{device.config.dns || 'Not set'}</dd></div></dl>}
     {device.type === 'l3switch' && <p className="nl-routing-status">IP routing: {device.config.ipRouting === false ? 'disabled' : 'enabled'}</p>}
+    <NetworkStpStatus device={device} state={spanningTree} vlan={stpVlan} onVlanChange={onStpVlanChange} />
     {device.config.nat?.enabled && <details className="nl-routing-status"><summary>NAT / PAT enabled</summary><p>Inside: {device.config.nat.inside.join(', ')}<br />Outside: {device.config.nat.outside.join(', ')}</p><p>{device.config.nat.staticMappings.length} static mappings / {device.config.nat.overload.length} overload rules</p><p>Open Configure device &rarr; NAT / PAT to edit. Run a simulation to inspect observed translations.</p></details>}
     {device.config.gateway6 && <p className="nl-routing-status">IPv6 gateway: {device.config.gateway6}</p>}
     {ospf && <details className="nl-routing-status" open><summary>OSPF · area {ospf.area}</summary><p>Router ID: {ospf.routerId || 'Unavailable'}</p>{ospf.errors.map(error => <p key={error}>{error}</p>)}<strong>Neighbors</strong>{!ospf.neighbors.length && <p>No neighbors. Check advertised interfaces, links and addressing.</p>}<ul>{ospf.neighbors.map((n, i) => <li key={i}>{topology.devices.find(d => d.id === n.peerId)?.name} · {n.port} · {n.state}{n.reason && ` — ${n.reason}`}</li>)}</ul><strong>Learned routes</strong>{!ospf.routes.length && <p>No learned routes.</p>}<ul>{ospf.routes.map(r => <li key={r.destination}>{r.destination} via {r.nextHop} · {r.port} · cost {r.cost}</li>)}</ul></details>}

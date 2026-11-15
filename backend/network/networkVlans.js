@@ -1,3 +1,4 @@
+import { normalizeStp } from './networkStpConfig.js';
 export const isSwitchDevice = type => ['switch', 'l3switch'].includes(type);
 export const validVlanId = value => Number.isInteger(value) && value >= 1 && value <= 4094;
 const fail = message => { throw Object.assign(new Error(message), { status: 400 }); };
@@ -122,5 +123,5 @@ export function normalizeVlanSettings(type, ports, config) {
       return { vlan, enabled: item.enabled ?? true, ip: item.ip ?? '', mask: item.mask ?? '/24', ...interfaceProtocolFields(item) };
     }).sort((a, b) => a.vlan - b.vlan);
   } else if (config.svis?.length || config.ipRouting !== undefined) fail('SVIs and IP routing settings are available on L3 switches.');
-  return config;
+  return normalizeStp(type, ports, config);
 }

@@ -3,6 +3,7 @@ import { DEVICE_TYPES, emptyTopology, connectionError } from './networkTopology.
 import { defaultDeviceConfig, validateDeviceSettings, ipv4, maskPrefix, allDeviceInterfaces, validInterfaceName, validVlanId, parseVlanList, switchPort, isSwitchDevice, interfaceProtocolFields } from './networkConfig.js';
 import { getOspfState, testConnectivity, simulatePing, simulateHTTP, resolveHostname, requestDHCP } from './networkSimulation.js';
 import { natRole } from './networkNat.js';
+import { getStpState } from './networkStp.js';
 
 const fail = message => { throw Object.assign(new Error(message), { status: 400 }); };
 const object = value => value && typeof value === 'object' && !Array.isArray(value);
@@ -19,7 +20,7 @@ function deviceConfig(type, input = {}) {
     result.interfaces[port] = { enabled: boolean(data.enabled, true), ip: data.ip ?? '', mask: data.mask ?? '255.255.255.0', ...interfaceProtocolFields(data) };
   }
   for (const key of ['gateway', 'dns']) result[key] = input[key] ?? result[key];
-  for (const key of ['vlans', 'switchports', 'subinterfaces', 'svis', 'ipRouting', 'gateway6', 'routes6', 'ipv6Routing', 'acls', 'ospf', 'nat']) {
+  for (const key of ['vlans', 'switchports', 'subinterfaces', 'svis', 'ipRouting', 'gateway6', 'routes6', 'ipv6Routing', 'acls', 'ospf', 'nat', 'stp']) {
     if (input[key] !== undefined) result[key] = structuredClone(input[key]);
   }
   result.routes = (input.routes ?? []).map(route => ({ destination: route.destination, nextHop: route.nextHop, port: route.port }));
@@ -137,6 +138,37 @@ export function normalizeProblem(input) {
       }
       if (['tcp', 'udp'].includes(goal.protocol) && result.destinationPort === undefined) fail('Set the destination port.');
       if (goal.targetDevice) { device(goal.targetDevice); result.targetDevice = goal.targetDevice; }
+    } else if (['stpRoot', 'stpMode', 'stpPort', 'stpFailover'].includes(goal.type)) {
+      const target = device(goal.device); result.device = goal.device;
+      if (!['switch', 'l3switch'].includes(target.type)) fail('Spanning-tree objectives require a switch or L3 switch.');
+      if (goal.type === 'stpMode') {
+        if (!['stp', 'rstp'].includes(goal.mode)) fail('Spanning-tree mode must be stp or rstp.');
+        result.mode = goal.mode; result.enabled = boolean(goal.enabled, true);
+      } else {
+        if (!validVlanId(goal.vlan)) fail('Spanning-tree objectives require a VLAN from 1 to 4094.'); result.vlan = goal.vlan;
+      }
+      if (goal.type === 'stpRoot' && goal.members !== undefined) {
+        if (!Array.isArray(goal.members) || goal.members.length > 40) fail('Root bridge members must be an array of switch IDs.');
+        result.members = [...new Set(goal.members)];
+        if (result.members.some(id => !['switch', 'l3switch'].includes(device(id).type))) fail('Root bridge members must be switches.');
+      }
+      if (goal.type === 'stpPort') {
+        result.port = getPort(goal.device, goal.port);
+        if (!Object.hasOwn(target.config.interfaces, result.port)) fail('STP port objectives require a physical port.');
+        if (goal.role !== undefined) {
+          if (!['root', 'designated', 'alternate', 'backup', 'disabled', 'unprotected', 'inconsistent'].includes(goal.role)) fail('Invalid spanning-tree port role.'); result.role = goal.role;
+        }
+        if (goal.state !== undefined) {
+          if (!['forwarding', 'blocking', 'discarding', 'disabled'].includes(goal.state)) fail('Invalid spanning-tree port state.'); result.state = goal.state;
+        }
+        if (!result.role && !result.state) fail('Set the expected spanning-tree role or state.');
+      }
+      if (goal.type === 'stpFailover') {
+        device(goal.source); result.source = goal.source;
+        if (!parseAddress(goal.target)) fail('Failover objectives need a valid IPv4 or IPv6 target.'); result.target = goal.target;
+        if (!topology.cables.some(cable => cable.id === goal.linkId)) fail('Choose an existing cable for the failover test.'); result.linkId = goal.linkId;
+        if (goal.rootPort !== undefined) result.rootPort = getPort(goal.device, goal.rootPort);
+      }
     } else if (['natRole', 'natStatic', 'natOverload'].includes(goal.type)) {
       const target = device(goal.device); result.device = goal.device;
       if (!['router', 'l3switch', 'cloud', 'firewall'].includes(target.type)) fail('NAT objectives require a routing device.');
@@ -210,6 +242,7 @@ export function validateSubmission(problem, input) {
 }
 
 export function evaluateObjectives(problem, topology) {
+  const spanningTree = problem.objectives.some(goal => goal.type.startsWith('stp')) ? getStpState(topology) : null;
   return problem.objectives.map(goal => {
     let passed = false, detail;
     const device = topology.devices.find(item => item.id === goal.device);
@@ -250,6 +283,20 @@ export function evaluateObjectives(problem, topology) {
       passed = Boolean(routes?.some(r => networkFor(r.destination.split('/')[0], parseNetwork(r.destination).prefix) === goal.destination && (!goal.nextHop || sameAddress(r.nextHop, goal.nextHop)) && (!goal.port || r.port === goal.port)));
     } else if (goal.type === 'aclBinding') passed = allDeviceInterfaces(device)[goal.port]?.[`${goal.family === 6 ? 'acl6' : 'acl'}${goal.direction === 'in' ? 'In' : 'Out'}`] === goal.name;
 
+    else if (goal.type === 'stpRoot') {
+      const instance = spanningTree.devices[goal.device]?.vlans[goal.vlan];
+      passed = Boolean(instance?.isRoot && !instance.errors.length && (goal.members || []).every(id => spanningTree.devices[id]?.vlans[goal.vlan]?.rootId === goal.device)); detail = instance ? `VLAN ${goal.vlan}: root ${instance.rootName}. All required member switches must see the same root.` : 'Enable spanning tree and check the VLAN database.';
+    } else if (goal.type === 'stpMode') passed = device?.config.stp?.enabled === goal.enabled && device.config.stp.mode === goal.mode;
+    else if (goal.type === 'stpPort') {
+      const port = spanningTree.ports[`${goal.device}/${goal.port}@${goal.vlan}`];
+      passed = Boolean(port && (!goal.role || port.role === goal.role) && (!goal.state || port.state === goal.state)); detail = port ? `${goal.port}: ${port.role} / ${port.state}. ${port.reason}` : 'This port is not participating in the required VLAN.';
+    } else if (goal.type === 'stpFailover') {
+      const simulated = { ...topology, cables: topology.cables.filter(cable => cable.id !== goal.linkId) };
+      const tree = getStpState(simulated), instance = tree.devices[goal.device]?.vlans[goal.vlan];
+      const connection = simulatePing(simulated, goal.source, goal.target);
+      passed = connection.ok && Boolean(instance) && (!goal.rootPort || instance.rootPort === goal.rootPort);
+      detail = `After removing ${goal.linkId}: ${connection.message} Root port: ${instance?.rootPort || 'none'}.`;
+    }
     else if (goal.type === 'natRole') passed = natRole(device, goal.port) === goal.role;
     else if (goal.type === 'natStatic') passed = Boolean(device?.config.nat?.enabled && device.config.nat.staticMappings.some(m => sameAddress(m.local, goal.local) && sameAddress(m.global, goal.global)));
     else if (goal.type === 'natOverload') passed = Boolean(device?.config.nat?.enabled && device.config.nat.overload.some(r => r.source === goal.sourcePrefix && r.outside === goal.port));

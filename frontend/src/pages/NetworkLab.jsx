@@ -1,3 +1,5 @@
+import { getStpState, stpPortKey } from '../../../backend/network/networkStp';
+import '../styles/NetworkStp.css';
 import { useContext, useEffect, useId, useMemo, useReducer, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { MousePointer2, Cable, Plus, Minus, Scan, ArrowUpRight, Settings2, FlaskConical, CircleHelp, Undo2, Redo2, TableProperties } from 'lucide-react';
@@ -37,6 +39,10 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
       (['connect', 'delete-cable'].includes(action.type) && !cablesEditable) || (action.type === 'configure' && !editable(action.id))) return;
     playback.clear(); updateHistory({ type: 'edit', operation: action });
   };
+  const spanningTree = useMemo(() => getStpState(topology), [topology]);
+  const [stpVlan, setStpVlan] = useState(1);
+  const stpVlans = [...new Set(Object.values(spanningTree.devices).flatMap(device => Object.keys(device.vlans).map(Number)))].sort((a, b) => a - b);
+  const visibleStpVlan = stpVlans.includes(stpVlan) ? stpVlan : stpVlans[0] || 1;
   const [tool, setTool] = useState('select');
   const [selected, setSelected] = useState(null);
   const [source, setSource] = useState(null);
@@ -256,7 +262,7 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
           </svg>
           <h1>Network Lab</h1>
         </div>
-        <div className="nl-example-actions"><Link className="nl-practice-link" to="/network-lab/problems">Practice problems <ArrowUpRight size={15} /></Link><Link className="nl-nat-demo-link" target="_blank" rel="noopener noreferrer" to={demo ? '/network-lab' : '/network-lab?example=nat-pat'}>{demo ? 'Empty sandbox' : 'Try NAT / PAT demo'}<ArrowUpRight size={14} /></Link></div>
+        <div className="nl-example-actions"><Link className="nl-practice-link" to="/network-lab/problems">Practice problems <ArrowUpRight size={15} /></Link></div>
       </div>}
       {demo && <div className="nl-example-note"><p><strong>NAT / PAT demo.</strong> Select Inside PC &rarr; Simulate &rarr; Ping or HTTP to <strong>198.51.100.10</strong> to see PAT. Select Outside web server &rarr; HTTP to <strong>203.0.113.50</strong> to test static NAT. Edit NAT edge &rarr; NAT / PAT to experiment. This is a simulated network, not a real Internet connection.</p></div>}
       <div className="nl-workspace">
@@ -285,7 +291,7 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
                 <button type="button" className="nl-icon-button" disabled={!canRedo} onClick={() => restoreHistory('redo')} aria-label="Redo last change" title="Redo (Ctrl/⌘ Shift Z or Ctrl Y)"><Redo2 size={16} /></button>
               </div>
             </div>
-            <div className="nl-view-tools"><button type="button" className="nl-icon-button" aria-label="Zoom out" onClick={() => zoomTo(view.zoom / 1.2)}><Minus size={15} /></button><span>{Math.round(view.zoom * 100)}%</span><button type="button" className="nl-icon-button" aria-label="Zoom in" onClick={() => zoomTo(view.zoom * 1.2)}><Plus size={15} /></button><span className="nl-toolbar-separator" /><button type="button" className="nl-fit-button" onClick={() => setView(fitTopology(topology.devices, size.width, size.height))}><Scan size={15} />Fit view</button></div>
+            <div className="nl-view-tools">{stpVlans.length > 0 && <label className="nl-stp-canvas-control">STP VLAN<select aria-label="Canvas spanning-tree VLAN" value={visibleStpVlan} onChange={e => setStpVlan(Number(e.target.value))}>{stpVlans.map(id => <option key={id} value={id}>{id}</option>)}</select></label>}<button type="button" className="nl-icon-button" aria-label="Zoom out" onClick={() => zoomTo(view.zoom / 1.2)}><Minus size={15} /></button><span>{Math.round(view.zoom * 100)}%</span><button type="button" className="nl-icon-button" aria-label="Zoom in" onClick={() => zoomTo(view.zoom * 1.2)}><Plus size={15} /></button><span className="nl-toolbar-separator" /><button type="button" className="nl-fit-button" onClick={() => setView(fitTopology(topology.devices, size.width, size.height))}><Scan size={15} />Fit view</button></div>
           </div>
           <div className={`nl-stage${isDragging ? ' is-dragging' : ''}${tool === 'cable' ? ' is-cabling' : ''}`} ref={stageRef}>
             <svg className="nl-canvas" ref={svgRef} tabIndex={0} role="application" aria-label="Network topology. Drag devices to move them. Click two ports to connect them. Use arrow keys to move a selected device." viewBox={`${view.x} ${view.y} ${size.width / view.zoom} ${size.height / view.zoom}`} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={finishPointer} onPointerCancel={finishPointer} onLostPointerCapture={finishPointer}>
@@ -294,8 +300,12 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
               {topology.cables.map(cable => {
                 const from = topology.devices.find(device => device.id === cable.from.deviceId);
                 const to = topology.devices.find(device => device.id === cable.to.deviceId);
-                const d = cablePath(portPosition(from, cable.from.portId), portPosition(to, cable.to.portId));
-                return <g key={cable.id} data-cable={cable.id} className={`nl-cable${selectedCable?.id === cable.id ? ' selected' : ''}${tracedLinks.includes(cable.id) ? ' traced' : ''}`} role="button" tabIndex={0} aria-label={`Cable: ${endpointLabel(cable.from)} to ${endpointLabel(cable.to)}`} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelected({ kind: 'cable', id: cable.id }); } }}><path d={d} className="nl-cable-hit" /><path d={d} className="nl-cable-line" /><title>{endpointLabel(cable.from)} → {endpointLabel(cable.to)}</title></g>;
+                const start = portPosition(from, cable.from.portId), end = portPosition(to, cable.to.portId);
+                const d = cablePath(start, end);
+                const stpPorts = [cable.from, cable.to].map(point => spanningTree.ports[stpPortKey(point.deviceId, point.portId, visibleStpVlan)]).filter(Boolean);
+                const standby = stpPorts.find(port => ['blocking', 'discarding'].includes(port.state));
+                const bend = Math.max(55, Math.abs(start.x - end.x) * .3, Math.abs(start.y - end.y) * .4);
+                return <g key={cable.id} data-cable={cable.id} className={`nl-cable${selectedCable?.id === cable.id ? ' selected' : ''}${tracedLinks.includes(cable.id) ? ' traced' : ''}${standby ? ' is-stp-blocked' : ''}`} role="button" tabIndex={0} aria-label={`Cable: ${endpointLabel(cable.from)} to ${endpointLabel(cable.to)}`} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelected({ kind: 'cable', id: cable.id }); } }}><path d={d} className="nl-cable-hit" /><path d={d} className="nl-cable-line" />{standby && <g className="nl-stp-cable-label" transform={`translate(${(start.x + end.x) / 2},${(start.y + end.y) / 2 + bend * .75})`}><rect x="-27" y="-9" width="54" height="18" rx="4" /><text textAnchor="middle" y="3">{standby.state === 'blocking' ? 'BLOCK' : 'DISCARD'}</text></g>}<title>{endpointLabel(cable.from)} → {endpointLabel(cable.to)}</title></g>;
               })}
               {sourceDevice && <path d={cablePath(portPosition(sourceDevice, source.portId), cursor)} className="nl-cable-preview" />}
               {wifiLinks.map(link => {
@@ -308,12 +318,14 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
                 return <g key={device.id} data-device={device.id} transform={`translate(${device.x} ${device.y})`} className={`nl-device${selectedDevice?.id === device.id ? ' selected' : ''}${activePacketDevice === device.id ? playback.event.status === 'blocked' ? ' packet-blocked' : ' packet-active' : ''}`} style={{ '--device-color': config.color }} role="button" tabIndex={0} aria-label={`${device.name}, ${config.label}. ${editable(device.id) ? 'Double-click to configure.' : 'Preset configuration.'} Select and use arrow keys to move.`} onDoubleClick={event => { if (!event.target.closest('[data-port]') && editable(device.id)) setSettingsDeviceId(device.id); }} onKeyDown={event => { if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); setSelected({ kind: 'device', id: device.id }); setInspectorTab('device'); if (event.key === 'Enter' && editable(device.id)) setSettingsDeviceId(device.id); } }}>
                   <rect x="-10" y="-26" width="180" height="177" rx="12" className="nl-device-outline" />
                   <text x="80" y="-9" textAnchor="middle" className="nl-device-name">{device.name}</text>
+                  {spanningTree.devices[device.id]?.vlans[visibleStpVlan]?.isRoot && <g className="nl-stp-root-marker" transform="translate(80,-41)"><rect x="-47" y="-10" width="94" height="19" rx="4" /><text textAnchor="middle" y="3">ROOT / VLAN {visibleStpVlan}</text></g>}
                   <NetworkDeviceArtwork type={device.type} width="160" height="112" />
                   {config.ports.map(portId => {
                     const point = portPosition(device, portId);
                     const endpoint = { deviceId: device.id, portId };
                     const occupied = portInUse(topology, endpoint);
-                    return <g key={portId} data-port={portId} className={`nl-port${occupied ? ' occupied' : ''}${source && samePort(source, endpoint) ? ' pending' : ''}`} role="button" tabIndex={0} aria-label={`${device.name} ${portId}: ${occupied ? 'connected' : 'available'}`} onPointerDown={event => event.stopPropagation()} onClick={event => { event.stopPropagation(); choosePort(endpoint); }} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); choosePort(endpoint); } }}>
+                    const stpPort = spanningTree.ports[stpPortKey(device.id, portId, visibleStpVlan)];
+                    return <g key={portId} data-port={portId} className={`nl-port${occupied ? ' occupied' : ''}${source && samePort(source, endpoint) ? ' pending' : ''}${stpPort && ['blocking', 'discarding'].includes(stpPort.state) ? ' is-stp-blocked' : ''}`} role="button" tabIndex={0} aria-label={`${device.name} ${portId}: ${occupied ? 'connected' : 'available'}`} onPointerDown={event => event.stopPropagation()} onClick={event => { event.stopPropagation(); choosePort(endpoint); }} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); choosePort(endpoint); } }}>
                       <path d={`M ${point.x - device.x} 110 V 123`} className="nl-port-stem" /><circle cx={point.x - device.x} cy="128" r="11" className="nl-port-hit" /><rect x={point.x - device.x - 4} y="124" width="8" height="8" rx="2" className="nl-port-mark" /><title>{device.name} · {portId} · {occupied ? 'Connected' : 'Click to connect'}</title>
                     </g>;
                   })}
@@ -330,7 +342,7 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
           <div className="nl-inspector-tabs" role="tablist" aria-label="Inspector views">{[['device', 'Device', Settings2], ['simulation', 'Simulation', FlaskConical]].map(([id, label, Icon]) => <button key={id} type="button" role="tab" id={`${gridId}-${id}-tab`} aria-selected={inspectorTab === id} aria-controls={`${gridId}-${id}-panel`} tabIndex={inspectorTab === id ? 0 : -1} onKeyDown={event => { if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) { event.preventDefault(); const next = event.key === 'Home' ? 'device' : event.key === 'End' ? 'simulation' : id === 'device' ? 'simulation' : 'device'; setInspectorTab(next); document.getElementById(`${gridId}-${next}-tab`)?.focus(); } }} onClick={() => setInspectorTab(id)}><Icon size={14} />{label}{id === 'simulation' && playback.playing && <span className="nl-tab-running" />}</button>)}</div>
           <div className="nl-inspector-content">
             <div role="tabpanel" id={`${gridId}-device-panel`} aria-labelledby={`${gridId}-device-tab`} hidden={inspectorTab !== 'device'}>
-              <NetworkInspector quickGuide={<button ref={guideButtonRef} type="button" className="nl-quick-guide-button" aria-haspopup="dialog" onClick={() => { guideReturnTab.current = inspectorTab; setLessonGuide(false); setGuideOpen(true); }}><CircleHelp size={17} />Quick Guide</button>} topology={topology} wifiLinks={wifiLinks} device={selectedDevice} cable={selectedCable} readOnly={!editable(selectedDevice?.id)} canDelete={selectedCable ? cablesEditable : removable(selectedDevice?.id)} onConfigure={() => setSettingsDeviceId(selectedDevice.id)} onSimulate={() => { setSimulationSourceId(selectedDevice.id); setInspectorTab('simulation'); }} onDelete={removeSelected} onDeselect={() => setSelected(null)} />
+              <NetworkInspector stpState={spanningTree} stpVlan={visibleStpVlan} onStpVlanChange={setStpVlan} quickGuide={<button ref={guideButtonRef} type="button" className="nl-quick-guide-button" aria-haspopup="dialog" onClick={() => { guideReturnTab.current = inspectorTab; setLessonGuide(false); setGuideOpen(true); }}><CircleHelp size={17} />Quick Guide</button>} topology={topology} wifiLinks={wifiLinks} device={selectedDevice} cable={selectedCable} readOnly={!editable(selectedDevice?.id)} canDelete={selectedCable ? cablesEditable : removable(selectedDevice?.id)} onConfigure={() => setSettingsDeviceId(selectedDevice.id)} onSimulate={() => { setSimulationSourceId(selectedDevice.id); setInspectorTab('simulation'); }} onDelete={removeSelected} onDeselect={() => setSelected(null)} />
             </div>
             <div role="tabpanel" id={`${gridId}-simulation-panel`} aria-labelledby={`${gridId}-simulation-tab`} hidden={inspectorTab !== 'simulation'}>
               <NetworkTools topology={topology} sourceId={simulationSourceId} sourceEditable={editable(simulationSourceId)} onSourceChange={setSimulationSourceId} activeResult={playback.session} onReset={() => { playback.clear(); setHighlightedLinks([]); }} onResult={result => { setHighlightedLinks(result.links); setMessage(result.message); playback.start(result); }} onDHCP={(id, config) => { const device = topology.devices.find(item => item.id === id); dispatch({ type: 'configure', id, settings: { name: device.name, config } }); }} />

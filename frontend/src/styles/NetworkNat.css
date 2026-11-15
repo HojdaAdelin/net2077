@@ -24,5 +24,3 @@
 .nl-example-note p { margin: 0; font-size: 12px; line-height: 1.8; color: var(--text-secondary); }
 .nl-example-note strong { color: var(--text-primary); }
 .nl-example-actions { display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 10px; }
-.nl-nat-demo-link { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 5px; background: var(--bg-card); color: var(--text-primary); font-size: 11px; text-decoration: none; }
-.nl-nat-demo-link:hover { border-color: var(--nl-highlight); color: var(--nl-highlight); }

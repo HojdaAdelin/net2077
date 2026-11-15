@@ -4,13 +4,15 @@ import { interfaceAcl } from './networkAcl.js';
 import { buildOspfState } from './networkOspf.js';
 import { ipv4, formatIPv4, sameSubnet, maskPrefix, prefixMask, isBridgeDevice, isRoutingDevice, allDeviceInterfaces, interfaceEnabled, isSwitchport } from './networkConfig.js';
 import { vlanLayer2Domain, sviOperational } from './networkLayer2.js';
+import { getStpState } from './networkStp.js';
 export { sviOperational } from './networkLayer2.js';
+export { getStpState } from './networkStp.js';
 
 const splitKey = key => { const [deviceId, portId] = key.split('/'); return { deviceId, portId }; };
 const enabled = interfaceEnabled;
-const addressInterfaces = (device, topology, family = 4) => Object.entries(allDeviceInterfaces(device)).filter(([port, iface]) =>
+const addressInterfaces = (device, topology, family = 4, stp) => Object.entries(allDeviceInterfaces(device)).filter(([port, iface]) =>
   enabled(device, port) && !isSwitchport(device, port) &&
-  (iface.kind !== 'svi' || sviOperational(topology, device, iface.vlan)) &&
+  (iface.kind !== 'svi' || sviOperational(topology, device, iface.vlan, stp)) &&
   (family === 6 ? parseAddress(iface.ipv6)?.family === 6 : ipv4(iface.ip) !== null && maskPrefix(iface.mask) !== null));
 
 export function wirelessConnections(topology) {
@@ -24,26 +26,26 @@ export function wirelessConnections(topology) {
   return links;
 }
 
-export function layer2Domain(topology, origin) {
-  return vlanLayer2Domain(topology, origin, wirelessConnections(topology));
+export function layer2Domain(topology, origin, stp = getStpState(topology)) {
+  return vlanLayer2Domain(topology, origin, wirelessConnections(topology), stp);
 }
 
-export const getOspfState = topology => buildOspfState(topology, layer2Domain, addressInterfaces);
-function routeFor(device, destination, topology, ospf) {
+export const getOspfState = (topology, stp = getStpState(topology)) => buildOspfState(topology, (t, origin) => layer2Domain(t, origin, stp), (device, t, family) => addressInterfaces(device, t, family, stp));
+function routeFor(device, destination, topology, ospf, stp) {
   const family = parseAddress(destination).family;
   const candidates = [];
-  for (const [port, iface] of addressInterfaces(device, topology, family)) {
+  for (const [port, iface] of addressInterfaces(device, topology, family, stp)) {
     const network = family === 6 ? `${iface.ipv6}/${iface.prefix6}` : networkFor(iface.ip, maskPrefix(iface.mask));
     if (addressInNetwork(destination, network)) candidates.push({ port, iface, nextHop: destination, prefix: parseNetwork(network, false).prefix, connected: true, distance: 0 });
   }
   const routes = [...(family === 6 ? device.config.routes6 || [] : device.config.routes || []).map(r => ({ ...r, distance: 1 })), ...(family === 4 ? ospf.devices[device.id]?.routes || [] : []).map(r => ({ ...r, distance: 110 }))];
   const gateway = family === 6 ? device.config.gateway6 : device.config.gateway;
-  if (gateway) for (const [port, iface] of addressInterfaces(device, topology, family)) {
+  if (gateway) for (const [port, iface] of addressInterfaces(device, topology, family, stp)) {
     const network = family === 6 ? `${iface.ipv6}/${iface.prefix6}` : networkFor(iface.ip, maskPrefix(iface.mask));
     if (addressInNetwork(gateway, network)) routes.push({ destination: family === 6 ? '::/0' : '0.0.0.0/0', nextHop: gateway, port, distance: 1 });
   }
   for (const route of routes) {
-    const iface = addressInterfaces(device, topology, family).find(([port]) => port === route.port)?.[1];
+    const iface = addressInterfaces(device, topology, family, stp).find(([port]) => port === route.port)?.[1];
     if (!iface || !addressInNetwork(destination, route.destination)) continue;
     const network = family === 6 ? `${iface.ipv6}/${iface.prefix6}` : networkFor(iface.ip, maskPrefix(iface.mask));
     if (!addressInNetwork(route.nextHop, network)) continue;
@@ -52,12 +54,12 @@ function routeFor(device, destination, topology, ospf) {
   return candidates.sort((a, b) => b.prefix - a.prefix || a.distance - b.distance || (a.cost || 0) - (b.cost || 0))[0];
 }
 
-function deliver(topology, sourceId, destination, protocol, options, ospf, natSession) {
+function deliver(topology, sourceId, destination, protocol, options, ospf, natSession, stp) {
   const family = parseAddress(destination)?.family;
   const address = iface => family === 6 ? iface.ipv6 : iface.ip;
   const actualProtocol = protocol === 'http' ? 'tcp' : protocol === 'dns' ? 'udp' : protocol === 'icmp' && family === 6 ? 'icmpv6' : protocol;
   const packet = { ...options, family, protocol: actualProtocol, destinationIP: destination, sourceIP: options.sourceIP || '' };
-  const numbered = device => addressInterfaces(device, topology, family);
+  const numbered = device => addressInterfaces(device, topology, family, stp);
   const steps = [], links = [], trace = [];
   let current = topology.devices.find(device => device.id === sourceId);
   let incomingPort = null, originalSourceIP = packet.sourceIP;
@@ -89,7 +91,7 @@ function deliver(topology, sourceId, destination, protocol, options, ospf, natSe
     if (incomingPort && (!isRoutingDevice(current.type) || (family === 6 ? current.config.ipv6Routing === false : current.type === 'l3switch' && current.config.ipRouting === false))) return fail(`${current.name} cannot forward packets to another network. Check IPv${family} routing.`);
     if (visited.has(current.id)) return fail(`Routing loop detected at ${current.name}.`);
     visited.add(current.id);
-    const route = routeFor(current, packet.destinationIP, topology, ospf);
+    const route = routeFor(current, packet.destinationIP, topology, ospf, stp);
     if (!route) return fail(`${current.name}: no route to ${packet.destinationIP}. Check addressing, prefix, gateway, static routes and OSPF advertisements.`);
     if (!packet.sourceIP) { packet.sourceIP = address(route.iface); originalSourceIP = packet.sourceIP; }
     // Inside-to-outside source translation follows route selection and precedes
@@ -99,7 +101,8 @@ function deliver(topology, sourceId, destination, protocol, options, ospf, natSe
     if (!outgoing.allowed) return fail(`${current.name}: ${outgoing.message}`);
     steps.push(`${current.name} → ${route.port}: ${route.connected ? 'directly connected network' : `next hop ${route.nextHop}`}`);
     record(`${current.name}: ${route.connected ? 'destination is on a connected network' : `forward via ${route.nextHop}`}. Outgoing interface: ${route.port}.`);
-    const domain = layer2Domain(topology, { deviceId: current.id, portId: route.port });
+    const domain = layer2Domain(topology, { deviceId: current.id, portId: route.port }, stp);
+    if (domain.loopDetected) return fail(`${current.name}: ${domain.loopMessage}`);
     const responders = [], ownAddress = [];
     for (const [key, path] of domain) {
       const endpoint = splitKey(key);
@@ -132,13 +135,13 @@ function deliver(topology, sourceId, destination, protocol, options, ospf, natSe
 }
 
 export function testConnectivity(topology, sourceId, destination, protocol = 'icmp', options = {}) {
-  const ospf = getOspfState(topology), natSession = createNatSession();
+  const stp = getStpState(topology), ospf = getOspfState(topology, stp), natSession = createNatSession();
   const transport = ['http', 'dns', 'tcp', 'udp'].includes(protocol);
   const ports = { sourcePort: transport ? 49152 : null, destinationPort: protocol === 'http' ? 80 : protocol === 'dns' ? 53 : null, icmpId: !transport ? 49152 : null, ...options };
-  const outward = deliver(topology, sourceId, destination, protocol, ports, ospf, natSession);
+  const outward = deliver(topology, sourceId, destination, protocol, ports, ospf, natSession, stp);
   outward.trace = outward.trace.map(event => ({ ...event, phase: 'Request' }));
   if (!outward.ok) return outward;
-  const reply = deliver(topology, outward.targetId, outward.sourceIP, protocol, { sourceIP: outward.destinationIP, sourcePort: outward.destinationPort, destinationPort: outward.sourcePort, icmpId: outward.icmpId }, ospf, natSession);
+  const reply = deliver(topology, outward.targetId, outward.sourceIP, protocol, { sourceIP: outward.destinationIP, sourcePort: outward.destinationPort, destinationPort: outward.sourcePort, icmpId: outward.icmpId }, ospf, natSession, stp);
   const trace = [...outward.trace, ...reply.trace.map(event => ({ ...event, phase: 'Reply' }))];
   const natTranslations = natSession.entries.map(e => ({ ...e }));
   if (!reply.ok) return { ...reply, message: `Request reached the destination, but the reply failed: ${reply.message}`,
@@ -205,6 +208,7 @@ export function requestDHCP(topology, sourceId, port = 'eth0') {
   const fail = message => ({ ok: false, message, steps: [], links: [] });
   if (!source || isBridgeDevice(source.type) || isRoutingDevice(source.type) || !source.config.interfaces[port] || !enabled(source, port)) return fail('Choose an enabled interface on an end device.');
   const domain = layer2Domain(topology, { deviceId: sourceId, portId: port });
+  if (domain.loopDetected) return fail(domain.loopMessage);
   const servers = [];
   const occupied = new Set();
   for (const [key, path] of domain) {

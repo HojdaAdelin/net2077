@@ -1,0 +1,41 @@
+.nl-stp-settings { display: grid; gap: 15px; }
+.nl-stp-settings > .nl-config-help { margin-bottom: 0; }
+.nl-stp-section { border-top: 1px solid var(--border); padding-top: 18px; }
+.nl-stp-section h3 { font-size: 14px; margin: 0 0 8px; font-weight: 600; }
+.nl-stp-section > p { font-size: 11px; line-height: 1.8; margin-bottom: 16px; }
+.nl-stp-priority-row { display: grid; grid-template-columns: 1fr 1fr 32px; align-items: center; gap: 10px; }
+.nl-stp-port-settings { border: 1px solid var(--border); border-radius: 5px; padding: 13px; margin-top: 10px; }
+.nl-stp-port-settings > strong { display: block; font: 12px Consolas, monospace; margin-bottom: 12px; }
+.nl-stp-port-settings .nl-config-toggle { margin-bottom: 0; }
+.nl-stp-status { margin: 20px 0; padding-top: 16px; border-top: 1px solid var(--border); }
+.nl-stp-status > header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.nl-stp-status h4 { margin: 0; font-size: 12px; font-weight: 600; }
+.nl-stp-status > header > span { font: 10px Consolas, monospace; color: var(--nl-highlight); }
+.nl-stp-status p { margin: 8px 0; font-size: 11px; line-height: 1.75; color: var(--text-secondary); }
+.nl-stp-status-vlan { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 11px; margin-bottom: 12px; }
+.nl-stp-status-vlan select { width: auto; max-width: 180px; padding: 6px 9px; font-size: 11px; }
+.nl-stp-status dl { margin: 0 0 14px; }
+.nl-stp-status dl > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 10px; margin: 9px 0; font-size: 10px; }
+.nl-stp-status dt { color: var(--text-muted); }
+.nl-stp-status dd { margin: 0; text-align: right; overflow-wrap: anywhere; font: 10px Consolas, monospace; }
+.nl-stp-root-tag { display: block; margin-top: 4px; color: var(--nl-highlight); font-family: inherit; font-size: 9px; font-weight: 500; }
+.nl-stp-status-table { overflow: auto; border: 1px solid var(--border); border-radius: 4px; scrollbar-width: thin; scrollbar-color: var(--border) var(--bg-secondary); }
+.nl-stp-status table { width: 100%; border-collapse: collapse; text-align: left; font-size: 10px; }
+.nl-stp-status th { padding: 8px; color: var(--text-secondary); background: var(--bg-secondary); font-weight: 500; }
+.nl-stp-status td { padding: 9px 8px; border-top: 1px solid var(--border); white-space: nowrap; font-family: Consolas, monospace; }
+.nl-stp-status td small { display: block; margin-top: 3px; font-size: 9px; color: var(--text-muted); }
+.nl-stp-status .is-blocked td, .nl-stp-status .is-blocked small, .nl-stp-port-state.is-blocked { color: var(--warning); }
+.nl-stp-status .nl-stp-warning { color: var(--warning); }
+.nl-stp-status .nl-stp-status-note { font-size: 10px; }
+.nl-stp-port-state { margin-top: 6px; font-size: 10px; color: var(--nl-highlight); }
+.nl-stp-canvas-control { display: inline-flex; align-items: center; gap: 5px; padding-left: 7px; border-left: 1px solid var(--border); color: var(--text-muted); font-size: 9px; white-space: nowrap; }
+.nl-stp-canvas-control select { width: auto; min-height: 26px; padding: 3px 5px; border-radius: 4px; font-size: 10px; }
+.nl-cable.is-stp-blocked .nl-cable-line { stroke: #c08b35; stroke-dasharray: 7 5; opacity: .85; }
+.nl-cable.selected.is-stp-blocked .nl-cable-line { stroke-width: 4; opacity: 1; }
+.nl-stp-cable-label, .nl-stp-root-marker { pointer-events: none; }
+.nl-stp-cable-label rect { fill: var(--nl-stage); stroke: #c08b35; stroke-width: 1; }
+.nl-stp-cable-label text { fill: #dbab58; font: 9px Consolas, monospace; }
+[data-theme="light"] .nl-stp-cable-label text { fill: #8c5b0d; }
+.nl-stp-root-marker rect { fill: var(--nl-stage); stroke: var(--nl-highlight); stroke-width: 1; }
+.nl-stp-root-marker text { fill: var(--nl-highlight); font: 9px Consolas, monospace; }
+.nl-port.is-stp-blocked .nl-port-mark { fill: #c08b35; stroke: #c08b35; }
