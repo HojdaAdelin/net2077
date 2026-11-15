@@ -1,3 +1,4 @@
+import { createNatSession, natInbound, natOutbound, natProxyAddress, mergeNatTranslations } from './networkNat.js';
 import { parseAddress, sameAddress, addressInNetwork, networkFor, parseNetwork } from './networkAddressing.js';
 import { interfaceAcl } from './networkAcl.js';
 import { buildOspfState } from './networkOspf.js';
@@ -51,20 +52,24 @@ function routeFor(device, destination, topology, ospf) {
   return candidates.sort((a, b) => b.prefix - a.prefix || a.distance - b.distance || (a.cost || 0) - (b.cost || 0))[0];
 }
 
-function deliver(topology, sourceId, destination, protocol, options, ospf) {
+function deliver(topology, sourceId, destination, protocol, options, ospf, natSession) {
   const family = parseAddress(destination)?.family;
   const address = iface => family === 6 ? iface.ipv6 : iface.ip;
   const actualProtocol = protocol === 'http' ? 'tcp' : protocol === 'dns' ? 'udp' : protocol === 'icmp' && family === 6 ? 'icmpv6' : protocol;
-  const packet = { family, protocol: actualProtocol, destinationIP: destination, ...options };
+  const packet = { ...options, family, protocol: actualProtocol, destinationIP: destination, sourceIP: options.sourceIP || '' };
   const numbered = device => addressInterfaces(device, topology, family);
   const steps = [], links = [], trace = [];
   let current = topology.devices.find(device => device.id === sourceId);
-  let sourceIP = options.sourceIP || '';
-  const record = (message, extra = {}) => trace.push({ deviceId: current?.id, protocol: actualProtocol, sourcePort: packet.sourcePort, destinationPort: packet.destinationPort,
-    sourceIP: sourceIP || (current ? address(numbered(current)[0]?.[1] || {}) || '' : ''), destinationIP: destination, message, status: 'active', ...extra });
-  const fail = message => {
-    record(message, { status: 'blocked' });
-    return { ok: false, message, steps, links, trace };
+  let incomingPort = null, originalSourceIP = packet.sourceIP;
+  const record = (message, extra = {}) => trace.push({ deviceId: current?.id, protocol: actualProtocol, sourcePort: packet.sourcePort, destinationPort: packet.destinationPort, icmpId: packet.icmpId,
+    sourceIP: packet.sourceIP || (current ? address(numbered(current)[0]?.[1] || {}) || '' : ''), destinationIP: packet.destinationIP, message, status: 'active', ...extra });
+  const result = extra => ({ steps, links, trace, natTranslations: natSession.entries.map(e => ({ ...e })), ...extra });
+  const fail = message => { record(message, { status: 'blocked' }); return result({ ok: false, message }); };
+  const translated = change => {
+    if (!change) return;
+    const tuple = p => `${p.sourceIP}${p.sourcePort != null ? `:${p.sourcePort}` : ''} → ${p.destinationIP}${p.destinationPort != null ? `:${p.destinationPort}` : ''}${p.icmpId != null && actualProtocol === 'icmp' ? ` (ICMP ID ${p.icmpId})` : ''}`;
+    const message = `${current.name}: ${change.kind} ${change.direction}: ${tuple(change.before)} becomes ${tuple(change.after)}.`;
+    steps.push(message); record(message, { nat: change });
   };
   if (!current || isBridgeDevice(current.type)) return fail('Select a PC, laptop, server, or routing device as the source.');
   if (!family) return fail('Enter a valid IPv4 or IPv6 destination address.');
@@ -72,31 +77,38 @@ function deliver(topology, sourceId, destination, protocol, options, ospf) {
   const visited = new Set();
   for (let ttl = 32; ttl > 0; ttl--) {
     if (current.type === 'firewall' && current.config.firewall[actualProtocol === 'icmpv6' ? 'icmpv6' : protocol] === false) return fail(`${current.name}: ${protocol.toUpperCase()} traffic is blocked by the firewall.`);
-    const local = numbered(current).find(([, iface]) => sameAddress(address(iface), destination));
+    // Outside-to-inside destination translation precedes routing. The ingress
+    // ACL was already evaluated against the on-wire public tuple below.
+    translated(natInbound(current, incomingPort, packet, natSession));
+    const local = numbered(current).find(([, iface]) => sameAddress(address(iface), packet.destinationIP));
     if (local) {
-      record('Packet reached its destination.', { status: 'delivered', sourceIP: sourceIP || destination });
-      return { ok: true, message: 'Packet delivered.', steps, links, trace, sourceIP: sourceIP || destination, targetId: current.id, targetPort: local[0] };
+      record('Packet reached its destination.', { status: 'delivered', sourceIP: packet.sourceIP || packet.destinationIP });
+      return result({ ok: true, message: 'Packet delivered.', originalSourceIP: originalSourceIP || packet.destinationIP,
+        sourceIP: packet.sourceIP || packet.destinationIP, destinationIP: packet.destinationIP, sourcePort: packet.sourcePort, destinationPort: packet.destinationPort, icmpId: packet.icmpId, targetId: current.id, targetPort: local[0] });
     }
+    if (incomingPort && (!isRoutingDevice(current.type) || (family === 6 ? current.config.ipv6Routing === false : current.type === 'l3switch' && current.config.ipRouting === false))) return fail(`${current.name} cannot forward packets to another network. Check IPv${family} routing.`);
     if (visited.has(current.id)) return fail(`Routing loop detected at ${current.name}.`);
     visited.add(current.id);
-    const route = routeFor(current, destination, topology, ospf);
-    if (!route) return fail(`${current.name}: no route to ${destination}. Check addressing, prefix, gateway, static routes and OSPF advertisements.`);
-    if (!sourceIP) sourceIP = address(route.iface);
-    packet.sourceIP = sourceIP;
+    const route = routeFor(current, packet.destinationIP, topology, ospf);
+    if (!route) return fail(`${current.name}: no route to ${packet.destinationIP}. Check addressing, prefix, gateway, static routes and OSPF advertisements.`);
+    if (!packet.sourceIP) { packet.sourceIP = address(route.iface); originalSourceIP = packet.sourceIP; }
+    // Inside-to-outside source translation follows route selection and precedes
+    // the output ACL, which therefore sees the translated source tuple.
+    translated(natOutbound(current, incomingPort, route.port, packet, natSession));
     const outgoing = interfaceAcl(current, route.port, 'out', packet);
     if (!outgoing.allowed) return fail(`${current.name}: ${outgoing.message}`);
     steps.push(`${current.name} → ${route.port}: ${route.connected ? 'directly connected network' : `next hop ${route.nextHop}`}`);
     record(`${current.name}: ${route.connected ? 'destination is on a connected network' : `forward via ${route.nextHop}`}. Outgoing interface: ${route.port}.`);
     const domain = layer2Domain(topology, { deviceId: current.id, portId: route.port });
-    const responders = [];
-    const ownAddress = [];
+    const responders = [], ownAddress = [];
     for (const [key, path] of domain) {
       const endpoint = splitKey(key);
       const device = topology.devices.find(item => item.id === endpoint.deviceId);
       const iface = device ? allDeviceInterfaces(device)[endpoint.portId] : null;
       if (!device || isBridgeDevice(device.type) || isSwitchport(device, endpoint.portId) || !iface || !enabled(device, endpoint.portId)) continue;
       if (sameAddress(address(iface), address(route.iface))) ownAddress.push(key);
-      if (device.id !== current.id && sameAddress(address(iface), route.nextHop)) responders.push({ device, endpoint, path });
+      // Static inside-global addresses can answer proxy ARP on an outside LAN.
+      if (device.id !== current.id && (sameAddress(address(iface), route.nextHop) || family === 4 && natProxyAddress(device, endpoint.portId, route.nextHop, iface))) responders.push({ device, endpoint, path });
     }
     if (ownAddress.length > 1) return fail(`Duplicate IP address ${address(route.iface)} on the local network.`);
     if (responders.length > 1) return fail(`Duplicate IP address ${route.nextHop} on the local network.`);
@@ -111,33 +123,36 @@ function deliver(topology, sourceId, destination, protocol, options, ospf) {
     }
     const hopDevices = [...new Set(responder.path.map(edge => splitKey(edge.to).deviceId))];
     steps.push(`Local delivery: ${[current.id, ...hopDevices].map(id => topology.devices.find(device => device.id === id)?.name).join(' → ')}`);
-    current = responder.device;
-    const incoming = interfaceAcl(current, responder.endpoint.portId, 'in', packet);
+    current = responder.device; incomingPort = responder.endpoint.portId;
+    const incoming = interfaceAcl(current, incomingPort, 'in', packet);
     if (!incoming.allowed) return fail(`${current.name}: ${incoming.message}`);
-    if (numbered(current).some(([, iface]) => sameAddress(address(iface), destination))) continue;
-    if (!isRoutingDevice(current.type) || (family === 6 ? current.config.ipv6Routing === false : current.type === 'l3switch' && current.config.ipRouting === false)) return fail(`${current.name} cannot forward packets to another network. Check IPv${family} routing.`);
+
   }
   return fail('Packet TTL expired. Check for a routing loop.');
 }
 
 export function testConnectivity(topology, sourceId, destination, protocol = 'icmp', options = {}) {
-  const ospf = getOspfState(topology);
+  const ospf = getOspfState(topology), natSession = createNatSession();
   const transport = ['http', 'dns', 'tcp', 'udp'].includes(protocol);
-  const ports = { sourcePort: transport ? 49152 : null, destinationPort: protocol === 'http' ? 80 : protocol === 'dns' ? 53 : null, ...options };
-  const outward = deliver(topology, sourceId, destination, protocol, ports, ospf);
+  const ports = { sourcePort: transport ? 49152 : null, destinationPort: protocol === 'http' ? 80 : protocol === 'dns' ? 53 : null, icmpId: !transport ? 49152 : null, ...options };
+  const outward = deliver(topology, sourceId, destination, protocol, ports, ospf, natSession);
   outward.trace = outward.trace.map(event => ({ ...event, phase: 'Request' }));
   if (!outward.ok) return outward;
-  const reply = deliver(topology, outward.targetId, outward.sourceIP, protocol, { sourceIP: destination, sourcePort: ports.destinationPort, destinationPort: ports.sourcePort }, ospf);
+  const reply = deliver(topology, outward.targetId, outward.sourceIP, protocol, { sourceIP: outward.destinationIP, sourcePort: outward.destinationPort, destinationPort: outward.sourcePort, icmpId: outward.icmpId }, ospf, natSession);
   const trace = [...outward.trace, ...reply.trace.map(event => ({ ...event, phase: 'Reply' }))];
+  const natTranslations = natSession.entries.map(e => ({ ...e }));
   if (!reply.ok) return { ...reply, message: `Request reached the destination, but the reply failed: ${reply.message}`,
-    steps: [...outward.steps, 'Reply path:', ...reply.steps], links: [...outward.links, ...reply.links], trace };
+    steps: [...outward.steps, 'Reply path:', ...reply.steps], links: [...outward.links, ...reply.links], trace, natTranslations };
+  if (reply.targetId !== sourceId || !sameAddress(reply.destinationIP, outward.originalSourceIP) || !sameAddress(reply.sourceIP, destination) || (transport && (reply.destinationPort !== ports.sourcePort || reply.sourcePort !== ports.destinationPort)) || (!transport && reply.icmpId !== ports.icmpId)) {
+    return { ...outward, ok: false, message: 'The reply did not return to the original source tuple. Check NAT roles, mappings and the return route.', trace, natTranslations };
+  }
   return { ...outward, message: protocol === 'icmp' ? `Reply from ${destination}. Both request and reply paths are reachable.` : `Connection to ${destination} established.`,
-    steps: [...outward.steps, 'Reply path:', ...reply.steps], links: [...new Set([...outward.links, ...reply.links])], trace };
+    steps: [...outward.steps, 'Reply path:', ...reply.steps], links: [...new Set([...outward.links, ...reply.links])], trace, natTranslations };
 }
 
 const serviceEvent = (connection, message, status) => ({ deviceId: connection.targetId,
   protocol: connection.trace?.[0]?.protocol, phase: 'Service', sourceIP: connection.sourceIP,
-  destinationIP: connection.trace?.[0]?.destinationIP, message, status });
+  destinationIP: connection.destinationIP || connection.trace?.[0]?.destinationIP, message, status });
 
 export function resolveHostname(topology, sourceId, hostname) {
   const source = topology.devices.find(device => device.id === sourceId);
@@ -162,7 +177,7 @@ export function simulatePing(topology, sourceId, target) {
   const dns = resolveHostname(topology, sourceId, target);
   if (!dns.ok) return dns;
   const result = testConnectivity(topology, sourceId, dns.ip);
-  return { ...result, steps: [dns.message, ...dns.steps, ...result.steps], links: [...new Set([...dns.links, ...result.links])], trace: [...(dns.trace || []), ...(result.trace || [])] };
+  return { ...result, natTranslations: mergeNatTranslations(dns, result), steps: [dns.message, ...dns.steps, ...result.steps], links: [...new Set([...dns.links, ...result.links])], trace: [...(dns.trace || []), ...(result.trace || [])] };
 }
 
 export function simulateHTTP(topology, sourceId, target) {
@@ -174,13 +189,13 @@ export function simulateHTTP(topology, sourceId, target) {
   const dns = !parseAddress(host) ? resolveHostname(topology, sourceId, host) : null;
   if (dns && !dns.ok) return dns;
   const result = testConnectivity(topology, sourceId, dns ? dns.ip : host, 'http');
-  if (!result.ok) return { ...result, trace: [...(dns?.trace || []), ...(result.trace || [])] };
+  if (!result.ok) return { ...result, natTranslations: mergeNatTranslations(dns, result), trace: [...(dns?.trace || []), ...(result.trace || [])] };
   const server = topology.devices.find(device => device.id === result.targetId);
   if (server.type !== 'server' || !server.config.services.http.enabled) {
     const message = 'The destination is reachable, but HTTP service is not enabled.';
     return { ...result, ok: false, message, trace: [...(dns?.trace || []), ...result.trace, serviceEvent(result, message, 'blocked')] };
   }
-  return { ...result, message: 'HTTP 200 OK', page: { title: server.config.services.http.title, body: server.config.services.http.body },
+  return { ...result, natTranslations: mergeNatTranslations(dns, result), message: 'HTTP 200 OK', page: { title: server.config.services.http.title, body: server.config.services.http.body },
     steps: [...(dns ? [dns.message, ...dns.steps] : []), ...result.steps], links: [...new Set([...(dns?.links || []), ...result.links])],
     trace: [...(dns?.trace || []), ...result.trace, serviceEvent(result, 'HTTP 200 OK: the server returned its configured page.', 'delivered')] };
 }

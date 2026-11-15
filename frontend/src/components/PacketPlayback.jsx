@@ -56,7 +56,8 @@ export function PacketControls({ playback, topology }) {
     </div>
     <progress className="nl-packet-progress" value={index + playback.progress} max={session.trace.length} aria-label="Packet simulation progress" />
     <p role="status">{event.message}</p>
-    <details className="nl-packet-detail-disclosure"><summary>Packet details</summary><div className="nl-packet-details"><span>Device <b>{device?.name || 'Source'}</b></span><span>Source IP <b>{event.sourceIP || 'Not assigned'}</b></span><span>Destination IP <b>{event.destinationIP || '—'}</b></span></div></details>
+    <details className="nl-packet-detail-disclosure"><summary>Packet details</summary><div className="nl-packet-details"><span>Device <b>{device?.name || 'Source'}</b></span><span>Source IP <b>{event.sourceIP || 'Not assigned'}</b></span><span>Destination IP <b>{event.destinationIP || '—'}</b></span>{event.sourcePort != null && <span>Source port <b>{event.sourcePort}</b></span>}{event.destinationPort != null && <span>Destination port <b>{event.destinationPort}</b></span>}{event.protocol === 'icmp' && event.icmpId != null && <span>ICMP identifier <b>{event.icmpId}</b></span>}</div></details>
+    {event.nat && <div className="nl-nat-packet-change"><strong>{event.nat.kind} / {event.nat.direction}</strong><br />Before: {event.nat.before.sourceIP}{event.nat.before.sourcePort != null ? `:${event.nat.before.sourcePort}` : ''} &rarr; {event.nat.before.destinationIP}{event.nat.before.destinationPort != null ? `:${event.nat.before.destinationPort}` : ''}<br />After: {event.nat.after.sourceIP}{event.nat.after.sourcePort != null ? `:${event.nat.after.sourcePort}` : ''} &rarr; {event.nat.after.destinationIP}{event.nat.after.destinationPort != null ? `:${event.nat.after.destinationPort}` : ''}</div>}
     {finished && <p className={session.ok ? 'nl-packet-success' : 'nl-packet-failure'}>{session.ok ? 'Simulation complete. ' : 'Simulation stopped. '}{session.message}</p>}
   </div>;
 }

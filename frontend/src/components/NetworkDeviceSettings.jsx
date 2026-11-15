@@ -4,6 +4,7 @@ import NetworkWorkspaceGuide from './NetworkWorkspaceGuide';
 import { Settings2 } from 'lucide-react';
 import { lockModalScroll } from '../utils/modalScrollLock';
 import NetworkAdvancedSettings from './NetworkAdvancedSettings';
+import NetworkNatSettings from './NetworkNatSettings';
 import NetworkVlanSettings from './NetworkVlanSettings';
 import { DEVICE_TYPES } from '../utils/networkTopology';
 import { isBridgeDevice, isRoutingDevice, hasWireless, validateDeviceSettings, normalizeAdvancedConfig, normalizeVlanSettings, isSwitchDevice, isSwitchport, allDeviceInterfaces, switchPort } from '../utils/networkConfig';
@@ -56,6 +57,7 @@ export default function NetworkDeviceSettings({ device, onApply, onClose, lesson
           {device.type === 'l3switch' && <button type="button" aria-pressed={tab === 'svis'} onClick={() => setTab('svis')}>VLAN interfaces</button>}
           {routing && <button type="button" aria-pressed={tab === 'routes'} onClick={() => setTab('routes')}>Static routes</button>}
           {(!bridge) && ['ipv6', ...(routing ? ['acl', 'ospf'] : [])].map(section => <button key={section} type="button" aria-pressed={tab === section} onClick={() => setTab(section)}>{section === 'ipv6' ? 'IPv6' : section.toUpperCase()}</button>)}
+          {routing && <button type="button" aria-pressed={tab === 'nat'} onClick={() => setTab('nat')}>NAT / PAT</button>}
           {hasWireless(device.type) && <button type="button" aria-pressed={tab === 'wifi'} onClick={() => setTab('wifi')}>Wi-Fi</button>}
           {device.type === 'server' && <button type="button" aria-pressed={tab === 'services'} onClick={() => setTab('services')}>Services</button>}
           {device.type === 'firewall' && <button type="button" aria-pressed={tab === 'policy'} onClick={() => setTab('policy')}>Traffic policy</button>}
@@ -77,6 +79,7 @@ export default function NetworkDeviceSettings({ device, onApply, onClose, lesson
           </>}
           {['switching', 'subinterfaces', 'svis'].includes(tab) && <NetworkVlanSettings device={device} config={config} setConfig={setConfig} section={tab} />}
           {['ipv6', 'acl', 'ospf'].includes(tab) && <NetworkAdvancedSettings device={device} config={config} setConfig={setConfig} section={tab} />}
+          {tab === 'nat' && <NetworkNatSettings device={device} config={config} setConfig={setConfig} />}
           {tab === 'routes' && <>
             <p className="nl-config-help">Connected networks are learned from interface addresses. Add a route for each remote network, or use 0.0.0.0/0 for a default route. Remember the return route.</p>
             {config.routes.map((route, index) => <div className="nl-route-row" key={index}>

@@ -2,6 +2,7 @@ import { parseAddress, sameAddress, validUnicast6, validPrefix6, parseNetwork, n
 import { DEVICE_TYPES, emptyTopology, connectionError } from './networkTopology.js';
 import { defaultDeviceConfig, validateDeviceSettings, ipv4, maskPrefix, allDeviceInterfaces, validInterfaceName, validVlanId, parseVlanList, switchPort, isSwitchDevice, interfaceProtocolFields } from './networkConfig.js';
 import { getOspfState, testConnectivity, simulatePing, simulateHTTP, resolveHostname, requestDHCP } from './networkSimulation.js';
+import { natRole } from './networkNat.js';
 
 const fail = message => { throw Object.assign(new Error(message), { status: 400 }); };
 const object = value => value && typeof value === 'object' && !Array.isArray(value);
@@ -18,7 +19,7 @@ function deviceConfig(type, input = {}) {
     result.interfaces[port] = { enabled: boolean(data.enabled, true), ip: data.ip ?? '', mask: data.mask ?? '255.255.255.0', ...interfaceProtocolFields(data) };
   }
   for (const key of ['gateway', 'dns']) result[key] = input[key] ?? result[key];
-  for (const key of ['vlans', 'switchports', 'subinterfaces', 'svis', 'ipRouting', 'gateway6', 'routes6', 'ipv6Routing', 'acls', 'ospf']) {
+  for (const key of ['vlans', 'switchports', 'subinterfaces', 'svis', 'ipRouting', 'gateway6', 'routes6', 'ipv6Routing', 'acls', 'ospf', 'nat']) {
     if (input[key] !== undefined) result[key] = structuredClone(input[key]);
   }
   result.routes = (input.routes ?? []).map(route => ({ destination: route.destination, nextHop: route.nextHop, port: route.port }));
@@ -136,6 +137,19 @@ export function normalizeProblem(input) {
       }
       if (['tcp', 'udp'].includes(goal.protocol) && result.destinationPort === undefined) fail('Set the destination port.');
       if (goal.targetDevice) { device(goal.targetDevice); result.targetDevice = goal.targetDevice; }
+    } else if (['natRole', 'natStatic', 'natOverload'].includes(goal.type)) {
+      const target = device(goal.device); result.device = goal.device;
+      if (!['router', 'l3switch', 'cloud', 'firewall'].includes(target.type)) fail('NAT objectives require a routing device.');
+      if (goal.type === 'natRole') {
+        result.port = getPort(goal.device, goal.port);
+        if (!['inside', 'outside'].includes(goal.role)) fail('NAT role must be inside or outside.');
+        result.role = goal.role;
+      } else if (goal.type === 'natStatic') {
+        result.local = address(goal.local); result.global = address(goal.global);
+      } else {
+        if (parseNetwork(goal.sourcePrefix)?.family !== 4) fail('PAT objective requires an aligned IPv4 source prefix.');
+        result.sourcePrefix = goal.sourcePrefix; result.port = getPort(goal.device, goal.port);
+      }
     } else if (goal.type === 'gateway6') {
       device(goal.device); result.device = goal.device;
       if (!validUnicast6(goal.value)) fail('Invalid IPv6 gateway objective.'); result.value = goal.value;
@@ -236,6 +250,9 @@ export function evaluateObjectives(problem, topology) {
       passed = Boolean(routes?.some(r => networkFor(r.destination.split('/')[0], parseNetwork(r.destination).prefix) === goal.destination && (!goal.nextHop || sameAddress(r.nextHop, goal.nextHop)) && (!goal.port || r.port === goal.port)));
     } else if (goal.type === 'aclBinding') passed = allDeviceInterfaces(device)[goal.port]?.[`${goal.family === 6 ? 'acl6' : 'acl'}${goal.direction === 'in' ? 'In' : 'Out'}`] === goal.name;
 
+    else if (goal.type === 'natRole') passed = natRole(device, goal.port) === goal.role;
+    else if (goal.type === 'natStatic') passed = Boolean(device?.config.nat?.enabled && device.config.nat.staticMappings.some(m => sameAddress(m.local, goal.local) && sameAddress(m.global, goal.global)));
+    else if (goal.type === 'natOverload') passed = Boolean(device?.config.nat?.enabled && device.config.nat.overload.some(r => r.source === goal.sourcePrefix && r.outside === goal.port));
     else if (goal.type === 'dhcp') {
       const result = requestDHCP(topology, goal.device, goal.port);
       const iface = device?.config.interfaces[goal.port];

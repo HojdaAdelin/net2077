@@ -2,6 +2,9 @@ const Field = ({ label, children }) => <label className="npa-field"><span>{label
 export default function NetworkAdvancedObjectiveFields({ goal, devices, patch, optional }) {
   const input = (key, label, numeric = false, required = false) => <Field label={label}><input type={numeric ? 'number' : 'text'} value={goal[key] ?? ''} onChange={e => (required ? patch({ [key]: numeric ? Number(e.target.value) : e.target.value }) : optional(key, e.target.value === '' ? '' : numeric ? Number(e.target.value) : e.target.value))} /></Field>;
   return <>
+    {goal.type === 'natRole' && <>{input('port', 'NAT interface', false, true)}<Field label="Expected NAT role"><select value={goal.role} onChange={e => patch({ role: e.target.value })}><option value="inside">Inside</option><option value="outside">Outside</option></select></Field></>}
+    {goal.type === 'natStatic' && <div className="npa-form-grid">{input('local', 'Inside local IPv4', false, true)}{input('global', 'Inside global IPv4', false, true)}</div>}
+    {goal.type === 'natOverload' && <div className="npa-form-grid">{input('sourcePrefix', 'Inside source prefix', false, true)}{input('port', 'Outside interface', false, true)}</div>}
     {goal.type === 'interface' && <div className="npa-form-grid">{input('ipv6', 'IPv6 address (optional)')}{input('prefix6', 'IPv6 prefix length (optional)', true)}</div>}
     {goal.type === 'gateway6' && input('value', 'Expected IPv6 gateway', false, true)}
     {goal.type === 'ipv6Routing' && <label className="npa-checkbox"><input type="checkbox" checked={goal.enabled} onChange={e => patch({ enabled: e.target.checked })} />IPv6 forwarding enabled</label>}

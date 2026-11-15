@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Play, CheckCircle2, CircleAlert, Radio, Globe, Search, Network } from 'lucide-react';
+import NetworkNatTranslations from './NetworkNatTranslations';
+import '../styles/NetworkNat.css';
 import { isBridgeDevice, isRoutingDevice } from '../utils/networkConfig';
 import { testConnectivity, simulatePing, resolveHostname, simulateHTTP, requestDHCP } from '../utils/networkSimulation';
 
@@ -45,6 +47,7 @@ export default function NetworkTools({ topology, sourceId, sourceEditable = true
         {mode === 'traffic' && <div className="nl-config-grid"><label className="nl-config-field"><span>Protocol</span><select value={transport} onChange={e => { setTransport(e.target.value); reset(); }}><option value="tcp">TCP</option><option value="udp">UDP</option></select></label><label className="nl-config-field"><span>Destination port</span><input required type="number" min="0" max="65535" value={destinationPort} onChange={e => { setDestinationPort(Number(e.target.value)); reset(); }} /></label></div>}
         <button type="submit" className="nl-primary-button" disabled={!source || mode === 'dhcp' && (isRoutingDevice(source.type) || !sourceEditable)}><Play size={13} />Run {TOOLS.find(item => item.id === mode).label} simulation</button>
       </form>
+      <NetworkNatTranslations result={activeResult} />
       {mode === 'dhcp' && source && isRoutingDevice(source.type) && <p className="nl-config-help">Use a PC, laptop, or server as a DHCP client.</p>}
       {mode === 'dhcp' && source && !sourceEditable && <p className="nl-config-help">This device has a preset configuration. Choose an editable client.</p>}
       {!sources.length && <p className="nl-tool-empty">Add a PC, laptop, server or router to start a simulation.</p>}

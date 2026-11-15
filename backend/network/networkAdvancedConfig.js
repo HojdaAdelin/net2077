@@ -1,6 +1,7 @@
 import { allDeviceInterfaces, isSwitchport } from './networkVlans.js';
 import { parseAddress, parseNetwork, validPrefix6, validUnicast6, formatIPv6, addressInNetwork, sameAddress } from './networkAddressing.js';
 import { normalizeAcl } from './networkAcl.js';
+import { normalizeNat } from './networkNat.js';
 
 const fail = message => { throw Object.assign(new Error(message), { status: 400 }); };
 export function canonicalArea(value) {
@@ -71,5 +72,5 @@ export function normalizeAdvancedConfig(type, config) {
     return { port: item.port, passive: item.passive ?? false, cost };
   });
   config.ospf = { enabled: ospf.enabled ?? false, routerId, area: canonicalArea(ospf.area ?? '0'), interfaces };
-  return config;
+  return normalizeNat(type, config);
 }

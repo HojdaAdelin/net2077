@@ -1,5 +1,5 @@
-import { useContext, useEffect, useId, useReducer, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useContext, useEffect, useId, useMemo, useReducer, useRef, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { MousePointer2, Cable, Plus, Minus, Scan, ArrowUpRight, Settings2, FlaskConical, CircleHelp, Undo2, Redo2, TableProperties } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import NetworkDeviceArtwork from '../components/NetworkDeviceArtwork';
@@ -8,6 +8,7 @@ import NetworkTools from '../components/NetworkTools';
 import NetworkInspector from '../components/NetworkInspector';
 import NetworkAddressTable from '../components/NetworkAddressTable';
 import NetworkWorkspaceGuide from '../components/NetworkWorkspaceGuide';
+import { createNatExample } from '../../../backend/network/networkNatExample';
 import { settingsLessonGuide } from '../utils/networkCourseGuide';
 import { createNetworkHistory, networkHistoryReducer } from '../utils/networkHistory';
 import { usePacketPlayback, PacketControls, PacketMarker } from '../components/PacketPlayback';
@@ -22,7 +23,7 @@ const DEVICE_GROUPS = [
   { label: 'Services', types: ['server'] },
 ];
 
-export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, embedded = false, courseLesson, guideRequest = 0, onGuideComplete }) {
+export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, embedded = false, courseLesson, guideRequest = 0, onGuideComplete, demo = false }) {
   const [history, updateHistory] = useReducer(networkHistoryReducer, initialTopology,
     value => createNetworkHistory(value ? structuredClone(value) : emptyTopology()));
   const topology = history.present;
@@ -255,8 +256,9 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
           </svg>
           <h1>Network Lab</h1>
         </div>
-        <Link className="nl-practice-link" to="/network-lab/problems">Practice problems <ArrowUpRight size={15} /></Link>
+        <div className="nl-example-actions"><Link className="nl-practice-link" to="/network-lab/problems">Practice problems <ArrowUpRight size={15} /></Link><Link className="nl-nat-demo-link" target="_blank" rel="noopener noreferrer" to={demo ? '/network-lab' : '/network-lab?example=nat-pat'}>{demo ? 'Empty sandbox' : 'Try NAT / PAT demo'}<ArrowUpRight size={14} /></Link></div>
       </div>}
+      {demo && <div className="nl-example-note"><p><strong>NAT / PAT demo.</strong> Select Inside PC &rarr; Simulate &rarr; Ping or HTTP to <strong>198.51.100.10</strong> to see PAT. Select Outside web server &rarr; HTTP to <strong>203.0.113.50</strong> to test static NAT. Edit NAT edge &rarr; NAT / PAT to experiment. This is a simulated network, not a real Internet connection.</p></div>}
       <div className="nl-workspace">
         <aside ref={libraryRef} className="nl-sidebar">
           <div className="nl-sidebar-heading"><h2>{devicesEditable ? 'Device library' : 'Lab devices'}</h2><span>{topology.devices.length} devices</span></div>
@@ -361,5 +363,8 @@ export function NetworkWorkspace({ initialTopology, problem, onTopologyChange, e
 
 export default function NetworkLab() {
   const { user } = useContext(AuthContext);
-  return <NetworkWorkspace key={user?.id || 'guest'} />;
+  const [params] = useSearchParams();
+  const demo = params.get('example') === 'nat-pat';
+  const topology = useMemo(() => demo ? createNatExample() : undefined, [demo]);
+  return <NetworkWorkspace key={`${user?.id || 'guest'}-${demo ? 'nat' : 'empty'}`} initialTopology={topology} demo={demo} />;
 }
