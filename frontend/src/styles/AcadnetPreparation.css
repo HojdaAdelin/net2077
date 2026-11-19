@@ -101,3 +101,145 @@
 .acad-route-links .acad-route-primary { padding:11px 14px; gap:14px; border:1px solid var(--accent-primary); border-radius:6px; background:var(--accent-primary); color:var(--bg-primary); font-size:12px; font-weight:600; transition:opacity .2s; }
 .acad-route-links .acad-route-primary:hover { opacity:.85; }
 .acad-route-links .acad-route-primary:focus-visible { outline-offset:4px; }
+
+[data-theme="light"] .hero-root .h-section {
+  border-bottom-color: rgba(109, 40, 217, 0.14);
+}
+[data-theme="light"] .hero-root .acad-routes {
+  border-color: rgba(109, 40, 217, 0.14);
+}
+
+[data-theme="light"] .hero-root .acad-route + .acad-route {
+  border-left-color: rgba(109, 40, 217, 0.14);
+}
+
+[data-theme="light"] .hero-root .acad-route-heading > span {
+  color: #8b7aad;
+}
+
+[data-theme="light"] .hero-root .acad-route-heading h3 {
+  color: #1a0a3d;
+}
+
+[data-theme="light"] .hero-root .acad-shell-path {
+  color: #8b7aad;
+}
+
+[data-theme="light"] .hero-root .acad-shell-command {
+  color: #1a0a3d;
+}
+
+[data-theme="light"] .hero-root .acad-shell-command > span {
+  color: #6d28d9;
+}
+
+[data-theme="light"] .hero-root .acad-shell-command i {
+  background: #6d28d9;
+  opacity: 0.7;
+}
+
+[data-theme="light"] .hero-root .acad-shell-output {
+  color: #4b3f72;
+}
+
+[data-theme="light"] .hero-root .acad-shell-output > span {
+  color: #8b7aad;
+}
+
+[data-theme="light"] .hero-root .acad-net-wire {
+  stroke: rgba(109, 40, 217, 0.22);
+}
+
+[data-theme="light"] .hero-root .acad-net-flow {
+  stroke: #6d28d9;
+}
+
+[data-theme="light"] .hero-root .acad-net-node {
+  fill: #f4f2fb;
+  stroke: #6d28d9;
+}
+
+[data-theme="light"] .hero-root .acad-net-hub {
+  fill: #f4f2fb;
+  stroke: #1a0a3d;
+}
+
+[data-theme="light"] .hero-root .acad-net-hub-mark {
+  stroke: #4b3f72;
+}
+
+[data-theme="light"] .hero-root .acad-network text {
+  fill: #8b7aad;
+}
+
+[data-theme="light"] .hero-root .acad-code code {
+  color: #4b3f72;
+}
+
+[data-theme="light"] .hero-root .acad-code > div > span {
+  color: #8b7aad;
+}
+
+[data-theme="light"] .hero-root .acad-code .acad-code-removed code {
+  color: #8b7aad;
+}
+
+[data-theme="light"] .hero-root .acad-code .acad-code-fixed code {
+  color: #1a0a3d;
+  background: rgba(109, 40, 217, 0.08);
+}
+
+[data-theme="light"] .hero-root .acad-route-topics {
+  color: #4b3f72;
+}
+
+[data-theme="light"] .hero-root .acad-route-links a {
+  color: #1a0a3d;
+}
+
+[data-theme="light"] .hero-root .acad-papers-heading h3 {
+  color: #1a0a3d;
+}
+
+[data-theme="light"] .hero-root .acad-papers-heading h3 > span {
+  color: #8b7aad;
+}
+
+[data-theme="light"] .hero-root .acad-papers-heading > a {
+  background: #6d28d9;
+  border-color: #6d28d9;
+  color: #ffffff;
+}
+
+[data-theme="light"] .hero-root .acad-paper {
+  border-bottom-color: rgba(109, 40, 217, 0.14);
+  color: #1a0a3d;
+}
+
+[data-theme="light"] .hero-root .acad-paper-year {
+  color: #8b7aad;
+}
+
+[data-theme="light"] .hero-root .acad-paper-body small {
+  color: #8b7aad;
+}
+
+[data-theme="light"] .hero-root .acad-paper > svg {
+  color: #8b7aad;
+}
+
+[data-theme="light"] .hero-root .acad-paper:hover > svg,
+[data-theme="light"] .hero-root .acad-paper:hover .acad-paper-year {
+  color: #6d28d9;
+}
+
+[data-theme="light"] .hero-root .acad-route-links .acad-route-primary {
+  background: #6d28d9;
+  border-color: #6d28d9;
+  color: #ffffff;
+}
+
+[data-theme="light"] .hero-root .acad-route-links .acad-route-primary:hover {
+  background: #5b21b6;
+  border-color: #5b21b6;
+}

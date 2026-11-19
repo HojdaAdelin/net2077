@@ -1,0 +1,43 @@
+/* LightVeil — full-page ambient background for the homepage in light mode.
+   Rendered via portal into document.body, z-index 0, pointer-events none. */
+
+.lightveil-root {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  animation: lightveil-appear 1.4s ease 0.1s forwards;
+}
+
+/* Fade the whole veil in after mount so the page doesn't flash */
+@keyframes lightveil-appear {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* The ASCII canvas fills the entire fixed layer */
+.lightveil-root .gradient-ascii-container,
+.lightveil-root .gradient-ascii-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* White overlay that keeps page content legible over the effect.
+   Tune this opacity to dial how much of the ASCII bleeds through. */
+.lightveil-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(248, 246, 255, 0.72);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lightveil-root {
+    animation: none;
+    opacity: 1;
+  }
+}

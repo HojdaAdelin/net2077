@@ -11,6 +11,8 @@ import {
 import AcadnetPreparation from './AcadnetPreparation';
 import AccountBenefits from './AccountBenefits';
 import DarkVeil from './DarkVeil';
+import DarkASCII from './DarkASCII';
+import LightVeil from './LightVeil';
 import FeaturesSection from './FeaturesSection';
 import '../styles/Hero.css';
 
@@ -86,6 +88,8 @@ export default function Hero() {
   const [linuxOverviewOpen] = useState(false);
   const [isDark, setIsDark] = useState(() => document.documentElement.getAttribute('data-theme') !== 'light');
   const [darkVeilFailed, setDarkVeilFailed] = useState(false);
+  // 'shader' = DarkVeil (original WebGL shader), 'ascii' = DarkASCII (GradientASCII purple)
+  const [darkBgMode, setDarkBgMode] = useState('ascii');
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -106,24 +110,31 @@ export default function Hero() {
   return (
     <div className="hero-root">
 
-      {isDark && createPortal(
-        <div className="h-darkveil-bg">
-          {!darkVeilFailed ? (
-            <DarkVeil
-              hueShift={0}
-              noiseIntensity={0}
-              scanlineIntensity={0}
-              speed={0.5}
-              scanlineFrequency={0}
-              warpAmount={0}
-              onError={() => setDarkVeilFailed(true)}
-            />
-          ) : (
-            <div className="h-darkveil-fallback" />
-          )}
-        </div>,
-        document.body
-      )}
+      {isDark
+        ? createPortal(
+            darkBgMode === 'ascii'
+              ? <DarkASCII />
+              : (
+                <div className="h-darkveil-bg">
+                  {!darkVeilFailed ? (
+                    <DarkVeil
+                      hueShift={0}
+                      noiseIntensity={0}
+                      scanlineIntensity={0}
+                      speed={0.5}
+                      scanlineFrequency={0}
+                      warpAmount={0}
+                      onError={() => setDarkVeilFailed(true)}
+                    />
+                  ) : (
+                    <div className="h-darkveil-fallback" />
+                  )}
+                </div>
+              ),
+            document.body
+          )
+        : createPortal(<LightVeil />, document.body)
+      }
 
       <section className="h-hero">
         <div className="h-container">

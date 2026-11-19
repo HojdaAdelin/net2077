@@ -1,0 +1,42 @@
+/* DarkASCII — full-page ambient background for dark theme on the homepage.
+   Rendered via portal into document.body, z-index 0, pointer-events none.
+   Sits alongside DarkVeil; Hero.jsx toggles between them via a switch. */
+
+.darkascii-root {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  animation: darkascii-appear 1.4s ease 0.1s forwards;
+}
+
+@keyframes darkascii-appear {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.darkascii-root .gradient-ascii-container,
+.darkascii-root .gradient-ascii-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Scrim keeps page content readable over the ASCII effect.
+   Less opaque than LightVeil because dark backgrounds naturally recede. */
+.darkascii-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 8, 14, 0.62);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .darkascii-root {
+    animation: none;
+    opacity: 1;
+  }
+}

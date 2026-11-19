@@ -1744,3 +1744,578 @@ AcadNet Section ── */
     left: 70px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIGHT THEME — Homepage-only palette overrides
+   Scoped to [data-theme="light"] .hero-root so they never touch dark mode
+   or any other page. All tokens below are prefixed --h-lt- to avoid
+   collision with global CSS variables.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="light"] .hero-root {
+  /* Local colour tokens — richer, more saturated than the global light palette */
+  --h-lt-bg:            #f4f2fb;         /* very faint violet tint on base */
+  --h-lt-bg-alt:        #ede9f9;         /* section alt — perceptible but soft */
+  --h-lt-bg-card:       #ffffff;         /* cards pop against tinted bg */
+  --h-lt-border:        rgba(109, 40, 217, 0.14);  /* violet-tinted borders */
+  --h-lt-border-light:  rgba(109, 40, 217, 0.08);
+  --h-lt-text:          #1a1333;         /* deep indigo-black — high contrast */
+  --h-lt-text-sec:      #4b3f72;         /* mid-tone violet prose */
+  --h-lt-text-muted:    #8b7aad;         /* muted violet for labels */
+  --h-lt-accent:        #6d28d9;         /* primary violet accent */
+  --h-lt-accent-hover:  #5b21b6;
+  --h-lt-shadow:        rgba(109, 40, 217, 0.10);
+  --h-lt-shadow-hover:  rgba(109, 40, 217, 0.18);
+}
+
+/* ── Base surface ── */
+[data-theme="light"] .hero-root {
+  background: var(--h-lt-bg);
+}
+
+/* ── Hero section ── */
+[data-theme="light"] .h-hero {
+  border-bottom-color: var(--h-lt-border);
+}
+
+[data-theme="light"] .h-title {
+  color: var(--h-lt-text);
+}
+
+[data-theme="light"] .h-sub {
+  color: var(--h-lt-text-sec);
+}
+
+[data-theme="light"] .h-cursor {
+  color: var(--h-lt-accent);
+}
+
+[data-theme="light"] .h-badge {
+  color: var(--h-lt-text-muted);
+  border-color: var(--h-lt-border);
+  background: rgba(109, 40, 217, 0.05);
+}
+
+/* CTA buttons */
+[data-theme="light"] .h-btn-primary {
+  background: var(--h-lt-text);
+  color: #ffffff;
+}
+
+[data-theme="light"] .h-btn-start-learning {
+  background: var(--h-lt-bg-card);
+  color: var(--h-lt-text);
+  border-color: var(--h-lt-border);
+}
+
+[data-theme="light"] .h-btn-start-learning:hover {
+  background: var(--h-lt-bg-alt);
+  border-color: rgba(109, 40, 217, 0.28);
+}
+
+[data-theme="light"] .h-btn-secondary {
+  color: var(--h-lt-text);
+  border-color: var(--h-lt-border);
+}
+
+[data-theme="light"] .h-btn-secondary:hover {
+  background: var(--h-lt-bg-alt);
+  border-color: rgba(109, 40, 217, 0.28);
+}
+
+/* ── Stats stripe ── */
+[data-theme="light"] .h-stats-stripe {
+  background: var(--h-lt-bg-alt);
+  border-top-color: var(--h-lt-border);
+  border-bottom-color: var(--h-lt-border);
+}
+
+[data-theme="light"] .h-stripe-num {
+  color: var(--h-lt-text);
+}
+
+[data-theme="light"] .h-stripe-label {
+  color: var(--h-lt-text-muted);
+}
+
+[data-theme="light"] .h-stripe-divider {
+  background: var(--h-lt-border);
+}
+
+/* ── Generic sections ── */
+[data-theme="light"] .h-section {
+  border-bottom-color: var(--h-lt-border);
+}
+
+[data-theme="light"] .h-section-alt {
+  background: var(--h-lt-bg-alt);
+}
+
+[data-theme="light"] .h-section-title {
+  color: var(--h-lt-text);
+}
+
+[data-theme="light"] .h-section-sub {
+  color: var(--h-lt-text-sec);
+}
+
+[data-theme="light"] .h-view-all {
+  color: var(--h-lt-text-muted);
+}
+
+[data-theme="light"] .h-view-all:hover {
+  color: var(--h-lt-text);
+}
+
+/* ── Track cards ── */
+[data-theme="light"] .h-track-card {
+  background: var(--h-lt-bg-card);
+  border-color: var(--h-lt-border);
+  box-shadow: 0 2px 10px var(--h-lt-shadow);
+}
+
+[data-theme="light"] .h-track-card:hover {
+  border-color: rgba(109, 40, 217, 0.30);
+  box-shadow: 0 6px 24px var(--h-lt-shadow-hover);
+}
+
+[data-theme="light"] .h-track-circle {
+  background: var(--h-lt-bg-alt);
+  border-color: var(--h-lt-border);
+  color: var(--h-lt-accent);
+}
+
+[data-theme="light"] .h-track-card:hover .h-track-circle {
+  background: rgba(109, 40, 217, 0.08);
+}
+
+[data-theme="light"] .h-track-title {
+  color: var(--h-lt-text);
+}
+
+[data-theme="light"] .h-track-desc {
+  color: var(--h-lt-text-sec);
+}
+
+[data-theme="light"] .h-tag {
+  background: rgba(109, 40, 217, 0.06);
+  border-color: var(--h-lt-border);
+  color: var(--h-lt-text-muted);
+}
+
+[data-theme="light"] .h-track-actions {
+  border-top-color: var(--h-lt-border);
+}
+
+[data-theme="light"] .h-track-get-started {
+  background: var(--h-lt-accent);
+  color: #ffffff;
+}
+
+[data-theme="light"] .h-track-get-started:hover {
+  background: var(--h-lt-accent-hover);
+}
+
+[data-theme="light"] .h-track-primary {
+  color: var(--h-lt-accent);
+}
+
+[data-theme="light"] .h-track-secondary {
+  color: var(--h-lt-text-muted);
+}
+
+/* ── Linux overview panel ── */
+[data-theme="light"] .h-linux-overview-inner {
+  background: var(--h-lt-bg-card);
+  border-color: var(--h-lt-border);
+}
+
+[data-theme="light"] .h-linux-overview-title {
+  color: var(--h-lt-text);
+}
+
+[data-theme="light"] .h-linux-overview-sub {
+  color: var(--h-lt-text-sec);
+}
+
+[data-theme="light"] .h-linux-meta-pill {
+  background: var(--h-lt-bg-alt);
+  border-color: var(--h-lt-border);
+  color: var(--h-lt-text-muted);
+}
+
+[data-theme="light"] .h-linux-chapter-item {
+  background: var(--h-lt-bg-alt);
+  border-color: var(--h-lt-border);
+}
+
+[data-theme="light"] .h-linux-chapter-item:hover {
+  background: rgba(109, 40, 217, 0.07);
+  border-color: rgba(109, 40, 217, 0.22);
+}
+
+[data-theme="light"] .h-linux-chapter-icon {
+  color: var(--h-lt-accent);
+}
+
+[data-theme="light"] .h-linux-chapter-name {
+  color: var(--h-lt-text);
+}
+
+[data-theme="light"] .h-linux-chapter-num,
+[data-theme="light"] .h-linux-chapter-count {
+  color: var(--h-lt-text-muted);
+}
+
+[data-theme="light"] .h-linux-overview-footer {
+  border-top-color: var(--h-lt-border);
+}
+
+[data-theme="light"] .h-linux-start-btn {
+  background: var(--h-lt-accent);
+  color: #ffffff;
+}
+
+/* ── Exam cards ── */
+[data-theme="light"] .h-exam-card {
+  background: var(--h-lt-bg-card);
+  border-color: var(--h-lt-border);
+  box-shadow: 0 1px 6px var(--h-lt-shadow);
+}
+
+[data-theme="light"] .h-exam-card:hover {
+  background: var(--h-lt-bg-alt);
+  border-color: rgba(109, 40, 217, 0.28);
+}
+
+[data-theme="light"] .h-exam-title {
+  color: var(--h-lt-text);
+}
+
+[data-theme="light"] .h-exam-meta,
+[data-theme="light"] .h-exam-info,
+[data-theme="light"] .h-exam-arrow {
+  color: var(--h-lt-text-muted);
+}
+
+/* ── Compare table ── */
+[data-theme="light"] .h-compare-table {
+  background: var(--h-lt-bg-card);
+  border-color: var(--h-lt-border);
+}
+
+[data-theme="light"] .h-compare-th {
+  color: var(--h-lt-text-muted);
+  border-bottom-color: var(--h-lt-border);
+  background: var(--h-lt-bg-alt);
+}
+
+[data-theme="light"] .h-compare-th-account {
+  background: rgba(109, 40, 217, 0.07);
+  color: var(--h-lt-accent);
+  border-left-color: rgba(109, 40, 217, 0.22);
+}
+
+[data-theme="light"] .h-compare-row-even td {
+  background: var(--h-lt-bg-alt);
+}
+
+[data-theme="light"] .h-compare-td {
+  color: var(--h-lt-text-sec);
+  border-bottom-color: var(--h-lt-border);
+}
+
+[data-theme="light"] .h-compare-td-account::after {
+  background: rgba(109, 40, 217, 0.03);
+}
+
+[data-theme="light"] .h-compare-td-account {
+  border-left-color: rgba(109, 40, 217, 0.15);
+}
+
+[data-theme="light"] .h-compare-account-label {
+  color: var(--h-lt-accent);
+}
+
+[data-theme="light"] .h-compare-login-hint {
+  color: var(--h-lt-text-muted);
+}
+
+[data-theme="light"] .h-compare-login-link {
+  color: var(--h-lt-accent);
+}
+
+[data-theme="light"] .h-register-btn {
+  background: var(--h-lt-accent);
+  color: #ffffff;
+}
+
+/* ── AcadNet section ── */
+[data-theme="light"] .h-acadnet-section::before {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--h-lt-accent) 30%,
+    #ec4899 50%,
+    var(--h-lt-accent) 70%,
+    transparent 100%);
+  opacity: 0.45;
+}
+
+[data-theme="light"] .h-acadnet-subtitle-highlight {
+  background: linear-gradient(135deg, var(--h-lt-accent), #7c3aed, #ec4899);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .h-acadnet-exam-card {
+  background: var(--h-lt-bg-card);
+  border-color: var(--h-lt-border);
+  box-shadow: 0 1px 6px var(--h-lt-shadow);
+}
+
+[data-theme="light"] .h-acadnet-exam-card:hover {
+  border-color: rgba(109, 40, 217, 0.30);
+  box-shadow: 0 4px 18px var(--h-lt-shadow-hover);
+}
+
+[data-theme="light"] .h-acadnet-exam-meta {
+  color: var(--h-lt-accent);
+}
+
+[data-theme="light"] .h-acadnet-exam-title {
+  color: var(--h-lt-text);
+}
+
+[data-theme="light"] .h-acadnet-exam-info {
+  color: var(--h-lt-text-muted);
+}
+
+[data-theme="light"] .h-acadnet-exam-arrow {
+  color: var(--h-lt-text-muted);
+}
+
+[data-theme="light"] .h-acadnet-exam-card:hover .h-acadnet-exam-arrow {
+  color: var(--h-lt-accent);
+}
+
+[data-theme="light"] .h-acadnet-domain-card {
+  background: var(--h-lt-bg-card);
+  border-color: var(--h-lt-border);
+  box-shadow: 0 1px 6px var(--h-lt-shadow);
+}
+
+[data-theme="light"] .h-acadnet-domain-card:hover {
+  border-color: rgba(109, 40, 217, 0.26);
+  box-shadow: 0 4px 20px var(--h-lt-shadow-hover);
+}
+
+[data-theme="light"] .h-acadnet-domain-title {
+  color: var(--h-lt-text);
+}
+
+[data-theme="light"] .h-acadnet-domain-subtitle {
+  color: var(--h-lt-text-muted);
+}
+
+[data-theme="light"] .h-acadnet-expand-icon {
+  color: var(--h-lt-text-muted);
+}
+
+[data-theme="light"] .h-acadnet-domain-card.expanded .h-acadnet-expand-icon {
+  color: var(--h-lt-accent);
+}
+
+[data-theme="light"] .h-acadnet-step {
+  background: var(--h-lt-bg-alt);
+  border-color: var(--h-lt-border);
+}
+
+[data-theme="light"] .h-acadnet-step:hover {
+  border-color: rgba(109, 40, 217, 0.28);
+  background: rgba(109, 40, 217, 0.05);
+}
+
+[data-theme="light"] .h-acadnet-step-title {
+  color: var(--h-lt-text);
+}
+
+[data-theme="light"] .h-acadnet-step-desc {
+  color: var(--h-lt-text-muted);
+}
+
+[data-theme="light"] .h-acadnet-step-link {
+  color: var(--h-lt-text-muted);
+}
+
+[data-theme="light"] .h-acadnet-step:hover .h-acadnet-step-link {
+  color: var(--h-lt-accent);
+}
+
+[data-theme="light"] .h-acadnet-step-number {
+  background: linear-gradient(135deg, var(--h-lt-accent) 0%, #7c3aed 100%);
+  box-shadow: 0 4px 14px rgba(109, 40, 217, 0.30);
+}
+
+/* ── Partners ── */
+[data-theme="light"] .h-partner-card {
+  background: var(--h-lt-bg-card);
+  border-color: var(--h-lt-border);
+}
+
+[data-theme="light"] .h-partner-card:hover {
+  box-shadow: 0 4px 20px var(--h-lt-shadow-hover);
+}
+
+[data-theme="light"] .h-partner-name {
+  color: var(--h-lt-text);
+}
+
+[data-theme="light"] .h-partner-desc {
+  color: var(--h-lt-text-sec);
+}
+
+[data-theme="light"] .h-partner-logo {
+  border-color: var(--h-lt-border);
+}
+
+/* ── Terminal 2.0 promo ── */
+[data-theme="light"] .h-t2-title {
+  color: var(--h-lt-text);
+}
+
+[data-theme="light"] .h-t2-desc {
+  color: var(--h-lt-text-sec);
+}
+
+[data-theme="light"] .h-t2-screen {
+  background: var(--h-lt-bg-card);
+  border-color: var(--h-lt-border);
+  box-shadow: 0 8px 28px var(--h-lt-shadow);
+}
+
+[data-theme="light"] .h-t2-screen-bar {
+  background: var(--h-lt-bg-alt);
+  border-bottom-color: var(--h-lt-border);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION TRANSPARENCY — let the ambient background (ASCII / Shader) show
+   through the page sections in both themes.
+
+   Dark mode: sections get a semi-transparent dark glass surface so the
+   purple ASCII beneath is visible but doesn't hurt readability.
+
+   Light mode: sections get a semi-transparent frosted-white surface so
+   the violet ASCII beneath bleeds through the same way.
+
+   Only targets .hero-root to avoid any leakage to other pages.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Dark theme section transparency ── */
+[data-theme="dark"] .hero-root,
+[data-theme="dark"] .hero-root .h-hero,
+[data-theme="dark"] .hero-root .h-section {
+  background: transparent;
+}
+
+/* AcadNet + AccountBenefits — opac în ambele teme */
+[data-theme="dark"] .hero-root .h-acadnet-section,
+[data-theme="dark"] .hero-root .acad-prep,
+[data-theme="dark"] .hero-root .account-benefits {
+  background: var(--bg-primary);
+}
+
+[data-theme="dark"] .hero-root .h-stats-stripe {
+  background: rgba(10, 10, 15, 0.55);
+  border-top-color: rgba(255, 255, 255, 0.06);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+[data-theme="dark"] .hero-root .h-section-alt {
+  background: rgba(15, 12, 24, 0.52);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Cards, tables și inner containers — glass discret (doar secțiunile transparente) */
+[data-theme="dark"] .hero-root .h-track-card,
+[data-theme="dark"] .hero-root .h-exam-card,
+[data-theme="dark"] .hero-root .h-compare-table,
+[data-theme="dark"] .hero-root .h-partner-card,
+[data-theme="dark"] .hero-root .h-linux-overview-inner {
+  background: rgba(18, 14, 32, 0.68);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+[data-theme="dark"] .hero-root .h-compare-th {
+  background: rgba(25, 20, 42, 0.70);
+}
+
+[data-theme="dark"] .hero-root .h-compare-row-even td {
+  background: rgba(25, 20, 42, 0.45);
+}
+
+[data-theme="dark"] .hero-root .h-linux-chapter-item,
+[data-theme="dark"] .hero-root .h-linux-meta-pill,
+[data-theme="dark"] .hero-root .h-track-circle,
+[data-theme="dark"] .hero-root .h-tag {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ── Light theme section transparency ── */
+[data-theme="light"] .hero-root .h-hero,
+[data-theme="light"] .hero-root .h-section {
+  background: transparent;
+}
+
+[data-theme="light"] .hero-root {
+  background: transparent;
+}
+
+/* AcadNet + AccountBenefits — opac în ambele teme */
+[data-theme="light"] .hero-root .h-acadnet-section,
+[data-theme="light"] .hero-root .acad-prep,
+[data-theme="light"] .hero-root .account-benefits {
+  background: var(--h-lt-bg);
+}
+
+[data-theme="light"] .hero-root .h-stats-stripe {
+  background: rgba(248, 246, 255, 0.60);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+[data-theme="light"] .hero-root .h-section-alt {
+  background: rgba(237, 233, 254, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Cards get frosted glass (doar secțiunile transparente) */
+[data-theme="light"] .hero-root .h-track-card,
+[data-theme="light"] .hero-root .h-exam-card,
+[data-theme="light"] .hero-root .h-compare-table,
+[data-theme="light"] .hero-root .h-partner-card,
+[data-theme="light"] .hero-root .h-linux-overview-inner {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+[data-theme="light"] .hero-root .h-compare-th {
+  background: rgba(237, 233, 254, 0.70);
+}
+
+[data-theme="light"] .hero-root .h-compare-row-even td {
+  background: rgba(237, 233, 254, 0.45);
+}
+
+[data-theme="light"] .hero-root .h-linux-chapter-item,
+[data-theme="light"] .hero-root .h-linux-meta-pill,
+[data-theme="light"] .hero-root .h-tag {
+  background: rgba(255, 255, 255, 0.55);
+}

@@ -30,3 +30,61 @@
 }
 @media(max-width:380px) { .account-benefits-comparison thead th { padding:14px 6px; } .account-benefits-comparison tbody th { font-size:12px; } }
 @media(prefers-reduced-motion:reduce) { .account-benefits *, .account-benefits *::after { transition:none !important; } }
+
+/* ── Light-theme overrides scoped to homepage ── */
+[data-theme="light"] .hero-root .account-benefits {
+  border-bottom-color: rgba(109, 40, 217, 0.14);
+}
+
+[data-theme="light"] .hero-root .account-benefits-intro h2 {
+  color: #1a0a3d;
+}
+
+[data-theme="light"] .hero-root .account-benefits-intro > p {
+  color: #4b3f72;
+}
+
+[data-theme="light"] .hero-root .account-benefits-register {
+  background: #6d28d9;
+  border-color: #6d28d9;
+  color: #ffffff;
+}
+
+[data-theme="light"] .hero-root .account-benefits-register:hover {
+  background: #5b21b6;
+  border-color: #5b21b6;
+}
+
+[data-theme="light"] .hero-root .account-benefits-comparison table {
+  border-top-color: rgba(109, 40, 217, 0.14);
+}
+
+[data-theme="light"] .hero-root .account-benefits-comparison thead th {
+  color: #8b7aad;
+  border-bottom-color: rgba(109, 40, 217, 0.14);
+}
+
+[data-theme="light"] .hero-root .account-benefits-comparison tbody th {
+  color: #1a0a3d;
+}
+
+[data-theme="light"] .hero-root .account-benefits-comparison tbody tr {
+  border-bottom-color: rgba(109, 40, 217, 0.10);
+}
+
+[data-theme="light"] .hero-root .account-benefits-comparison .account-benefits-account {
+  background: rgba(109, 40, 217, 0.05);
+  color: #1a0a3d;
+}
+
+[data-theme="light"] .hero-root .account-benefits-yes {
+  color: #6d28d9;
+}
+
+[data-theme="light"] .hero-root .account-benefits-no {
+  color: #c4b5d6;
+}
+
+[data-theme="light"] .hero-root .account-benefits a:focus-visible {
+  outline-color: #6d28d9;
+}
