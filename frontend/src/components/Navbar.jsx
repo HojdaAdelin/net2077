@@ -387,6 +387,7 @@ export default function Navbar() {
             <SeasonRewardBadge />
           </Link>
           <Link to="/learn" onClick={closeMobileMenu}>Learn</Link>
+          <Link to="/esp32" onClick={closeMobileMenu}>ESP32</Link>
           {user && <Link to="/progress" onClick={closeMobileMenu}>Progress</Link>}
           
           <div className="nav-auth">

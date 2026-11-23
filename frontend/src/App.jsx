@@ -4,6 +4,7 @@ import terminalBadgeFiles from 'virtual:terminal-badges';
 import StreakChain from './pages/StreakChain';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import Esp32 from './pages/Esp32';
 import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { MessageProvider } from './context/MessageContext';
@@ -97,6 +98,12 @@ export default function App() {
                   <Route path="/lab" element={<Lab />} />
                   <Route path="/terminal" element={<Terminal />} />
                   <Route path="/network-lab" element={<NetworkLab />} />
+                  <Route path="/esp32" element={<Esp32 />} />
+                  <Route path="/esp32/admin" element={<Esp32 admin />} />
+                  <Route path="/esp32/admin/courses/new" element={<Esp32 admin creating />} />
+                  <Route path="/esp32/admin/:slug" element={<Esp32 admin />} />
+                  <Route path="/esp32/:slug" element={<Esp32 />} />
+                  <Route path="/esp32/:slug/:lessonId" element={<Esp32 />} />
                   <Route path="/network-lab/course" element={<NetworkCourse />} />
                   <Route path="/network-lab/problems" element={<NetworkProblems />} />
                   <Route path="/network-lab/problems/:problemId" element={<NetworkProblem />} />
