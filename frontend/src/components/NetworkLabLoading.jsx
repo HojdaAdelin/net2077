@@ -5,10 +5,10 @@ export default function NetworkLabLoading({ view = 'list' }) {
     <span className="nlp-loading-status" role="status">Loading network problems…</span>
     <div aria-hidden="true">
       <div className="nlp-skeleton-hero"><div><Line className="nlp-skeleton-eyebrow" /><Line className="nlp-skeleton-heading" /><Line className="nlp-skeleton-subtitle" /></div><Line className="nlp-skeleton-action" /></div>
-      <Line className="npc-loading-progress" />
       <div className="npc-loading-layout">
         <div className="npc-loading-sidebar">{[0, 1, 2, 3, 4, 5].map(item => <Line key={item} />)}</div>
         <div className="npc-loading-main">
+          <Line className="npc-loading-progress" />
           <Line />
           <div className="npc-grid">{[0, 1, 2, 3].map(card => <div className="npc-lab" key={card}><div className="nlp-card-top"><Line className="nlp-skeleton-label" /><Line className="nlp-skeleton-badge" /></div><Line className="nlp-skeleton-title" /><Line className="nlp-skeleton-line" /><Line className="nlp-skeleton-short" /><div className="nlp-skeleton-tags"><Line className="nlp-skeleton-tag" /><Line className="nlp-skeleton-tag" /></div></div>)}</div>
         </div>

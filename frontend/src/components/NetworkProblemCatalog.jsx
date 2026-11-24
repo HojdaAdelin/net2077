@@ -7,7 +7,7 @@ import NetworkLabLoading from './NetworkLabLoading';
 import { networkRequest } from '../services/networkProblems';
 import { filterNetworkProblems, recommendedNetworkProblem } from '../utils/networkProblemCatalog';
 import '../styles/NetworkProblemCatalog.css';
-import { NetworkCourseCard } from '../pages/NetworkCourse';
+import { NetworkCourseLink } from '../pages/NetworkCourse';
 
 const PAGE_SIZE = 8;
 const initialFilters = { search: '', status: 'all', difficulty: 'all', topic: 'all', sort: 'recommended' };
@@ -27,30 +27,42 @@ function Difficulty({ value }) {
   return <span className={`nlp-difficulty ${value}`}><span className="npc-level" aria-hidden="true">{[0, 1, 2].map(index => <i key={index} className={index <= difficulties.indexOf(value) ? 'is-filled' : ''} />)}</span>{value}</span>;
 }
 
-function LabCard({ problem, number, featured = false }) {
+function LabCard({ problem, number }) {
   const Icon = topicIcon(problem);
-  return <Link to={`/network-lab/problems/${problem._id}`} className={`npc-lab${featured ? ' npc-lab-featured' : ''}${problem.solved ? ' is-solved' : ''}`}>
+  return <Link to={`/network-lab/problems/${problem._id}`} className={`npc-lab${problem.solved ? ' is-solved' : ''}`}>
     <div className="npc-lab-top">
       <span className="npc-lab-index"><Icon size={16} /> LAB {String(number).padStart(2, '0')}</span>
-      <div className="npc-lab-badges">{!problem.published && <span className="nlp-badge">Draft</span>}<Difficulty value={problem.difficulty} /></div>
+      <div className="npc-lab-badges">
+        {!problem.published && <span className="nlp-badge">Draft</span>}
+        <Difficulty value={problem.difficulty} />
+      </div>
     </div>
     <div className="npc-lab-body">
       <div className="npc-lab-copy">
-        {featured && <span className="npc-featured-label"><span />RECOMMENDED NEXT</span>}
         <h3>{problem.title}</h3>
         <p>{problem.summary}</p>
         <div className="npc-lab-topics">{(problem.tags || []).map(tag => <span key={tag}>{tag}</span>)}</div>
       </div>
-      {featured && <div className="npc-network-art" aria-hidden="true">
-        <svg viewBox="0 0 240 150" fill="none"><path d="M35 105V75H120V35M120 75H205V105" /><circle cx="120" cy="75" r="4" /><circle cx="35" cy="105" r="3" /><circle cx="205" cy="105" r="3" /></svg>
-        <span className="npc-art-node npc-art-router"><Router size={25} /></span><span className="npc-art-node npc-art-left"><Server size={23} /></span><span className="npc-art-node npc-art-right"><Globe size={23} /></span>
-      </div>}
     </div>
     <div className="npc-lab-bottom">
       <div className="npc-lab-meta"><span><Target size={14} />{problem.objectiveCount} objectives</span><span className="npc-xp"><Zap size={14} />{problem.xp} XP</span></div>
-      <span className="npc-lab-action">{problem.solved ? <><CheckCircle2 size={14} />Review lab</> : <>Start lab<ArrowRight size={15} /></>}</span>
+      {problem.solved ? <span className="npc-completed-badge"><CheckCircle2 size={16} aria-hidden="true" /> Completed</span> :
+        <span className="npc-lab-action">Start lab<ArrowRight size={15} /></span>}
     </div>
   </Link>;
+}
+
+function LearningLinks({ recommended }) {
+  return <section className={`npc-learning${recommended ? '' : ' npc-learning-single'}`} aria-label="Recommended lab and guided course">
+    {recommended && <Link to={`/network-lab/problems/${recommended._id}`} className="npc-learning-link">
+      <span className="npc-learning-label"><Target size={15} aria-hidden="true" /> Recommended next</span>
+      <h2>{recommended.title}</h2>
+      <p>{recommended.summary}</p>
+      <span className="npc-learning-meta"><Difficulty value={recommended.difficulty} /><span>{recommended.xp} XP</span></span>
+      <span className="npc-learning-action">Start lab <ArrowRight size={16} aria-hidden="true" /></span>
+    </Link>}
+    <NetworkCourseLink />
+  </section>;
 }
 
 export default function NetworkProblemCatalog() {
@@ -102,13 +114,6 @@ export default function NetworkProblemCatalog() {
       <Link className="npc-sandbox" to="/network-lab"><FlaskConical size={17} /><span>Open sandbox</span><ArrowUpRight size={15} /></Link>
     </header>
 
-    {!data.error && <section className="npc-progress" aria-label="Your lab progress">
-      <span className="npc-progress-icon"><CheckCircle2 size={19} /></span>
-      <div className="npc-progress-label"><strong>{completed}<span> / {published.length}</span></strong><span>labs completed</span></div>
-      <div className="npc-progress-bar"><progress value={completed} max={published.length || 1} aria-label="Completed labs" /><span>{percent}%</span></div>
-      <span className="npc-progress-xp"><Zap size={15} /><strong>{xp.toLocaleString()}</strong> XP to earn</span>
-    </section>}
-
     <div className="npc-layout">
       <aside className={`npc-sidebar${filtersOpen ? ' is-open' : ''}`} aria-label="Problem filters">
         <div className="npc-sidebar-top"><span><ListFilter size={15} />Filters{activeCount > 0 && <b>{activeCount}</b>}</span><button type="button" onClick={clearFilters} disabled={!activeCount && !filters.search && filters.sort === 'recommended'}>Reset</button></div>
@@ -121,6 +126,21 @@ export default function NetworkProblemCatalog() {
       </aside>
 
       <main className="npc-main" aria-label="Network practice catalog">
+        {!data.error && <section className="npc-progress" aria-label="Your lab progress">
+          <div className="npc-progress-ring" style={{ '--npc-progress-fill': `${percent}%` }}
+            role="progressbar" aria-label="Labs completed" aria-valuenow={percent} aria-valuemin={0} aria-valuemax={100}>
+            <span aria-hidden="true">{percent}%</span>
+          </div>
+          <div className="npc-progress-copy">
+            <h2>{published.length && completed === published.length ? 'All labs completed' : `${completed} of ${published.length} labs completed`}</h2>
+            {xp > 0 && <p><Zap size={14} aria-hidden="true" /> {xp.toLocaleString('en')} XP still available</p>}
+          </div>
+          {published.length > completed && <button className="npc-progress-next" type="button" onClick={() => {
+            setFilters({ ...initialFilters, status: 'unsolved' });
+            setPage(1);
+            toolbar.current?.scrollIntoView({ block: 'start' });
+          }}>View to-do labs <ArrowRight size={15} aria-hidden="true" /></button>}
+        </section>}
         <div ref={toolbar} className="npc-toolbar">
           <label className="npc-search"><Search size={17} /><input aria-label="Search problems" placeholder="Search labs or topics…" value={filters.search} onChange={event => changeFilter('search', event.target.value)} />{filters.search && <button type="button" aria-label="Clear search" onClick={() => changeFilter('search', '')}><X size={14} /></button>}</label>
           <label className="npc-sort"><span>Sort by</span><select aria-label="Sort problems" value={filters.sort} onChange={event => changeFilter('sort', event.target.value)}><option value="recommended">Recommended</option><option value="difficulty">Difficulty</option><option value="xp">Highest XP</option></select><ChevronDown size={13} /></label>
@@ -128,7 +148,7 @@ export default function NetworkProblemCatalog() {
         </div>
 
         {data.error ? <div className="npc-empty" role="alert"><Network size={28} /><h2>Unable to load labs</h2><p>{data.error}</p><button type="button" className="nlp-button" onClick={() => setRetry(previous => previous + 1)}>Try again</button></div> : <>
-          {currentPage === 1 && <div className={`npc-learning-row${recommended ? '' : ' nc-course-only'}`}>{recommended && <section className="npc-recommended" aria-label="Recommended next lab"><LabCard problem={recommended} number={problems.indexOf(recommended) + 1} featured /></section>}<NetworkCourseCard /></div>}
+          {currentPage === 1 && <LearningLinks recommended={recommended} />}
           <div className="npc-results-heading"><div><h2>{activeCount || filters.search.trim() ? 'Matching labs' : 'Explore the labs'}</h2><span aria-live="polite">{visible.length} {visible.length === 1 ? 'lab' : 'labs'}</span></div>{activeCount > 0 && <button type="button" onClick={clearFilters}>Clear filters<X size={12} /></button>}</div>
           {!visible.length ? <div className="npc-empty"><Search size={28} /><h2>{problems.length ? 'No labs found' : 'New challenges are on the way'}</h2><p>{problems.length ? 'Try a different topic or broaden your search.' : 'Your networking practice starts here. Check back for new labs.'}</p>{problems.length > 0 && <button type="button" className="nlp-button" onClick={clearFilters}>Reset filters</button>}</div> : <div className="npc-grid">{visible.slice(offset, offset + PAGE_SIZE).map(problem => <LabCard key={problem._id} problem={problem} number={problems.indexOf(problem) + 1} />)}</div>}
           {visible.length > 0 && <div className="nlp-pagination npc-pagination"><span className="nlp-pagination-summary" role="status">Showing {offset + 1}–{Math.min(offset + PAGE_SIZE, visible.length)} of {visible.length}</span>{pageCount > 1 && <nav aria-label="Network problems pages"><button type="button" onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1} aria-label="Previous page"><ChevronLeft size={15} /></button>{pageNumbers.map((number, index) => <span className="nlp-page-number-group" key={number}>{index > 0 && number - pageNumbers[index - 1] > 1 && <span className="nlp-page-ellipsis">…</span>}<button type="button" aria-label={`Page ${number}`} aria-current={currentPage === number ? 'page' : undefined} onClick={() => changePage(number)}>{number}</button></span>)}<button type="button" onClick={() => changePage(currentPage + 1)} disabled={currentPage === pageCount} aria-label="Next page"><ChevronRight size={15} /></button></nav>}</div>}

@@ -9,19 +9,22 @@ import { networkRequest } from '../services/networkProblems';
 import { courseChapters, courseLessons, courseStarter, COURSE_COMPLETION_XP } from '../../../backend/network/networkCourse';
 import '../styles/NetworkCourse.css';
 
-export function NetworkCourseCard() {
+export function NetworkCourseLink() {
   const { user, updateUser } = useContext(AuthContext);
   const [progress, setProgress] = useState(null);
   useEffect(() => { let active = true; setProgress(null); networkRequest('/course/progress').then(data => { if (active) { setProgress(data); if (data.reward?.xpGained > 0) updateUser({ xp: data.reward.xp, level: data.reward.level }); } }).catch(() => {}); return () => { active = false; }; }, [user?.id, user?._id, user?.username]);
   const done = courseLessons.filter(l => progress?.completed.includes(l.id)).length;
   const next = courseLessons.find(l => !progress?.completed.includes(l.id)) || courseLessons[0];
-  return <Link to={`/network-lab/course?lesson=${next.id}`} className="nc-course-card">
-    <span className="nc-card-kicker"><BookOpen size={15} />GUIDED COURSE</span>
-    <h3>Understand it.<br />Then build it.</h3><p>Networking, one working connection at a time.</p>
-    <span className="nc-course-reward"><Zap size={13} />{COURSE_COMPLETION_XP} XP {progress?.reward?.rewardClaimed ? 'earned' : 'on completion'}</span>
-    <div className="nc-card-progress"><span>{progress ? `${done} / ${courseLessons.length} lessons` : `${courseLessons.length} practical lessons`}</span><span>{progress ? `${Math.round(done / courseLessons.length * 100)}%` : 'Start here'}</span></div>
-    <progress aria-label="Course completion" value={done} max={courseLessons.length} />
-    <span className="nc-card-action">{done ? 'Continue course' : 'Start learning'}<ArrowRight size={15} /></span>
+  return <Link to={`/network-lab/course?lesson=${next.id}`} className="npc-learning-link npc-learning-course">
+    <span className="npc-learning-label"><BookOpen size={15} aria-hidden="true" /> Guided course</span>
+    <h2>Networking Foundations</h2>
+    <p>Build a working network one lesson at a time.</p>
+    <span className="npc-learning-meta">
+      <span>{progress ? `${done} / ${courseLessons.length} lessons` : `${courseLessons.length} lessons`}</span>
+      <span>{COURSE_COMPLETION_XP} XP{progress?.reward?.rewardClaimed ? ' earned' : ''}</span>
+    </span>
+    {progress && <progress aria-label="Course completion" value={done} max={courseLessons.length} />}
+    <span className="npc-learning-action">{done === courseLessons.length ? 'Review course' : done ? 'Continue course' : 'Start course'} <ArrowRight size={16} aria-hidden="true" /></span>
   </Link>;
 }
 
