@@ -45,6 +45,62 @@ function CourseProgress({ total, completed }) {
   </div>;
 }
 
+function SkeletonLine({ width }) {
+  return <span className="esp-skeleton esp-skeleton-line" style={{ width }} />;
+}
+
+function EspLoading({ reader }) {
+  return <>
+    <span className="esp-visually-hidden" role="status">{reader ? 'Loading lesson…' : 'Loading ESP32 courses…'}</span>
+    <div aria-hidden="true">
+      {reader ? <>
+        <div className="esp-crumb"><SkeletonLine width="104px" /></div>
+        <div className="esp-layout">
+          <div className="esp-sidebar esp-skeleton-sidebar">
+            <SkeletonLine width="72%" />
+            <SkeletonLine width="55%" />
+            <span className="esp-skeleton esp-skeleton-track" />
+            <div className="esp-skeleton-outline">
+              {[0, 1].map(group => <div className="esp-module" key={group}>
+                <SkeletonLine width="65%" />
+                <SkeletonLine width="86%" />
+                <SkeletonLine width="74%" />
+              </div>)}
+            </div>
+            <span className="esp-skeleton esp-skeleton-mobile-toc" />
+          </div>
+          <div className="esp-lesson">
+            <header><SkeletonLine width="138px" /><span className="esp-skeleton esp-skeleton-title" /></header>
+            <section className="esp-block esp-skeleton-paragraph">
+              <SkeletonLine width="35%" />
+              <SkeletonLine width="100%" />
+              <SkeletonLine width="89%" />
+              <SkeletonLine width="62%" />
+            </section>
+            <div className="esp-code esp-skeleton-code">
+              <div><SkeletonLine width="110px" /><SkeletonLine width="52px" /></div>
+              <section><SkeletonLine width="50%" /><SkeletonLine width="72%" /><SkeletonLine width="38%" /></section>
+            </div>
+          </div>
+        </div>
+      </> : <>
+        <div className="esp-catalog-bar"><SkeletonLine width="112px" /></div>
+        <div className="esp-cards">
+          {[0, 1].map(card => <div className="esp-card" key={card}>
+            <span className="esp-skeleton esp-skeleton-cover" />
+            <div className="esp-card-body">
+              <SkeletonLine width="120px" />
+              <div className="esp-skeleton-paragraph"><SkeletonLine width="100%" /><SkeletonLine width="76%" /></div>
+              <div className="esp-progress"><SkeletonLine width="124px" /><span className="esp-skeleton esp-skeleton-track" /></div>
+              <span className="esp-skeleton esp-skeleton-button" />
+            </div>
+          </div>)}
+        </div>
+      </>}
+    </div>
+  </>;
+}
+
 function Catalog({ courses, progress, root }) {
   return <>
     <div className="esp-catalog-bar">
@@ -206,6 +262,7 @@ export default function Esp32({ admin = false, creating = false }) {
   const [local, setLocal] = useState({});
   const progress = [...(progressState.data || []), ...(local.account === account ? local.items || [] : [])];
   const course = courseState.data;
+  const loadingProgress = user && !progressState.data && !progressState.error;
   async function complete(lesson) {
     await request(`/${slug}/lessons/${lesson.id}/complete`, { method: 'PUT' });
     setLocal(previous => ({ account, items: [...(previous.account === account ? previous.items : []), { course: course._id, lesson: lesson.id }] }));
@@ -215,7 +272,7 @@ export default function Esp32({ admin = false, creating = false }) {
     {admin ? root ? <EspCourseEditor key={creating ? '/new' : slug || '/catalog'} slug={slug} creating={creating} request={request} /> :
       <p role="alert">The root role is required to manage courses.</p> :
       courseState.error ? <p role="alert">{courseState.error}</p> :
-      !course ? <p role="status">Loading…</p> : <>
+      !course || loadingProgress ? <EspLoading reader={Boolean(slug)} /> : <>
         {progressState.error && <p role="alert">Could not load your progress. {progressState.error}</p>}
         {slug ? <CourseReader key={course._id} course={course} lessonId={lessonId} user={user} root={root}
           done={completedFor(course, progress)} complete={complete} /> :
