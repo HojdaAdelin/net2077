@@ -74,6 +74,8 @@ export function NetworkProblem() {
       saved.current = JSON.stringify(topology.current); setSaveStatus('Saved'); setResult(response);
       if (response.completed && !response.preview) {
         setData(previous => ({ ...previous, solved: true }));
+      }
+      if (!response.preview && (response.completed || response.dailyBonusXp > 0)) {
         updateUser({ xp: response.xp, level: response.level, streak: response.streak });
       }
     } catch (error) { if (version === generation.current) setError(error.message); }
@@ -112,6 +114,7 @@ export function NetworkProblem() {
     })}</div></section>
     {error && <p className="nlp-error" role="alert">{error}</p>}
     {result?.completed && <div className="nlp-success" role="status"><CheckCircle2 size={22} /><div><strong>{result.preview ? 'Preview completed successfully' : 'Lab completed!'}</strong><p>{result.preview ? 'Publish this problem to enable XP rewards.' : result.alreadySolved ? 'You have already earned XP for this problem. You can keep practicing.' : `+${result.xpGained} XP earned. Your competitive season and active Season Pass progress have been updated.`}</p></div></div>}
+    {result?.dailyBonusXp > 0 && <div className="nlp-success" role="status"><Zap size={20} /><div><strong>Daily Challenge complete</strong><p>+{result.dailyBonusXp} XP and +1 point earned</p></div></div>}
     <div inert={busy ? '' : undefined} aria-busy={busy}><NetworkWorkspace key={`${problem._id}-${resetKey}`} initialTopology={data.attempt.topology} problem={problem} onTopologyChange={changed} embedded /></div>
   </div>;
 }

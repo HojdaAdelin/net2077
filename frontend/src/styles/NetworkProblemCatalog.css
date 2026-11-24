@@ -7,17 +7,41 @@
 .npc-sandbox { display: inline-flex; align-items: center; gap: 10px; flex-shrink: 0; padding: 12px 16px; border: 1px solid var(--border); border-radius: 9px; color: var(--text-primary); background: var(--bg-card); font-size: 12px; text-decoration: none; transition: border-color .18s; }
 .npc-sandbox > svg:first-child { color: var(--nlp-accent); }
 .npc-sandbox:hover { border-color: var(--nlp-accent); }
-.npc-progress {
-  --npc-progress-surface: color-mix(in srgb, var(--npc-done) 5%, var(--bg-card));
+.npc-dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  margin-bottom: 24px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-card);
+}
+.npc-progress, .npc-daily-summary, .npc-dashboard-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  min-width: 0;
+  padding: clamp(15px, 2vw, 22px);
+}
+.npc-dashboard-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-card);
+}
+.npc-progress { --npc-progress-surface: var(--bg-card); }
+.npc-daily-summary { border-inline-start: 1px solid var(--border); }
+.npc-progress > h2, .npc-daily-summary > h2, .npc-dashboard-card h2 {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 14px;
-  padding: 14px 18px;
-  margin-bottom: 26px;
-  border-radius: 10px;
-  background: var(--npc-progress-surface);
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 680;
+  margin: 0;
+  line-height: 1.3;
 }
+.npc-daily-summary h2 svg, .npc-dashboard-card h2 svg { color: var(--npc-done); flex-shrink: 0; }
+.npc-dashboard-card h2 span { margin-inline-start: auto; color: var(--text-secondary); font-size: 10px; font-weight: 500; white-space: nowrap; }
+.npc-progress-summary { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
 .npc-progress-ring {
   display: grid;
   flex: 0 0 58px;
@@ -39,13 +63,51 @@
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
-.npc-progress-copy { flex: 1; min-width: min(150px, 100%); }
-.npc-progress-copy h2 { margin: 0; font-size: 16px; font-weight: 650; letter-spacing: -.025em; }
+.npc-progress-copy { flex: 1; min-width: min(90px, 100%); }
+.npc-progress-copy strong { font-size: 14px; font-weight: 650; letter-spacing: -.025em; }
 .npc-progress-copy p { display: flex; align-items: center; gap: 5px; margin: 5px 0 0; font-size: 12px; color: var(--text-secondary); }
 .npc-progress-copy p svg { flex-shrink: 0; color: var(--npc-done); }
-.npc-progress-next { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 0; border: 0; background: transparent; color: var(--npc-done); font: inherit; font-size: 12px; font-weight: 650; cursor: pointer; }
+.npc-progress-next { display: inline-flex; align-self: flex-start; align-items: center; gap: 7px; min-height: 28px; padding: 0; border: 0; background: transparent; color: var(--npc-done); font: inherit; font-size: 12px; font-weight: 650; cursor: pointer; }
 .npc-progress-next:hover { text-decoration: underline; text-underline-offset: 3px; }
 .npc-progress-next:focus-visible { outline: 2px solid var(--npc-done); outline-offset: 3px; }
+.npc-leaderboard-card { gap: 8px; }
+.npc-daily-details { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 12px; color: var(--text-secondary); font-size: 11px; }
+.npc-daily-reward { display: inline-flex; align-items: center; gap: 4px; color: var(--npc-done); font-weight: 650; }
+.npc-daily-summary h2 .npc-daily-points, .npc-dashboard-card h2 .npc-daily-points { margin-inline-start: auto; padding: 4px 8px; border-radius: 6px; background: color-mix(in srgb, var(--npc-done) 12%, var(--bg-card)); color: var(--npc-done); font-size: 11px; font-weight: 650; white-space: nowrap; }
+.npc-daily-meter { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 11px; font-variant-numeric: tabular-nums; }
+.npc-daily-meter progress { flex: 1; width: 0; min-width: 0; height: 7px; accent-color: var(--npc-done); }
+.npc-dashboard-footer { display: flex; align-items: center; justify-content: space-between; gap: 5px 8px; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 8px; margin-top: auto; font-size: 10px; color: var(--text-secondary); }
+.npc-dashboard-footer > span { display: inline-flex; align-items: center; gap: 4px; }
+.npc-your-rank span { color: var(--npc-done); font-weight: 650; }
+.npc-leaders { display: grid; gap: 2px; list-style: none; padding: 0; margin: 0; }
+.npc-leaders li { display: grid; grid-template-columns: 21px minmax(0, 1fr) auto; gap: 6px; align-items: center; padding: 3px 4px; font-size: 11px; }
+.npc-leaders li.is-you { background: var(--nlp-accent-soft); border-radius: 4px; }
+.npc-leaders a { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-primary); text-decoration: none; }
+.npc-leaders a:hover { text-decoration: underline; }
+.npc-leader-rank { color: var(--text-secondary); }
+.npc-leader-score { font-weight: 650; font-variant-numeric: tabular-nums; }
+.npc-dashboard-message { margin: auto 0; font-size: 12px; color: var(--text-secondary); }
+.npc-dashboard-open, .npc-dialog-content > header button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 36px; padding: 0 11px; border: 1px solid var(--border); border-radius: 7px; background: var(--bg-card); color: var(--text-primary); font: inherit; font-size: 12px; cursor: pointer; }
+.npc-dashboard-open { align-self: flex-start; margin-top: auto; border-color: transparent; background: #087985; color: #fff; font-weight: 650; }
+.npc-dashboard-open:hover:not(:disabled) { background: #086773; }
+[data-theme="dark"] .npc-dashboard-open { background: #8ddfdc; color: #112d32; }
+[data-theme="dark"] .npc-dashboard-open:hover:not(:disabled) { background: #b1eeea; }
+.npc-dashboard-open:disabled { opacity: .55; cursor: default; }
+.npc-dialog-content > header button:hover { border-color: var(--npc-done); }
+.npc-dashboard-dialog { position: fixed; inset: 0; width: min(820px, calc(100% - 24px)); max-height: calc(100dvh - 24px); margin: auto; padding: 0; border: 1px solid var(--border); border-radius: 14px; background: var(--bg-primary); color: var(--text-primary); }
+.npc-dashboard-dialog::backdrop { background: rgb(5 14 19 / 70%); }
+.npc-dialog-content { padding: clamp(14px, 3vw, 25px); }
+.npc-dialog-content > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.npc-dialog-content > header h2 { margin: 0; font-size: clamp(17px, 3vw, 23px); letter-spacing: -.03em; }
+.npc-dialog-layout { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 14px; }
+.npc-dialog-layout .npc-dashboard-card { padding: 16px; }
+.npc-dialog-layout .npc-leaders li { padding: 8px 5px; font-size: 13px; }
+.npc-dialog-layout .npc-dashboard-footer { padding-top: 10px; font-size: 11px; }
+.npc-task-list { display: grid; gap: 8px; margin: 2px 0; padding: 0; list-style: none; }
+.npc-task-list li { padding: 9px; border: 1px solid var(--border); border-radius: 7px; }
+.npc-task-list li > div:first-child { display: flex; justify-content: space-between; align-items: center; gap: 7px; margin-bottom: 6px; font-size: 12px; }
+.npc-task-list svg { color: var(--npc-done); flex-shrink: 0; }
+@media (max-width: 600px) { .npc-dialog-layout { grid-template-columns: minmax(0, 1fr); } }
 .npc-layout { display: grid; grid-template-columns: 216px minmax(0, 1fr); gap: 36px; align-items: start; }
 .npc-sidebar { position: sticky; top: 95px; min-width: 0; max-height: calc(100dvh - 115px); overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; padding-right: 5px; }
 .npc-sidebar-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 25px; min-height: 40px; }
@@ -183,7 +245,7 @@
 .npc-loading-main { min-width: 0; }
 .npc-loading-main > .nlp-skeleton:not(.npc-loading-progress) { width: 100%; height: 43px; margin-bottom: 24px; }
 .npc-loading-main .npc-lab { min-height: 255px; }
-.npc-loading-progress { width: 100%; height: 86px; margin-bottom: 26px; border-radius: 11px; }
+.npc-loading-progress { width: 100%; height: 156px; margin-bottom: 24px; border-radius: 12px; }
 @media (max-width: 1120px) {
   .npc-layout, .npc-loading-layout { grid-template-columns: 190px minmax(0, 1fr); gap: 24px; }
   .npc-lab { padding: 19px; }
@@ -206,8 +268,9 @@
   .npc-header { align-items: flex-start; flex-direction: column; gap: 19px; margin-bottom: 23px; }
   .npc-header h1 { letter-spacing: -1px; }
   .npc-sandbox { padding: 10px 13px; }
-  .npc-progress { padding: 12px; gap: 9px 12px; margin-bottom: 22px; }
-  .npc-loading-progress { margin-bottom: 22px; }
+  .npc-dashboard { grid-template-columns: minmax(0, 1fr); }
+  .npc-daily-summary { border-inline-start: 0; border-top: 1px solid var(--border); }
+  .npc-loading-progress { height: 280px; }
   .npc-toolbar { flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
   .npc-search { flex-basis: 100%; }
   .npc-sort { flex: 1; }

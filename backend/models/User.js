@@ -32,6 +32,10 @@ const userSchema = new mongoose.Schema({
   solvedTerminalQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Terminal' }],
   solvedNetworkProblems: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NetworkProblem' }],
   networkLabStats: { solved: { type: Number, default: 0 } },
+  networkLabDailyPoints: { type: Number, default: 0 },
+  networkLabDaily: new mongoose.Schema({
+    day: Number, version: Number, labs: Number, xp: Number, objectiveKeys: [String], rewarded: Boolean,
+  }, { _id: false }),
   networkCourseRewarded: { type: Boolean, default: false },
   terminalStats: {
     solved: { type: Number, default: 0 }
@@ -163,5 +167,7 @@ const userSchema = new mongoose.Schema({
     streakRewardClaimed: { type: Boolean, default: false }
   }
 }, { timestamps: true });
+
+userSchema.index({ 'networkLabStats.solved': -1, _id: 1 });
 
 export default mongoose.model('User', userSchema);

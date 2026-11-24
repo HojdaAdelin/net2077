@@ -4,6 +4,7 @@ import { ArrowRight, ArrowUpRight, Check, CheckCircle2, ChevronDown, ChevronLeft
 import { AuthContext } from '../context/AuthContext';
 import LoginRequired from './LoginRequired';
 import NetworkLabLoading from './NetworkLabLoading';
+import NetworkLabDashboard from './NetworkLabDashboard';
 import { networkRequest } from '../services/networkProblems';
 import { filterNetworkProblems, recommendedNetworkProblem } from '../utils/networkProblemCatalog';
 import '../styles/NetworkProblemCatalog.css';
@@ -126,21 +127,27 @@ export default function NetworkProblemCatalog() {
       </aside>
 
       <main className="npc-main" aria-label="Network practice catalog">
-        {!data.error && <section className="npc-progress" aria-label="Your lab progress">
-          <div className="npc-progress-ring" style={{ '--npc-progress-fill': `${percent}%` }}
-            role="progressbar" aria-label="Labs completed" aria-valuenow={percent} aria-valuemin={0} aria-valuemax={100}>
-            <span aria-hidden="true">{percent}%</span>
-          </div>
-          <div className="npc-progress-copy">
-            <h2>{published.length && completed === published.length ? 'All labs completed' : `${completed} of ${published.length} labs completed`}</h2>
-            {xp > 0 && <p><Zap size={14} aria-hidden="true" /> {xp.toLocaleString('en')} XP still available</p>}
-          </div>
-          {published.length > completed && <button className="npc-progress-next" type="button" onClick={() => {
-            setFilters({ ...initialFilters, status: 'unsolved' });
-            setPage(1);
-            toolbar.current?.scrollIntoView({ block: 'start' });
-          }}>View to-do labs <ArrowRight size={15} aria-hidden="true" /></button>}
-        </section>}
+        {!data.error && <div className="npc-dashboard">
+          <section className="npc-progress" aria-label="Your lab progress">
+            <h2>Lab Progress</h2>
+            <div className="npc-progress-summary">
+              <div className="npc-progress-ring" style={{ '--npc-progress-fill': `${percent}%` }}
+                role="progressbar" aria-label="Labs completed" aria-valuenow={percent} aria-valuemin={0} aria-valuemax={100}>
+                <span aria-hidden="true">{percent}%</span>
+              </div>
+              <div className="npc-progress-copy">
+                <strong>{published.length && completed === published.length ? 'All labs completed' : `${completed} of ${published.length} labs completed`}</strong>
+                {xp > 0 && <p><Zap size={14} aria-hidden="true" /> {xp.toLocaleString('en')} XP still available</p>}
+              </div>
+            </div>
+            {published.length > completed && <button className="npc-progress-next" type="button" onClick={() => {
+              setFilters({ ...initialFilters, status: 'unsolved' });
+              setPage(1);
+              toolbar.current?.scrollIntoView({ block: 'start' });
+            }}>View to-do labs <ArrowRight size={15} aria-hidden="true" /></button>}
+          </section>
+          <NetworkLabDashboard key={userKey} />
+        </div>}
         <div ref={toolbar} className="npc-toolbar">
           <label className="npc-search"><Search size={17} /><input aria-label="Search problems" placeholder="Search labs or topics…" value={filters.search} onChange={event => changeFilter('search', event.target.value)} />{filters.search && <button type="button" aria-label="Clear search" onClick={() => changeFilter('search', '')}><X size={14} /></button>}</label>
           <label className="npc-sort"><span>Sort by</span><select aria-label="Sort problems" value={filters.sort} onChange={event => changeFilter('sort', event.target.value)}><option value="recommended">Recommended</option><option value="difficulty">Difficulty</option><option value="xp">Highest XP</option></select><ChevronDown size={13} /></label>

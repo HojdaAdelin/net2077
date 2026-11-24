@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { isRoot } from '../middleware/checkRole.js';
 import { getCourseProgress, saveCourseLesson } from '../controllers/networkCourseController.js';
-import { listNetworkProblems, getNetworkProblem, saveNetworkAttempt, resetNetworkAttempt, checkNetworkProblem,
+import { listNetworkProblems, getNetworkLabDashboard, getNetworkProblem, saveNetworkAttempt, resetNetworkAttempt, checkNetworkProblem,
   adminListNetworkProblems, previewNetworkProblems, createNetworkProblems, updateNetworkProblem, deleteNetworkProblem, reorderNetworkProblems } from '../controllers/networkProblemController.js';
 
 const router = express.Router();
@@ -19,6 +19,7 @@ router.put('/admin/order', isRoot, reorderNetworkProblems);
 router.put('/admin/:id', isRoot, updateNetworkProblem);
 router.delete('/admin/:id', isRoot, deleteNetworkProblem);
 router.get('/', listNetworkProblems);
+router.get('/dashboard', getNetworkLabDashboard);
 router.get('/:id', getNetworkProblem);
 router.put('/:id/attempt', saveNetworkAttempt);
 router.post('/:id/reset', resetNetworkAttempt);

@@ -4,6 +4,7 @@ import NetworkLabProgress from '../models/NetworkLabProgress.js';
 import User from '../models/User.js';
 import { normalizeProblem, validateSubmission, evaluateObjectives } from '../network/problemDefinition.js';
 import { awardNetworkProblem } from '../utils/networkProblemReward.js';
+import { networkDailyStatus } from '../utils/networkLabDaily.js';
 
 const fail = (message, status = 400) => { throw Object.assign(new Error(message), { status }); };
 const id = value => typeof value === 'string' && /^[a-f\d]{24}$/i.test(value) ? value : fail('Invalid problem ID.');
@@ -38,6 +39,24 @@ export const listNetworkProblems = handle(async (req, res) => {
     .select('title slug summary difficulty xp tags published order revision objectives.id').lean();
   const solved = new Set(user.solvedNetworkProblems.map(String));
   res.json({ problems: problems.map(({ objectives, ...problem }) => ({ ...problem, objectiveCount: objectives.length, solved: solved.has(String(problem._id)) })) });
+});
+export const getNetworkLabDashboard = handle(async (req, res) => {
+  const user = await User.findById(req.userId).select('networkLabStats.solved networkLabDaily networkLabDailyPoints').lean();
+  if (!user) fail('User not found.', 404);
+  const solved = user.networkLabStats?.solved || 0;
+  const score = 'networkLabStats.solved';
+  const [leaders, higher] = await Promise.all([
+    User.find({ [score]: { $gt: 0 } }).sort({ [score]: -1, _id: 1 }).limit(5).select('username networkLabStats.solved').lean(),
+    solved ? User.countDocuments({ [score]: { $gt: solved } }) : null,
+  ]);
+  const top = leaders.map(leader => ({
+    username: leader.username, solved: leader.networkLabStats.solved, you: String(leader._id) === req.userId,
+    rank: 1 + leaders.findIndex(other => other.networkLabStats.solved === leader.networkLabStats.solved),
+  }));
+  res.json({
+    daily: networkDailyStatus(user.networkLabDaily, user.networkLabDailyPoints),
+    leaderboard: { top, rank: higher === null ? null : higher + 1, solved },
+  });
 });
 export const getNetworkProblem = handle(async (req, res) => {
   const { problem, user } = await availableProblem(req);
@@ -75,7 +94,8 @@ export const checkNetworkProblem = handle(async (req, res) => {
   await persist(req, problem, topology);
   const objectives = evaluateObjectives(problem, topology);
   const completed = objectives.every(goal => goal.passed);
-  const reward = completed && problem.published ? await awardNetworkProblem(req.userId, problem) : { xpGained: 0 };
+  const reward = problem.published && (completed || objectives.some(goal => goal.passed))
+    ? await awardNetworkProblem(req.userId, problem, { completed, objectives }) : { xpGained: 0 };
   res.json({ completed, objectives, preview: !problem.published, ...reward });
 });
 
